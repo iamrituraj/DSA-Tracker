@@ -1,0 +1,92 @@
+[
+  {
+    "id": "a2z-001",
+    "title": "Two Sum",
+    "topic": "Arrays",
+    "pattern": "Hashing",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/two-sum/"
+  },
+  {
+    "id": "a2z-002",
+    "title": "Maximum Subarray",
+    "topic": "Arrays",
+    "pattern": "Kadane's Algorithm",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/maximum-subarray/"
+  },
+  {
+    "id": "a2z-003",
+    "title": "3Sum",
+    "topic": "Arrays",
+    "pattern": "Two Pointer",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/3sum/"
+  },
+  {
+    "id": "a2z-004",
+    "title": "Binary Search",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-search/"
+  },
+  {
+    "id": "a2z-005",
+    "title": "Longest Substring Without Repeating Characters",
+    "topic": "Sliding Window",
+    "pattern": "Variable Window",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/"
+  },
+  {
+    "id": "a2z-006",
+    "title": "Minimum Window Substring",
+    "topic": "Sliding Window",
+    "pattern": "Variable Window + Frequency Map",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/minimum-window-substring/"
+  },
+  {
+    "id": "a2z-007",
+    "title": "Target Sum",
+    "topic": "Dynamic Programming",
+    "pattern": "Subset Sum / Knapsack",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/target-sum/"
+  },
+  {
+    "id": "a2z-008",
+    "title": "Course Schedule",
+    "topic": "Graphs",
+    "pattern": "Topological Sort",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/course-schedule/"
+  },
+  {
+    "id": "a2z-009",
+    "title": "Reverse Linked List",
+    "topic": "Linked List",
+    "pattern": "Linked List",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/reverse-linked-list/"
+  },
+  {
+    "id": "a2z-010",
+    "title": "House Robber",
+    "topic": "Dynamic Programming",
+    "pattern": "1D DP",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/house-robber/"
+  }
+]
