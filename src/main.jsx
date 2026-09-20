@@ -1,12 +1,27 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Search, LayoutDashboard, BookOpen, RefreshCw, Brain, BarChart3, Settings, CheckCircle2, Clock3, Download, Upload, ExternalLink, ChevronRight, ChevronDown, Flame, Star, Filter, CalendarDays, Target, RotateCcw, Trash2, Timer, Lightbulb, AlertCircle, BookmarkCheck, X } from "lucide-react";
+import { Search, LayoutDashboard, BookOpen, RefreshCw, Brain, BarChart3, Settings, CheckCircle2, Clock3, Download, Upload, ExternalLink, ChevronRight, ChevronDown, Flame, Star, Filter, CalendarDays, Target, RotateCcw, Trash2, Timer, Lightbulb, BookmarkCheck, Lock, Unlock, Pencil, Plus, Code2 } from "lucide-react";
 import "./styles.css";
 
 const SEED = "/data/problems.json";
 const statuses = ["Not Started", "Attempted", "Solved", "Mastered"];
 const confidence = ["🔴 Weak", "🟡 Learning", "🟢 Strong", "🔵 Interview Ready"];
 const revisionSteps = [1, 3, 7, 14, 30];
+const NOTE_FIELDS = [
+  ["insight", "Key insight", "What is the core idea or pattern behind this problem?"],
+  ["mistake", "My mistake", "What did you miss, misread, or get wrong on the first try?"],
+  ["approach", "Approach", "Write the approach in your own words, step by step."],
+  ["complexity", "Complexity", "Time: O(?)   Space: O(?)"],
+  ["interviewCue", "Interview cue", "What keywords or constraints should trigger this pattern?"],
+];
+const emptyNotes = () => ({ insight: "", mistake: "", approach: "", complexity: "", interviewCue: "" });
+const defaultApproaches = () => ([
+  { id: "brute", title: "1. Brute Force", level: "Brute", time: "O(?)", space: "O(?)", explanation: "", code: "" },
+  { id: "better", title: "2. Better", level: "Better", time: "O(?)", space: "O(?)", explanation: "", code: "" },
+  { id: "optimal", title: "3. Optimal", level: "Optimal", time: "O(?)", space: "O(?)", explanation: "", code: "" },
+  { id: "optimal-alt", title: "4. Optimal (alt)", level: "Optimal+", time: "O(?)", space: "O(?)", explanation: "", code: "" },
+]);
+function uid() { return `a-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}` }
 
 function useLocalState(key, initial) {
   const [v, setV] = useState(() => { try { return JSON.parse(localStorage.getItem(key)) ?? initial } catch { return initial } });
@@ -30,6 +45,7 @@ function App() {
   const [problems, setProblems] = useState([]);
   const [progress, setProgress] = useLocalState("dsa-progress", {});
   const [notes, setNotes] = useLocalState("dsa-notes", {});
+  const [solutions, setSolutions] = useLocalState("dsa-solutions", {});
   const [activity, setActivity] = useLocalState("dsa-activity", {});
   const [settings, setSettings] = useLocalState("dsa-settings", { dailyGoal: 3 });
   const [page, setPage] = useState("dashboard");
@@ -68,9 +84,9 @@ function App() {
   const recordActivity = () => setActivity(x => ({ ...x, [todayKey()]: ((x[todayKey()] || 0) + 1) }));
   const open = (p) => { setSelected(p.id); setPage("problem") };
   const selectedProblem = useMemo(() => enriched.find(p => p.id === selected) || null, [enriched, selected]);
-  const exportData = () => { const blob = new Blob([JSON.stringify({ version: 2, progress, notes, activity, settings, exportedAt: new Date().toISOString() }, null, 2)], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "dsa-tracker-backup.json"; a.click(); URL.revokeObjectURL(a.href) };
-  const importData = e => { const f = e.target.files?.[0]; if (!f) return; const r = new FileReader(); r.onload = () => { try { const d = JSON.parse(r.result); if (d.progress) setProgress(d.progress); if (d.notes) setNotes(d.notes); if (d.activity) setActivity(d.activity); if (d.settings) setSettings(d.settings); setToast("Backup restored.") } catch { setToast("Invalid backup file.") } }; r.readAsText(f); e.target.value = "" };
-  const resetAll = () => { if (confirm("Reset all progress, notes and activity? This cannot be undone unless you have a backup.")) { setProgress({}); setNotes({}); setActivity({}); setToast("All local progress reset.") } };
+  const exportData = () => { const blob = new Blob([JSON.stringify({ version: 3, progress, notes, solutions, activity, settings, exportedAt: new Date().toISOString() }, null, 2)], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "dsa-tracker-backup.json"; a.click(); URL.revokeObjectURL(a.href) };
+  const importData = e => { const f = e.target.files?.[0]; if (!f) return; const r = new FileReader(); r.onload = () => { try { const d = JSON.parse(r.result); if (d.progress) setProgress(d.progress); if (d.notes) setNotes(d.notes); if (d.solutions) setSolutions(d.solutions); if (d.activity) setActivity(d.activity); if (d.settings) setSettings(d.settings); setToast("Backup restored.") } catch { setToast("Invalid backup file.") } }; r.readAsText(f); e.target.value = "" };
+  const resetAll = () => { if (confirm("Reset all progress, notes, solutions and activity? This cannot be undone unless you have a backup.")) { setProgress({}); setNotes({}); setSolutions({}); setActivity({}); setToast("All local progress reset.") } };
   const topics = ["All", ...new Set(problems.map(p => p.topic))];
   const patterns = ["All", ...new Set(
     (roadmapFilters.topic === "All" ? problems : problems.filter(p => p.topic === roadmapFilters.topic)).map(p => p.pattern)
@@ -90,9 +106,9 @@ function App() {
       {page === "roadmap" && <Roadmap problems={enriched} topics={topics} patterns={patterns} open={open} filters={roadmapFilters} setFilters={setRoadmapFilters} filtered={filtered} />}
       {page === "revision" && <Revision problems={enriched} open={open} update={update} recordActivity={recordActivity} />}
       {page === "patterns" && <Patterns problems={enriched} open={open} />}
-      {page === "analytics" && <Analytics stats={stats} problems={enriched} />}
+      {page === "analytics" && <Analytics stats={stats} problems={enriched} activity={activity} notes={notes} solutions={solutions} />}
       {page === "settings" && <SettingsPage exportData={exportData} importData={importData} resetAll={resetAll} settings={settings} setSettings={setSettings} />}
-      {page === "problem" && selectedProblem && <Problem p={selectedProblem} update={update} notes={notes[selectedProblem.id] || {}} setNotes={setNotes} back={() => setPage("roadmap")} recordActivity={recordActivity} setToast={setToast} />}
+      {page === "problem" && selectedProblem && <Problem p={selectedProblem} update={update} notes={notes[selectedProblem.id] || {}} setNotes={setNotes} solutions={solutions[selectedProblem.id]} setSolutions={setSolutions} back={() => setPage("roadmap")} recordActivity={recordActivity} setToast={setToast} />}
     </main>
     {toast && <div className="toast">{toast}</div>}
   </div>
@@ -196,23 +212,171 @@ function Patterns({ problems, open }) {
   </section>;
 }
 
-function Analytics({ stats, problems }) { const topics = {}; const diffs = { Easy: 0, Medium: 0, Hard: 0 }; problems.forEach(p => { topics[p.topic] ??= { t: 0, s: 0 }; topics[p.topic].t++; if (p.status === "Solved" || p.status === "Mastered") topics[p.topic].s++; diffs[p.difficulty]++ }); return <section><div className="stats-large"><div><small>Completion</small><strong>{stats.total ? Math.round(stats.solved / stats.total * 100) : 0}%</strong></div><div><small>Completed</small><strong>{stats.solved}</strong></div><div><small>Mastered</small><strong>{stats.mastered}</strong></div><div><small>Attempts</small><strong>{problems.reduce((s, p) => s + (p.attempts || 0), 0)}</strong></div></div><div className="grid2"><div className="panel"><h3>Topic progress</h3>{Object.entries(topics).map(([k, v]) => <div className="bar-row" key={k}><div><span>{k}</span><b>{v.s}/{v.t}</b></div><div className="bar"><i style={{ width: `${v.t ? v.s / v.t * 100 : 0}%` }} /></div></div>)}</div><div className="panel"><h3>Difficulty mix</h3>{Object.entries(diffs).map(([k, v]) => <div className="bar-row" key={k}><div><span>{k}</span><b>{v}</b></div><div className="bar"><i style={{ width: `${problems.length ? v / problems.length * 100 : 0}%` }} /></div></div>)}<div className="analytics-note"><Lightbulb size={16} /><span>Use topic completion to spot gaps; use weak confidence and revision history to decide what to revisit.</span></div></div></div></section> }
+function Analytics({ stats, problems, activity, notes, solutions }) {
+  const statusCounts = { "Not Started": 0, Attempted: 0, Solved: 0, Mastered: 0 };
+  const confCounts = { "🔴 Weak": 0, "🟡 Learning": 0, "🟢 Strong": 0, "🔵 Interview Ready": 0, Unset: 0 };
+  const topics = {};
+  const diffs = { Easy: { t: 0, s: 0 }, Medium: { t: 0, s: 0 }, Hard: { t: 0, s: 0 } };
+  let notesCount = 0, solutionsCount = 0, approachesFilled = 0;
+  problems.forEach(p => {
+    statusCounts[p.status || "Not Started"] = (statusCounts[p.status || "Not Started"] || 0) + 1;
+    const conf = p.confidence || "Unset";
+    confCounts[conf] = (confCounts[conf] || 0) + 1;
+    topics[p.topic] ??= { t: 0, s: 0, a: 0, weak: 0 };
+    topics[p.topic].t++;
+    if (p.status === "Solved" || p.status === "Mastered") topics[p.topic].s++;
+    if (p.status === "Attempted") topics[p.topic].a++;
+    if (p.confidence === "🔴 Weak") topics[p.topic].weak++;
+    if (diffs[p.difficulty]) {
+      diffs[p.difficulty].t++;
+      if (p.status === "Solved" || p.status === "Mastered") diffs[p.difficulty].s++;
+    }
+    const n = notes[p.id];
+    if (n && Object.values(n).some(v => String(v || "").trim())) notesCount++;
+    const sol = solutions[p.id]?.approaches || [];
+    if (sol.some(a => a.explanation?.trim() || a.code?.trim())) {
+      solutionsCount++;
+      approachesFilled += sol.filter(a => a.explanation?.trim() || a.code?.trim()).length;
+    }
+  });
+  const topicRows = Object.entries(topics).map(([k, v]) => ({ name: k, ...v, pct: v.t ? Math.round(v.s / v.t * 100) : 0 })).sort((a, b) => a.pct - b.pct);
+  const weakest = topicRows.filter(t => t.t > 0).slice(0, 5);
+  const strongest = [...topicRows].sort((a, b) => b.pct - a.pct).slice(0, 5);
+  const last14 = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    last14.push({ key, label: d.toLocaleDateString(undefined, { weekday: "short" }), count: activity[key] || 0 });
+  }
+  const maxAct = Math.max(1, ...last14.map(d => d.count));
+  const dueSoon = problems.filter(p => p.nextRevision).length;
+  const dueNow = problems.filter(p => p.nextRevision && new Date(p.nextRevision) <= new Date()).length;
+  const totalAttempts = problems.reduce((s, p) => s + (p.attempts || 0), 0);
+  return <section className="analytics-page">
+    <div className="stats-large">
+      <div><small>Completion</small><strong>{stats.total ? Math.round(stats.solved / stats.total * 100) : 0}%</strong><em>{stats.solved}/{stats.total}</em></div>
+      <div><small>Mastered</small><strong>{stats.mastered}</strong><em>Interview ready</em></div>
+      <div><small>In progress</small><strong>{stats.attempted}</strong><em>Attempted</em></div>
+      <div><small>Streak</small><strong>{stats.streak}</strong><em>Active days</em></div>
+    </div>
+    <div className="stats-large secondary">
+      <div><small>Notes coverage</small><strong>{notesCount}</strong><em>{stats.total ? Math.round(notesCount / stats.total * 100) : 0}% of problems</em></div>
+      <div><small>Solutions written</small><strong>{solutionsCount}</strong><em>{approachesFilled} approaches filled</em></div>
+      <div><small>Revisions due</small><strong>{dueNow}</strong><em>{dueSoon} scheduled total</em></div>
+      <div><small>Total attempts</small><strong>{totalAttempts}</strong><em>Across all problems</em></div>
+    </div>
+    <div className="panel">
+      <h3>Last 14 days activity</h3>
+      <div className="activity-chart">
+        {last14.map(d => (
+          <div className="activity-col" key={d.key} title={`${d.key}: ${d.count}`}>
+            <div className="activity-bar-wrap"><i style={{ height: `${(d.count / maxAct) * 100}%` }} /></div>
+            <span>{d.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+    <div className="grid2">
+      <div className="panel">
+        <h3>Status breakdown</h3>
+        {Object.entries(statusCounts).map(([k, v]) => (
+          <div className="bar-row" key={k}><div><span>{k}</span><b>{v}</b></div><div className="bar"><i style={{ width: `${stats.total ? v / stats.total * 100 : 0}%` }} /></div></div>
+        ))}
+      </div>
+      <div className="panel">
+        <h3>Confidence mix</h3>
+        {Object.entries(confCounts).filter(([, v]) => v > 0).map(([k, v]) => (
+          <div className="bar-row" key={k}><div><span>{k}</span><b>{v}</b></div><div className="bar"><i style={{ width: `${stats.total ? v / stats.total * 100 : 0}%` }} /></div></div>
+        ))}
+      </div>
+    </div>
+    <div className="grid2">
+      <div className="panel">
+        <h3>Difficulty completion</h3>
+        {Object.entries(diffs).map(([k, v]) => (
+          <div className="bar-row" key={k}><div><span>{k}</span><b>{v.s}/{v.t}</b></div><div className="bar"><i style={{ width: `${v.t ? v.s / v.t * 100 : 0}%` }} /></div></div>
+        ))}
+      </div>
+      <div className="panel">
+        <h3>Focus next (weakest topics)</h3>
+        {weakest.length ? weakest.map(t => (
+          <div className="bar-row" key={t.name}><div><span>{t.name}</span><b>{t.pct}% · {t.weak} weak</b></div><div className="bar"><i style={{ width: `${t.pct}%` }} /></div></div>
+        )) : <Empty text="No topic data yet." />}
+      </div>
+    </div>
+    <div className="grid2">
+      <div className="panel">
+        <h3>Topic progress</h3>
+        {topicRows.map(t => (
+          <div className="bar-row" key={t.name}><div><span>{t.name}</span><b>{t.s}/{t.t}</b></div><div className="bar"><i style={{ width: `${t.pct}%` }} /></div></div>
+        ))}
+      </div>
+      <div className="panel">
+        <h3>Strongest topics</h3>
+        {strongest.map(t => (
+          <div className="bar-row" key={t.name}><div><span>{t.name}</span><b>{t.pct}%</b></div><div className="bar"><i style={{ width: `${t.pct}%` }} /></div></div>
+        ))}
+        <div className="analytics-note"><Lightbulb size={16} /><span>Pair weakest topics with revision due items. Fill notes and locked solutions after each solve so review stays high-signal.</span></div>
+      </div>
+    </div>
+  </section>;
+}
 
-function Problem({ p, update, notes, setNotes, back, recordActivity, setToast }) {
-  const emptyNotes = { insight: "", mistake: "", approach: "", complexity: "", interviewCue: "" };
-  const [local, setLocal] = useState(() => ({ ...emptyNotes, ...notes }));
-  useEffect(() => setLocal({ ...emptyNotes, ...notes }), [p.id]);
+function Problem({ p, update, notes, setNotes, solutions, setSolutions, back, recordActivity, setToast }) {
+  const [tab, setTab] = useState("notes");
+  const [localNotes, setLocalNotes] = useState(() => ({ ...emptyNotes(), ...notes }));
+  const [editingNotes, setEditingNotes] = useState(() => !Object.values(notes || {}).some(v => String(v || "").trim()));
+  const [localSol, setLocalSol] = useState(() => (solutions?.approaches?.length ? solutions.approaches : defaultApproaches()));
+  const [editingSol, setEditingSol] = useState(false);
+  const [openApproach, setOpenApproach] = useState(0);
+
+  useEffect(() => {
+    setLocalNotes({ ...emptyNotes(), ...notes });
+    setEditingNotes(!Object.values(notes || {}).some(v => String(v || "").trim()));
+    setLocalSol(solutions?.approaches?.length ? solutions.approaches : defaultApproaches());
+    setEditingSol(false);
+    setOpenApproach(0);
+    setTab("notes");
+  }, [p.id]);
+
   const status = p.status || "Not Started";
   const link = practiceLink(p);
-  const noteFields = [
-    ["insight", "Key insight", "What is the core idea or pattern behind this problem?"],
-    ["mistake", "My mistake", "What did you miss, misread, or get wrong on the first try?"],
-    ["approach", "Approach", "Write the approach in your own words, step by step."],
-    ["complexity", "Complexity", "Time: O(?)   Space: O(?)"],
-    ["interviewCue", "Interview cue", "What keywords or constraints should trigger this pattern?"],
-  ];
-  const filledNotes = noteFields.filter(([k]) => local[k]?.trim()).length;
-  const saveNotes = () => { setNotes(x => ({ ...x, [p.id]: local })); setToast("Notes saved.") };
+  const filledNotes = NOTE_FIELDS.filter(([k]) => localNotes[k]?.trim()).length;
+  const filledApproaches = localSol.filter(a => a.explanation?.trim() || a.code?.trim()).length;
+
+  const saveNotes = () => {
+    setNotes(x => ({ ...x, [p.id]: localNotes }));
+    setEditingNotes(false);
+    setToast("Notes saved.");
+  };
+  const clearNotes = () => {
+    if (!confirm("Clear all learning notes for this problem?")) return;
+    const blank = emptyNotes();
+    setLocalNotes(blank);
+    setNotes(x => { const next = { ...x }; delete next[p.id]; return next; });
+    setEditingNotes(true);
+    setToast("Notes cleared.");
+  };
+  const saveSolutions = () => {
+    setSolutions(x => ({ ...x, [p.id]: { approaches: localSol, updatedAt: new Date().toISOString() } }));
+    setEditingSol(false);
+    setToast("Solutions locked & saved.");
+  };
+  const cancelSolEdit = () => {
+    setLocalSol(solutions?.approaches?.length ? solutions.approaches : defaultApproaches());
+    setEditingSol(false);
+    setToast("Solution edits discarded.");
+  };
+  const updateApproach = (idx, patch) => setLocalSol(list => list.map((a, i) => i === idx ? { ...a, ...patch } : a));
+  const addApproach = () => {
+    setLocalSol(list => [...list, { id: uid(), title: `${list.length + 1}. New approach`, level: "Custom", time: "O(?)", space: "O(?)", explanation: "", code: "" }]);
+    setOpenApproach(localSol.length);
+  };
+  const removeApproach = (idx) => {
+    if (!confirm("Delete this approach?")) return;
+    setLocalSol(list => list.filter((_, i) => i !== idx));
+    setOpenApproach(0);
+  };
   const mark = (nextStatus) => {
     if (status === nextStatus) { setToast(`Already marked ${nextStatus}.`); return; }
     update(p.id, {
@@ -227,8 +391,7 @@ function Problem({ p, update, notes, setNotes, back, recordActivity, setToast })
     recordActivity();
     setToast(`${nextStatus} saved.`);
   };
-  const changeConfidence = e => update(p.id, { confidence: e.target.value });
-  const scheduleRevision = () => { const count = p.revisionCount || 0; const step = revisionSteps[Math.min(count, revisionSteps.length - 1)]; update(p.id, { nextRevision: addDays(step), lastRevised: new Date().toISOString(), revisionCount: count }); setToast(`Next revision in ${step} day${step !== 1 ? "s" : ""}.`) };
+
   return <section className="problem-page">
     <button type="button" className="back" onClick={back}>← Back to roadmap</button>
     <div className="problem-header">
@@ -246,47 +409,117 @@ function Problem({ p, update, notes, setNotes, back, recordActivity, setToast })
         <button type="button" className="status-btn ghost" onClick={() => mark("Not Started")}>Reset</button>
       </div>
     </div>
-    <div className="detail-grid">
-      <div className="detail-main">
-        <div className="panel notes-panel">
-          <div className="notes-head">
-            <div>
-              <h3>Learning notes</h3>
-              <p>Capture what you learned so revision is from memory, not from the solution.</p>
-            </div>
-            <span className="notes-progress">{filledNotes}/{noteFields.length} filled</span>
-          </div>
-          <div className="notes-fields">
-            {noteFields.map(([key, label, placeholder]) => (
-              <label className="note-field" key={key}>
-                <span>{label}</span>
-                <textarea
-                  className={key === "complexity" || key === "interviewCue" ? "short" : ""}
-                  value={local[key] || ""}
-                  onChange={e => setLocal({ ...local, [key]: e.target.value })}
-                  placeholder={placeholder}
-                  rows={key === "complexity" || key === "interviewCue" ? 2 : 4}
-                />
-              </label>
-            ))}
-          </div>
-          <button type="button" className="primary save" onClick={saveNotes}>Save notes</button>
-        </div>
-      </div>
-      <div className="detail-side">
-        <div className="panel">
-          <div className="field"><label>Confidence</label><select value={p.confidence || "🟡 Learning"} onChange={changeConfidence}>{confidence.map(c => <option key={c}>{c}</option>)}</select></div>
-          <div className="mini-stats"><span>Status<b>{status}</b></span><span>Attempts<b>{p.attempts || 0}</b></span><span>Revisions<b>{p.revisionCount || 0}</b></span></div>
-          <div className="problem-tools"><button type="button" onClick={scheduleRevision}><CalendarDays size={15} />Schedule next revision</button><span>{p.nextRevision ? `Next: ${new Date(p.nextRevision).toLocaleDateString()}` : "No revision scheduled"}</span></div>
-        </div>
-        <div className="panel challenge"><Brain size={22} /><h3>Revision ladder</h3><p>Each review moves the problem farther into the future. Reconstruct the solution before looking at your notes.</p><div className="revision-steps">{revisionSteps.map((d, i) => <span className={(p.revisionCount || 0) > i ? "done-step" : ""} key={d}>{d} day{d !== 1 ? "s" : ""}</span>)}</div></div>
-        <div className="panel"><h3>Problem metadata</h3><div className="metadata"><span>Topic<b>{p.topic}</b></span><span>Pattern<b>{p.pattern}</b></span><span>Difficulty<b>{p.difficulty}</b></span><span>Last revised<b>{p.lastRevised ? new Date(p.lastRevised).toLocaleDateString() : "Never"}</b></span></div></div>
-        <div className="panel checklist"><h3>Before marking mastered</h3><p><CheckCircle2 size={14} />Can explain the pattern?</p><p><CheckCircle2 size={14} />Can solve without looking?</p><p><CheckCircle2 size={14} />Know time & space complexity?</p><p><CheckCircle2 size={14} />Know when to use this pattern?</p></div>
-      </div>
+
+    <div className="problem-toolbar panel">
+      <div className="field tight"><label>Confidence</label><select value={p.confidence || "🟡 Learning"} onChange={e => update(p.id, { confidence: e.target.value })}>{confidence.map(c => <option key={c}>{c}</option>)}</select></div>
+      <div className="mini-stats compact"><span>Status<b>{status}</b></span><span>Attempts<b>{p.attempts || 0}</b></span><span>Revisions<b>{p.revisionCount || 0}</b></span></div>
+      <div className="problem-tools"><button type="button" onClick={() => { const count = p.revisionCount || 0; const step = revisionSteps[Math.min(count, revisionSteps.length - 1)]; update(p.id, { nextRevision: addDays(step), lastRevised: new Date().toISOString(), revisionCount: count }); setToast(`Next revision in ${step} day${step !== 1 ? "s" : ""}.`); }}><CalendarDays size={15} />Schedule revision</button><span>{p.nextRevision ? `Next: ${new Date(p.nextRevision).toLocaleDateString()}` : "No revision scheduled"}</span></div>
     </div>
-  </section>
+
+    <div className="problem-tabs">
+      <button type="button" className={tab === "notes" ? "active" : ""} onClick={() => setTab("notes")}>Learning notes <em>{filledNotes}/5</em></button>
+      <button type="button" className={tab === "solutions" ? "active" : ""} onClick={() => setTab("solutions")}>Solutions <em>{filledApproaches}/{localSol.length}</em></button>
+      <button type="button" className={tab === "meta" ? "active" : ""} onClick={() => setTab("meta")}>Revision & meta</button>
+    </div>
+
+    {tab === "notes" && <div className="panel notes-panel visible-block">
+      <div className="notes-head">
+        <div>
+          <h3>Learning notes</h3>
+          <p>{editingNotes ? "Edit mode — write freely, then save." : "View mode — unlock edit to change notes."}</p>
+        </div>
+        <div className="notes-actions">
+          {!editingNotes ? (
+            <>
+              <button type="button" className="status-btn" onClick={() => setEditingNotes(true)}><Pencil size={14} /> Edit</button>
+              <button type="button" className="status-btn ghost" onClick={clearNotes}><Trash2 size={14} /> Clear</button>
+            </>
+          ) : (
+            <>
+              <button type="button" className="primary" onClick={saveNotes}>Save notes</button>
+              <button type="button" className="status-btn ghost" onClick={() => { setLocalNotes({ ...emptyNotes(), ...notes }); setEditingNotes(false); }}>Cancel</button>
+            </>
+          )}
+        </div>
+      </div>
+      <div className="notes-fields">
+        {NOTE_FIELDS.map(([key, label, placeholder]) => (
+          <div className="note-field" key={key}>
+            <span>{label}</span>
+            {editingNotes ? (
+              <textarea
+                className={key === "complexity" || key === "interviewCue" ? "short" : ""}
+                value={localNotes[key] || ""}
+                onChange={e => setLocalNotes({ ...localNotes, [key]: e.target.value })}
+                placeholder={placeholder}
+                rows={key === "complexity" || key === "interviewCue" ? 2 : 5}
+              />
+            ) : (
+              <div className={`note-view${localNotes[key]?.trim() ? "" : " empty"}`}>{localNotes[key]?.trim() || "No notes yet — click Edit to add."}</div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>}
+
+    {tab === "solutions" && <div className="panel solutions-panel visible-block">
+      <div className="notes-head">
+        <div>
+          <h3>Solutions — brute → optimal</h3>
+          <p>{editingSol ? "Unlocked for editing. Lock when finished so you don’t overwrite by accident." : "Locked. Open an approach to read; unlock only when you intend to edit."}</p>
+        </div>
+        <div className="notes-actions">
+          {!editingSol ? (
+            <button type="button" className="status-btn" onClick={() => setEditingSol(true)}><Unlock size={14} /> Unlock to edit</button>
+          ) : (
+            <>
+              <button type="button" className="status-btn" onClick={addApproach}><Plus size={14} /> Add approach</button>
+              <button type="button" className="primary" onClick={saveSolutions}><Lock size={14} /> Save & lock</button>
+              <button type="button" className="status-btn ghost" onClick={cancelSolEdit}>Cancel</button>
+            </>
+          )}
+        </div>
+      </div>
+      <div className="approach-list">
+        {localSol.map((a, idx) => {
+          const open = openApproach === idx;
+          return <div className={`approach-card${open ? " open" : ""}`} key={a.id}>
+            <button type="button" className="approach-head" onClick={() => setOpenApproach(open ? -1 : idx)}>
+              <span className="collapse-icon">{open ? <ChevronDown size={15} /> : <ChevronRight size={15} />}</span>
+              <div className="approach-title">
+                {editingSol ? <input value={a.title} onClick={e => e.stopPropagation()} onChange={e => updateApproach(idx, { title: e.target.value })} /> : <strong>{a.title}</strong>}
+                <small>{a.level} · Time {a.time || "—"} · Space {a.space || "—"}</small>
+              </div>
+              {editingSol && <button type="button" className="icon-danger" onClick={e => { e.stopPropagation(); removeApproach(idx); }}><Trash2 size={14} /></button>}
+            </button>
+            {open && <div className="approach-body">
+              <div className="complexity-row">
+                <label>Level{editingSol ? <select value={a.level} onChange={e => updateApproach(idx, { level: e.target.value })}>{["Brute", "Better", "Optimal", "Optimal+", "Custom"].map(x => <option key={x}>{x}</option>)}</select> : <b>{a.level}</b>}</label>
+                <label>Time{editingSol ? <input value={a.time} onChange={e => updateApproach(idx, { time: e.target.value })} placeholder="O(n)" /> : <b>{a.time || "—"}</b>}</label>
+                <label>Space{editingSol ? <input value={a.space} onChange={e => updateApproach(idx, { space: e.target.value })} placeholder="O(1)" /> : <b>{a.space || "—"}</b>}</label>
+              </div>
+              <div className="note-field">
+                <span>Explanation</span>
+                {editingSol ? <textarea rows={4} value={a.explanation} onChange={e => updateApproach(idx, { explanation: e.target.value })} placeholder={a.level === "Brute" ? "Most straightforward idea — often nested loops / all possibilities…" : a.level === "Better" ? "Improve with hashing, sorting, two pointers, prefix…" : "Best interview solution for this pattern…"} /> : <div className={`note-view${a.explanation?.trim() ? "" : " empty"}`}>{a.explanation?.trim() || "No explanation yet."}</div>}
+              </div>
+              <div className="note-field">
+                <span className="with-icon"><Code2 size={13} /> Code / pseudocode</span>
+                {editingSol ? <textarea className="code" rows={8} value={a.code} onChange={e => updateApproach(idx, { code: e.target.value })} placeholder="// Write code or pseudocode here" /> : <pre className={`code-view${a.code?.trim() ? "" : " empty"}`}>{a.code?.trim() || "No code yet."}</pre>}
+              </div>
+            </div>}
+          </div>;
+        })}
+      </div>
+    </div>}
+
+    {tab === "meta" && <div className="meta-grid">
+      <div className="panel challenge"><Brain size={22} /><h3>Revision ladder</h3><p>Each review moves the problem farther into the future. Reconstruct the solution before looking at your notes.</p><div className="revision-steps">{revisionSteps.map((d, i) => <span className={(p.revisionCount || 0) > i ? "done-step" : ""} key={d}>{d} day{d !== 1 ? "s" : ""}</span>)}</div></div>
+      <div className="panel"><h3>Problem metadata</h3><div className="metadata"><span>Topic<b>{p.topic}</b></span><span>Pattern<b>{p.pattern}</b></span><span>Difficulty<b>{p.difficulty}</b></span><span>Last revised<b>{p.lastRevised ? new Date(p.lastRevised).toLocaleDateString() : "Never"}</b></span></div></div>
+      <div className="panel checklist"><h3>Before marking mastered</h3><p><CheckCircle2 size={14} />Can explain the pattern?</p><p><CheckCircle2 size={14} />Can solve without looking?</p><p><CheckCircle2 size={14} />Know time & space complexity?</p><p><CheckCircle2 size={14} />Know when to use this pattern?</p></div>
+    </div>}
+  </section>;
 }
 
-function SettingsPage({ exportData, importData, resetAll, settings, setSettings }) { return <section><div className="panel settings"><h3>Data & Privacy</h3><p>Your progress, notes and activity are stored only in this browser. There is no account or server database.</p><div className="setting-row"><div><b>Daily goal</b><span>How many problem activities count toward your daily target.</span></div><input className="goal-input" type="number" min="1" max="50" value={settings.dailyGoal} onChange={e => setSettings({ ...settings, dailyGoal: Math.max(1, Number(e.target.value) || 1) })} /></div><div className="setting-row"><div><b>Export backup</b><span>Download all progress, notes, activity and settings as JSON.</span></div><button onClick={exportData}><Download size={16} /> Export</button></div><div className="setting-row"><div><b>Import backup</b><span>Restore a previous DSA Tracker backup.</span></div><label className="file-btn"><Upload size={16} /> Import<input type="file" accept=".json" onChange={importData} /></label></div><div className="setting-row danger-row"><div><b>Reset local data</b><span>Delete all progress, notes and activity from this browser.</span></div><button className="danger" onClick={resetAll}><Trash2 size={16} /> Reset</button></div></div><div className="panel settings"><h3>How the tracker works</h3><div className="help-grid"><div><Timer size={18} /><b>Revision</b><p>Attempted → 1 day, then 3 → 7 → 14 → 30 day spacing.</p></div><div><BookmarkCheck size={18} /><b>Mastery</b><p>Mastered marks the problem interview-ready and keeps it on a longer review cycle.</p></div><div><Download size={18} /><b>Backup</b><p>Export regularly because local browser storage is device/browser specific.</p></div></div></div></section> }
+function SettingsPage({ exportData, importData, resetAll, settings, setSettings }) { return <section><div className="panel settings"><h3>Data & Privacy</h3><p>Your progress, notes, solutions and activity are stored only in this browser. There is no account or server database.</p><div className="setting-row"><div><b>Daily goal</b><span>How many problem activities count toward your daily target.</span></div><input className="goal-input" type="number" min="1" max="50" value={settings.dailyGoal} onChange={e => setSettings({ ...settings, dailyGoal: Math.max(1, Number(e.target.value) || 1) })} /></div><div className="setting-row"><div><b>Export backup</b><span>Download all progress, notes, solutions, activity and settings as JSON.</span></div><button onClick={exportData}><Download size={16} /> Export</button></div><div className="setting-row"><div><b>Import backup</b><span>Restore a previous DSA Tracker backup.</span></div><label className="file-btn"><Upload size={16} /> Import<input type="file" accept=".json" onChange={importData} /></label></div><div className="setting-row danger-row"><div><b>Reset local data</b><span>Delete all progress, notes, solutions and activity from this browser.</span></div><button className="danger" onClick={resetAll}><Trash2 size={16} /> Reset</button></div></div><div className="panel settings"><h3>How the tracker works</h3><div className="help-grid"><div><Timer size={18} /><b>Revision</b><p>Attempted → 1 day, then 3 → 7 → 14 → 30 day spacing.</p></div><div><BookmarkCheck size={18} /><b>Mastery</b><p>Mastered marks the problem interview-ready and keeps it on a longer review cycle.</p></div><div><Download size={18} /><b>Backup</b><p>Export regularly because local browser storage is device/browser specific.</p></div></div></div></section> }
 function Empty({ text }) { return <div className="empty"><Clock3 size={22} /><span>{text}</span></div> }
 createRoot(document.getElementById("root")).render(<App />);
