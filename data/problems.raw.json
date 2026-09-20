@@ -1,8 +1,548 @@
 [
   {
+    "id": "a2z-001",
+    "title": "Input Output",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/input-output",
+    "videoUrl": "https://youtu.be/EAR7De6Goz4?t=250"
+  },
+  {
+    "id": "a2z-002",
+    "title": "Cpp Basics",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/cpp",
+    "videoUrl": "https://youtu.be/EAR7De6Goz4?t=2415"
+  },
+  {
+    "id": "a2z-003",
+    "title": "If ElseIf",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/if-elseif",
+    "videoUrl": "https://youtu.be/EAR7De6Goz4?t=1259"
+  },
+  {
+    "id": "a2z-004",
+    "title": "Switch Case",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/switch-case",
+    "videoUrl": "https://youtu.be/EAR7De6Goz4"
+  },
+  {
+    "id": "a2z-005",
+    "title": "What are arrays, strings?",
+    "topic": "Learn the basics",
+    "pattern": "Strings",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/cpp",
+    "videoUrl": "https://youtu.be/EAR7De6Goz4?t=2415"
+  },
+  {
+    "id": "a2z-006",
+    "title": "For loops",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/for-loop",
+    "videoUrl": "https://youtu.be/EAR7De6Goz4?t=3096"
+  },
+  {
+    "id": "a2z-007",
+    "title": "While loops",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/while-loop",
+    "videoUrl": "https://youtu.be/EAR7De6Goz4?t=3459"
+  },
+  {
+    "id": "a2z-008",
+    "title": "Functions (Pass by Reference and Value)",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pass-by-ref",
+    "videoUrl": "https://youtu.be/EAR7De6Goz4?t=3677"
+  },
+  {
+    "id": "a2z-009",
+    "title": "Theory with examples",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/theory-with-examples",
+    "videoUrl": "https://youtu.be/FPu9Uld7W-E"
+  },
+  {
+    "id": "a2z-010",
+    "title": "Easy and Medium",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/easy-and-medium",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-011",
+    "title": "Hard",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/hard",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-012",
+    "title": "Pattern 1",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-1",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-013",
+    "title": "Pattern 2",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-2",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-014",
+    "title": "Pattern 3",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-3",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-015",
+    "title": "Pattern 4",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-4",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-016",
+    "title": "Pattern 5",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-5",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-017",
+    "title": "Pattern 6",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-018",
+    "title": "Pattern 7",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-7",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-019",
+    "title": "Pattern 8",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-8",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-020",
+    "title": "Pattern 9",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-9",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-021",
+    "title": "Pattern 10",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-10",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-022",
+    "title": "Pattern 11",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-11",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-023",
+    "title": "Pattern 12",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-12",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-024",
+    "title": "Pattern 13",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-13",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-025",
+    "title": "Pattern 14",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-14",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-026",
+    "title": "Pattern 15",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-15",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-027",
+    "title": "Pattern 16",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-028",
+    "title": "Pattern 17",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-17",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-029",
+    "title": "Pattern 18",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-18",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-030",
+    "title": "Pattern 19",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-19",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-031",
+    "title": "Pattern 20",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-20",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-032",
+    "title": "Pattern 21",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-21",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-033",
+    "title": "Pattern 22",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pattern-22",
+    "videoUrl": "https://www.youtube.com/watch?v=tNm_NNSB3_w&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=3"
+  },
+  {
+    "id": "a2z-034",
+    "title": "STL",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/stl",
+    "videoUrl": "https://www.youtube.com/watch?v=RRVYpIET_RU"
+  },
+  {
+    "id": "a2z-035",
+    "title": "Java Collections",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/java-collections",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-036",
+    "title": "Count all Digits of a Number",
+    "topic": "Learn the basics",
+    "pattern": "Maths",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/count-all-digits-of-a-number",
+    "videoUrl": "https://youtu.be/1xNbjMdbjug"
+  },
+  {
+    "id": "a2z-037",
+    "title": "Reverse a number",
+    "topic": "Learn the basics",
+    "pattern": "Maths",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/reverse-integer/",
+    "videoUrl": "https://youtu.be/1xNbjMdbjug?t=930"
+  },
+  {
+    "id": "a2z-038",
+    "title": "Palindrome Number",
+    "topic": "Learn the basics",
+    "pattern": "Strings",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/palindrome-number/",
+    "videoUrl": "https://youtu.be/1xNbjMdbjug?t=1230"
+  },
+  {
+    "id": "a2z-039",
+    "title": "GCD of Two Numbers",
+    "topic": "Learn the basics",
+    "pattern": "Maths",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/gcd-of-two-numbers",
+    "videoUrl": "https://youtu.be/1xNbjMdbjug?t=2684"
+  },
+  {
+    "id": "a2z-040",
+    "title": "Check if the Number is Armstrong",
+    "topic": "Learn the basics",
+    "pattern": "Graphs",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/armstrong-number/",
+    "videoUrl": "https://youtu.be/1xNbjMdbjug?t=1418"
+  },
+  {
+    "id": "a2z-041",
+    "title": "Print all Divisors",
+    "topic": "Learn the basics",
+    "pattern": "Maths",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/divisors-of-a-number",
+    "videoUrl": "https://youtu.be/1xNbjMdbjug?t=1580"
+  },
+  {
+    "id": "a2z-042",
+    "title": "Check for Prime Number",
+    "topic": "Learn the basics",
+    "pattern": "Maths",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/check-for-prime-number",
+    "videoUrl": "https://youtu.be/1xNbjMdbjug?t=2381"
+  },
+  {
+    "id": "a2z-043",
+    "title": "Understand recursion by print something N times",
+    "topic": "Learn the basics",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/recursion/introduction-to-recursion-understand-recursion-by-printing-something-n-times/",
+    "videoUrl": "https://www.youtube.com/watch?v=yVdKa8dnKiE&list=PLgUwDviBIf0rGlzIn_7rsaR2FQ5e6ZOL9"
+  },
+  {
+    "id": "a2z-044",
+    "title": "Print name N times using recursion",
+    "topic": "Learn the basics",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/recursion/print-name-n-times-using-recursion/",
+    "videoUrl": "https://www.youtube.com/watch?v=un6PLygfXrA&list=PLgUwDviBIf0rGlzIn_7rsaR2FQ5e6ZOL9&index=2"
+  },
+  {
+    "id": "a2z-045",
+    "title": "Print 1 to N using Recursion",
+    "topic": "Learn the basics",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/print-1-to-n-using-recursion",
+    "videoUrl": "https://www.youtube.com/watch?v=un6PLygfXrA&list=PLgUwDviBIf0rGlzIn_7rsaR2FQ5e6ZOL9&index=2"
+  },
+  {
+    "id": "a2z-046",
+    "title": "Print N to 1 using Recursion",
+    "topic": "Learn the basics",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/print-n-to-1-using-recursion",
+    "videoUrl": "https://www.youtube.com/watch?v=un6PLygfXrA&list=PLgUwDviBIf0rGlzIn_7rsaR2FQ5e6ZOL9&index=2"
+  },
+  {
+    "id": "a2z-047",
+    "title": "Sum of First N Numbers",
+    "topic": "Learn the basics",
+    "pattern": "Maths",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": "https://www.youtube.com/watch?v=69ZCDFy-OUo&list=PLgUwDviBIf0rGlzIn_7rsaR2FQ5e6ZOL9&index=3"
+  },
+  {
+    "id": "a2z-048",
+    "title": "Factorial of a given number",
+    "topic": "Learn the basics",
+    "pattern": "Maths",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/factorial-of-a-given-number-i",
+    "videoUrl": "https://www.youtube.com/watch?v=69ZCDFy-OUo&list=PLgUwDviBIf0rGlzIn_7rsaR2FQ5e6ZOL9&index=3"
+  },
+  {
+    "id": "a2z-049",
+    "title": "Reverse an array",
+    "topic": "Learn the basics",
+    "pattern": "Fundamentals",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/reverse-an-array",
+    "videoUrl": "https://www.youtube.com/watch?v=twuC1F6gLI8&list=PLgUwDviBIf0rGlzIn_7rsaR2FQ5e6ZOL9&index=4"
+  },
+  {
+    "id": "a2z-050",
+    "title": "Check if String is Palindrome or Not",
+    "topic": "Learn the basics",
+    "pattern": "Strings",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/valid-palindrome/",
+    "videoUrl": "https://www.youtube.com/watch?v=twuC1F6gLI8&list=PLgUwDviBIf0rGlzIn_7rsaR2FQ5e6ZOL9&index=4"
+  },
+  {
+    "id": "a2z-051",
+    "title": "Fibonacci Number",
+    "topic": "Learn the basics",
+    "pattern": "Maths",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/fibonacci-number/",
+    "videoUrl": "https://www.youtube.com/watch?v=kvRjNm4rVBE&list=PLgUwDviBIf0rGlzIn_7rsaR2FQ5e6ZOL9&index=5"
+  },
+  {
+    "id": "a2z-052",
+    "title": "Basic Hashing",
+    "topic": "Learn the basics",
+    "pattern": "Hashing",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/basic-hashing",
+    "videoUrl": "https://www.youtube.com/watch?v=KEs5UyBJ39g"
+  },
+  {
+    "id": "a2z-053",
+    "title": "Counting Frequencies of Array Elements",
+    "topic": "Learn the basics",
+    "pattern": "Hashing",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/counting-frequencies-of-array-elements",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-054",
+    "title": "Highest Occurring Element in an Array",
+    "topic": "Learn the basics",
+    "pattern": "Hashing",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/frequency-of-the-most-frequent-element/",
+    "videoUrl": ""
+  },
+  {
     "id": "a2z-055",
     "title": "Selection Sort",
-    "topic": "Sorting",
+    "topic": "Learn Important Sorting Techniques",
     "pattern": "Sorting",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -12,7 +552,7 @@
   {
     "id": "a2z-056",
     "title": "Bubble Sort",
-    "topic": "Sorting",
+    "topic": "Learn Important Sorting Techniques",
     "pattern": "Sorting",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -22,7 +562,7 @@
   {
     "id": "a2z-057",
     "title": "Insertion Sorting",
-    "topic": "Sorting",
+    "topic": "Learn Important Sorting Techniques",
     "pattern": "Sorting",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -32,7 +572,7 @@
   {
     "id": "a2z-058",
     "title": "Merge Sorting",
-    "topic": "Sorting",
+    "topic": "Learn Important Sorting Techniques",
     "pattern": "Sorting",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -42,7 +582,7 @@
   {
     "id": "a2z-059",
     "title": "Recursive Bubble Sort",
-    "topic": "Sorting",
+    "topic": "Learn Important Sorting Techniques",
     "pattern": "Recursion / Backtracking",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -52,7 +592,7 @@
   {
     "id": "a2z-060",
     "title": "Recursive Insertion Sort",
-    "topic": "Sorting",
+    "topic": "Learn Important Sorting Techniques",
     "pattern": "Recursion / Backtracking",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -62,7 +602,7 @@
   {
     "id": "a2z-061",
     "title": "Quick Sorting",
-    "topic": "Sorting",
+    "topic": "Learn Important Sorting Techniques",
     "pattern": "Sorting",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -72,7 +612,7 @@
   {
     "id": "a2z-062",
     "title": "Largest Element",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -82,7 +622,7 @@
   {
     "id": "a2z-063",
     "title": "Second Largest Element",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -92,7 +632,7 @@
   {
     "id": "a2z-064",
     "title": "Check if the Array is Sorted II",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Sorting",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -102,7 +642,7 @@
   {
     "id": "a2z-065",
     "title": "Remove duplicates from Sorted array",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Sorting",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -112,7 +652,7 @@
   {
     "id": "a2z-066",
     "title": "Left Rotate Array by One",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -122,7 +662,7 @@
   {
     "id": "a2z-067",
     "title": "Left Rotate Array by K Places",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -132,7 +672,7 @@
   {
     "id": "a2z-068",
     "title": "Move Zeros to End",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -142,7 +682,7 @@
   {
     "id": "a2z-069",
     "title": "Linear Search",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -152,7 +692,7 @@
   {
     "id": "a2z-070",
     "title": "Union of two sorted arrays",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Sorting",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -162,7 +702,7 @@
   {
     "id": "a2z-071",
     "title": "Find missing number",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Maths",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -172,7 +712,7 @@
   {
     "id": "a2z-072",
     "title": "Maximum Consecutive Ones",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Sliding Window / Two Pointer",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -182,7 +722,7 @@
   {
     "id": "a2z-073",
     "title": "Find the number that appears once, and other numbers twice.",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Maths",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -192,7 +732,7 @@
   {
     "id": "a2z-074",
     "title": "Longest subarray with given sum K(positives)",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -202,7 +742,7 @@
   {
     "id": "a2z-075",
     "title": "Longest subarray with sum K",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -212,7 +752,7 @@
   {
     "id": "a2z-076",
     "title": "Two Sum",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -222,7 +762,7 @@
   {
     "id": "a2z-077",
     "title": "Sort an array of 0's 1's and 2's",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Sorting",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -232,7 +772,7 @@
   {
     "id": "a2z-078",
     "title": "Majority Element-I",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -242,7 +782,7 @@
   {
     "id": "a2z-079",
     "title": "Kadane's Algorithm",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -252,7 +792,7 @@
   {
     "id": "a2z-080",
     "title": "Print subarray with maximum subarray sum (extended version of above problem)",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -262,7 +802,7 @@
   {
     "id": "a2z-081",
     "title": "Stock Buy and Sell",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -272,7 +812,7 @@
   {
     "id": "a2z-082",
     "title": "Rearrange array elements by sign",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -282,7 +822,7 @@
   {
     "id": "a2z-083",
     "title": "Next Permutation",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -292,7 +832,7 @@
   {
     "id": "a2z-084",
     "title": "Leaders in an Array",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -302,7 +842,7 @@
   {
     "id": "a2z-085",
     "title": "Longest Consecutive Sequence in an Array",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -312,7 +852,7 @@
   {
     "id": "a2z-086",
     "title": "Set Matrix Zeroes",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -322,7 +862,7 @@
   {
     "id": "a2z-087",
     "title": "Rotate matrix by 90 degrees",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -332,7 +872,7 @@
   {
     "id": "a2z-088",
     "title": "Print the matrix in spiral manner",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -342,7 +882,7 @@
   {
     "id": "a2z-089",
     "title": "Count subarrays with given sum",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -352,7 +892,7 @@
   {
     "id": "a2z-090",
     "title": "Pascal's Triangle I",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -362,7 +902,7 @@
   {
     "id": "a2z-091",
     "title": "Majority Element-II",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -372,7 +912,7 @@
   {
     "id": "a2z-092",
     "title": "3 Sum",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -382,7 +922,7 @@
   {
     "id": "a2z-093",
     "title": "4 Sum",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -392,7 +932,7 @@
   {
     "id": "a2z-094",
     "title": "Largest Subarray with Sum 0",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -402,7 +942,7 @@
   {
     "id": "a2z-095",
     "title": "Count subarrays with given xor K",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Bit Manipulation",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -412,7 +952,7 @@
   {
     "id": "a2z-096",
     "title": "Merge Overlapping Subintervals",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -422,7 +962,7 @@
   {
     "id": "a2z-097",
     "title": "Merge two sorted arrays without extra space",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Sorting",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -432,7 +972,7 @@
   {
     "id": "a2z-098",
     "title": "Find the repeating and missing number",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Maths",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -442,7 +982,7 @@
   {
     "id": "a2z-099",
     "title": "Count Inversions",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -452,7 +992,7 @@
   {
     "id": "a2z-100",
     "title": "Reverse Pairs",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -462,7 +1002,7 @@
   {
     "id": "a2z-101",
     "title": "Maximum Product Subarray in an Array",
-    "topic": "Arrays",
+    "topic": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -472,7 +1012,7 @@
   {
     "id": "a2z-102",
     "title": "Search X in sorted array",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Sorting",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -482,7 +1022,7 @@
   {
     "id": "a2z-103",
     "title": "Lower Bound",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -492,7 +1032,7 @@
   {
     "id": "a2z-104",
     "title": "Upper Bound",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -502,7 +1042,7 @@
   {
     "id": "a2z-105",
     "title": "Search insert position",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -512,7 +1052,7 @@
   {
     "id": "a2z-106",
     "title": "Floor and Ceil in Sorted Array",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Sorting",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -522,7 +1062,7 @@
   {
     "id": "a2z-107",
     "title": "First and last occurrence",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search [1D, 2D Arrays, Search Space]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -532,7 +1072,7 @@
   {
     "id": "a2z-108",
     "title": "Count Occurrences in a Sorted Array",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Sorting",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -542,7 +1082,7 @@
   {
     "id": "a2z-109",
     "title": "Search in rotated sorted array-I",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -552,7 +1092,7 @@
   {
     "id": "a2z-110",
     "title": "Search in rotated sorted array-II",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -562,7 +1102,7 @@
   {
     "id": "a2z-111",
     "title": "Find minimum in Rotated Sorted Array",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -572,7 +1112,7 @@
   {
     "id": "a2z-112",
     "title": "Find out how many times the array is rotated",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search [1D, 2D Arrays, Search Space]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -582,7 +1122,7 @@
   {
     "id": "a2z-113",
     "title": "Single element in a Sorted Array",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Sorting",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -592,7 +1132,7 @@
   {
     "id": "a2z-114",
     "title": "Find peak element",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -602,7 +1142,7 @@
   {
     "id": "a2z-115",
     "title": "Find square root of a number",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -612,7 +1152,7 @@
   {
     "id": "a2z-116",
     "title": "Find Nth root of a number",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -622,7 +1162,7 @@
   {
     "id": "a2z-117",
     "title": "Koko eating bananas",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -632,7 +1172,7 @@
   {
     "id": "a2z-118",
     "title": "Minimum days to make M bouquets",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -642,7 +1182,7 @@
   {
     "id": "a2z-119",
     "title": "Find the smallest divisor",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -652,7 +1192,7 @@
   {
     "id": "a2z-120",
     "title": "Capacity to Ship Packages Within D Days",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -662,7 +1202,7 @@
   {
     "id": "a2z-121",
     "title": "Kth Missing Positive Number",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -672,7 +1212,7 @@
   {
     "id": "a2z-122",
     "title": "Aggressive Cows",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -682,7 +1222,7 @@
   {
     "id": "a2z-123",
     "title": "Book Allocation Problem",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -692,7 +1232,7 @@
   {
     "id": "a2z-124",
     "title": "Split array - largest sum",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -702,7 +1242,7 @@
   {
     "id": "a2z-125",
     "title": "Painter's Partition",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -712,7 +1252,7 @@
   {
     "id": "a2z-126",
     "title": "Minimize Max Distance to Gas Station",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -722,7 +1262,7 @@
   {
     "id": "a2z-127",
     "title": "Median of 2 sorted arrays",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -732,7 +1272,7 @@
   {
     "id": "a2z-128",
     "title": "Kth element of 2 sorted arrays",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -742,7 +1282,7 @@
   {
     "id": "a2z-129",
     "title": "Find row with maximum 1's",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search [1D, 2D Arrays, Search Space]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -752,7 +1292,7 @@
   {
     "id": "a2z-130",
     "title": "Search in a 2D matrix",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search [1D, 2D Arrays, Search Space]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -762,7 +1302,7 @@
   {
     "id": "a2z-131",
     "title": "Search in 2D matrix - II",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search [1D, 2D Arrays, Search Space]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -772,7 +1312,7 @@
   {
     "id": "a2z-132",
     "title": "Find Peak Element - II",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -782,7 +1322,7 @@
   {
     "id": "a2z-133",
     "title": "Matrix Median",
-    "topic": "Binary Search",
+    "topic": "Binary Search [1D, 2D Arrays, Search Space]",
     "pattern": "Binary Search",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -792,7 +1332,7 @@
   {
     "id": "a2z-134",
     "title": "Remove Outermost Parentheses",
-    "topic": "Strings",
+    "topic": "Strings [Basic and Medium]",
     "pattern": "Stack / Queue",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -802,7 +1342,7 @@
   {
     "id": "a2z-135",
     "title": "Reverse words in a given string / Palindrome Check",
-    "topic": "Strings",
+    "topic": "Strings [Basic and Medium]",
     "pattern": "Strings",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -812,7 +1352,7 @@
   {
     "id": "a2z-136",
     "title": "Largest Odd Number in a String",
-    "topic": "Strings",
+    "topic": "Strings [Basic and Medium]",
     "pattern": "Strings",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -822,7 +1362,7 @@
   {
     "id": "a2z-137",
     "title": "Longest Common Prefix",
-    "topic": "Strings",
+    "topic": "Strings [Basic and Medium]",
     "pattern": "Stack / Queue",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -832,7 +1372,7 @@
   {
     "id": "a2z-138",
     "title": "Isomorphic String",
-    "topic": "Strings",
+    "topic": "Strings [Basic and Medium]",
     "pattern": "Strings",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -842,7 +1382,7 @@
   {
     "id": "a2z-139",
     "title": "Rotate String",
-    "topic": "Strings",
+    "topic": "Strings [Basic and Medium]",
     "pattern": "Strings",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -852,7 +1392,7 @@
   {
     "id": "a2z-140",
     "title": "Check if two strings are anagram of each other",
-    "topic": "Strings",
+    "topic": "Strings [Basic and Medium]",
     "pattern": "Strings",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -862,7 +1402,7 @@
   {
     "id": "a2z-141",
     "title": "Sort Characters by Frequency",
-    "topic": "Strings",
+    "topic": "Strings [Basic and Medium]",
     "pattern": "Sorting",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -872,7 +1412,7 @@
   {
     "id": "a2z-142",
     "title": "Maximum Nesting Depth of the Parentheses",
-    "topic": "Strings",
+    "topic": "Strings [Basic and Medium]",
     "pattern": "Stack / Queue",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -882,7 +1422,7 @@
   {
     "id": "a2z-143",
     "title": "Roman to Integer",
-    "topic": "Strings",
+    "topic": "Strings [Basic and Medium]",
     "pattern": "Strings",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -892,7 +1432,7 @@
   {
     "id": "a2z-144",
     "title": "String to Integer (atoi)",
-    "topic": "Strings",
+    "topic": "Strings [Basic and Medium]",
     "pattern": "Strings",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -902,7 +1442,7 @@
   {
     "id": "a2z-145",
     "title": "Count Number of Substrings",
-    "topic": "Strings",
+    "topic": "Strings [Basic and Medium]",
     "pattern": "Trees",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -912,7 +1452,7 @@
   {
     "id": "a2z-146",
     "title": "Longest Palindromic Substring",
-    "topic": "Strings",
+    "topic": "Strings [Basic and Medium]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -922,7 +1462,7 @@
   {
     "id": "a2z-147",
     "title": "Sum of Beauty of All Substrings",
-    "topic": "Strings",
+    "topic": "Strings [Basic and Medium]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -932,7 +1472,7 @@
   {
     "id": "a2z-148",
     "title": "Reverse every word in a string",
-    "topic": "Strings",
+    "topic": "Strings [Basic and Medium]",
     "pattern": "Strings",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -940,9 +1480,19 @@
     "videoUrl": ""
   },
   {
+    "id": "a2z-149",
+    "title": "Introduction to Singly LinkedList",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
+    "pattern": "Linked List",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/introduction-to-singly-linkedlist",
+    "videoUrl": "https://youtu.be/Nq7ok-OyEpg?si=9PR1o8OPRWil7fRA"
+  },
+  {
     "id": "a2z-150",
     "title": "Insertion at the head of Linked List",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Linked List",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -952,7 +1502,7 @@
   {
     "id": "a2z-151",
     "title": "Deletion of the head of LL",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -962,7 +1512,7 @@
   {
     "id": "a2z-152",
     "title": "Find the length of the Linked List",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Linked List",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -972,7 +1522,7 @@
   {
     "id": "a2z-153",
     "title": "Search in Linked List",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Linked List",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -980,9 +1530,19 @@
     "videoUrl": "https://youtu.be/Nq7ok-OyEpg?si=WNXcIaXZ_B6cNq0s&t=2524"
   },
   {
+    "id": "a2z-154",
+    "title": "Introduction to Doubly LL",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
+    "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/introduction-to-doubly-ll",
+    "videoUrl": "https://youtu.be/0eKMU10uEDI?si=uDnoj_C5ghEpNLvP"
+  },
+  {
     "id": "a2z-155",
     "title": "Insert node before head in Doubly Linked List",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Linked List",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -992,7 +1552,7 @@
   {
     "id": "a2z-156",
     "title": "Delete head of Doubly Linked List",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Linked List",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1002,7 +1562,7 @@
   {
     "id": "a2z-157",
     "title": "Reverse a Doubly Linked List",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Linked List",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1012,7 +1572,7 @@
   {
     "id": "a2z-158",
     "title": "Middle of a LinkedList [TortoiseHare Method]",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Linked List",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1022,7 +1582,7 @@
   {
     "id": "a2z-159",
     "title": "Reverse a LinkedList [Iterative]",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Linked List",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1032,7 +1592,7 @@
   {
     "id": "a2z-160",
     "title": "Reverse a LL",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1042,7 +1602,7 @@
   {
     "id": "a2z-161",
     "title": "Detect a loop in LL",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1052,7 +1612,7 @@
   {
     "id": "a2z-162",
     "title": "Find the starting point in LL",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1062,7 +1622,7 @@
   {
     "id": "a2z-163",
     "title": "Length of loop in LL",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1072,7 +1632,7 @@
   {
     "id": "a2z-164",
     "title": "Check if LL is palindrome or not",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Strings",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1082,7 +1642,7 @@
   {
     "id": "a2z-165",
     "title": "Segregate odd and even nodes in Linked List",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Linked List",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1092,7 +1652,7 @@
   {
     "id": "a2z-166",
     "title": "Remove Nth node from the back of the LL",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1102,7 +1662,7 @@
   {
     "id": "a2z-167",
     "title": "Delete the middle node in LL",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1112,7 +1672,7 @@
   {
     "id": "a2z-168",
     "title": "Sort LL",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Sorting",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1122,7 +1682,7 @@
   {
     "id": "a2z-169",
     "title": "Sort a Linked List of 0's 1's and 2's",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Linked List",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1132,7 +1692,7 @@
   {
     "id": "a2z-170",
     "title": "Find the intersection point of Y LL",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1142,7 +1702,7 @@
   {
     "id": "a2z-171",
     "title": "Add one to a number represented by LL",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Maths",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1152,7 +1712,7 @@
   {
     "id": "a2z-172",
     "title": "Add two numbers in Linked List",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Linked List",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1162,7 +1722,7 @@
   {
     "id": "a2z-173",
     "title": "Delete all occurrences of a key in DLL",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1172,7 +1732,7 @@
   {
     "id": "a2z-174",
     "title": "Find Pairs with Given Sum in Doubly Linked List",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Linked List",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1182,7 +1742,7 @@
   {
     "id": "a2z-175",
     "title": "Remove duplicates from sorted DLL",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Sorting",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1192,7 +1752,7 @@
   {
     "id": "a2z-176",
     "title": "Reverse LL in group of given size K",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1202,7 +1762,7 @@
   {
     "id": "a2z-177",
     "title": "Rotate a LL",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1212,7 +1772,7 @@
   {
     "id": "a2z-178",
     "title": "Flattening of LL",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Linked List",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1222,7 +1782,7 @@
   {
     "id": "a2z-179",
     "title": "Clone a LL with random and next pointer",
-    "topic": "Linked List",
+    "topic": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
     "pattern": "Linked List",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1232,7 +1792,7 @@
   {
     "id": "a2z-180",
     "title": "Recursive Implementation of atoi()",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Strings",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1242,7 +1802,7 @@
   {
     "id": "a2z-181",
     "title": "Pow(x, n)",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion [PatternWise]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1252,7 +1812,7 @@
   {
     "id": "a2z-182",
     "title": "Count Good Numbers",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Maths",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1262,7 +1822,7 @@
   {
     "id": "a2z-183",
     "title": "Sort a stack using recursion",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Stack / Queue",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1272,7 +1832,7 @@
   {
     "id": "a2z-184",
     "title": "Reverse a Stack",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Stack / Queue",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1282,7 +1842,7 @@
   {
     "id": "a2z-185",
     "title": "Generate Binary Strings Without Consecutive 1s",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Strings",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1292,7 +1852,7 @@
   {
     "id": "a2z-186",
     "title": "Generate Parentheses",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Stack / Queue",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1302,7 +1862,7 @@
   {
     "id": "a2z-187",
     "title": "Power Set",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion / Backtracking",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1310,9 +1870,19 @@
     "videoUrl": "https://www.youtube.com/watch?v=b7AYbpM5YrE&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=67"
   },
   {
+    "id": "a2z-188",
+    "title": "Learn All Patterns of Subsequences (Theory)",
+    "topic": "Recursion [PatternWise]",
+    "pattern": "Recursion [PatternWise]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/data-structure/learn-all-patterns-of-subsequences-theory",
+    "videoUrl": "https://www.youtube.com/watch?v=eQCS_v3bw0Q&list=PLgUwDviBIf0rGlzIn_7rsaR2FQ5e6ZOL9&index=7"
+  },
+  {
     "id": "a2z-189",
     "title": "Count all subsequences with sum K",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion [PatternWise]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1322,7 +1892,7 @@
   {
     "id": "a2z-190",
     "title": "Check if there exists a subsequence with sum K",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion [PatternWise]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1332,7 +1902,7 @@
   {
     "id": "a2z-191",
     "title": "Combination Sum",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion / Backtracking",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1342,7 +1912,7 @@
   {
     "id": "a2z-192",
     "title": "Combination Sum II",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion / Backtracking",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1352,7 +1922,7 @@
   {
     "id": "a2z-193",
     "title": "Subsets I",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion / Backtracking",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1362,7 +1932,7 @@
   {
     "id": "a2z-194",
     "title": "Subsets II",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion / Backtracking",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1372,7 +1942,7 @@
   {
     "id": "a2z-195",
     "title": "Combination Sum III",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion / Backtracking",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1382,7 +1952,7 @@
   {
     "id": "a2z-196",
     "title": "Letter Combinations of a Phone Number",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion / Backtracking",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1392,7 +1962,7 @@
   {
     "id": "a2z-197",
     "title": "Palindrome partitioning",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1402,7 +1972,7 @@
   {
     "id": "a2z-198",
     "title": "Word Search",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion / Backtracking",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1412,7 +1982,7 @@
   {
     "id": "a2z-199",
     "title": "N Queen",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion / Backtracking",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1422,7 +1992,7 @@
   {
     "id": "a2z-200",
     "title": "Rat in a Maze",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion / Backtracking",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1432,7 +2002,7 @@
   {
     "id": "a2z-201",
     "title": "Word Break",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion [PatternWise]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1442,7 +2012,7 @@
   {
     "id": "a2z-202",
     "title": "M Coloring Problem",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion / Backtracking",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1452,7 +2022,7 @@
   {
     "id": "a2z-203",
     "title": "Sudoku Solver",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion / Backtracking",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1462,7 +2032,7 @@
   {
     "id": "a2z-204",
     "title": "Expression Add Operators",
-    "topic": "Recursion",
+    "topic": "Recursion [PatternWise]",
     "pattern": "Recursion [PatternWise]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1470,9 +2040,19 @@
     "videoUrl": ""
   },
   {
+    "id": "a2z-205",
+    "title": "Introduction to Bits and Tricks",
+    "topic": "Bit Manipulation [Concepts & Problems]",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/introduction-to-bits-and-tricks",
+    "videoUrl": "https://youtu.be/qQd-ViW7bfk?si=QtdNaRhHmZb08Mr8"
+  },
+  {
     "id": "a2z-206",
     "title": "Check if the i-th bit is Set or Not",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Bit Manipulation",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1482,7 +2062,7 @@
   {
     "id": "a2z-207",
     "title": "Check if a Number is Odd or Not",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Maths",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1492,7 +2072,7 @@
   {
     "id": "a2z-208",
     "title": "Check if a Number is Power of 2 or Not",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Maths",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1502,7 +2082,7 @@
   {
     "id": "a2z-209",
     "title": "Count the Number of Set Bits",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Bit Manipulation",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1512,7 +2092,7 @@
   {
     "id": "a2z-210",
     "title": "Set/Unset the rightmost unset bit",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Bit Manipulation",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1522,7 +2102,7 @@
   {
     "id": "a2z-211",
     "title": "Swap Two Numbers",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Maths",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1532,7 +2112,7 @@
   {
     "id": "a2z-212",
     "title": "Divide two numbers without multiplication and division",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Maths",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1542,7 +2122,7 @@
   {
     "id": "a2z-213",
     "title": "Minimum Bit Flips to Convert Number",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Bit Manipulation",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1552,7 +2132,7 @@
   {
     "id": "a2z-214",
     "title": "Single Number - I",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Bit Manipulation",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1562,7 +2142,7 @@
   {
     "id": "a2z-215",
     "title": "Power Set Bit Manipulation",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Bit Manipulation",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1572,7 +2152,7 @@
   {
     "id": "a2z-216",
     "title": "XOR of numbers in a given range",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Bit Manipulation",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1582,7 +2162,7 @@
   {
     "id": "a2z-217",
     "title": "Single Number - III",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Bit Manipulation",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1592,7 +2172,7 @@
   {
     "id": "a2z-218",
     "title": "Print Prime Factors of a Number",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Maths",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1602,7 +2182,7 @@
   {
     "id": "a2z-219",
     "title": "Divisors of a Number",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Maths",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1612,7 +2192,7 @@
   {
     "id": "a2z-220",
     "title": "Count primes in range L to R",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Maths",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1622,7 +2202,7 @@
   {
     "id": "a2z-221",
     "title": "Prime factorisation of a Number",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Maths",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1632,7 +2212,7 @@
   {
     "id": "a2z-222",
     "title": "Pow(x,n)",
-    "topic": "Bit Manipulation",
+    "topic": "Bit Manipulation [Concepts & Problems]",
     "pattern": "Bit Manipulation [Concepts & Problems]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1642,7 +2222,7 @@
   {
     "id": "a2z-223",
     "title": "Implement Stack using Arrays",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1652,7 +2232,7 @@
   {
     "id": "a2z-224",
     "title": "Implement Queue using Arrays",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1662,7 +2242,7 @@
   {
     "id": "a2z-225",
     "title": "Implement Stack using Queue",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1672,7 +2252,7 @@
   {
     "id": "a2z-226",
     "title": "Implement Queue using Stack",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1682,7 +2262,7 @@
   {
     "id": "a2z-227",
     "title": "Implement stack using Linkedlist",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Linked List",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1692,7 +2272,7 @@
   {
     "id": "a2z-228",
     "title": "Implement queue using Linkedlist",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Linked List",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1702,7 +2282,7 @@
   {
     "id": "a2z-229",
     "title": "Balanced Paranthesis",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1712,7 +2292,7 @@
   {
     "id": "a2z-230",
     "title": "Implement Min Stack",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1722,7 +2302,7 @@
   {
     "id": "a2z-231",
     "title": "Infix to Postfix Conversion",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1732,7 +2312,7 @@
   {
     "id": "a2z-232",
     "title": "Prefix to Infix Conversion",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1742,7 +2322,7 @@
   {
     "id": "a2z-233",
     "title": "Prefix to Postfix Conversion",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1752,7 +2332,7 @@
   {
     "id": "a2z-234",
     "title": "Postfix to Prefix Conversion",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1762,7 +2342,7 @@
   {
     "id": "a2z-235",
     "title": "Postfix to Infix Conversion",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1772,7 +2352,7 @@
   {
     "id": "a2z-236",
     "title": "Infix to Prefix Conversion",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1782,7 +2362,7 @@
   {
     "id": "a2z-237",
     "title": "Next Greater Element",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1792,7 +2372,7 @@
   {
     "id": "a2z-238",
     "title": "Next Greater Element - 2",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1802,7 +2382,7 @@
   {
     "id": "a2z-239",
     "title": "Next Smaller Element",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1812,7 +2392,7 @@
   {
     "id": "a2z-240",
     "title": "Number of Greater Elements to the Right",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Maths",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -1822,7 +2402,7 @@
   {
     "id": "a2z-241",
     "title": "Trapping Rainwater",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1832,7 +2412,7 @@
   {
     "id": "a2z-242",
     "title": "Sum of Subarray Minimums",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1842,7 +2422,7 @@
   {
     "id": "a2z-243",
     "title": "Asteroid Collision",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1852,7 +2432,7 @@
   {
     "id": "a2z-244",
     "title": "Sum of Subarray Ranges",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1862,7 +2442,7 @@
   {
     "id": "a2z-245",
     "title": "Remove K Digits",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Maths",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1872,7 +2452,7 @@
   {
     "id": "a2z-246",
     "title": "Largest rectangle in a histogram",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1882,7 +2462,7 @@
   {
     "id": "a2z-247",
     "title": "Maximum Rectangles",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1892,7 +2472,7 @@
   {
     "id": "a2z-248",
     "title": "Sliding Window Maximum",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Sliding Window / Two Pointer",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1902,7 +2482,7 @@
   {
     "id": "a2z-249",
     "title": "Stock span problem",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1912,7 +2492,7 @@
   {
     "id": "a2z-250",
     "title": "Celebrity Problem",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1922,7 +2502,7 @@
   {
     "id": "a2z-251",
     "title": "LRU Cache",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1932,7 +2512,7 @@
   {
     "id": "a2z-252",
     "title": "LFU Cache",
-    "topic": "Stack & Queue",
+    "topic": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
     "pattern": "Stack / Queue",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1942,7 +2522,7 @@
   {
     "id": "a2z-253",
     "title": "Longest Substring Without Repeating Characters",
-    "topic": "Sliding Window",
+    "topic": "Sliding Window & Two Pointer Combined Problems",
     "pattern": "Sliding Window / Two Pointer",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1952,7 +2532,7 @@
   {
     "id": "a2z-254",
     "title": "Max Consecutive Ones III",
-    "topic": "Sliding Window",
+    "topic": "Sliding Window & Two Pointer Combined Problems",
     "pattern": "Sliding Window & Two Pointer Combined Problems",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1962,7 +2542,7 @@
   {
     "id": "a2z-255",
     "title": "Fruit Into Baskets",
-    "topic": "Sliding Window",
+    "topic": "Sliding Window & Two Pointer Combined Problems",
     "pattern": "Sliding Window & Two Pointer Combined Problems",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -1972,7 +2552,7 @@
   {
     "id": "a2z-256",
     "title": "Longest Repeating Character Replacement",
-    "topic": "Sliding Window",
+    "topic": "Sliding Window & Two Pointer Combined Problems",
     "pattern": "Sliding Window / Two Pointer",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1982,7 +2562,7 @@
   {
     "id": "a2z-257",
     "title": "Binary Subarrays With Sum",
-    "topic": "Sliding Window",
+    "topic": "Sliding Window & Two Pointer Combined Problems",
     "pattern": "Sliding Window / Two Pointer",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -1992,7 +2572,7 @@
   {
     "id": "a2z-258",
     "title": "Count number of Nice subarrays",
-    "topic": "Sliding Window",
+    "topic": "Sliding Window & Two Pointer Combined Problems",
     "pattern": "Sliding Window / Two Pointer",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2002,7 +2582,7 @@
   {
     "id": "a2z-259",
     "title": "Number of Substrings Containing All Three Characters",
-    "topic": "Sliding Window",
+    "topic": "Sliding Window & Two Pointer Combined Problems",
     "pattern": "Trees",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2012,7 +2592,7 @@
   {
     "id": "a2z-260",
     "title": "Maximum Points You Can Obtain from Cards",
-    "topic": "Sliding Window",
+    "topic": "Sliding Window & Two Pointer Combined Problems",
     "pattern": "Sliding Window & Two Pointer Combined Problems",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2022,7 +2602,7 @@
   {
     "id": "a2z-261",
     "title": "Longest Substring With At Most K Distinct Characters",
-    "topic": "Sliding Window",
+    "topic": "Sliding Window & Two Pointer Combined Problems",
     "pattern": "Sliding Window / Two Pointer",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2032,7 +2612,7 @@
   {
     "id": "a2z-262",
     "title": "Subarrays with K Different Integers",
-    "topic": "Sliding Window",
+    "topic": "Sliding Window & Two Pointer Combined Problems",
     "pattern": "Sliding Window / Two Pointer",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2042,7 +2622,7 @@
   {
     "id": "a2z-263",
     "title": "Minimum Window Substring",
-    "topic": "Sliding Window",
+    "topic": "Sliding Window & Two Pointer Combined Problems",
     "pattern": "Sliding Window / Two Pointer",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2052,7 +2632,7 @@
   {
     "id": "a2z-264",
     "title": "Minimum Window Subsequence",
-    "topic": "Sliding Window",
+    "topic": "Sliding Window & Two Pointer Combined Problems",
     "pattern": "Sliding Window / Two Pointer",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2062,7 +2642,7 @@
   {
     "id": "a2z-265",
     "title": "Kth smallest element in an array [use priority queue]",
-    "topic": "Heaps",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
     "pattern": "Stack / Queue",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2070,9 +2650,19 @@
     "videoUrl": ""
   },
   {
+    "id": "a2z-266",
+    "title": "Heaps (Theory Video)",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
+    "pattern": "Heaps",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": ""
+  },
+  {
     "id": "a2z-267",
     "title": "Implement Min Heap",
-    "topic": "Heaps",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
     "pattern": "Heaps",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2082,7 +2672,7 @@
   {
     "id": "a2z-268",
     "title": "Check if an array represents a min heap",
-    "topic": "Heaps",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
     "pattern": "Heaps",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2092,7 +2682,7 @@
   {
     "id": "a2z-269",
     "title": "Convert Min Heap to Max Heap",
-    "topic": "Heaps",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
     "pattern": "Heaps",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2102,7 +2692,7 @@
   {
     "id": "a2z-270",
     "title": "K-th Largest element in an array",
-    "topic": "Heaps",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
     "pattern": "Heaps [Learning, Medium, Hard Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2112,7 +2702,7 @@
   {
     "id": "a2z-271",
     "title": "Sort K sorted array",
-    "topic": "Heaps",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
     "pattern": "Sorting",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2122,7 +2712,7 @@
   {
     "id": "a2z-272",
     "title": "Merge K sorted Lists",
-    "topic": "Heaps",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
     "pattern": "Heaps",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2132,7 +2722,7 @@
   {
     "id": "a2z-273",
     "title": "Replace Elements by Their Rank",
-    "topic": "Heaps",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
     "pattern": "Heaps [Learning, Medium, Hard Problems]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2142,7 +2732,7 @@
   {
     "id": "a2z-274",
     "title": "Task Scheduler",
-    "topic": "Heaps",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
     "pattern": "Heaps",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2152,7 +2742,7 @@
   {
     "id": "a2z-275",
     "title": "Hand of Straights",
-    "topic": "Heaps",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
     "pattern": "Heaps",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2162,7 +2752,7 @@
   {
     "id": "a2z-276",
     "title": "Design Twitter",
-    "topic": "Heaps",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
     "pattern": "Heaps [Learning, Medium, Hard Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2172,7 +2762,7 @@
   {
     "id": "a2z-277",
     "title": "Minimum Cost to Connect Sticks",
-    "topic": "Heaps",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
     "pattern": "Heaps [Learning, Medium, Hard Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2182,7 +2772,7 @@
   {
     "id": "a2z-278",
     "title": "Kth largest element in a stream of running integers",
-    "topic": "Heaps",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
     "pattern": "Heaps",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2192,7 +2782,7 @@
   {
     "id": "a2z-279",
     "title": "Maximum Sum Combination",
-    "topic": "Heaps",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
     "pattern": "Recursion / Backtracking",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2202,7 +2792,7 @@
   {
     "id": "a2z-280",
     "title": "Find Median from Data Stream",
-    "topic": "Heaps",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
     "pattern": "Heaps [Learning, Medium, Hard Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2212,7 +2802,7 @@
   {
     "id": "a2z-281",
     "title": "Top K Frequent Elements",
-    "topic": "Heaps",
+    "topic": "Heaps [Learning, Medium, Hard Problems]",
     "pattern": "Heaps",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2222,7 +2812,7 @@
   {
     "id": "a2z-282",
     "title": "Assign Cookies",
-    "topic": "Greedy",
+    "topic": "Greedy Algorithms [Easy, Medium/Hard]",
     "pattern": "Greedy Algorithms [Easy, Medium/Hard]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2232,7 +2822,7 @@
   {
     "id": "a2z-283",
     "title": "Fractional Knapsack",
-    "topic": "Greedy",
+    "topic": "Greedy Algorithms [Easy, Medium/Hard]",
     "pattern": "Dynamic Programming",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2242,7 +2832,7 @@
   {
     "id": "a2z-284",
     "title": "Lemonade Change",
-    "topic": "Greedy",
+    "topic": "Greedy Algorithms [Easy, Medium/Hard]",
     "pattern": "Greedy",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2252,7 +2842,7 @@
   {
     "id": "a2z-285",
     "title": "Valid Paranthesis Checker",
-    "topic": "Greedy",
+    "topic": "Greedy Algorithms [Easy, Medium/Hard]",
     "pattern": "Greedy Algorithms [Easy, Medium/Hard]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2262,7 +2852,7 @@
   {
     "id": "a2z-286",
     "title": "N meetings in one room",
-    "topic": "Greedy",
+    "topic": "Greedy Algorithms [Easy, Medium/Hard]",
     "pattern": "Greedy",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2272,7 +2862,7 @@
   {
     "id": "a2z-287",
     "title": "Jump Game - I",
-    "topic": "Greedy",
+    "topic": "Greedy Algorithms [Easy, Medium/Hard]",
     "pattern": "Greedy",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2282,7 +2872,7 @@
   {
     "id": "a2z-288",
     "title": "Jump Game II",
-    "topic": "Greedy",
+    "topic": "Greedy Algorithms [Easy, Medium/Hard]",
     "pattern": "Greedy",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2292,7 +2882,7 @@
   {
     "id": "a2z-289",
     "title": "Minimum number of platforms required for a railway",
-    "topic": "Greedy",
+    "topic": "Greedy Algorithms [Easy, Medium/Hard]",
     "pattern": "Greedy",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2302,7 +2892,7 @@
   {
     "id": "a2z-290",
     "title": "Job sequencing Problem",
-    "topic": "Greedy",
+    "topic": "Greedy Algorithms [Easy, Medium/Hard]",
     "pattern": "Greedy",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2312,7 +2902,7 @@
   {
     "id": "a2z-291",
     "title": "Candy",
-    "topic": "Greedy",
+    "topic": "Greedy Algorithms [Easy, Medium/Hard]",
     "pattern": "Greedy",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2322,7 +2912,7 @@
   {
     "id": "a2z-292",
     "title": "Shortest Job First",
-    "topic": "Greedy",
+    "topic": "Greedy Algorithms [Easy, Medium/Hard]",
     "pattern": "Greedy",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2332,7 +2922,7 @@
   {
     "id": "a2z-293",
     "title": "Program for Least Recently Used (LRU) Page Replacement Algorithm",
-    "topic": "Greedy",
+    "topic": "Greedy Algorithms [Easy, Medium/Hard]",
     "pattern": "Stack / Queue",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2342,7 +2932,7 @@
   {
     "id": "a2z-294",
     "title": "Insert Interval",
-    "topic": "Greedy",
+    "topic": "Greedy Algorithms [Easy, Medium/Hard]",
     "pattern": "Greedy Algorithms [Easy, Medium/Hard]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2352,7 +2942,7 @@
   {
     "id": "a2z-295",
     "title": "Merge Intervals",
-    "topic": "Greedy",
+    "topic": "Greedy Algorithms [Easy, Medium/Hard]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2362,7 +2952,7 @@
   {
     "id": "a2z-296",
     "title": "Non-overlapping Intervals",
-    "topic": "Greedy",
+    "topic": "Greedy Algorithms [Easy, Medium/Hard]",
     "pattern": "Greedy",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2370,9 +2960,29 @@
     "videoUrl": "https://youtu.be/HDHQ8lAWakY?si=JVtLqboGdpUTOVjf"
   },
   {
+    "id": "a2z-297",
+    "title": "Introduction to Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": "https://youtu.be/_ANrF3FJm7I"
+  },
+  {
+    "id": "a2z-298",
+    "title": "Binary Tree Representation in Java",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/introduction-",
+    "videoUrl": "https://youtu.be/hyLyW7rP24I"
+  },
+  {
     "id": "a2z-299",
     "title": "Pre, Post, Inorder in one traversal",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2382,7 +2992,7 @@
   {
     "id": "a2z-300",
     "title": "Preorder Traversal",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2392,7 +3002,7 @@
   {
     "id": "a2z-301",
     "title": "Inorder Traversal of Binary Tree",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2402,7 +3012,7 @@
   {
     "id": "a2z-302",
     "title": "Postorder Traversal",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2412,7 +3022,7 @@
   {
     "id": "a2z-303",
     "title": "Level Order Traversal",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2422,7 +3032,7 @@
   {
     "id": "a2z-304",
     "title": "Iterative Preorder Traversal of Binary Tree",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2432,7 +3042,7 @@
   {
     "id": "a2z-305",
     "title": "Iterative Inorder Traversal of Binary Tree",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2442,7 +3052,7 @@
   {
     "id": "a2z-306",
     "title": "Post-order Traversal of Binary Tree using 2 stack",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2452,7 +3062,7 @@
   {
     "id": "a2z-307",
     "title": "Post-order Traversal of Binary Tree using 1 stack",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2462,7 +3072,7 @@
   {
     "id": "a2z-308",
     "title": "Preorder, Inorder, and Postorder Traversal in one Traversal",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2472,7 +3082,7 @@
   {
     "id": "a2z-309",
     "title": "Maximum Depth in BT",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2482,7 +3092,7 @@
   {
     "id": "a2z-310",
     "title": "Check for balanced binary tree",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2492,7 +3102,7 @@
   {
     "id": "a2z-311",
     "title": "Diameter of Binary Tree",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2502,7 +3112,7 @@
   {
     "id": "a2z-312",
     "title": "Maximum path sum",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2512,7 +3122,7 @@
   {
     "id": "a2z-313",
     "title": "Check if two trees are identical or not",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2522,7 +3132,7 @@
   {
     "id": "a2z-314",
     "title": "Zig Zag or Spiral Traversal",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2532,7 +3142,7 @@
   {
     "id": "a2z-315",
     "title": "Boundary Traversal",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2542,7 +3152,7 @@
   {
     "id": "a2z-316",
     "title": "Vertical Order Traversal",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2552,7 +3162,7 @@
   {
     "id": "a2z-317",
     "title": "Top View of BT",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2562,7 +3172,7 @@
   {
     "id": "a2z-318",
     "title": "Bottom view of BT",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2572,7 +3182,7 @@
   {
     "id": "a2z-319",
     "title": "Right/Left View of Binary Tree",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2582,7 +3192,7 @@
   {
     "id": "a2z-320",
     "title": "Symmetric Binary Tree",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2592,7 +3202,7 @@
   {
     "id": "a2z-321",
     "title": "Print root to leaf path in BT",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2602,7 +3212,7 @@
   {
     "id": "a2z-322",
     "title": "LCA in BT",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2612,7 +3222,7 @@
   {
     "id": "a2z-323",
     "title": "Maximum Width of BT",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2622,7 +3232,7 @@
   {
     "id": "a2z-324",
     "title": "Children Sum Property in Binary Tree",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2632,7 +3242,7 @@
   {
     "id": "a2z-325",
     "title": "Print all nodes at a distance of K in BT",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2642,7 +3252,7 @@
   {
     "id": "a2z-326",
     "title": "Minimum time taken to burn the BT from a given Node",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2652,7 +3262,7 @@
   {
     "id": "a2z-327",
     "title": "Count total nodes in a complete BT",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2662,7 +3272,7 @@
   {
     "id": "a2z-328",
     "title": "Requirements needed to construct a unique BT",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2672,7 +3282,7 @@
   {
     "id": "a2z-329",
     "title": "Construct a BT from Preorder and Inorder",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2682,7 +3292,7 @@
   {
     "id": "a2z-330",
     "title": "Construct the Binary Tree from Postorder and Inorder Traversal",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2692,7 +3302,7 @@
   {
     "id": "a2z-331",
     "title": "Serialize and De-serialize BT",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2702,7 +3312,7 @@
   {
     "id": "a2z-332",
     "title": "Morris Preorder Traversal of a Binary Tree",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2712,7 +3322,7 @@
   {
     "id": "a2z-333",
     "title": "Morris Inorder Traversal of a Binary Tree",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Trees",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2722,7 +3332,7 @@
   {
     "id": "a2z-334",
     "title": "Flatten Binary Tree to Linked List",
-    "topic": "Binary Trees",
+    "topic": "Binary Trees [Traversals, Medium and Hard Problems]",
     "pattern": "Linked List",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2730,9 +3340,19 @@
     "videoUrl": "https://youtu.be/sWf7k1x9XR4"
   },
   {
+    "id": "a2z-335",
+    "title": "Introduction to BST",
+    "topic": "Binary Search Trees [Concept and Problems]",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/introduction-to-bst",
+    "videoUrl": "https://youtu.be/p7-9UvDQZ3w"
+  },
+  {
     "id": "a2z-336",
     "title": "Search in a Binary Search Tree",
-    "topic": "BST",
+    "topic": "Binary Search Trees [Concept and Problems]",
     "pattern": "Binary Search",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2742,7 +3362,7 @@
   {
     "id": "a2z-337",
     "title": "Find Min/Max in BST",
-    "topic": "BST",
+    "topic": "Binary Search Trees [Concept and Problems]",
     "pattern": "Trees",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2752,7 +3372,7 @@
   {
     "id": "a2z-338",
     "title": "Floor and Ceil in a BST",
-    "topic": "BST",
+    "topic": "Binary Search Trees [Concept and Problems]",
     "pattern": "Trees",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2762,7 +3382,7 @@
   {
     "id": "a2z-339",
     "title": "Floor in a Binary Search Tree",
-    "topic": "BST",
+    "topic": "Binary Search Trees [Concept and Problems]",
     "pattern": "Binary Search",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -2772,7 +3392,7 @@
   {
     "id": "a2z-340",
     "title": "Insert a given node in BST",
-    "topic": "BST",
+    "topic": "Binary Search Trees [Concept and Problems]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2782,7 +3402,7 @@
   {
     "id": "a2z-341",
     "title": "Delete a node in BST",
-    "topic": "BST",
+    "topic": "Binary Search Trees [Concept and Problems]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2792,7 +3412,7 @@
   {
     "id": "a2z-342",
     "title": "Kth Smallest and Largest element in BST",
-    "topic": "BST",
+    "topic": "Binary Search Trees [Concept and Problems]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2802,7 +3422,7 @@
   {
     "id": "a2z-343",
     "title": "Check if a tree is a BST or not",
-    "topic": "BST",
+    "topic": "Binary Search Trees [Concept and Problems]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2812,7 +3432,7 @@
   {
     "id": "a2z-344",
     "title": "LCA in BST",
-    "topic": "BST",
+    "topic": "Binary Search Trees [Concept and Problems]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2822,7 +3442,7 @@
   {
     "id": "a2z-345",
     "title": "Construct a BST from a preorder traversal",
-    "topic": "BST",
+    "topic": "Binary Search Trees [Concept and Problems]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2832,7 +3452,7 @@
   {
     "id": "a2z-346",
     "title": "Inorder Successor/Predecessor in BST",
-    "topic": "BST",
+    "topic": "Binary Search Trees [Concept and Problems]",
     "pattern": "Trees",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2842,7 +3462,7 @@
   {
     "id": "a2z-347",
     "title": "Merge 2 BST's",
-    "topic": "BST",
+    "topic": "Binary Search Trees [Concept and Problems]",
     "pattern": "Trees",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2852,7 +3472,7 @@
   {
     "id": "a2z-348",
     "title": "Two Sum In BST | Check if there exists a pair with Sum K",
-    "topic": "BST",
+    "topic": "Binary Search Trees [Concept and Problems]",
     "pattern": "Arrays / Two Pointers",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2862,7 +3482,7 @@
   {
     "id": "a2z-349",
     "title": "Correct BST with two nodes swapped",
-    "topic": "BST",
+    "topic": "Binary Search Trees [Concept and Problems]",
     "pattern": "Trees",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2872,7 +3492,7 @@
   {
     "id": "a2z-350",
     "title": "Largest BST in Binary Tree",
-    "topic": "BST",
+    "topic": "Binary Search Trees [Concept and Problems]",
     "pattern": "Trees",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2880,9 +3500,39 @@
     "videoUrl": "https://youtu.be/X0oXMdtUDwo"
   },
   {
+    "id": "a2z-351",
+    "title": "Introduction to Graph",
+    "topic": "Graphs [Concepts & Problems]",
+    "pattern": "Graphs",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/introduction-to-graph",
+    "videoUrl": "https://youtu.be/3oI-34aPMWM"
+  },
+  {
+    "id": "a2z-352",
+    "title": "Graph Representation | C++",
+    "topic": "Graphs [Concepts & Problems]",
+    "pattern": "Graphs",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/introduction-to-graph",
+    "videoUrl": "https://youtu.be/3oI-34aPMWM"
+  },
+  {
+    "id": "a2z-353",
+    "title": "Graph Representation | Java",
+    "topic": "Graphs [Concepts & Problems]",
+    "pattern": "Graphs",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/introduction-to-graph",
+    "videoUrl": "https://youtu.be/3oI-34aPMWM"
+  },
+  {
     "id": "a2z-354",
     "title": "Connected Components",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs [Concepts & Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2892,7 +3542,7 @@
   {
     "id": "a2z-355",
     "title": "Traversal Techniques",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs [Concepts & Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2902,7 +3552,7 @@
   {
     "id": "a2z-356",
     "title": "DFS",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs [Concepts & Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2912,7 +3562,7 @@
   {
     "id": "a2z-357",
     "title": "Number of provinces",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2922,7 +3572,7 @@
   {
     "id": "a2z-358",
     "title": "Connected Components Problem in Matrix",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs [Concepts & Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2932,7 +3582,7 @@
   {
     "id": "a2z-359",
     "title": "Rotten Oranges",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2942,7 +3592,7 @@
   {
     "id": "a2z-360",
     "title": "Flood fill algorithm",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2952,7 +3602,7 @@
   {
     "id": "a2z-361",
     "title": "Cycle Detection in Undirected Graph (bfs)",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2962,7 +3612,7 @@
   {
     "id": "a2z-362",
     "title": "Detect a cycle in an undirected graph",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -2972,7 +3622,7 @@
   {
     "id": "a2z-363",
     "title": "Distance of nearest cell having one",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs [Concepts & Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2982,7 +3632,7 @@
   {
     "id": "a2z-364",
     "title": "Surrounded Regions",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs [Concepts & Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -2992,7 +3642,7 @@
   {
     "id": "a2z-365",
     "title": "Number of enclaves",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Maths",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3002,7 +3652,7 @@
   {
     "id": "a2z-366",
     "title": "Word ladder I",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3012,7 +3662,7 @@
   {
     "id": "a2z-367",
     "title": "Word ladder II",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3022,7 +3672,7 @@
   {
     "id": "a2z-368",
     "title": "Number of islands",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3032,7 +3682,7 @@
   {
     "id": "a2z-369",
     "title": "Bipartite Graph (DFS)",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3042,7 +3692,7 @@
   {
     "id": "a2z-370",
     "title": "Cycle Detection in Directed Graph (DFS)",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3052,7 +3702,7 @@
   {
     "id": "a2z-371",
     "title": "Topo Sort",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Sorting",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3062,7 +3712,7 @@
   {
     "id": "a2z-372",
     "title": "Topological sort or Kahn's algorithm",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3072,7 +3722,7 @@
   {
     "id": "a2z-373",
     "title": "Detect a cycle in a directed graph",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3082,7 +3732,7 @@
   {
     "id": "a2z-374",
     "title": "Course Schedule I",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3092,7 +3742,7 @@
   {
     "id": "a2z-375",
     "title": "Course Schedule II",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3102,7 +3752,7 @@
   {
     "id": "a2z-376",
     "title": "Find eventual safe states",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3112,7 +3762,7 @@
   {
     "id": "a2z-377",
     "title": "Alien Dictionary",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3122,7 +3772,7 @@
   {
     "id": "a2z-378",
     "title": "Shortest path in undirected graph with unit weights",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3132,7 +3782,7 @@
   {
     "id": "a2z-379",
     "title": "Shortest path in DAG",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3142,7 +3792,7 @@
   {
     "id": "a2z-380",
     "title": "Djisktra's Algorithm",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs [Concepts & Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3152,7 +3802,7 @@
   {
     "id": "a2z-381",
     "title": "Why priority Queue is used in Djisktra's Algorithm",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Stack / Queue",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3162,7 +3812,7 @@
   {
     "id": "a2z-382",
     "title": "Shortest Distance in a Binary Maze",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs [Concepts & Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3172,7 +3822,7 @@
   {
     "id": "a2z-383",
     "title": "Path with minimum effort",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs [Concepts & Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3182,7 +3832,7 @@
   {
     "id": "a2z-384",
     "title": "Cheapest flight within K stops",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3192,7 +3842,7 @@
   {
     "id": "a2z-385",
     "title": "Network Delay Time",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3202,7 +3852,7 @@
   {
     "id": "a2z-386",
     "title": "Number of ways to arrive at destination",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Maths",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3212,7 +3862,7 @@
   {
     "id": "a2z-387",
     "title": "Minimum multiplications to reach end",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs [Concepts & Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3222,7 +3872,7 @@
   {
     "id": "a2z-388",
     "title": "Bellman Ford Algorithm",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3232,7 +3882,7 @@
   {
     "id": "a2z-389",
     "title": "Floyd warshall algorithm",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3242,7 +3892,7 @@
   {
     "id": "a2z-390",
     "title": "Find the city with the smallest number of neighbors",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Maths",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3250,9 +3900,19 @@
     "videoUrl": "https://youtu.be/9XybHVqTHcQ"
   },
   {
+    "id": "a2z-391",
+    "title": "MST theory",
+    "topic": "Graphs [Concepts & Problems]",
+    "pattern": "Graphs",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": "https://youtu.be/ZSPjZuZWCME"
+  },
+  {
     "id": "a2z-392",
     "title": "Prim's Algorithm",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3262,7 +3922,7 @@
   {
     "id": "a2z-393",
     "title": "Disjoint Set",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3272,7 +3932,7 @@
   {
     "id": "a2z-394",
     "title": "Find the MST weight",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3282,7 +3942,7 @@
   {
     "id": "a2z-395",
     "title": "Number of operations to make network connected",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Maths",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3292,7 +3952,7 @@
   {
     "id": "a2z-396",
     "title": "Most stones removed with same row or column",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs [Concepts & Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3302,7 +3962,7 @@
   {
     "id": "a2z-397",
     "title": "Accounts merge",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3312,7 +3972,7 @@
   {
     "id": "a2z-398",
     "title": "Number of islands II",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3322,7 +3982,7 @@
   {
     "id": "a2z-399",
     "title": "Making a large island",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3332,7 +3992,7 @@
   {
     "id": "a2z-400",
     "title": "Swim in Rising Water",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3342,7 +4002,7 @@
   {
     "id": "a2z-401",
     "title": "Bridges in graph",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3352,7 +4012,7 @@
   {
     "id": "a2z-402",
     "title": "Articulation point in graph",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3362,7 +4022,7 @@
   {
     "id": "a2z-403",
     "title": "Kosaraju's algorithm",
-    "topic": "Graphs",
+    "topic": "Graphs [Concepts & Problems]",
     "pattern": "Graphs [Concepts & Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3370,9 +4030,19 @@
     "videoUrl": "https://www.youtube.com/watch?v=V8qIqJxCioo&list=PLgUwDviBIf0rGEWe64KWas0Nryn7SCRWw&index=27"
   },
   {
+    "id": "a2z-404",
+    "title": "Introduction to DP",
+    "topic": "Dynamic Programming [Patterns and Problems]",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/introduction-to-dp",
+    "videoUrl": "https://youtu.be/tyB0ztf0DNY"
+  },
+  {
     "id": "a2z-405",
     "title": "Climbing stairs",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3382,7 +4052,7 @@
   {
     "id": "a2z-406",
     "title": "Frog Jump",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3392,7 +4062,7 @@
   {
     "id": "a2z-407",
     "title": "Frog jump with K distances",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3402,7 +4072,7 @@
   {
     "id": "a2z-408",
     "title": "Maximum sum of non adjacent elements",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3412,7 +4082,7 @@
   {
     "id": "a2z-409",
     "title": "House robber",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3422,7 +4092,7 @@
   {
     "id": "a2z-410",
     "title": "Ninja's training",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3432,7 +4102,7 @@
   {
     "id": "a2z-411",
     "title": "Grid Unique Paths : DP on Grids (DP8)",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3442,7 +4112,7 @@
   {
     "id": "a2z-412",
     "title": "Unique paths II",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3452,7 +4122,7 @@
   {
     "id": "a2z-413",
     "title": "Minimum Falling Path Sum",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3462,7 +4132,7 @@
   {
     "id": "a2z-414",
     "title": "Triangle",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3472,7 +4142,7 @@
   {
     "id": "a2z-415",
     "title": "Ninja and his Friends",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3482,7 +4152,7 @@
   {
     "id": "a2z-416",
     "title": "Subset sum equal to target (DP- 14)",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3492,7 +4162,7 @@
   {
     "id": "a2z-417",
     "title": "Partition equal subset sum",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3502,7 +4172,7 @@
   {
     "id": "a2z-418",
     "title": "Partition a set into two subsets with minimum absolute sum difference",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3512,7 +4182,7 @@
   {
     "id": "a2z-419",
     "title": "Count subsets with sum K",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Recursion / Backtracking",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3522,7 +4192,7 @@
   {
     "id": "a2z-420",
     "title": "Count partitions with given difference",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3532,7 +4202,7 @@
   {
     "id": "a2z-421",
     "title": "Assign Cookies",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -3542,7 +4212,7 @@
   {
     "id": "a2z-422",
     "title": "Minimum Coins (DP - 20)",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3552,7 +4222,7 @@
   {
     "id": "a2z-423",
     "title": "Target sum",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3562,7 +4232,7 @@
   {
     "id": "a2z-424",
     "title": "Coin Change 2 (DP - 22)",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3572,7 +4242,7 @@
   {
     "id": "a2z-425",
     "title": "Unbounded knapsack",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3582,7 +4252,7 @@
   {
     "id": "a2z-426",
     "title": "Rod Cutting Problem | (DP - 24)",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3592,7 +4262,7 @@
   {
     "id": "a2z-427",
     "title": "Longest common subsequence",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3602,7 +4272,7 @@
   {
     "id": "a2z-428",
     "title": "Print Longest Common Subsequence | (DP - 26)",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3612,7 +4282,7 @@
   {
     "id": "a2z-429",
     "title": "Longest common substring",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Trees",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3622,7 +4292,7 @@
   {
     "id": "a2z-430",
     "title": "Longest palindromic subsequence",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3632,7 +4302,7 @@
   {
     "id": "a2z-431",
     "title": "Minimum insertions to make string palindrome | DP-29",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3642,7 +4312,7 @@
   {
     "id": "a2z-432",
     "title": "Minimum insertions or deletions to convert string A to B",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Strings",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3652,7 +4322,7 @@
   {
     "id": "a2z-433",
     "title": "Shortest common supersequence",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3662,7 +4332,7 @@
   {
     "id": "a2z-434",
     "title": "Distinct subsequences",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3672,7 +4342,7 @@
   {
     "id": "a2z-435",
     "title": "Edit distance",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3682,7 +4352,7 @@
   {
     "id": "a2z-436",
     "title": "Wildcard matching",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3692,7 +4362,7 @@
   {
     "id": "a2z-437",
     "title": "Best time to buy and sell stock",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3702,7 +4372,7 @@
   {
     "id": "a2z-438",
     "title": "Best time to buy and sell stock II",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3712,7 +4382,7 @@
   {
     "id": "a2z-439",
     "title": "Best time to buy and sell stock III",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3722,7 +4392,7 @@
   {
     "id": "a2z-440",
     "title": "Best time to buy and sell stock IV",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3732,7 +4402,7 @@
   {
     "id": "a2z-441",
     "title": "Best Time to Buy and Sell Stock with Cooldown",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3742,7 +4412,7 @@
   {
     "id": "a2z-442",
     "title": "Best time to buy and sell stock with transaction fees",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3752,7 +4422,7 @@
   {
     "id": "a2z-443",
     "title": "Longest Increasing Subsequence",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3762,7 +4432,7 @@
   {
     "id": "a2z-444",
     "title": "Print Longest Increasing Subsequence",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3772,7 +4442,7 @@
   {
     "id": "a2z-445",
     "title": "Longest Increasing Subsequence |(DP-43)",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3782,7 +4452,7 @@
   {
     "id": "a2z-446",
     "title": "Largest Divisible Subset",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3792,7 +4462,7 @@
   {
     "id": "a2z-447",
     "title": "Longest String Chain",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Strings",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3802,7 +4472,7 @@
   {
     "id": "a2z-448",
     "title": "Longest Bitonic Subsequence",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Bit Manipulation",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3812,7 +4482,7 @@
   {
     "id": "a2z-449",
     "title": "Number of Longest Increasing Subsequences",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Maths",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3822,7 +4492,7 @@
   {
     "id": "a2z-450",
     "title": "Matrix chain multiplication",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3832,7 +4502,7 @@
   {
     "id": "a2z-451",
     "title": "Matrix Chain Multiplication | Bottom-Up|(DP-49)",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3842,7 +4512,7 @@
   {
     "id": "a2z-452",
     "title": "Minimum cost to cut the stick",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming [Patterns and Problems]",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3852,7 +4522,7 @@
   {
     "id": "a2z-453",
     "title": "Burst balloons",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3862,7 +4532,7 @@
   {
     "id": "a2z-454",
     "title": "Different Ways to Evaluate a Boolean Expression",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3872,7 +4542,7 @@
   {
     "id": "a2z-455",
     "title": "Palindrome partitioning II",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3882,7 +4552,7 @@
   {
     "id": "a2z-456",
     "title": "Partition Array for Maximum Sum",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Medium",
     "status": "Not Started",
@@ -3892,7 +4562,7 @@
   {
     "id": "a2z-457",
     "title": "Maximum Rectangle Area with all 1's|(DP-55)",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Hard",
     "status": "Not Started",
@@ -3902,7 +4572,7 @@
   {
     "id": "a2z-458",
     "title": "Count Square Submatrices with All Ones|(DP-56)",
-    "topic": "Dynamic Programming",
+    "topic": "Dynamic Programming [Patterns and Problems]",
     "pattern": "Dynamic Programming",
     "difficulty": "Easy",
     "status": "Not Started",
@@ -3997,6 +4667,16 @@
     "difficulty": "Hard",
     "status": "Not Started",
     "url": "https://leetcode.com/problems/count-and-say/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-468",
+    "title": "Hashing In Strings | Theory",
+    "topic": "Strings",
+    "pattern": "Strings",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/data-structure/hashing-in-strings",
     "videoUrl": ""
   },
   {

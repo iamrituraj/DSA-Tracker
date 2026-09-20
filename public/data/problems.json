@@ -1,92 +1,4062 @@
 [
   {
-    "id": "a2z-001",
-    "title": "Two Sum",
-    "topic": "Arrays",
-    "pattern": "Hashing",
+    "id": "a2z-055",
+    "title": "Selection Sort",
+    "topic": "Sorting",
+    "pattern": "Sorting",
     "difficulty": "Easy",
     "status": "Not Started",
-    "url": "https://leetcode.com/problems/two-sum/"
+    "url": "",
+    "videoUrl": "https://youtu.be/HGk_ypEuS24?t=167"
   },
   {
-    "id": "a2z-002",
-    "title": "Maximum Subarray",
-    "topic": "Arrays",
-    "pattern": "Kadane's Algorithm",
+    "id": "a2z-056",
+    "title": "Bubble Sort",
+    "topic": "Sorting",
+    "pattern": "Sorting",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/bubble-sort",
+    "videoUrl": "https://youtu.be/HGk_ypEuS24?t=1061"
+  },
+  {
+    "id": "a2z-057",
+    "title": "Insertion Sorting",
+    "topic": "Sorting",
+    "pattern": "Sorting",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/insertion-sorting",
+    "videoUrl": "https://youtu.be/HGk_ypEuS24?t=1900"
+  },
+  {
+    "id": "a2z-058",
+    "title": "Merge Sorting",
+    "topic": "Sorting",
+    "pattern": "Sorting",
     "difficulty": "Medium",
     "status": "Not Started",
-    "url": "https://leetcode.com/problems/maximum-subarray/"
+    "url": "https://takeuforward.org/plus/dsa/problems/merge-sorting",
+    "videoUrl": "https://youtu.be/ogjf7ORKfd8"
   },
   {
-    "id": "a2z-003",
-    "title": "3Sum",
+    "id": "a2z-059",
+    "title": "Recursive Bubble Sort",
+    "topic": "Sorting",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/recursive-bubble-sort",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-060",
+    "title": "Recursive Insertion Sort",
+    "topic": "Sorting",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/recursive-insertion-sort",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-061",
+    "title": "Quick Sorting",
+    "topic": "Sorting",
+    "pattern": "Sorting",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/quick-sorting",
+    "videoUrl": "https://youtu.be/WIrA4YexLRQ"
+  },
+  {
+    "id": "a2z-062",
+    "title": "Largest Element",
     "topic": "Arrays",
-    "pattern": "Two Pointer",
+    "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/largest-element",
+    "videoUrl": "https://youtu.be/37E9ckMDdTk?t=526"
+  },
+  {
+    "id": "a2z-063",
+    "title": "Second Largest Element",
+    "topic": "Arrays",
+    "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/second-largest-element",
+    "videoUrl": "https://youtu.be/37E9ckMDdTk?t=810"
+  },
+  {
+    "id": "a2z-064",
+    "title": "Check if the Array is Sorted II",
+    "topic": "Arrays",
+    "pattern": "Sorting",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/check-if-array-is-sorted-and-rotated/#:~:text=Input%3A%20nums%20%3D%20%5B2%2C,no%20rotation)%20to%20make%20nums.",
+    "videoUrl": "https://youtu.be/37E9ckMDdTk?t=17224"
+  },
+  {
+    "id": "a2z-065",
+    "title": "Remove duplicates from Sorted array",
+    "topic": "Arrays",
+    "pattern": "Sorting",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/remove-duplicates-from-sorted-array/#:~:text=Input%3A%20nums%20%3D%20%5B0%2C,%2C%203%2C%20and%204%20respectively.",
+    "videoUrl": "https://youtu.be/37E9ckMDdTk?t=1887"
+  },
+  {
+    "id": "a2z-066",
+    "title": "Left Rotate Array by One",
+    "topic": "Arrays",
+    "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/rotate-array/",
+    "videoUrl": "https://youtu.be/wvcQg43_V8U?t=61"
+  },
+  {
+    "id": "a2z-067",
+    "title": "Left Rotate Array by K Places",
+    "topic": "Arrays",
+    "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/rotate-array/",
+    "videoUrl": "https://youtu.be/wvcQg43_V8U?t=485"
+  },
+  {
+    "id": "a2z-068",
+    "title": "Move Zeros to End",
+    "topic": "Arrays",
+    "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/move-zeroes/",
+    "videoUrl": "https://youtu.be/wvcQg43_V8U?t=1633"
+  },
+  {
+    "id": "a2z-069",
+    "title": "Linear Search",
+    "topic": "Arrays",
+    "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/linear-search",
+    "videoUrl": "https://youtu.be/wvcQg43_V8U?t=2465"
+  },
+  {
+    "id": "a2z-070",
+    "title": "Union of two sorted arrays",
+    "topic": "Arrays",
+    "pattern": "Sorting",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/union-of-two-sorted-arrays",
+    "videoUrl": "https://youtu.be/wvcQg43_V8U?t=2584"
+  },
+  {
+    "id": "a2z-071",
+    "title": "Find missing number",
+    "topic": "Arrays",
+    "pattern": "Maths",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/find-missing-number",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-072",
+    "title": "Maximum Consecutive Ones",
+    "topic": "Arrays",
+    "pattern": "Sliding Window / Two Pointer",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/max-consecutive-ones/",
+    "videoUrl": "https://youtu.be/bYWLJb3vCWY?t=1124"
+  },
+  {
+    "id": "a2z-073",
+    "title": "Find the number that appears once, and other numbers twice.",
+    "topic": "Arrays",
+    "pattern": "Maths",
     "difficulty": "Medium",
     "status": "Not Started",
-    "url": "https://leetcode.com/problems/3sum/"
+    "url": "https://leetcode.com/problems/single-number/",
+    "videoUrl": "https://youtu.be/bYWLJb3vCWY?t=1369"
   },
   {
-    "id": "a2z-004",
-    "title": "Binary Search",
+    "id": "a2z-074",
+    "title": "Longest subarray with given sum K(positives)",
+    "topic": "Arrays",
+    "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/longest-subarray-with-sum-k",
+    "videoUrl": "https://www.youtube.com/watch?v=frf7qxiN2qU&feature=youtu.be"
+  },
+  {
+    "id": "a2z-075",
+    "title": "Longest subarray with sum K",
+    "topic": "Arrays",
+    "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/longest-subarray-with-sum-k",
+    "videoUrl": "https://youtu.be/frf7qxiN2qU"
+  },
+  {
+    "id": "a2z-076",
+    "title": "Two Sum",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/two-sum/",
+    "videoUrl": "https://youtu.be/UXDSeD9mN-k"
+  },
+  {
+    "id": "a2z-077",
+    "title": "Sort an array of 0's 1's and 2's",
+    "topic": "Arrays",
+    "pattern": "Sorting",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/sort-colors/",
+    "videoUrl": "https://youtu.be/tp8JIuCXBaU"
+  },
+  {
+    "id": "a2z-078",
+    "title": "Majority Element-I",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/majority-element/",
+    "videoUrl": "https://youtu.be/nP_ns3uSh80"
+  },
+  {
+    "id": "a2z-079",
+    "title": "Kadane's Algorithm",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/maximum-subarray/",
+    "videoUrl": "https://youtu.be/AHZpyENo7k4?si=QJpof4R1hHokm1hw"
+  },
+  {
+    "id": "a2z-080",
+    "title": "Print subarray with maximum subarray sum (extended version of above problem)",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/kadane's-algorithm",
+    "videoUrl": "https://youtu.be/AHZpyENo7k4"
+  },
+  {
+    "id": "a2z-081",
+    "title": "Stock Buy and Sell",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/",
+    "videoUrl": "https://youtu.be/excAOvwF_Wk"
+  },
+  {
+    "id": "a2z-082",
+    "title": "Rearrange array elements by sign",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/rearrange-array-elements-by-sign/",
+    "videoUrl": "https://youtu.be/h4aBagy4Uok"
+  },
+  {
+    "id": "a2z-083",
+    "title": "Next Permutation",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/next-permutation/",
+    "videoUrl": "https://youtu.be/JDOXKqF60RQ"
+  },
+  {
+    "id": "a2z-084",
+    "title": "Leaders in an Array",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/leaders-in-an-array",
+    "videoUrl": "https://youtu.be/cHrH9CQ8pmY"
+  },
+  {
+    "id": "a2z-085",
+    "title": "Longest Consecutive Sequence in an Array",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/longest-consecutive-sequence/solution/",
+    "videoUrl": "https://youtu.be/oO5uLE7EUlM"
+  },
+  {
+    "id": "a2z-086",
+    "title": "Set Matrix Zeroes",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/set-matrix-zeroes/",
+    "videoUrl": "https://youtu.be/N0MgLvceX7M"
+  },
+  {
+    "id": "a2z-087",
+    "title": "Rotate matrix by 90 degrees",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/rotate-image/",
+    "videoUrl": "https://youtu.be/Z0R2u6gd3GU"
+  },
+  {
+    "id": "a2z-088",
+    "title": "Print the matrix in spiral manner",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/spiral-matrix/",
+    "videoUrl": "https://youtu.be/3Zv-s9UUrFM"
+  },
+  {
+    "id": "a2z-089",
+    "title": "Count subarrays with given sum",
+    "topic": "Arrays",
+    "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/subarray-sum-equals-k/",
+    "videoUrl": "https://www.youtube.com/watch?v=xvNwoz-ufXA&list=PLgUwDviBIf0oF6QL8m22w1hIDC1vJ_BHz&index=32"
+  },
+  {
+    "id": "a2z-090",
+    "title": "Pascal's Triangle I",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/pascals-triangle/",
+    "videoUrl": "https://youtu.be/bR7mQgwQ_o8"
+  },
+  {
+    "id": "a2z-091",
+    "title": "Majority Element-II",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/majority-element-ii/",
+    "videoUrl": "https://youtu.be/vwZj1K0e9U8"
+  },
+  {
+    "id": "a2z-092",
+    "title": "3 Sum",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/3sum/",
+    "videoUrl": "https://youtu.be/DhFh8Kw7ymk"
+  },
+  {
+    "id": "a2z-093",
+    "title": "4 Sum",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/4sum/",
+    "videoUrl": "https://youtu.be/eD95WRfh81c"
+  },
+  {
+    "id": "a2z-094",
+    "title": "Largest Subarray with Sum 0",
+    "topic": "Arrays",
+    "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/largest-subarray-with-sum-0",
+    "videoUrl": "https://www.youtube.com/watch?v=xmguZ6GbatA&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=23"
+  },
+  {
+    "id": "a2z-095",
+    "title": "Count subarrays with given xor K",
+    "topic": "Arrays",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": "https://youtu.be/eZr-6p0B7ME"
+  },
+  {
+    "id": "a2z-096",
+    "title": "Merge Overlapping Subintervals",
+    "topic": "Arrays",
+    "pattern": "Solve Problems on Arrays [Easy -> Medium -> Hard]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/merge-intervals/",
+    "videoUrl": "https://youtu.be/IexN60k62jo"
+  },
+  {
+    "id": "a2z-097",
+    "title": "Merge two sorted arrays without extra space",
+    "topic": "Arrays",
+    "pattern": "Sorting",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/merge-sorted-array/",
+    "videoUrl": "https://youtu.be/n7uwj04E0I4"
+  },
+  {
+    "id": "a2z-098",
+    "title": "Find the repeating and missing number",
+    "topic": "Arrays",
+    "pattern": "Maths",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/find-the-repeating-and-missing-number",
+    "videoUrl": "https://youtu.be/2D0D8HE6uak"
+  },
+  {
+    "id": "a2z-099",
+    "title": "Count Inversions",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/count-inversions",
+    "videoUrl": "https://youtu.be/AseUmwVNaoY"
+  },
+  {
+    "id": "a2z-100",
+    "title": "Reverse Pairs",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/reverse-pairs/",
+    "videoUrl": "https://youtu.be/0e4bZaP3MDI"
+  },
+  {
+    "id": "a2z-101",
+    "title": "Maximum Product Subarray in an Array",
+    "topic": "Arrays",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/maximum-product-subarray/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-102",
+    "title": "Search X in sorted array",
+    "topic": "Binary Search",
+    "pattern": "Sorting",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-search/",
+    "videoUrl": "https://youtu.be/MHf6awe89xw"
+  },
+  {
+    "id": "a2z-103",
+    "title": "Lower Bound",
     "topic": "Binary Search",
     "pattern": "Binary Search",
     "difficulty": "Easy",
     "status": "Not Started",
-    "url": "https://leetcode.com/problems/binary-search/"
+    "url": "https://takeuforward.org/plus/dsa/problems/lower-bound-",
+    "videoUrl": "https://youtu.be/6zhGS79oQ4k"
   },
   {
-    "id": "a2z-005",
-    "title": "Longest Substring Without Repeating Characters",
-    "topic": "Sliding Window",
-    "pattern": "Variable Window",
+    "id": "a2z-104",
+    "title": "Upper Bound",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/upper-bound",
+    "videoUrl": "https://youtu.be/6zhGS79oQ4k"
+  },
+  {
+    "id": "a2z-105",
+    "title": "Search insert position",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/search-insert-position/#:~:text=Search%20Insert%20Position%20%2D%20LeetCode&text=Given%20a%20sorted%20array%20of,(log%20n)%20runtime%20complexity.",
+    "videoUrl": "https://youtu.be/6zhGS79oQ4k"
+  },
+  {
+    "id": "a2z-106",
+    "title": "Floor and Ceil in Sorted Array",
+    "topic": "Binary Search",
+    "pattern": "Sorting",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/floor-and-ceil-in-sorted-array",
+    "videoUrl": "https://www.youtube.com/watch?v=6zhGS79oQ4k&list=PLgUwDviBIf0pMFMWuuvDNMAkoQFi-h0ZF&index=3"
+  },
+  {
+    "id": "a2z-107",
+    "title": "First and last occurrence",
+    "topic": "Binary Search",
+    "pattern": "Binary Search [1D, 2D Arrays, Search Space]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/",
+    "videoUrl": "https://youtu.be/hjR1IYVx9lY"
+  },
+  {
+    "id": "a2z-108",
+    "title": "Count Occurrences in a Sorted Array",
+    "topic": "Binary Search",
+    "pattern": "Sorting",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/count-occurrences-in-a-sorted-array",
+    "videoUrl": "https://youtu.be/hjR1IYVx9lY"
+  },
+  {
+    "id": "a2z-109",
+    "title": "Search in rotated sorted array-I",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
     "difficulty": "Medium",
     "status": "Not Started",
-    "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/"
+    "url": "https://leetcode.com/problems/search-in-rotated-sorted-array/",
+    "videoUrl": "https://www.youtube.com/watch?v=r3pMQ8-Ad5s&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=64"
   },
   {
-    "id": "a2z-006",
-    "title": "Minimum Window Substring",
-    "topic": "Sliding Window",
-    "pattern": "Variable Window + Frequency Map",
+    "id": "a2z-110",
+    "title": "Search in rotated sorted array-II",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/search-in-rotated-sorted-array-ii/",
+    "videoUrl": "https://youtu.be/w2G2W8l__pc"
+  },
+  {
+    "id": "a2z-111",
+    "title": "Find minimum in Rotated Sorted Array",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/",
+    "videoUrl": "https://youtu.be/nhEMDKMB44g"
+  },
+  {
+    "id": "a2z-112",
+    "title": "Find out how many times the array is rotated",
+    "topic": "Binary Search",
+    "pattern": "Binary Search [1D, 2D Arrays, Search Space]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/find-out-how-many-times-the-array-is-rotated",
+    "videoUrl": "https://youtu.be/jtSiWTPLwd0"
+  },
+  {
+    "id": "a2z-113",
+    "title": "Single element in a Sorted Array",
+    "topic": "Binary Search",
+    "pattern": "Sorting",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/single-element-in-a-sorted-array/",
+    "videoUrl": "https://youtu.be/AZOmHuHadxQ"
+  },
+  {
+    "id": "a2z-114",
+    "title": "Find peak element",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/find-peak-element/#:~:text=Find%20Peak%20Element%20%2D%20LeetCode&text=A%20peak%20element%20is%20an,to%20any%20of%20the%20peaks.",
+    "videoUrl": "https://youtu.be/cXxmbemS6XM"
+  },
+  {
+    "id": "a2z-115",
+    "title": "Find square root of a number",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/find-square-root-of-a-number",
+    "videoUrl": "https://youtu.be/Bsv3FPUX_BA"
+  },
+  {
+    "id": "a2z-116",
+    "title": "Find Nth root of a number",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/find-nth-root-of-a-number",
+    "videoUrl": "https://www.youtube.com/watch?v=WjpswYrS2nY&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=62"
+  },
+  {
+    "id": "a2z-117",
+    "title": "Koko eating bananas",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/koko-eating-bananas/",
+    "videoUrl": "https://youtu.be/qyfekrNni90"
+  },
+  {
+    "id": "a2z-118",
+    "title": "Minimum days to make M bouquets",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/minimum-number-of-days-to-make-m-bouquets/",
+    "videoUrl": "https://youtu.be/TXAuxeYBTdg"
+  },
+  {
+    "id": "a2z-119",
+    "title": "Find the smallest divisor",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/find-the-smallest-divisor-given-a-threshold/",
+    "videoUrl": "https://youtu.be/UvBKTVaG6U8"
+  },
+  {
+    "id": "a2z-120",
+    "title": "Capacity to Ship Packages Within D Days",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/",
+    "videoUrl": "https://youtu.be/MG-Ac4TAvTY"
+  },
+  {
+    "id": "a2z-121",
+    "title": "Kth Missing Positive Number",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/kth-missing-positive-number/#:~:text=Given%20an%20array%20arr%20of,13%2C...%5D.",
+    "videoUrl": "https://youtu.be/uZ0N_hZpyps"
+  },
+  {
+    "id": "a2z-122",
+    "title": "Aggressive Cows",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
     "difficulty": "Hard",
     "status": "Not Started",
-    "url": "https://leetcode.com/problems/minimum-window-substring/"
+    "url": "",
+    "videoUrl": "https://youtu.be/R_Mfw4ew-Vo"
   },
   {
-    "id": "a2z-007",
-    "title": "Target Sum",
-    "topic": "Dynamic Programming",
-    "pattern": "Subset Sum / Knapsack",
+    "id": "a2z-123",
+    "title": "Book Allocation Problem",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/book-allocation-problem",
+    "videoUrl": "https://www.youtube.com/watch?v=gYmWHvRHu-s&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=69"
+  },
+  {
+    "id": "a2z-124",
+    "title": "Split array - largest sum",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/split-array-largest-sum/",
+    "videoUrl": "https://www.youtube.com/watch?v=thUd_WJn6wk&list=PLgUwDviBIf0pMFMWuuvDNMAkoQFi-h0ZF&index=20"
+  },
+  {
+    "id": "a2z-125",
+    "title": "Painter's Partition",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
     "difficulty": "Medium",
     "status": "Not Started",
-    "url": "https://leetcode.com/problems/target-sum/"
+    "url": "https://takeuforward.org/plus/dsa/problems/painters-partition",
+    "videoUrl": "https://www.youtube.com/watch?v=thUd_WJn6wk&list=PLgUwDviBIf0pMFMWuuvDNMAkoQFi-h0ZF&index=20"
   },
   {
-    "id": "a2z-008",
-    "title": "Course Schedule",
-    "topic": "Graphs",
-    "pattern": "Topological Sort",
+    "id": "a2z-126",
+    "title": "Minimize Max Distance to Gas Station",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/minimize-max-distance-to-gas-station/",
+    "videoUrl": "https://www.youtube.com/watch?v=kMSBvlZ-_HA&list=PLgUwDviBIf0pMFMWuuvDNMAkoQFi-h0ZF&index=21"
+  },
+  {
+    "id": "a2z-127",
+    "title": "Median of 2 sorted arrays",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/median-of-two-sorted-arrays/",
+    "videoUrl": "https://www.youtube.com/watch?v=NTop3VTjmxk&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=65"
+  },
+  {
+    "id": "a2z-128",
+    "title": "Kth element of 2 sorted arrays",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
     "difficulty": "Medium",
     "status": "Not Started",
-    "url": "https://leetcode.com/problems/course-schedule/"
+    "url": "https://takeuforward.org/plus/dsa/problems/kth-element-of-2-sorted-arrays",
+    "videoUrl": "https://youtu.be/D1oDwWCq50g"
   },
   {
-    "id": "a2z-009",
-    "title": "Reverse Linked List",
+    "id": "a2z-129",
+    "title": "Find row with maximum 1's",
+    "topic": "Binary Search",
+    "pattern": "Binary Search [1D, 2D Arrays, Search Space]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/find-row-with-maximum-1's",
+    "videoUrl": "https://youtu.be/SCz-1TtYxDI"
+  },
+  {
+    "id": "a2z-130",
+    "title": "Search in a 2D matrix",
+    "topic": "Binary Search",
+    "pattern": "Binary Search [1D, 2D Arrays, Search Space]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/search-a-2d-matrix/",
+    "videoUrl": "https://youtu.be/ZYpYur0znng"
+  },
+  {
+    "id": "a2z-131",
+    "title": "Search in 2D matrix - II",
+    "topic": "Binary Search",
+    "pattern": "Binary Search [1D, 2D Arrays, Search Space]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/search-a-2d-matrix-ii/",
+    "videoUrl": "https://youtu.be/9ZbB397jU4k"
+  },
+  {
+    "id": "a2z-132",
+    "title": "Find Peak Element - II",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/find-a-peak-element-ii/",
+    "videoUrl": "https://youtu.be/nGGp5XBzC4g?si=WCop5C6Azj5gAELH"
+  },
+  {
+    "id": "a2z-133",
+    "title": "Matrix Median",
+    "topic": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/matrix-median",
+    "videoUrl": "https://youtu.be/Q9wXgdxJq48?si=ScI_0uzJh7yg8nrX"
+  },
+  {
+    "id": "a2z-134",
+    "title": "Remove Outermost Parentheses",
+    "topic": "Strings",
+    "pattern": "Stack / Queue",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/remove-outermost-parentheses/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-135",
+    "title": "Reverse words in a given string / Palindrome Check",
+    "topic": "Strings",
+    "pattern": "Strings",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/reverse-words-in-a-string/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-136",
+    "title": "Largest Odd Number in a String",
+    "topic": "Strings",
+    "pattern": "Strings",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/largest-odd-number-in-string/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-137",
+    "title": "Longest Common Prefix",
+    "topic": "Strings",
+    "pattern": "Stack / Queue",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/longest-common-prefix/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-138",
+    "title": "Isomorphic String",
+    "topic": "Strings",
+    "pattern": "Strings",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/isomorphic-strings/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-139",
+    "title": "Rotate String",
+    "topic": "Strings",
+    "pattern": "Strings",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/rotate-string/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-140",
+    "title": "Check if two strings are anagram of each other",
+    "topic": "Strings",
+    "pattern": "Strings",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/valid-anagram/#:~:text=Given%20two%20strings%20s%20and,the%20original%20letters%20exactly%20once.&text=Constraints%3A,.length%20%3C%3D%205%20*%2010",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-141",
+    "title": "Sort Characters by Frequency",
+    "topic": "Strings",
+    "pattern": "Sorting",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/sort-characters-by-frequency/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-142",
+    "title": "Maximum Nesting Depth of the Parentheses",
+    "topic": "Strings",
+    "pattern": "Stack / Queue",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/maximum-nesting-depth-of-the-parentheses/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-143",
+    "title": "Roman to Integer",
+    "topic": "Strings",
+    "pattern": "Strings",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/roman-to-integer/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-144",
+    "title": "String to Integer (atoi)",
+    "topic": "Strings",
+    "pattern": "Strings",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/string-to-integer-atoi/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-145",
+    "title": "Count Number of Substrings",
+    "topic": "Strings",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/data-structure/count-number-of-substrings",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-146",
+    "title": "Longest Palindromic Substring",
+    "topic": "Strings",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/longest-palindromic-substring/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-147",
+    "title": "Sum of Beauty of All Substrings",
+    "topic": "Strings",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/sum-of-beauty-of-all-substrings/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-148",
+    "title": "Reverse every word in a string",
+    "topic": "Strings",
+    "pattern": "Strings",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/reverse-words-in-a-string/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-150",
+    "title": "Insertion at the head of Linked List",
     "topic": "Linked List",
     "pattern": "Linked List",
     "difficulty": "Easy",
     "status": "Not Started",
-    "url": "https://leetcode.com/problems/reverse-linked-list/"
+    "url": "https://takeuforward.org/plus/dsa/problems/insertion-at-the-head-of-ll",
+    "videoUrl": "https://youtu.be/VaECK03Dz-g?si=vHSwdf9jhE05adKM&t=1934"
   },
   {
-    "id": "a2z-010",
-    "title": "House Robber",
-    "topic": "Dynamic Programming",
-    "pattern": "1D DP",
+    "id": "a2z-151",
+    "title": "Deletion of the head of LL",
+    "topic": "Linked List",
+    "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/delete-node-in-a-linked-list/",
+    "videoUrl": "https://youtu.be/VaECK03Dz-g?si=CRaBHbOo2bHFbOT5"
+  },
+  {
+    "id": "a2z-152",
+    "title": "Find the length of the Linked List",
+    "topic": "Linked List",
+    "pattern": "Linked List",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/find-the-length-of-the-linked-list",
+    "videoUrl": "https://youtu.be/Nq7ok-OyEpg?si=xqQbukLfo2oZ6C6s&t=2240"
+  },
+  {
+    "id": "a2z-153",
+    "title": "Search in Linked List",
+    "topic": "Linked List",
+    "pattern": "Linked List",
     "difficulty": "Medium",
     "status": "Not Started",
-    "url": "https://leetcode.com/problems/house-robber/"
+    "url": "https://takeuforward.org/plus/dsa/problems/search-in-linked-list",
+    "videoUrl": "https://youtu.be/Nq7ok-OyEpg?si=WNXcIaXZ_B6cNq0s&t=2524"
+  },
+  {
+    "id": "a2z-155",
+    "title": "Insert node before head in Doubly Linked List",
+    "topic": "Linked List",
+    "pattern": "Linked List",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/insert-node-before-head-in-dll",
+    "videoUrl": "https://youtu.be/0eKMU10uEDI?si=J5a0pQTosimcO_aA&t=2684"
+  },
+  {
+    "id": "a2z-156",
+    "title": "Delete head of Doubly Linked List",
+    "topic": "Linked List",
+    "pattern": "Linked List",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/delete-head-of-dll",
+    "videoUrl": "https://youtu.be/0eKMU10uEDI?si=sE7jqrW46lfRHVLd&t=853"
+  },
+  {
+    "id": "a2z-157",
+    "title": "Reverse a Doubly Linked List",
+    "topic": "Linked List",
+    "pattern": "Linked List",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/reverse-a-doubly-linked-list",
+    "videoUrl": "https://youtu.be/u3WUW2qe6ww?si=96Wwlju72IvmzkxE"
+  },
+  {
+    "id": "a2z-158",
+    "title": "Middle of a LinkedList [TortoiseHare Method]",
+    "topic": "Linked List",
+    "pattern": "Linked List",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/middle-of-the-linked-list/",
+    "videoUrl": "https://youtu.be/7LjQ57RqgEc?si=ir_rRDio38rhamU_"
+  },
+  {
+    "id": "a2z-159",
+    "title": "Reverse a LinkedList [Iterative]",
+    "topic": "Linked List",
+    "pattern": "Linked List",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/reverse-linked-list/",
+    "videoUrl": "https://youtu.be/D2vI2DNJGd8?si=RCaLSx01qR21IBdh"
+  },
+  {
+    "id": "a2z-160",
+    "title": "Reverse a LL",
+    "topic": "Linked List",
+    "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/reverse-linked-list/",
+    "videoUrl": "https://youtu.be/D2vI2DNJGd8?si=RCaLSx01qR21IBdh"
+  },
+  {
+    "id": "a2z-161",
+    "title": "Detect a loop in LL",
+    "topic": "Linked List",
+    "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/linked-list-cycle/",
+    "videoUrl": "https://youtu.be/wiOo4DC5GGA?si=zagt6O6tFXc4_3cx"
+  },
+  {
+    "id": "a2z-162",
+    "title": "Find the starting point in LL",
+    "topic": "Linked List",
+    "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/linked-list-cycle-ii/",
+    "videoUrl": "https://youtu.be/2Kd0KKmmHFc?si=7UreDPRjRvapeVB0"
+  },
+  {
+    "id": "a2z-163",
+    "title": "Length of loop in LL",
+    "topic": "Linked List",
+    "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/length-of-loop-in-ll",
+    "videoUrl": "https://youtu.be/I4g1qbkTPus?si=ONktpqewvx57T8pF"
+  },
+  {
+    "id": "a2z-164",
+    "title": "Check if LL is palindrome or not",
+    "topic": "Linked List",
+    "pattern": "Strings",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/palindrome-linked-list/",
+    "videoUrl": "https://youtu.be/lRY_G-u_8jk?si=BpM8hRYvXSYyjl-G"
+  },
+  {
+    "id": "a2z-165",
+    "title": "Segregate odd and even nodes in Linked List",
+    "topic": "Linked List",
+    "pattern": "Linked List",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/odd-even-linked-list/",
+    "videoUrl": "https://youtu.be/qf6qp7GzD5Q?si=JozAyXUdT8EJMSCQ"
+  },
+  {
+    "id": "a2z-166",
+    "title": "Remove Nth node from the back of the LL",
+    "topic": "Linked List",
+    "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/remove-nth-node-from-end-of-list/",
+    "videoUrl": "https://youtu.be/3kMKYQ2wNIU?si=DtFDnPU7z9HMz_GM"
+  },
+  {
+    "id": "a2z-167",
+    "title": "Delete the middle node in LL",
+    "topic": "Linked List",
+    "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list/#:~:text=You%20are%20given%20the%20head,than%20or%20equal%20to%20x%20.",
+    "videoUrl": "https://youtu.be/ePpV-_pfOeI?si=Au9GsZkVO57j6SiN"
+  },
+  {
+    "id": "a2z-168",
+    "title": "Sort LL",
+    "topic": "Linked List",
+    "pattern": "Sorting",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/sort-list/",
+    "videoUrl": "https://youtu.be/8ocB7a_c-Cc?si=Gv-Y8q8-WyARoV35"
+  },
+  {
+    "id": "a2z-169",
+    "title": "Sort a Linked List of 0's 1's and 2's",
+    "topic": "Linked List",
+    "pattern": "Linked List",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/sort-a-ll-of-0's-1's-and-2's",
+    "videoUrl": "https://youtu.be/gRII7LhdJWc?si=l3qRC7w3NhY7OAqw"
+  },
+  {
+    "id": "a2z-170",
+    "title": "Find the intersection point of Y LL",
+    "topic": "Linked List",
+    "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/intersection-of-two-linked-lists/",
+    "videoUrl": "https://youtu.be/0DYoPz2Tpt4?si=L-uJs5yXUxj4VJM2"
+  },
+  {
+    "id": "a2z-171",
+    "title": "Add one to a number represented by LL",
+    "topic": "Linked List",
+    "pattern": "Maths",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/add-one-to-a-number-represented-by-ll",
+    "videoUrl": "https://youtu.be/aXQWhbvT3w0?si=uRgU9S4r5cVmnUy7"
+  },
+  {
+    "id": "a2z-172",
+    "title": "Add two numbers in Linked List",
+    "topic": "Linked List",
+    "pattern": "Linked List",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/add-two-numbers/",
+    "videoUrl": "https://www.youtube.com/watch?v=LBVsXSMOIk4&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=32"
+  },
+  {
+    "id": "a2z-173",
+    "title": "Delete all occurrences of a key in DLL",
+    "topic": "Linked List",
+    "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/delete-all-occurrences-of-a-key-in-dll",
+    "videoUrl": "https://youtu.be/Mh0NH_SD92k?si=tCYshBRi1upMqSVz"
+  },
+  {
+    "id": "a2z-174",
+    "title": "Find Pairs with Given Sum in Doubly Linked List",
+    "topic": "Linked List",
+    "pattern": "Linked List",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/find-pairs-with-given-sum-in-doubly-linked-list",
+    "videoUrl": "https://youtu.be/YitR4dQsddE?si=iZAC259hdngV_OxC"
+  },
+  {
+    "id": "a2z-175",
+    "title": "Remove duplicates from sorted DLL",
+    "topic": "Linked List",
+    "pattern": "Sorting",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/remove-duplicated-from-sorted-dll",
+    "videoUrl": "https://youtu.be/YJKVTnOJXSY?si=AsZoNUoewetsBjr0"
+  },
+  {
+    "id": "a2z-176",
+    "title": "Reverse LL in group of given size K",
+    "topic": "Linked List",
+    "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/reverse-nodes-in-k-group/",
+    "videoUrl": "https://youtu.be/lIar1skcQYI?si=_jFghHKX4eaK36a1"
+  },
+  {
+    "id": "a2z-177",
+    "title": "Rotate a LL",
+    "topic": "Linked List",
+    "pattern": "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/rotate-list/description/",
+    "videoUrl": "https://youtu.be/uT7YI7XbTY8?si=ZaChW3a68c_v54Is"
+  },
+  {
+    "id": "a2z-178",
+    "title": "Flattening of LL",
+    "topic": "Linked List",
+    "pattern": "Linked List",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/flattening-of-ll",
+    "videoUrl": "https://youtu.be/ykelywHJWLg?si=InMg9MmTHzY22NSR"
+  },
+  {
+    "id": "a2z-179",
+    "title": "Clone a LL with random and next pointer",
+    "topic": "Linked List",
+    "pattern": "Linked List",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/copy-list-with-random-pointer/",
+    "videoUrl": "https://youtu.be/q570bKdrnlw?si=epZtpWvtNwuTf23o"
+  },
+  {
+    "id": "a2z-180",
+    "title": "Recursive Implementation of atoi()",
+    "topic": "Recursion",
+    "pattern": "Strings",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/string-to-integer-atoi/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-181",
+    "title": "Pow(x, n)",
+    "topic": "Recursion",
+    "pattern": "Recursion [PatternWise]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/powx-n/",
+    "videoUrl": "https://youtu.be/l0YC3876qxg"
+  },
+  {
+    "id": "a2z-182",
+    "title": "Count Good Numbers",
+    "topic": "Recursion",
+    "pattern": "Maths",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/count-good-numbers/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-183",
+    "title": "Sort a stack using recursion",
+    "topic": "Recursion",
+    "pattern": "Stack / Queue",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/sort-a-stack",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-184",
+    "title": "Reverse a Stack",
+    "topic": "Recursion",
+    "pattern": "Stack / Queue",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/reverse-a-stack",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-185",
+    "title": "Generate Binary Strings Without Consecutive 1s",
+    "topic": "Recursion",
+    "pattern": "Strings",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/generate-binary-strings-without-consecutive-1s",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-186",
+    "title": "Generate Parentheses",
+    "topic": "Recursion",
+    "pattern": "Stack / Queue",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/generate-parentheses/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-187",
+    "title": "Power Set",
+    "topic": "Recursion",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/power-set",
+    "videoUrl": "https://www.youtube.com/watch?v=b7AYbpM5YrE&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=67"
+  },
+  {
+    "id": "a2z-189",
+    "title": "Count all subsequences with sum K",
+    "topic": "Recursion",
+    "pattern": "Recursion [PatternWise]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-190",
+    "title": "Check if there exists a subsequence with sum K",
+    "topic": "Recursion",
+    "pattern": "Recursion [PatternWise]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/check-if-there-exists-a-subsequence-with-sum-k",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-191",
+    "title": "Combination Sum",
+    "topic": "Recursion",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/combination-sum/",
+    "videoUrl": "https://www.youtube.com/watch?v=OyZFFqQtu98&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=49"
+  },
+  {
+    "id": "a2z-192",
+    "title": "Combination Sum II",
+    "topic": "Recursion",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/combination-sum-ii/",
+    "videoUrl": "https://www.youtube.com/watch?v=G1fRTGRxXU8&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=50"
+  },
+  {
+    "id": "a2z-193",
+    "title": "Subsets I",
+    "topic": "Recursion",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/subsets-i",
+    "videoUrl": "https://www.youtube.com/watch?v=rYkfBRtMJr8&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=52"
+  },
+  {
+    "id": "a2z-194",
+    "title": "Subsets II",
+    "topic": "Recursion",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/subsets-ii/",
+    "videoUrl": "https://www.youtube.com/watch?v=RIn3gOkbhQE&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=53"
+  },
+  {
+    "id": "a2z-195",
+    "title": "Combination Sum III",
+    "topic": "Recursion",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/combination-sum-iii/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-196",
+    "title": "Letter Combinations of a Phone Number",
+    "topic": "Recursion",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/letter-combinations-of-a-phone-number/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-197",
+    "title": "Palindrome partitioning",
+    "topic": "Recursion",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/palindrome-partitioning",
+    "videoUrl": "https://youtu.be/_H8V5hJUGd0"
+  },
+  {
+    "id": "a2z-198",
+    "title": "Word Search",
+    "topic": "Recursion",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/word-search/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-199",
+    "title": "N Queen",
+    "topic": "Recursion",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/n-queens/",
+    "videoUrl": "https://www.youtube.com/watch?v=i05Ju7AftcM&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=57"
+  },
+  {
+    "id": "a2z-200",
+    "title": "Rat in a Maze",
+    "topic": "Recursion",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/rat-in-a-maze",
+    "videoUrl": "https://www.youtube.com/watch?v=bLGZhJlt4y0&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=60"
+  },
+  {
+    "id": "a2z-201",
+    "title": "Word Break",
+    "topic": "Recursion",
+    "pattern": "Recursion [PatternWise]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/word-break",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-202",
+    "title": "M Coloring Problem",
+    "topic": "Recursion",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/m-coloring-problem",
+    "videoUrl": "https://www.youtube.com/watch?v=wuVwUK25Rfc&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=59"
+  },
+  {
+    "id": "a2z-203",
+    "title": "Sudoku Solver",
+    "topic": "Recursion",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/sudoku-solver/",
+    "videoUrl": "https://www.youtube.com/watch?v=FWAIf_EVUKE&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=58"
+  },
+  {
+    "id": "a2z-204",
+    "title": "Expression Add Operators",
+    "topic": "Recursion",
+    "pattern": "Recursion [PatternWise]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/expression-add-operators/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-206",
+    "title": "Check if the i-th bit is Set or Not",
+    "topic": "Bit Manipulation",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/check-if-the-i-th-bit-is-set-or-not",
+    "videoUrl": "https://youtu.be/nttpF8kwgd4?si=x9o8PsYaA2XVZ9rV"
+  },
+  {
+    "id": "a2z-207",
+    "title": "Check if a Number is Odd or Not",
+    "topic": "Bit Manipulation",
+    "pattern": "Maths",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/check-if-a-number-is-odd-or-not",
+    "videoUrl": "https://youtu.be/nttpF8kwgd4?si=x9o8PsYaA2XVZ9rV"
+  },
+  {
+    "id": "a2z-208",
+    "title": "Check if a Number is Power of 2 or Not",
+    "topic": "Bit Manipulation",
+    "pattern": "Maths",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/power-of-two/",
+    "videoUrl": "https://youtu.be/nttpF8kwgd4?si=x9o8PsYaA2XVZ9rV"
+  },
+  {
+    "id": "a2z-209",
+    "title": "Count the Number of Set Bits",
+    "topic": "Bit Manipulation",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": "https://youtu.be/nttpF8kwgd4?si=x9o8PsYaA2XVZ9rV"
+  },
+  {
+    "id": "a2z-210",
+    "title": "Set/Unset the rightmost unset bit",
+    "topic": "Bit Manipulation",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/data-structure/set-the-rightmost-bit",
+    "videoUrl": "https://youtu.be/nttpF8kwgd4?si=x9o8PsYaA2XVZ9rV"
+  },
+  {
+    "id": "a2z-211",
+    "title": "Swap Two Numbers",
+    "topic": "Bit Manipulation",
+    "pattern": "Maths",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/swap-two-numbers",
+    "videoUrl": "https://youtu.be/nttpF8kwgd4?si=x9o8PsYaA2XVZ9rV"
+  },
+  {
+    "id": "a2z-212",
+    "title": "Divide two numbers without multiplication and division",
+    "topic": "Bit Manipulation",
+    "pattern": "Maths",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/divide-two-integers/",
+    "videoUrl": "https://youtu.be/pBD4B1tzgVc?si=G9c5pEE-RrzeU6sz"
+  },
+  {
+    "id": "a2z-213",
+    "title": "Minimum Bit Flips to Convert Number",
+    "topic": "Bit Manipulation",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/minimum-bit-flips-to-convert-number/",
+    "videoUrl": "https://youtu.be/OOdrmcfZXd8?si=rnkRVz1UiVBKWC69"
+  },
+  {
+    "id": "a2z-214",
+    "title": "Single Number - I",
+    "topic": "Bit Manipulation",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/single-number/",
+    "videoUrl": "https://youtu.be/bYWLJb3vCWY?t=1369"
+  },
+  {
+    "id": "a2z-215",
+    "title": "Power Set Bit Manipulation",
+    "topic": "Bit Manipulation",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/subsets/",
+    "videoUrl": "https://youtu.be/LqKaUv1G3_I?si=UXU_T5OsHiokPRvP"
+  },
+  {
+    "id": "a2z-216",
+    "title": "XOR of numbers in a given range",
+    "topic": "Bit Manipulation",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/xor-of-numbers-in-a-given-range",
+    "videoUrl": "https://youtu.be/WqGb7159h7Q?si=uGUEbNUUaIN_6Vvr"
+  },
+  {
+    "id": "a2z-217",
+    "title": "Single Number - III",
+    "topic": "Bit Manipulation",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/single-number---iii",
+    "videoUrl": "https://youtu.be/UA5JnV1J2sI?si=VFBRJyb3boZvx_r1"
+  },
+  {
+    "id": "a2z-218",
+    "title": "Print Prime Factors of a Number",
+    "topic": "Bit Manipulation",
+    "pattern": "Maths",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": "https://youtu.be/LT7XhVdeRyg?si=6HkjQokJRPTFai21"
+  },
+  {
+    "id": "a2z-219",
+    "title": "Divisors of a Number",
+    "topic": "Bit Manipulation",
+    "pattern": "Maths",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/divisors-of-a-number",
+    "videoUrl": "https://youtu.be/1xNbjMdbjug?t=1580"
+  },
+  {
+    "id": "a2z-220",
+    "title": "Count primes in range L to R",
+    "topic": "Bit Manipulation",
+    "pattern": "Maths",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/count-primes/",
+    "videoUrl": "https://youtu.be/g5Fuxn_AvSk?si=fv6Q-Po7wrMW0a5n"
+  },
+  {
+    "id": "a2z-221",
+    "title": "Prime factorisation of a Number",
+    "topic": "Bit Manipulation",
+    "pattern": "Maths",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/prime-factorisation-of-a-number",
+    "videoUrl": "https://youtu.be/LT7XhVdeRyg?si=6HkjQokJRPTFai21"
+  },
+  {
+    "id": "a2z-222",
+    "title": "Pow(x,n)",
+    "topic": "Bit Manipulation",
+    "pattern": "Bit Manipulation [Concepts & Problems]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/powx-n/",
+    "videoUrl": "https://youtu.be/l0YC3876qxg"
+  },
+  {
+    "id": "a2z-223",
+    "title": "Implement Stack using Arrays",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/implement-stack-using-arrays",
+    "videoUrl": "https://youtu.be/tqQ5fTamIN4?si=ofLt8Zt1ZvhikZ6w"
+  },
+  {
+    "id": "a2z-224",
+    "title": "Implement Queue using Arrays",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/implement-queue-using-arrays",
+    "videoUrl": "https://youtu.be/tqQ5fTamIN4?si=ofLt8Zt1ZvhikZ6w"
+  },
+  {
+    "id": "a2z-225",
+    "title": "Implement Stack using Queue",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/implement-stack-using-queues/",
+    "videoUrl": "https://youtu.be/tqQ5fTamIN4?si=ofLt8Zt1ZvhikZ6w"
+  },
+  {
+    "id": "a2z-226",
+    "title": "Implement Queue using Stack",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/implement-queue-using-stacks/",
+    "videoUrl": "https://youtu.be/tqQ5fTamIN4?si=ofLt8Zt1ZvhikZ6w"
+  },
+  {
+    "id": "a2z-227",
+    "title": "Implement stack using Linkedlist",
+    "topic": "Stack & Queue",
+    "pattern": "Linked List",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": "https://youtu.be/tqQ5fTamIN4?si=ofLt8Zt1ZvhikZ6w"
+  },
+  {
+    "id": "a2z-228",
+    "title": "Implement queue using Linkedlist",
+    "topic": "Stack & Queue",
+    "pattern": "Linked List",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/implement-queue-using-linkedlist",
+    "videoUrl": "https://youtu.be/tqQ5fTamIN4?si=ofLt8Zt1ZvhikZ6w"
+  },
+  {
+    "id": "a2z-229",
+    "title": "Balanced Paranthesis",
+    "topic": "Stack & Queue",
+    "pattern": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/valid-parentheses/",
+    "videoUrl": "https://youtu.be/xwjS0iZhw4I?si=UoyKpFn4Q3nf5h2R"
+  },
+  {
+    "id": "a2z-230",
+    "title": "Implement Min Stack",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/min-stack/",
+    "videoUrl": "https://youtu.be/NdDIaH91P0g?si=4_Jbsq5trFvfSdUY"
+  },
+  {
+    "id": "a2z-231",
+    "title": "Infix to Postfix Conversion",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/infix-to-postfix-conversion",
+    "videoUrl": "https://youtu.be/4pIc9UBHJtk?si=ryeVvQWpCgwbTQrh"
+  },
+  {
+    "id": "a2z-232",
+    "title": "Prefix to Infix Conversion",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/prefix-to-infix-conversion",
+    "videoUrl": "https://youtu.be/4pIc9UBHJtk?si=ryeVvQWpCgwbTQrh"
+  },
+  {
+    "id": "a2z-233",
+    "title": "Prefix to Postfix Conversion",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/prefix-to-postfix-conversion",
+    "videoUrl": "https://youtu.be/4pIc9UBHJtk?si=0pWtyDC1GhbiYP3P"
+  },
+  {
+    "id": "a2z-234",
+    "title": "Postfix to Prefix Conversion",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/postfix-to-prefix-conversion",
+    "videoUrl": "https://youtu.be/4pIc9UBHJtk?si=0pWtyDC1GhbiYP3P"
+  },
+  {
+    "id": "a2z-235",
+    "title": "Postfix to Infix Conversion",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/postfix-to-infix-conversion",
+    "videoUrl": "https://youtu.be/4pIc9UBHJtk?si=0pWtyDC1GhbiYP3P"
+  },
+  {
+    "id": "a2z-236",
+    "title": "Infix to Prefix Conversion",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/infix-to-prefix-conversion",
+    "videoUrl": "https://youtu.be/4pIc9UBHJtk?si=0pWtyDC1GhbiYP3P"
+  },
+  {
+    "id": "a2z-237",
+    "title": "Next Greater Element",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/next-greater-element-i/",
+    "videoUrl": "https://youtu.be/e7XQLtOQM3I?si=QdcHpTtx6gAHsext"
+  },
+  {
+    "id": "a2z-238",
+    "title": "Next Greater Element - 2",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/next-greater-element-ii/",
+    "videoUrl": "https://youtu.be/7PrncD7v9YQ?si=UkBc7eVy9HGlBpeW"
+  },
+  {
+    "id": "a2z-239",
+    "title": "Next Smaller Element",
+    "topic": "Stack & Queue",
+    "pattern": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/next-smaller-element",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-240",
+    "title": "Number of Greater Elements to the Right",
+    "topic": "Stack & Queue",
+    "pattern": "Maths",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/number-of-greater-elements-to-the-right",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-241",
+    "title": "Trapping Rainwater",
+    "topic": "Stack & Queue",
+    "pattern": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/trapping-rain-water/",
+    "videoUrl": "https://youtu.be/1_5VuquLbXg?si=NFG6df318_6OtGvg"
+  },
+  {
+    "id": "a2z-242",
+    "title": "Sum of Subarray Minimums",
+    "topic": "Stack & Queue",
+    "pattern": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/sum-of-subarray-minimums/",
+    "videoUrl": "https://youtu.be/v0e8p9JCgRc?si=XAU7ekECgS5nboRw"
+  },
+  {
+    "id": "a2z-243",
+    "title": "Asteroid Collision",
+    "topic": "Stack & Queue",
+    "pattern": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/asteroid-collision/",
+    "videoUrl": "https://youtu.be/_eYGqw_VDR4?si=YyxibcHq800RqgIQ"
+  },
+  {
+    "id": "a2z-244",
+    "title": "Sum of Subarray Ranges",
+    "topic": "Stack & Queue",
+    "pattern": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/sum-of-subarray-ranges/",
+    "videoUrl": "https://youtu.be/gIrMptNPf5M?si=Q_GHuBvzZVs27X_U"
+  },
+  {
+    "id": "a2z-245",
+    "title": "Remove K Digits",
+    "topic": "Stack & Queue",
+    "pattern": "Maths",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/remove-k-digits/",
+    "videoUrl": "https://youtu.be/jmbuRzYPGrg?si=WN387gwQ7aXWkUao"
+  },
+  {
+    "id": "a2z-246",
+    "title": "Largest rectangle in a histogram",
+    "topic": "Stack & Queue",
+    "pattern": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/largest-rectangle-in-histogram/",
+    "videoUrl": "https://youtu.be/Bzat9vgD0fs?si=DiBlLejXcr6EJoyB"
+  },
+  {
+    "id": "a2z-247",
+    "title": "Maximum Rectangles",
+    "topic": "Stack & Queue",
+    "pattern": "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack, Implementation]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/maximal-rectangle/",
+    "videoUrl": "https://youtu.be/tOylVCugy9k"
+  },
+  {
+    "id": "a2z-248",
+    "title": "Sliding Window Maximum",
+    "topic": "Stack & Queue",
+    "pattern": "Sliding Window / Two Pointer",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/sliding-window-maximum/",
+    "videoUrl": "https://youtu.be/NwBvene4Imo?si=eU1PY-bcQfk5wdog"
+  },
+  {
+    "id": "a2z-249",
+    "title": "Stock span problem",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/online-stock-span/",
+    "videoUrl": "https://youtu.be/eay-zoSRkVc?si=deNNe5i38BOAntha"
+  },
+  {
+    "id": "a2z-250",
+    "title": "Celebrity Problem",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/accounts/login/?next=/problems/find-the-celebrity/",
+    "videoUrl": "https://youtu.be/cEadsbTeze4?si=olXYfOs7l-SEn2zl"
+  },
+  {
+    "id": "a2z-251",
+    "title": "LRU Cache",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/lru-cache",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-252",
+    "title": "LFU Cache",
+    "topic": "Stack & Queue",
+    "pattern": "Stack / Queue",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/lfu-cache/",
+    "videoUrl": "https://www.youtube.com/watch?v=0PSB9y8ehbk&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=79"
+  },
+  {
+    "id": "a2z-253",
+    "title": "Longest Substring Without Repeating Characters",
+    "topic": "Sliding Window",
+    "pattern": "Sliding Window / Two Pointer",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
+    "videoUrl": "https://youtu.be/-zSxTJkcdAo?si=I2zfR-vlDMg0zU9z"
+  },
+  {
+    "id": "a2z-254",
+    "title": "Max Consecutive Ones III",
+    "topic": "Sliding Window",
+    "pattern": "Sliding Window & Two Pointer Combined Problems",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/max-consecutive-ones-iii/",
+    "videoUrl": "https://youtu.be/3E4JBHSLpYk?si=SoOW64pP6otEKxBw"
+  },
+  {
+    "id": "a2z-255",
+    "title": "Fruit Into Baskets",
+    "topic": "Sliding Window",
+    "pattern": "Sliding Window & Two Pointer Combined Problems",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/fruit-into-baskets",
+    "videoUrl": "https://youtu.be/e3bs0uA1NhQ?si=gR8pO62u-nJeFAXk"
+  },
+  {
+    "id": "a2z-256",
+    "title": "Longest Repeating Character Replacement",
+    "topic": "Sliding Window",
+    "pattern": "Sliding Window / Two Pointer",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/longest-repeating-character-replacement/",
+    "videoUrl": "https://youtu.be/_eNhaDCr6P0?si=pBWcEjozF5poom0p"
+  },
+  {
+    "id": "a2z-257",
+    "title": "Binary Subarrays With Sum",
+    "topic": "Sliding Window",
+    "pattern": "Sliding Window / Two Pointer",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-subarrays-with-sum/",
+    "videoUrl": "https://youtu.be/XnMdNUkX6VM?si=Nyt8EveeLUg8lmty"
+  },
+  {
+    "id": "a2z-258",
+    "title": "Count number of Nice subarrays",
+    "topic": "Sliding Window",
+    "pattern": "Sliding Window / Two Pointer",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/count-number-of-nice-subarrays/",
+    "videoUrl": "https://youtu.be/j_QOv9OT9Og?si=Oq5-5hyFkzVSOZpP"
+  },
+  {
+    "id": "a2z-259",
+    "title": "Number of Substrings Containing All Three Characters",
+    "topic": "Sliding Window",
+    "pattern": "Trees",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/",
+    "videoUrl": "https://youtu.be/xtqN4qlgr8s?si=kuaLHVOLXhh5Z2tW"
+  },
+  {
+    "id": "a2z-260",
+    "title": "Maximum Points You Can Obtain from Cards",
+    "topic": "Sliding Window",
+    "pattern": "Sliding Window & Two Pointer Combined Problems",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/maximum-points-you-can-obtain-from-cards/",
+    "videoUrl": "https://youtu.be/pBWCOCS636U?si=-X64rY67noxvOwrG"
+  },
+  {
+    "id": "a2z-261",
+    "title": "Longest Substring With At Most K Distinct Characters",
+    "topic": "Sliding Window",
+    "pattern": "Sliding Window / Two Pointer",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/longest-substring-with-at-most-k-distinct-characters/",
+    "videoUrl": "https://youtu.be/teM9ZsVRQyc?si=Kh0_u6aCkkBU3Q33"
+  },
+  {
+    "id": "a2z-262",
+    "title": "Subarrays with K Different Integers",
+    "topic": "Sliding Window",
+    "pattern": "Sliding Window / Two Pointer",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/subarrays-with-k-different-integers/",
+    "videoUrl": "https://youtu.be/7wYGbV_LsX4?si=KWa48RgLDCvdNqRb"
+  },
+  {
+    "id": "a2z-263",
+    "title": "Minimum Window Substring",
+    "topic": "Sliding Window",
+    "pattern": "Sliding Window / Two Pointer",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/minimum-window-substring/",
+    "videoUrl": "https://youtu.be/WJaij9ffOIY?si=-xnsWIH84zWU0ICd"
+  },
+  {
+    "id": "a2z-264",
+    "title": "Minimum Window Subsequence",
+    "topic": "Sliding Window",
+    "pattern": "Sliding Window / Two Pointer",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/minimum-window-subsequence/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-265",
+    "title": "Kth smallest element in an array [use priority queue]",
+    "topic": "Heaps",
+    "pattern": "Stack / Queue",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/k-th-largest-element-in-an-array",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-267",
+    "title": "Implement Min Heap",
+    "topic": "Heaps",
+    "pattern": "Heaps",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/implement-min-heap",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-268",
+    "title": "Check if an array represents a min heap",
+    "topic": "Heaps",
+    "pattern": "Heaps",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/check-if-an-array-represents-a-min-heap-",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-269",
+    "title": "Convert Min Heap to Max Heap",
+    "topic": "Heaps",
+    "pattern": "Heaps",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/convert-min-heap-to-max-heap",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-270",
+    "title": "K-th Largest element in an array",
+    "topic": "Heaps",
+    "pattern": "Heaps [Learning, Medium, Hard Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/k-th-largest-element-in-an-array",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-271",
+    "title": "Sort K sorted array",
+    "topic": "Heaps",
+    "pattern": "Sorting",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/data-structure/sort-k-sorted-array",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-272",
+    "title": "Merge K sorted Lists",
+    "topic": "Heaps",
+    "pattern": "Heaps",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/merge-k-sorted-lists/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-273",
+    "title": "Replace Elements by Their Rank",
+    "topic": "Heaps",
+    "pattern": "Heaps [Learning, Medium, Hard Problems]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/replace-elements-by-their-rank",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-274",
+    "title": "Task Scheduler",
+    "topic": "Heaps",
+    "pattern": "Heaps",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/task-scheduler/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-275",
+    "title": "Hand of Straights",
+    "topic": "Heaps",
+    "pattern": "Heaps",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/hand-of-straights/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-276",
+    "title": "Design Twitter",
+    "topic": "Heaps",
+    "pattern": "Heaps [Learning, Medium, Hard Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/design-twitter/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-277",
+    "title": "Minimum Cost to Connect Sticks",
+    "topic": "Heaps",
+    "pattern": "Heaps [Learning, Medium, Hard Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-278",
+    "title": "Kth largest element in a stream of running integers",
+    "topic": "Heaps",
+    "pattern": "Heaps",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/kth-largest-element-in-a-stream/#:~:text=Implement%20KthLargest%20class%3A,largest%20element%20in%20the%20stream.",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-279",
+    "title": "Maximum Sum Combination",
+    "topic": "Heaps",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/maximum-sum-combination",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-280",
+    "title": "Find Median from Data Stream",
+    "topic": "Heaps",
+    "pattern": "Heaps [Learning, Medium, Hard Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/find-median-from-data-stream/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-281",
+    "title": "Top K Frequent Elements",
+    "topic": "Heaps",
+    "pattern": "Heaps",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/top-k-frequent-elements/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-282",
+    "title": "Assign Cookies",
+    "topic": "Greedy",
+    "pattern": "Greedy Algorithms [Easy, Medium/Hard]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/assign-cookies/",
+    "videoUrl": "https://youtu.be/DIX2p7vb9co?si=GofAIDimue-Av0Fi"
+  },
+  {
+    "id": "a2z-283",
+    "title": "Fractional Knapsack",
+    "topic": "Greedy",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/fractional-knapsack",
+    "videoUrl": "https://youtu.be/1ibsQrnuEEg?si=8R2By3wpHo0zZVHE"
+  },
+  {
+    "id": "a2z-284",
+    "title": "Lemonade Change",
+    "topic": "Greedy",
+    "pattern": "Greedy",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/lemonade-change/",
+    "videoUrl": "https://youtu.be/n_tmibEhO6Q?si=q1NW8MfPy0QU6fIl"
+  },
+  {
+    "id": "a2z-285",
+    "title": "Valid Paranthesis Checker",
+    "topic": "Greedy",
+    "pattern": "Greedy Algorithms [Easy, Medium/Hard]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/valid-parenthesis-string/",
+    "videoUrl": "https://youtu.be/cHT6sG_hUZI?si=XRHeyh7jOaLaTy3g"
+  },
+  {
+    "id": "a2z-286",
+    "title": "N meetings in one room",
+    "topic": "Greedy",
+    "pattern": "Greedy",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/n-meetings-in-one-room",
+    "videoUrl": "https://youtu.be/mKfhTotEguk?si=2RELeq18mpmIIN3Q"
+  },
+  {
+    "id": "a2z-287",
+    "title": "Jump Game - I",
+    "topic": "Greedy",
+    "pattern": "Greedy",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/jump-game/",
+    "videoUrl": "https://youtu.be/tZAa_jJ3SwQ?si=voKd7n9VTLDRRNzJ"
+  },
+  {
+    "id": "a2z-288",
+    "title": "Jump Game II",
+    "topic": "Greedy",
+    "pattern": "Greedy",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/jump-game-ii/",
+    "videoUrl": "https://youtu.be/7SBVnw7GSTk?si=9uUouBELh9K3m2jZ"
+  },
+  {
+    "id": "a2z-289",
+    "title": "Minimum number of platforms required for a railway",
+    "topic": "Greedy",
+    "pattern": "Greedy",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/minimum-number-of-platforms-required-for-a-railway",
+    "videoUrl": "https://youtu.be/AsGzwR_FWok?si=165acXU_dtqOHuo9"
+  },
+  {
+    "id": "a2z-290",
+    "title": "Job sequencing Problem",
+    "topic": "Greedy",
+    "pattern": "Greedy",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/job-sequencing-problem",
+    "videoUrl": "https://youtu.be/QbwltemZbRg?si=wvcemJ5BLPlTRmkG"
+  },
+  {
+    "id": "a2z-291",
+    "title": "Candy",
+    "topic": "Greedy",
+    "pattern": "Greedy",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/candy/",
+    "videoUrl": "https://youtu.be/IIqVFvKE6RY?si=EjmuXZJNLQLUkEd7"
+  },
+  {
+    "id": "a2z-292",
+    "title": "Shortest Job First",
+    "topic": "Greedy",
+    "pattern": "Greedy",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/shortest-job-first",
+    "videoUrl": "https://youtu.be/3-QbX1iDbXs?si=IH8QZUblr01F7UoQ"
+  },
+  {
+    "id": "a2z-293",
+    "title": "Program for Least Recently Used (LRU) Page Replacement Algorithm",
+    "topic": "Greedy",
+    "pattern": "Stack / Queue",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/lru-cache",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-294",
+    "title": "Insert Interval",
+    "topic": "Greedy",
+    "pattern": "Greedy Algorithms [Easy, Medium/Hard]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/insert-interval/",
+    "videoUrl": "https://youtu.be/xxRE-46OCC8?si=a7aPuIw16zDx2lAa"
+  },
+  {
+    "id": "a2z-295",
+    "title": "Merge Intervals",
+    "topic": "Greedy",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/merge-intervals/",
+    "videoUrl": "https://www.youtube.com/watch?v=2JzRBPFYbKE&list=PLgUwDviBIf0rPG3Ictpu74YWBQ1CaBkm2&index=6"
+  },
+  {
+    "id": "a2z-296",
+    "title": "Non-overlapping Intervals",
+    "topic": "Greedy",
+    "pattern": "Greedy",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/non-overlapping-intervals/",
+    "videoUrl": "https://youtu.be/HDHQ8lAWakY?si=JVtLqboGdpUTOVjf"
+  },
+  {
+    "id": "a2z-299",
+    "title": "Pre, Post, Inorder in one traversal",
+    "topic": "Binary Trees",
+    "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pre,-post,-inorder-in-one-traversal",
+    "videoUrl": "https://youtu.be/ySp2epYvgTE"
+  },
+  {
+    "id": "a2z-300",
+    "title": "Preorder Traversal",
+    "topic": "Binary Trees",
+    "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-tree-preorder-traversal/",
+    "videoUrl": "https://youtu.be/RlUu72JrOCQ"
+  },
+  {
+    "id": "a2z-301",
+    "title": "Inorder Traversal of Binary Tree",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-tree-inorder-traversal/",
+    "videoUrl": "https://youtu.be/Z_NEgBgbRVI"
+  },
+  {
+    "id": "a2z-302",
+    "title": "Postorder Traversal",
+    "topic": "Binary Trees",
+    "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-tree-postorder-traversal/",
+    "videoUrl": "https://youtu.be/2YBhNLodD8Q"
+  },
+  {
+    "id": "a2z-303",
+    "title": "Level Order Traversal",
+    "topic": "Binary Trees",
+    "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-tree-level-order-traversal/",
+    "videoUrl": "https://youtu.be/EoAsWbO7sqg"
+  },
+  {
+    "id": "a2z-304",
+    "title": "Iterative Preorder Traversal of Binary Tree",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-tree-preorder-traversal/",
+    "videoUrl": "https://youtu.be/Bfqd8BsPVuw"
+  },
+  {
+    "id": "a2z-305",
+    "title": "Iterative Inorder Traversal of Binary Tree",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-tree-inorder-traversal/",
+    "videoUrl": "https://youtu.be/lxTGsVXjwvM"
+  },
+  {
+    "id": "a2z-306",
+    "title": "Post-order Traversal of Binary Tree using 2 stack",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-tree-postorder-traversal/",
+    "videoUrl": "https://youtu.be/2YBhNLodD8Q"
+  },
+  {
+    "id": "a2z-307",
+    "title": "Post-order Traversal of Binary Tree using 1 stack",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-tree-postorder-traversal/",
+    "videoUrl": "https://youtu.be/NzIGLLwZBS8"
+  },
+  {
+    "id": "a2z-308",
+    "title": "Preorder, Inorder, and Postorder Traversal in one Traversal",
+    "topic": "Binary Trees",
+    "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/pre,-post,-inorder-in-one-traversal",
+    "videoUrl": "https://youtu.be/ySp2epYvgTE"
+  },
+  {
+    "id": "a2z-309",
+    "title": "Maximum Depth in BT",
+    "topic": "Binary Trees",
+    "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/maximum-depth-of-binary-tree/",
+    "videoUrl": "https://youtu.be/eD3tmO66aBA"
+  },
+  {
+    "id": "a2z-310",
+    "title": "Check for balanced binary tree",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/balanced-binary-tree/",
+    "videoUrl": "https://youtu.be/Yt50Jfbd8Po"
+  },
+  {
+    "id": "a2z-311",
+    "title": "Diameter of Binary Tree",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/diameter-of-binary-tree/",
+    "videoUrl": "https://youtu.be/Rezetez59Nk"
+  },
+  {
+    "id": "a2z-312",
+    "title": "Maximum path sum",
+    "topic": "Binary Trees",
+    "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-tree-maximum-path-sum/",
+    "videoUrl": "https://youtu.be/WszrfSwMz58"
+  },
+  {
+    "id": "a2z-313",
+    "title": "Check if two trees are identical or not",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/same-tree/",
+    "videoUrl": "https://youtu.be/BhuvF_-PWS0"
+  },
+  {
+    "id": "a2z-314",
+    "title": "Zig Zag or Spiral Traversal",
+    "topic": "Binary Trees",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/",
+    "videoUrl": "https://youtu.be/3OXWEdlIGl4"
+  },
+  {
+    "id": "a2z-315",
+    "title": "Boundary Traversal",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/boundary-of-binary-tree/",
+    "videoUrl": "https://youtu.be/0ca1nvR0be4"
+  },
+  {
+    "id": "a2z-316",
+    "title": "Vertical Order Traversal",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/",
+    "videoUrl": "https://youtu.be/q_a6lpbKJdw"
+  },
+  {
+    "id": "a2z-317",
+    "title": "Top View of BT",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/top-view-of-bt",
+    "videoUrl": "https://youtu.be/Et9OCDNvJ78"
+  },
+  {
+    "id": "a2z-318",
+    "title": "Bottom view of BT",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/bottom-view-of-bt",
+    "videoUrl": "https://youtu.be/0FtVY6I4pB8"
+  },
+  {
+    "id": "a2z-319",
+    "title": "Right/Left View of Binary Tree",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-tree-right-side-view/",
+    "videoUrl": "https://youtu.be/KV4mRzTjlAk"
+  },
+  {
+    "id": "a2z-320",
+    "title": "Symmetric Binary Tree",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/symmetric-tree/",
+    "videoUrl": "https://youtu.be/nKggiEpBE"
+  },
+  {
+    "id": "a2z-321",
+    "title": "Print root to leaf path in BT",
+    "topic": "Binary Trees",
+    "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/print-root-to-note-path-in-bt",
+    "videoUrl": "https://youtu.be/fmflMqVOC7k"
+  },
+  {
+    "id": "a2z-322",
+    "title": "LCA in BT",
+    "topic": "Binary Trees",
+    "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/",
+    "videoUrl": "https://youtu.be/_-QHfMDde90"
+  },
+  {
+    "id": "a2z-323",
+    "title": "Maximum Width of BT",
+    "topic": "Binary Trees",
+    "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/maximum-width-of-binary-tree/",
+    "videoUrl": "https://youtu.be/ZbybYvcVLks"
+  },
+  {
+    "id": "a2z-324",
+    "title": "Children Sum Property in Binary Tree",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/children-sum-property-in-binary-tree",
+    "videoUrl": "https://youtu.be/fnmisPM6cVo"
+  },
+  {
+    "id": "a2z-325",
+    "title": "Print all nodes at a distance of K in BT",
+    "topic": "Binary Trees",
+    "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/",
+    "videoUrl": "https://youtu.be/i9ORlEy6EsI"
+  },
+  {
+    "id": "a2z-326",
+    "title": "Minimum time taken to burn the BT from a given Node",
+    "topic": "Binary Trees",
+    "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/minimum-time-taken-to-burn-the-bt-from-a-given-node",
+    "videoUrl": "https://youtu.be/2r5wLmQfD6g"
+  },
+  {
+    "id": "a2z-327",
+    "title": "Count total nodes in a complete BT",
+    "topic": "Binary Trees",
+    "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/count-complete-tree-nodes/",
+    "videoUrl": "https://youtu.be/u-yWemKGWO0"
+  },
+  {
+    "id": "a2z-328",
+    "title": "Requirements needed to construct a unique BT",
+    "topic": "Binary Trees",
+    "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/requirements-needed-to-construct-a-unique-bt",
+    "videoUrl": "https://youtu.be/9GMECGQgWrQ"
+  },
+  {
+    "id": "a2z-329",
+    "title": "Construct a BT from Preorder and Inorder",
+    "topic": "Binary Trees",
+    "pattern": "Binary Trees [Traversals, Medium and Hard Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/",
+    "videoUrl": "https://youtu.be/aZNaLrVebKQ"
+  },
+  {
+    "id": "a2z-330",
+    "title": "Construct the Binary Tree from Postorder and Inorder Traversal",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/",
+    "videoUrl": "https://youtu.be/LgLRTaEMRVc"
+  },
+  {
+    "id": "a2z-331",
+    "title": "Serialize and De-serialize BT",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/serialize-and-deserialize-binary-tree/",
+    "videoUrl": "https://youtu.be/-YbXySKJsX8"
+  },
+  {
+    "id": "a2z-332",
+    "title": "Morris Preorder Traversal of a Binary Tree",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-tree-inorder-traversal/",
+    "videoUrl": "https://youtu.be/80Zug6D1_r4"
+  },
+  {
+    "id": "a2z-333",
+    "title": "Morris Inorder Traversal of a Binary Tree",
+    "topic": "Binary Trees",
+    "pattern": "Trees",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-tree-inorder-traversal/",
+    "videoUrl": "https://youtu.be/80Zug6D1_r4"
+  },
+  {
+    "id": "a2z-334",
+    "title": "Flatten Binary Tree to Linked List",
+    "topic": "Binary Trees",
+    "pattern": "Linked List",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/flatten-binary-tree-to-linked-list/",
+    "videoUrl": "https://youtu.be/sWf7k1x9XR4"
+  },
+  {
+    "id": "a2z-336",
+    "title": "Search in a Binary Search Tree",
+    "topic": "BST",
+    "pattern": "Binary Search",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/search-in-a-binary-search-tree/",
+    "videoUrl": "https://youtu.be/KcNt6v_56cc"
+  },
+  {
+    "id": "a2z-337",
+    "title": "Find Min/Max in BST",
+    "topic": "BST",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/data-structure/find-minmax-in-a-bst",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-338",
+    "title": "Floor and Ceil in a BST",
+    "topic": "BST",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/floor-and-ceil-in-a-bst",
+    "videoUrl": "https://www.youtube.com/watch?v=xm_W1ub-K-w&list=PLgUwDviBIf0q8Hkd7bK2Bpryj2xVJk8Vk&index=43"
+  },
+  {
+    "id": "a2z-339",
+    "title": "Floor in a Binary Search Tree",
+    "topic": "BST",
+    "pattern": "Binary Search",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/floor-and-ceil-in-a-bst",
+    "videoUrl": "https://youtu.be/xm_W1ub-K-w"
+  },
+  {
+    "id": "a2z-340",
+    "title": "Insert a given node in BST",
+    "topic": "BST",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/insert-into-a-binary-search-tree/",
+    "videoUrl": "https://youtu.be/FiFiNvM29ps"
+  },
+  {
+    "id": "a2z-341",
+    "title": "Delete a node in BST",
+    "topic": "BST",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/delete-node-in-a-bst/",
+    "videoUrl": "https://youtu.be/kouxiP_H5WE"
+  },
+  {
+    "id": "a2z-342",
+    "title": "Kth Smallest and Largest element in BST",
+    "topic": "BST",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/kth-smallest-element-in-a-bst/",
+    "videoUrl": "https://youtu.be/9TJYWh0adfk"
+  },
+  {
+    "id": "a2z-343",
+    "title": "Check if a tree is a BST or not",
+    "topic": "BST",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/validate-binary-search-tree/",
+    "videoUrl": "https://youtu.be/f-sj7I5oXEI"
+  },
+  {
+    "id": "a2z-344",
+    "title": "LCA in BST",
+    "topic": "BST",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/",
+    "videoUrl": "https://youtu.be/cX_kPV_foZc"
+  },
+  {
+    "id": "a2z-345",
+    "title": "Construct a BST from a preorder traversal",
+    "topic": "BST",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/",
+    "videoUrl": "https://youtu.be/UmJT3j26t1I"
+  },
+  {
+    "id": "a2z-346",
+    "title": "Inorder Successor/Predecessor in BST",
+    "topic": "BST",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/inorder-successor-in-bst/",
+    "videoUrl": "https://youtu.be/SXKAD2svfmI"
+  },
+  {
+    "id": "a2z-347",
+    "title": "Merge 2 BST's",
+    "topic": "BST",
+    "pattern": "Trees",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/binary-search-tree-iterator/",
+    "videoUrl": "https://youtu.be/D2jMcmxU4bs"
+  },
+  {
+    "id": "a2z-348",
+    "title": "Two Sum In BST | Check if there exists a pair with Sum K",
+    "topic": "BST",
+    "pattern": "Arrays / Two Pointers",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/two-sum-iv-input-is-a-bst/",
+    "videoUrl": "https://youtu.be/ssL3sHwPeb4"
+  },
+  {
+    "id": "a2z-349",
+    "title": "Correct BST with two nodes swapped",
+    "topic": "BST",
+    "pattern": "Trees",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/recover-binary-search-tree/",
+    "videoUrl": "https://youtu.be/ZWGW7FminDM"
+  },
+  {
+    "id": "a2z-350",
+    "title": "Largest BST in Binary Tree",
+    "topic": "BST",
+    "pattern": "Trees",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/maximum-sum-bst-in-binary-tree/",
+    "videoUrl": "https://youtu.be/X0oXMdtUDwo"
+  },
+  {
+    "id": "a2z-354",
+    "title": "Connected Components",
+    "topic": "Graphs",
+    "pattern": "Graphs [Concepts & Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-355",
+    "title": "Traversal Techniques",
+    "topic": "Graphs",
+    "pattern": "Graphs [Concepts & Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/traversal-techniques",
+    "videoUrl": "https://youtu.be/Qzf1a--rhp8"
+  },
+  {
+    "id": "a2z-356",
+    "title": "DFS",
+    "topic": "Graphs",
+    "pattern": "Graphs [Concepts & Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/traversal-techniques",
+    "videoUrl": "https://youtu.be/Qzf1a--rhp8"
+  },
+  {
+    "id": "a2z-357",
+    "title": "Number of provinces",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/number-of-provinces/#:~:text=A%20province%20is%20a%20group,the%20total%20number%20of%20provinces.",
+    "videoUrl": "https://youtu.be/ACzkVtewUYA"
+  },
+  {
+    "id": "a2z-358",
+    "title": "Connected Components Problem in Matrix",
+    "topic": "Graphs",
+    "pattern": "Graphs [Concepts & Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/connected-components",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-359",
+    "title": "Rotten Oranges",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/rotting-oranges/",
+    "videoUrl": "https://www.youtube.com/watch?v=yf3oUhkvqA0"
+  },
+  {
+    "id": "a2z-360",
+    "title": "Flood fill algorithm",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/flood-fill/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-361",
+    "title": "Cycle Detection in Undirected Graph (bfs)",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/detect-a-cycle-in-an-undirected-graph",
+    "videoUrl": "https://youtu.be/BPlrALf1LDU"
+  },
+  {
+    "id": "a2z-362",
+    "title": "Detect a cycle in an undirected graph",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/course-schedule/",
+    "videoUrl": "https://youtu.be/zQ3zgFypzX4"
+  },
+  {
+    "id": "a2z-363",
+    "title": "Distance of nearest cell having one",
+    "topic": "Graphs",
+    "pattern": "Graphs [Concepts & Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/01-matrix/",
+    "videoUrl": "https://youtu.be/edXdVwkYHF8"
+  },
+  {
+    "id": "a2z-364",
+    "title": "Surrounded Regions",
+    "topic": "Graphs",
+    "pattern": "Graphs [Concepts & Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/surrounded-regions/",
+    "videoUrl": "https://youtu.be/BtdgAys4yMk"
+  },
+  {
+    "id": "a2z-365",
+    "title": "Number of enclaves",
+    "topic": "Graphs",
+    "pattern": "Maths",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/number-of-enclaves/",
+    "videoUrl": "https://youtu.be/rxKcepXQgU4"
+  },
+  {
+    "id": "a2z-366",
+    "title": "Word ladder I",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/word-ladder/",
+    "videoUrl": "https://youtu.be/tRPda0rcf8E"
+  },
+  {
+    "id": "a2z-367",
+    "title": "Word ladder II",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/word-ladder-ii/",
+    "videoUrl": "https://youtu.be/AD4SFl7tu7I?si=EpcJQTWm2YeURvEG"
+  },
+  {
+    "id": "a2z-368",
+    "title": "Number of islands",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/number-of-islands/",
+    "videoUrl": "https://www.youtube.com/watch?v=muncqlKJrH0&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=8"
+  },
+  {
+    "id": "a2z-369",
+    "title": "Bipartite Graph (DFS)",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/is-graph-bipartite/",
+    "videoUrl": "https://youtu.be/KG5YFfR0j8A"
+  },
+  {
+    "id": "a2z-370",
+    "title": "Cycle Detection in Directed Graph (DFS)",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/course-schedule-ii/discuss/293048/detecting-cycle-in-directed-graph-problem",
+    "videoUrl": "https://youtu.be/9twcmtQj4DU"
+  },
+  {
+    "id": "a2z-371",
+    "title": "Topo Sort",
+    "topic": "Graphs",
+    "pattern": "Sorting",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/topological-sort-or-kahns-algorithm",
+    "videoUrl": "https://youtu.be/5lZ0iJMrUMk"
+  },
+  {
+    "id": "a2z-372",
+    "title": "Topological sort or Kahn's algorithm",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/topological-sort-or-kahns-algorithm",
+    "videoUrl": "https://youtu.be/5lZ0iJMrUMk"
+  },
+  {
+    "id": "a2z-373",
+    "title": "Detect a cycle in a directed graph",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/course-schedule/",
+    "videoUrl": "https://www.youtube.com/watch?v=uzVUw90ZFIg&list=PLgUwDviBIf0rGEWe64KWas0Nryn7SCRWw&index=12"
+  },
+  {
+    "id": "a2z-374",
+    "title": "Course Schedule I",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/course-schedule/",
+    "videoUrl": "https://youtu.be/WAOfKpxYHR8"
+  },
+  {
+    "id": "a2z-375",
+    "title": "Course Schedule II",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/course-schedule-ii/",
+    "videoUrl": "https://youtu.be/WAOfKpxYHR8"
+  },
+  {
+    "id": "a2z-376",
+    "title": "Find eventual safe states",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/find-eventual-safe-states/",
+    "videoUrl": "https://youtu.be/2gtg3VsDGyc"
+  },
+  {
+    "id": "a2z-377",
+    "title": "Alien Dictionary",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/alien-dictionary/solution/",
+    "videoUrl": "https://youtu.be/U3N_je7tWAs"
+  },
+  {
+    "id": "a2z-378",
+    "title": "Shortest path in undirected graph with unit weights",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/shortest-path-in-undirected-graph-with-unit-weights",
+    "videoUrl": "https://www.youtube.com/watch?v=C4gxoTaI71U&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=28"
+  },
+  {
+    "id": "a2z-379",
+    "title": "Shortest path in DAG",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/shortest-path-in-dag",
+    "videoUrl": "https://www.youtube.com/watch?v=ZUFQfFaU-8U&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=27"
+  },
+  {
+    "id": "a2z-380",
+    "title": "Djisktra's Algorithm",
+    "topic": "Graphs",
+    "pattern": "Graphs [Concepts & Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/dijkstra's-algorithm",
+    "videoUrl": "https://www.youtube.com/watch?v=rp1SMw7HSO8&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=35"
+  },
+  {
+    "id": "a2z-381",
+    "title": "Why priority Queue is used in Djisktra's Algorithm",
+    "topic": "Graphs",
+    "pattern": "Stack / Queue",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/dijkstra's-algorithm",
+    "videoUrl": "https://www.youtube.com/watch?v=rp1SMw7HSO8&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=35"
+  },
+  {
+    "id": "a2z-382",
+    "title": "Shortest Distance in a Binary Maze",
+    "topic": "Graphs",
+    "pattern": "Graphs [Concepts & Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/shortest-path-in-binary-matrix/",
+    "videoUrl": "https://www.youtube.com/watch?v=U5Mw4eyUmw4&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=36"
+  },
+  {
+    "id": "a2z-383",
+    "title": "Path with minimum effort",
+    "topic": "Graphs",
+    "pattern": "Graphs [Concepts & Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/path-with-minimum-effort/",
+    "videoUrl": "https://youtu.be/0ytpZyiZFhA"
+  },
+  {
+    "id": "a2z-384",
+    "title": "Cheapest flight within K stops",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/cheapest-flights-within-k-stops/",
+    "videoUrl": "https://youtu.be/9XybHVqTHcQ"
+  },
+  {
+    "id": "a2z-385",
+    "title": "Network Delay Time",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/network-delay-time/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-386",
+    "title": "Number of ways to arrive at destination",
+    "topic": "Graphs",
+    "pattern": "Maths",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/number-of-ways-to-arrive-at-destination/",
+    "videoUrl": "https://youtu.be/_-0mx0SmYxA"
+  },
+  {
+    "id": "a2z-387",
+    "title": "Minimum multiplications to reach end",
+    "topic": "Graphs",
+    "pattern": "Graphs [Concepts & Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/minimum-multiplications-to-reach-end",
+    "videoUrl": "https://www.youtube.com/watch?v=_BvEJ3VIDWw&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=39"
+  },
+  {
+    "id": "a2z-388",
+    "title": "Bellman Ford Algorithm",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/bellman-ford-algorithm",
+    "videoUrl": "https://youtu.be/0vVofAhAYjc"
+  },
+  {
+    "id": "a2z-389",
+    "title": "Floyd warshall algorithm",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/floyd-warshall-algorithm",
+    "videoUrl": "https://www.youtube.com/watch?v=YbY8cVwWAvw&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=42"
+  },
+  {
+    "id": "a2z-390",
+    "title": "Find the city with the smallest number of neighbors",
+    "topic": "Graphs",
+    "pattern": "Maths",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/",
+    "videoUrl": "https://youtu.be/9XybHVqTHcQ"
+  },
+  {
+    "id": "a2z-392",
+    "title": "Prim's Algorithm",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/find-the-mst-weight",
+    "videoUrl": "https://youtu.be/mJcZjjKzeqk"
+  },
+  {
+    "id": "a2z-393",
+    "title": "Disjoint Set",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/disjoint-set-",
+    "videoUrl": "https://youtu.be/aBxjDBC4M1U"
+  },
+  {
+    "id": "a2z-394",
+    "title": "Find the MST weight",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/find-the-mst-weight",
+    "videoUrl": "https://youtu.be/mJcZjjKzeqk"
+  },
+  {
+    "id": "a2z-395",
+    "title": "Number of operations to make network connected",
+    "topic": "Graphs",
+    "pattern": "Maths",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/number-of-operations-to-make-network-connected/",
+    "videoUrl": "https://youtu.be/FYrl7iz9_ZU"
+  },
+  {
+    "id": "a2z-396",
+    "title": "Most stones removed with same row or column",
+    "topic": "Graphs",
+    "pattern": "Graphs [Concepts & Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/most-stones-removed-with-same-row-or-column/",
+    "videoUrl": "https://youtu.be/OwMNX8SPavM"
+  },
+  {
+    "id": "a2z-397",
+    "title": "Accounts merge",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/accounts-merge/",
+    "videoUrl": "https://youtu.be/FMwpt_aQOGw"
+  },
+  {
+    "id": "a2z-398",
+    "title": "Number of islands II",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/number-of-islands-ii/",
+    "videoUrl": "https://youtu.be/Rn6B-Q4SNyA"
+  },
+  {
+    "id": "a2z-399",
+    "title": "Making a large island",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/making-a-large-island/",
+    "videoUrl": "https://youtu.be/lgiz0Oup6gM"
+  },
+  {
+    "id": "a2z-400",
+    "title": "Swim in Rising Water",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/swim-in-rising-water/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-401",
+    "title": "Bridges in graph",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/critical-connections-in-a-network/discuss/382385/find-bridges-in-a-graph",
+    "videoUrl": "https://youtu.be/qrAub5z8FeA"
+  },
+  {
+    "id": "a2z-402",
+    "title": "Articulation point in graph",
+    "topic": "Graphs",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/articulation-point-in-graph",
+    "videoUrl": "https://youtu.be/j1QDfU21iZk"
+  },
+  {
+    "id": "a2z-403",
+    "title": "Kosaraju's algorithm",
+    "topic": "Graphs",
+    "pattern": "Graphs [Concepts & Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/maximum-number-of-non-overlapping-substrings/discuss/766485/kosaraju-algorithm-on",
+    "videoUrl": "https://www.youtube.com/watch?v=V8qIqJxCioo&list=PLgUwDviBIf0rGEWe64KWas0Nryn7SCRWw&index=27"
+  },
+  {
+    "id": "a2z-405",
+    "title": "Climbing stairs",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/climbing-stairs/",
+    "videoUrl": "https://youtu.be/mLfjzJsN8us"
+  },
+  {
+    "id": "a2z-406",
+    "title": "Frog Jump",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/frog-jump",
+    "videoUrl": "https://www.youtube.com/watch?v=EgG3jsGoPvQ"
+  },
+  {
+    "id": "a2z-407",
+    "title": "Frog jump with K distances",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/frog-jump-with-k-distances",
+    "videoUrl": "https://www.youtube.com/watch?v=Kmh3rhyEtB8"
+  },
+  {
+    "id": "a2z-408",
+    "title": "Maximum sum of non adjacent elements",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/house-robber/",
+    "videoUrl": "https://www.youtube.com/watch?v=GrMBfJNk_NY"
+  },
+  {
+    "id": "a2z-409",
+    "title": "House robber",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/house-robber-ii/",
+    "videoUrl": "https://www.youtube.com/watch?v=3WaxQMELSkw"
+  },
+  {
+    "id": "a2z-410",
+    "title": "Ninja's training",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": "https://www.youtube.com/watch?v=AE39gJYuRog"
+  },
+  {
+    "id": "a2z-411",
+    "title": "Grid Unique Paths : DP on Grids (DP8)",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/unique-paths/",
+    "videoUrl": "https://www.youtube.com/watch?v=sdE0A2Oxofw"
+  },
+  {
+    "id": "a2z-412",
+    "title": "Unique paths II",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/unique-paths-ii/",
+    "videoUrl": "https://www.youtube.com/watch?v=TmhpgXScLyY"
+  },
+  {
+    "id": "a2z-413",
+    "title": "Minimum Falling Path Sum",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/minimum-path-sum/",
+    "videoUrl": "https://youtu.be/_rgTlyky1uQ"
+  },
+  {
+    "id": "a2z-414",
+    "title": "Triangle",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/triangle/",
+    "videoUrl": "https://www.youtube.com/watch?v=SrP-PiLSYC0"
+  },
+  {
+    "id": "a2z-415",
+    "title": "Ninja and his Friends",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/ninja-and-his-friends",
+    "videoUrl": "https://www.youtube.com/watch?v=QGfn7JeXK54"
+  },
+  {
+    "id": "a2z-416",
+    "title": "Subset sum equal to target (DP- 14)",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/subset-sum-equals-to-target",
+    "videoUrl": "https://www.youtube.com/watch?v=fWX9xDmIzRI"
+  },
+  {
+    "id": "a2z-417",
+    "title": "Partition equal subset sum",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/partition-equal-subset-sum/",
+    "videoUrl": "https://www.youtube.com/watch?v=7win3dcgo3k"
+  },
+  {
+    "id": "a2z-418",
+    "title": "Partition a set into two subsets with minimum absolute sum difference",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference/",
+    "videoUrl": "https://www.youtube.com/watch?v=GS_OqZb2CWc"
+  },
+  {
+    "id": "a2z-419",
+    "title": "Count subsets with sum K",
+    "topic": "Dynamic Programming",
+    "pattern": "Recursion / Backtracking",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": "https://www.youtube.com/watch?v=ZHyb-A2Mte4"
+  },
+  {
+    "id": "a2z-420",
+    "title": "Count partitions with given difference",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/count-partitions-with-given-difference",
+    "videoUrl": "https://www.youtube.com/watch?v=zoilQD1kYSg"
+  },
+  {
+    "id": "a2z-421",
+    "title": "Assign Cookies",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/assign-cookies/",
+    "videoUrl": "https://youtu.be/DIX2p7vb9co?si=GofAIDimue-Av0Fi"
+  },
+  {
+    "id": "a2z-422",
+    "title": "Minimum Coins (DP - 20)",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/coin-change/",
+    "videoUrl": "https://www.youtube.com/watch?v=myPeWb3Y68A"
+  },
+  {
+    "id": "a2z-423",
+    "title": "Target sum",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/target-sum/",
+    "videoUrl": "https://www.youtube.com/watch?v=b3GD8263-PQ"
+  },
+  {
+    "id": "a2z-424",
+    "title": "Coin Change 2 (DP - 22)",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/coin-change-2/",
+    "videoUrl": "https://www.youtube.com/watch?v=HgyouUi11zk"
+  },
+  {
+    "id": "a2z-425",
+    "title": "Unbounded knapsack",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/unbounded-knapsack",
+    "videoUrl": "https://youtu.be/OgvOZ6OrJoY"
+  },
+  {
+    "id": "a2z-426",
+    "title": "Rod Cutting Problem | (DP - 24)",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/rod-cutting-problem",
+    "videoUrl": "https://youtu.be/mO8XpGoJwuo"
+  },
+  {
+    "id": "a2z-427",
+    "title": "Longest common subsequence",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/longest-common-subsequence",
+    "videoUrl": "https://youtu.be/-zI4mrF2Pb4"
+  },
+  {
+    "id": "a2z-428",
+    "title": "Print Longest Common Subsequence | (DP - 26)",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/longest-common-subsequence",
+    "videoUrl": "https://youtu.be/-zI4mrF2Pb4"
+  },
+  {
+    "id": "a2z-429",
+    "title": "Longest common substring",
+    "topic": "Dynamic Programming",
+    "pattern": "Trees",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/longest-common-substring",
+    "videoUrl": "https://youtu.be/_wP9mWNPL5w"
+  },
+  {
+    "id": "a2z-430",
+    "title": "Longest palindromic subsequence",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/longest-palindromic-subsequence/",
+    "videoUrl": "https://youtu.be/6i_T5kkfv4A"
+  },
+  {
+    "id": "a2z-431",
+    "title": "Minimum insertions to make string palindrome | DP-29",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/",
+    "videoUrl": "https://www.youtube.com/watch?v=xPBLEj41rFU"
+  },
+  {
+    "id": "a2z-432",
+    "title": "Minimum insertions or deletions to convert string A to B",
+    "topic": "Dynamic Programming",
+    "pattern": "Strings",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/delete-operation-for-two-strings/",
+    "videoUrl": "https://www.youtube.com/watch?v=yMnH0jrir0Q"
+  },
+  {
+    "id": "a2z-433",
+    "title": "Shortest common supersequence",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/shortest-common-supersequence/",
+    "videoUrl": "https://youtu.be/xElxAuBcvsU"
+  },
+  {
+    "id": "a2z-434",
+    "title": "Distinct subsequences",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/distinct-subsequences/",
+    "videoUrl": "https://youtu.be/nVG7eTiD2bY"
+  },
+  {
+    "id": "a2z-435",
+    "title": "Edit distance",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/edit-distance/",
+    "videoUrl": "https://youtu.be/fJaKO8FbDdo"
+  },
+  {
+    "id": "a2z-436",
+    "title": "Wildcard matching",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/wildcard-matching/",
+    "videoUrl": "https://youtu.be/ZmlQ3vgAOMo"
+  },
+  {
+    "id": "a2z-437",
+    "title": "Best time to buy and sell stock",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/",
+    "videoUrl": "https://youtu.be/excAOvwF_Wk"
+  },
+  {
+    "id": "a2z-438",
+    "title": "Best time to buy and sell stock II",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/",
+    "videoUrl": "https://youtu.be/nGJmxkUJQGs"
+  },
+  {
+    "id": "a2z-439",
+    "title": "Best time to buy and sell stock III",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/description/",
+    "videoUrl": "https://youtu.be/-uQGzhYj8BQ"
+  },
+  {
+    "id": "a2z-440",
+    "title": "Best time to buy and sell stock IV",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/",
+    "videoUrl": "https://youtu.be/IV1dHbk5CDc"
+  },
+  {
+    "id": "a2z-441",
+    "title": "Best Time to Buy and Sell Stock with Cooldown",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/",
+    "videoUrl": "https://youtu.be/IGIe46xw3YY"
+  },
+  {
+    "id": "a2z-442",
+    "title": "Best time to buy and sell stock with transaction fees",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/",
+    "videoUrl": "https://youtu.be/k4eK-vEmnKg"
+  },
+  {
+    "id": "a2z-443",
+    "title": "Longest Increasing Subsequence",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/longest-increasing-subsequence",
+    "videoUrl": "https://youtu.be/on2hvxBXJH4"
+  },
+  {
+    "id": "a2z-444",
+    "title": "Print Longest Increasing Subsequence",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/print-longest-increasing-subsequence",
+    "videoUrl": "https://youtu.be/IFfYfonAFGc"
+  },
+  {
+    "id": "a2z-445",
+    "title": "Longest Increasing Subsequence |(DP-43)",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/longest-increasing-subsequence",
+    "videoUrl": "https://youtu.be/on2hvxBXJH4"
+  },
+  {
+    "id": "a2z-446",
+    "title": "Largest Divisible Subset",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/largest-divisible-subset/",
+    "videoUrl": "https://youtu.be/gDuZwBW9VvM"
+  },
+  {
+    "id": "a2z-447",
+    "title": "Longest String Chain",
+    "topic": "Dynamic Programming",
+    "pattern": "Strings",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/longest-string-chain/",
+    "videoUrl": "https://youtu.be/YY8iBaYcc4g"
+  },
+  {
+    "id": "a2z-448",
+    "title": "Longest Bitonic Subsequence",
+    "topic": "Dynamic Programming",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/longest-bitonic-subsequence",
+    "videoUrl": "https://youtu.be/y4vN0WNdrlg"
+  },
+  {
+    "id": "a2z-449",
+    "title": "Number of Longest Increasing Subsequences",
+    "topic": "Dynamic Programming",
+    "pattern": "Maths",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/number-of-longest-increasing-subsequence/",
+    "videoUrl": "https://youtu.be/cKVl1TFdNXg"
+  },
+  {
+    "id": "a2z-450",
+    "title": "Matrix chain multiplication",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/matrix-chain-multiplication",
+    "videoUrl": "https://youtu.be/vRVfmbCFW7Y"
+  },
+  {
+    "id": "a2z-451",
+    "title": "Matrix Chain Multiplication | Bottom-Up|(DP-49)",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/matrix-chain-multiplication",
+    "videoUrl": "https://youtu.be/pDCXsbAw5Cg"
+  },
+  {
+    "id": "a2z-452",
+    "title": "Minimum cost to cut the stick",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming [Patterns and Problems]",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/minimum-cost-to-cut-a-stick/",
+    "videoUrl": "https://youtu.be/xwomavsC86c"
+  },
+  {
+    "id": "a2z-453",
+    "title": "Burst balloons",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/burst-balloons/",
+    "videoUrl": "https://youtu.be/Yz4LlDSlkns"
+  },
+  {
+    "id": "a2z-454",
+    "title": "Different Ways to Evaluate a Boolean Expression",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/parsing-a-boolean-expression/",
+    "videoUrl": "https://youtu.be/MM7fXopgyjw"
+  },
+  {
+    "id": "a2z-455",
+    "title": "Palindrome partitioning II",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/palindrome-partitioning-ii/",
+    "videoUrl": "https://youtu.be/_H8V5hJUGd0"
+  },
+  {
+    "id": "a2z-456",
+    "title": "Partition Array for Maximum Sum",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/partition-array-for-maximum-sum/",
+    "videoUrl": "https://youtu.be/PhWWJmaKfMc"
+  },
+  {
+    "id": "a2z-457",
+    "title": "Maximum Rectangle Area with all 1's|(DP-55)",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/maximal-rectangle/",
+    "videoUrl": "https://youtu.be/tOylVCugy9k"
+  },
+  {
+    "id": "a2z-458",
+    "title": "Count Square Submatrices with All Ones|(DP-56)",
+    "topic": "Dynamic Programming",
+    "pattern": "Dynamic Programming",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/count-square-submatrices-with-all-ones/",
+    "videoUrl": "https://youtu.be/auS1fynpnjo"
+  },
+  {
+    "id": "a2z-459",
+    "title": "Trie Implementation and Operations",
+    "topic": "Tries",
+    "pattern": "Tries",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/implement-trie-prefix-tree/",
+    "videoUrl": "https://www.youtube.com/watch?v=dBGUmUQhjaM&list=PLgUwDviBIf0pcIDCZnxhv0LkHf5KzG9zp"
+  },
+  {
+    "id": "a2z-460",
+    "title": "Trie Implementation and Advanced Operations",
+    "topic": "Tries",
+    "pattern": "Tries",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/trie-implementation-and-advanced-operations",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-461",
+    "title": "Longest Word with All Prefixes",
+    "topic": "Tries",
+    "pattern": "Stack / Queue",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/longest-word-with-all-prefixes",
+    "videoUrl": "https://www.youtube.com/watch?v=AWnBa91lThI&list=PLgUwDviBIf0pcIDCZnxhv0LkHf5KzG9zp&index=3"
+  },
+  {
+    "id": "a2z-462",
+    "title": "Number of distinct substrings in a string",
+    "topic": "Tries",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://takeuforward.org/plus/dsa/problems/number-of-distinct-substrings-in-a-string",
+    "videoUrl": "https://www.youtube.com/watch?v=RV0QeTyHZxo&list=PLgUwDviBIf0pcIDCZnxhv0LkHf5KzG9zp&index=4"
+  },
+  {
+    "id": "a2z-463",
+    "title": "Bit PreRequisites for TRIE Problems",
+    "topic": "Tries",
+    "pattern": "Tries",
+    "difficulty": "Easy",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": "https://youtu.be/5iyuU4hQFrw"
+  },
+  {
+    "id": "a2z-464",
+    "title": "Maximum XOR of two numbers in an array",
+    "topic": "Tries",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/",
+    "videoUrl": "https://www.youtube.com/watch?v=EIhAwfHubE8&list=PLgUwDviBIf0pcIDCZnxhv0LkHf5KzG9zp&index=6"
+  },
+  {
+    "id": "a2z-465",
+    "title": "Maximum Xor with an element from an array",
+    "topic": "Tries",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/maximum-xor-with-an-element-from-array/",
+    "videoUrl": "https://www.youtube.com/watch?v=Q8LhG9Pi5KM&list=PLgUwDviBIf0pcIDCZnxhv0LkHf5KzG9zp&index=7"
+  },
+  {
+    "id": "a2z-466",
+    "title": "Minimum number of bracket reversals to make an expression balanced",
+    "topic": "Strings",
+    "pattern": "Maths",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/minimum-add-to-make-parentheses-valid/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-467",
+    "title": "Count and say",
+    "topic": "Strings",
+    "pattern": "Strings",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/count-and-say/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-469",
+    "title": "Rabin Karp Algorithm",
+    "topic": "Strings",
+    "pattern": "Strings",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/repeated-string-match/discuss/416144/Rabin-Karp-algorithm-C%2B%2B-implementation",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-470",
+    "title": "Z function",
+    "topic": "Strings",
+    "pattern": "Strings",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-471",
+    "title": "KMP Algorithm or LPS array",
+    "topic": "Strings",
+    "pattern": "Strings",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/implement-strstr/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-472",
+    "title": "Shortest Palindrome",
+    "topic": "Strings",
+    "pattern": "Strings",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-473",
+    "title": "Longest happy prefix",
+    "topic": "Strings",
+    "pattern": "Stack / Queue",
+    "difficulty": "Hard",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/longest-happy-prefix/",
+    "videoUrl": ""
+  },
+  {
+    "id": "a2z-474",
+    "title": "Count Palindromic Subsequences",
+    "topic": "Strings",
+    "pattern": "Strings",
+    "difficulty": "Medium",
+    "status": "Not Started",
+    "url": "https://leetcode.com/problems/palindromic-substrings/",
+    "videoUrl": ""
   }
 ]
