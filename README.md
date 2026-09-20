@@ -16,6 +16,8 @@ npm run prepare-data
 
 Progress, notes, revisions, favorites, and activity stay in browser localStorage. No login or backend is required.
 
+Problems are grouped by TakeUForward A2Z **topics** and official **subcategory patterns** (e.g. Graphs → BFS/DFS, Topo Sort, Shortest Path, MST).
+
 ## Run locally
 
 ```bash

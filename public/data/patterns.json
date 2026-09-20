@@ -1,0 +1,90 @@
+{
+  "Sorting": [
+    "Sorting-I",
+    "Sorting-II"
+  ],
+  "Arrays": [
+    "Easy",
+    "Medium",
+    "Hard"
+  ],
+  "Binary Search": [
+    "BS on 1D Arrays",
+    "BS on Search Space",
+    "BS on 2D Arrays"
+  ],
+  "Strings": [
+    "Basic & Easy Strings",
+    "Medium Strings"
+  ],
+  "Linked List": [
+    "1D Linked List",
+    "Doubly Linked List",
+    "Medium LL",
+    "Medium DLL",
+    "Hard LL"
+  ],
+  "Recursion": [
+    "Get a Strong Hold",
+    "Subsequences Pattern",
+    "Trying All Combos / Hard"
+  ],
+  "Bit Manipulation": [
+    "Learn Bit Manipulation",
+    "Interview Problems",
+    "Advanced Maths"
+  ],
+  "Stack & Queue": [
+    "Learning",
+    "Prefix / Infix / Postfix",
+    "Monotonic Stack",
+    "Implementation"
+  ],
+  "Sliding Window": [
+    "Medium",
+    "Hard"
+  ],
+  "Heaps": [
+    "Medium",
+    "Learning",
+    "Hard"
+  ],
+  "Greedy": [
+    "Easy",
+    "Medium / Hard"
+  ],
+  "Binary Trees": [
+    "Traversals",
+    "Medium",
+    "Hard"
+  ],
+  "BST": [
+    "Concepts",
+    "Practice Problems"
+  ],
+  "Graphs": [
+    "Learning",
+    "BFS / DFS Problems",
+    "Topo Sort",
+    "Shortest Path",
+    "MST / Disjoint Set",
+    "Other Algorithms"
+  ],
+  "Dynamic Programming": [
+    "1D DP",
+    "2D / Grid DP",
+    "DP on Subsequences",
+    "DP on Strings",
+    "DP on Stocks",
+    "DP on LIS",
+    "MCM / Partition DP",
+    "DP on Squares"
+  ],
+  "Tries": [
+    "Theory",
+    "Problems"
+  ],
+  "Advanced Strings": [
+    "Hard Strings & Standard Algos"
+  ]
+}

@@ -71,7 +71,15 @@ function App(){
  const exportData=()=>{const blob=new Blob([JSON.stringify({version:2,progress,notes,activity,settings,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="dsa-tracker-backup.json";a.click();URL.revokeObjectURL(a.href)};
  const importData=e=>{const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(d.progress)setProgress(d.progress);if(d.notes)setNotes(d.notes);if(d.activity)setActivity(d.activity);if(d.settings)setSettings(d.settings);setToast("Backup restored.")}catch{setToast("Invalid backup file.")}};r.readAsText(f);e.target.value=""};
  const resetAll=()=>{if(confirm("Reset all progress, notes and activity? This cannot be undone unless you have a backup.")){setProgress({});setNotes({});setActivity({});setToast("All local progress reset.")}};
- const topics=["All",...new Set(problems.map(p=>p.topic))]; const patterns=["All",...new Set(problems.map(p=>p.pattern))];
+ const topics=["All",...new Set(problems.map(p=>p.topic))];
+ const patterns=["All",...new Set(
+  (roadmapFilters.topic==="All"?problems:problems.filter(p=>p.topic===roadmapFilters.topic)).map(p=>p.pattern)
+ )];
+ useEffect(()=>{
+  if(roadmapFilters.pattern!=="All"&&!patterns.includes(roadmapFilters.pattern)){
+   setRoadmapFilters(f=>({...f,pattern:"All"}));
+  }
+ },[roadmapFilters.topic,roadmapFilters.pattern,patterns]);
  return <div className="app">
   <aside><div className="brand"><div className="logo">DS</div><div><b>DSA Tracker</b><small>A2Z Learning System</small></div></div>
    <nav>{[["dashboard","Dashboard",LayoutDashboard],["roadmap","A2Z Roadmap",BookOpen],["revision","Revision",RefreshCw],["patterns","Patterns",Brain],["analytics","Analytics",BarChart3],["settings","Settings",Settings]].map(([id,label,I])=><button className={page===id?"active":""} onClick={()=>setPage(id)} key={id}><I size={18}/><span>{label}</span></button>)}</nav>
@@ -105,12 +113,63 @@ function Dashboard({stats,problems,open,setPage,settings}){
 function DashboardPanel({title,subtitle,action,onClick,children}){return <div className="panel"><div className="panel-head"><div><h3>{title}</h3><p>{subtitle}</p></div><button className="text-btn" onClick={onClick}>{action}<ChevronRight size={15}/></button></div>{children}</div>}
 function ProblemRow({p,open,tag}){return <button className="problem-row" onClick={()=>open(p)}><div className={`status-dot ${String(p.status||"Not Started").toLowerCase().replace(/\s+/g,"-")}`}></div><div className="row-main"><b>{p.title}{p.favorite&&<Star size={12} fill="currentColor"/>}</b><span>{p.topic} · {p.pattern}</span></div><span className={`diff ${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>{tag&&<span className="due">{tag}</span>}<ChevronRight size={17}/></button>}
 
-function Roadmap({problems,topics,patterns,open,filters,setFilters,filtered}){const set=(k,v)=>setFilters(x=>({...x,[k]:v}));return <section><div className="roadmap-summary"><div><b>{filtered.length}</b><span> visible problems</span></div><div className="legend"><span><i className="dot done"/>Solved</span><span><i className="dot todo"/>Not started</span><span><i className="dot weak"/>Weak</span></div></div><div className="filters panel"><div className="filter-title"><Filter size={15}/> Filters <button onClick={()=>setFilters({topic:"All",status:"All",difficulty:"All",pattern:"All",favorites:false,sort:"Order"})}><RotateCcw size={13}/>Reset</button></div><div className="filter-grid"><select value={filters.topic} onChange={e=>set("topic",e.target.value)}>{topics.map(x=><option key={x}>{x}</option>)}</select><select value={filters.status} onChange={e=>set("status",e.target.value)}><option>All</option>{statuses.map(x=><option key={x}>{x}</option>)}</select><select value={filters.difficulty} onChange={e=>set("difficulty",e.target.value)}><option>All</option>{["Easy","Medium","Hard"].map(x=><option key={x}>{x}</option>)}</select><select value={filters.pattern} onChange={e=>set("pattern",e.target.value)}>{patterns.map(x=><option key={x}>{x}</option>)}</select><select value={filters.sort} onChange={e=>set("sort",e.target.value)}><option>Order</option><option>Title</option><option>Difficulty</option><option>Weakest</option></select><button className={filters.favorites?"toggle on":"toggle"} onClick={()=>set("favorites",!filters.favorites)}><Star size={14} fill={filters.favorites?"currentColor":"none"}/> Favorites</button></div></div><div className="problem-list">{filtered.length?filtered.map(p=><ProblemRow key={p.id} p={p} open={open}/>):<Empty text="No problems match these filters."/>}</div></section>}
+function groupByTopicPattern(list){
+ const topics={};
+ list.forEach(p=>{
+  (topics[p.topic]??={});
+  (topics[p.topic][p.pattern]??=[]).push(p);
+ });
+ return topics;
+}
+
+function Roadmap({problems,topics,patterns,open,filters,setFilters,filtered}){
+ const set=(k,v)=>setFilters(x=>({...x,[k]:v}));
+ const grouped=useMemo(()=>groupByTopicPattern(filtered),[filtered]);
+ return <section>
+  <div className="roadmap-summary"><div><b>{filtered.length}</b><span> visible problems</span></div><div className="legend"><span><i className="dot done"/>Solved</span><span><i className="dot todo"/>Not started</span><span><i className="dot weak"/>Weak</span></div></div>
+  <div className="filters panel"><div className="filter-title"><Filter size={15}/> Filters <button onClick={()=>setFilters({topic:"All",status:"All",difficulty:"All",pattern:"All",favorites:false,sort:"Order"})}><RotateCcw size={13}/>Reset</button></div><div className="filter-grid"><select value={filters.topic} onChange={e=>set("topic",e.target.value)}>{topics.map(x=><option key={x}>{x}</option>)}</select><select value={filters.status} onChange={e=>set("status",e.target.value)}><option>All</option>{statuses.map(x=><option key={x}>{x}</option>)}</select><select value={filters.difficulty} onChange={e=>set("difficulty",e.target.value)}><option>All</option>{["Easy","Medium","Hard"].map(x=><option key={x}>{x}</option>)}</select><select value={filters.pattern} onChange={e=>set("pattern",e.target.value)}>{patterns.map(x=><option key={x}>{x}</option>)}</select><select value={filters.sort} onChange={e=>set("sort",e.target.value)}><option>Order</option><option>Title</option><option>Difficulty</option><option>Weakest</option></select><button className={filters.favorites?"toggle on":"toggle"} onClick={()=>set("favorites",!filters.favorites)}><Star size={14} fill={filters.favorites?"currentColor":"none"}/> Favorites</button></div></div>
+  {filtered.length?Object.entries(grouped).map(([topic,pats])=>{
+   const topicCount=Object.values(pats).reduce((n,arr)=>n+arr.length,0);
+   const topicSolved=Object.values(pats).flat().filter(p=>p.status==="Solved"||p.status==="Mastered").length;
+   return <div className="topic-block" key={topic}>
+    <div className="topic-head"><h3>{topic}</h3><span>{topicSolved}/{topicCount}</span></div>
+    {Object.entries(pats).map(([pattern,ps])=>{
+     const solved=ps.filter(p=>p.status==="Solved"||p.status==="Mastered").length;
+     return <div className="pattern-block" key={pattern}>
+      <div className="pattern-head"><h4>{pattern}</h4><span>{solved}/{ps.length}</span></div>
+      <div className="problem-list">{ps.map(p=><ProblemRow key={p.id} p={p} open={open}/>)}</div>
+     </div>;
+    })}
+   </div>;
+  }):<Empty text="No problems match these filters."/>}
+ </section>
+}
 
 function Revision({problems,open,update,recordActivity}){const now=Date.now();const due=problems.filter(p=>p.nextRevision&&new Date(p.nextRevision).getTime()<=now).sort((a,b)=>new Date(a.nextRevision)-new Date(b.nextRevision));const upcoming=problems.filter(p=>p.nextRevision&&new Date(p.nextRevision)>now).sort((a,b)=>new Date(a.nextRevision)-new Date(b.nextRevision)).slice(0,10);const complete=(p)=>{const count=p.revisionCount||0;const step=revisionSteps[Math.min(count,revisionSteps.length-1)];update(p.id,{revisionCount:count+1,lastRevised:new Date().toISOString(),nextRevision:addDays(step),status:p.status==="Attempted"?"Solved":p.status});recordActivity()};return <section><div className="callout"><RefreshCw size={22}/><div><b>{due.length} revisions due</b><span>Attempt first. Mark reviewed after you can explain the approach without notes.</span></div></div><div className="revision-columns"><div><h3 className="section-title">Due now</h3><div className="problem-list">{due.length?due.map(p=><RevisionRow key={p.id} p={p} open={open} complete={complete}/>):<Empty text="Nothing is due right now."/>}</div></div><div><h3 className="section-title">Upcoming</h3><div className="panel upcoming">{upcoming.length?upcoming.map(p=><button key={p.id} onClick={()=>open(p)}><div><b>{p.title}</b><span>{new Date(p.nextRevision).toLocaleDateString()} · {daysBetween(new Date(),p.nextRevision)} day{daysBetween(new Date(),p.nextRevision)!==1?"s":""}</span></div><ChevronRight size={15}/></button>):<Empty text="No scheduled revisions yet."/>}</div></div></div></section>}
 function RevisionRow({p,open,complete}){return <div className="revision-row"><button className="revision-main" onClick={()=>open(p)}><div className="status-dot"/><div><b>{p.title}</b><span>{p.topic} · Revision #{(p.revisionCount||0)+1}</span></div></button><button className="review-btn" onClick={()=>complete(p)}><CheckCircle2 size={15}/>Reviewed</button></div>}
 
-function Patterns({problems,open}){const map={};problems.forEach(p=>(map[p.pattern]??=[]).push(p));return <section><div className="pattern-grid">{Object.entries(map).map(([pat,ps])=>{const solved=ps.filter(p=>p.status==="Solved"||p.status==="Mastered").length;return <div className="pattern-card" key={pat}><div className="pattern-top"><div><span className="pattern-icon">◆</span><h3>{pat}</h3><p>{solved}/{ps.length} completed</p></div><strong>{ps.length?Math.round(solved/ps.length*100):0}%</strong></div><div className="bar"><i style={{width:`${ps.length?solved/ps.length*100:0}%`}}/></div><div className="pattern-list">{ps.map(p=>{const link=practiceLink(p);return <div className="pattern-row" key={p.id}><button onClick={()=>open(p)}><span>{p.title}</span><span className={`mini-status ${String(p.status||"Not Started").toLowerCase().replace(/\s+/g,"-")}`}>{p.status||"Not Started"}</span></button>{link&&<a className="pattern-ext" href={link.href} target="_blank" rel="noreferrer" title={link.label} onClick={e=>e.stopPropagation()}><ExternalLink size={13}/></a>}</div>})}</div></div>})}</div></section>}
+function Patterns({problems,open}){
+ const grouped=useMemo(()=>groupByTopicPattern(problems),[problems]);
+ return <section className="patterns-page">
+  {Object.entries(grouped).map(([topic,pats])=>{
+   const all=Object.values(pats).flat();
+   const topicSolved=all.filter(p=>p.status==="Solved"||p.status==="Mastered").length;
+   return <div className="topic-block" key={topic}>
+    <div className="topic-head"><h3>{topic}</h3><span>{topicSolved}/{all.length} completed</span></div>
+    <div className="pattern-grid">
+     {Object.entries(pats).map(([pattern,ps])=>{
+      const solved=ps.filter(p=>p.status==="Solved"||p.status==="Mastered").length;
+      return <div className="pattern-card" key={pattern}>
+       <div className="pattern-top"><div><span className="pattern-icon">◆</span><h3>{pattern}</h3><p>{solved}/{ps.length} completed</p></div><strong>{ps.length?Math.round(solved/ps.length*100):0}%</strong></div>
+       <div className="bar"><i style={{width:`${ps.length?solved/ps.length*100:0}%`}}/></div>
+       <div className="pattern-list">{ps.map(p=>{const link=practiceLink(p);return <div className="pattern-row" key={p.id}><button onClick={()=>open(p)}><span>{p.title}</span><span className={`mini-status ${String(p.status||"Not Started").toLowerCase().replace(/\s+/g,"-")}`}>{p.status||"Not Started"}</span></button>{link&&<a className="pattern-ext" href={link.href} target="_blank" rel="noreferrer" title={link.label} onClick={e=>e.stopPropagation()}><ExternalLink size={13}/></a>}</div>})}</div>
+      </div>;
+     })}
+    </div>
+   </div>;
+  })}
+ </section>;
+}
 
 function Analytics({stats,problems}){const topics={};const diffs={Easy:0,Medium:0,Hard:0};problems.forEach(p=>{topics[p.topic]??={t:0,s:0};topics[p.topic].t++;if(p.status==="Solved"||p.status==="Mastered")topics[p.topic].s++;diffs[p.difficulty]++});return <section><div className="stats-large"><div><small>Completion</small><strong>{stats.total?Math.round(stats.solved/stats.total*100):0}%</strong></div><div><small>Completed</small><strong>{stats.solved}</strong></div><div><small>Mastered</small><strong>{stats.mastered}</strong></div><div><small>Attempts</small><strong>{problems.reduce((s,p)=>s+(p.attempts||0),0)}</strong></div></div><div className="grid2"><div className="panel"><h3>Topic progress</h3>{Object.entries(topics).map(([k,v])=><div className="bar-row" key={k}><div><span>{k}</span><b>{v.s}/{v.t}</b></div><div className="bar"><i style={{width:`${v.t?v.s/v.t*100:0}%`}}/></div></div>)}</div><div className="panel"><h3>Difficulty mix</h3>{Object.entries(diffs).map(([k,v])=><div className="bar-row" key={k}><div><span>{k}</span><b>{v}</b></div><div className="bar"><i style={{width:`${problems.length?v/problems.length*100:0}%`}}/></div></div>)}<div className="analytics-note"><Lightbulb size={16}/><span>Use topic completion to spot gaps; use weak confidence and revision history to decide what to revisit.</span></div></div></div></section>}
 
