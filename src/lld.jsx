@@ -1,16 +1,19 @@
 import React, { useMemo, useState } from "react";
-import { BookMarked, Check, CheckCircle2, ChevronDown, ChevronRight, Code2, Copy, Grid2x2, Layers, Lightbulb, ListChecks, MessagesSquare, Route, ScanLine, Sparkles, Workflow } from "lucide-react";
+import { BookMarked, Check, CheckCircle2, ChevronDown, ChevronRight, Code2, Copy, Grid2x2, Layers, Lightbulb, ListChecks, MessagesSquare, Network, Play, Route, ScanLine, ShieldCheck, Sparkles, Workflow } from "lucide-react";
 import { highlightCode } from "./highlight.js";
 import { LLD_CHAPTERS, LLD_PATTERN_TABLE, LLD_STEPS, LLD_LADDER, LLD_RECAP_CARDS, LLD_FOLLOWUP_PROMPTS } from "./lld-data.js";
+import { LLD_UML, LLD_UML_NOTES } from "./lld-uml.jsx";
+import { LLD_SIMS, LLD_SIM_NOTES } from "./lld-sim.jsx";
 
 /* ---------------------------------- code frames ---------------------------------- */
 
-function LldCode({ name, code }) {
-  const lines = useMemo(() => highlightCode(code, "csharp"), [code]);
+function LldCode({ name, java, cs, lang }) {
+  const code = lang === "java" ? java : cs;
+  const lines = useMemo(() => highlightCode(code, lang), [code, lang]);
   const [copied, setCopied] = useState(false);
   return <div className="code-frame lld-code">
     <div className="code-frame-head">
-      <i className="dot r" /><i className="dot y" /><i className="dot g" /><span>{name}</span>
+      <i className="dot r" /><i className="dot y" /><i className="dot g" /><span>{name}.{lang === "java" ? "java" : "cs"}</span>
       <button type="button" className="copy-code" onClick={() => { navigator.clipboard?.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 1400); }}>{copied ? <Check size={13} /> : <Copy size={13} />}{copied ? "Copied" : "Copy"}</button>
     </div>
     <div className="code-body">
@@ -201,53 +204,120 @@ const LLD_DIAGRAM_CAPTIONS = {
 
 /* ---------------------------------- chapter card ---------------------------------- */
 
-function LldChapter({ chapter, open, onToggle }) {
+const LLD_TABS = [
+  ["brief", "Brief", ListChecks],
+  ["design", "Design idea", Lightbulb],
+  ["diagrams", "Diagrams", Grid2x2],
+  ["play", "Playground", Play],
+  ["code", "Implementation", Code2],
+  ["hard", "Concurrency & scale", Network],
+  ["interview", "Interview", MessagesSquare],
+];
+
+function Bullets({ items }) {
+  return <ul className="lld-bullets">{items.map(t => <li key={t}>{t}</li>)}</ul>;
+}
+
+function Pairs({ rows }) {
+  return <div className="lld-pairs">{rows.map(([q, a]) => <div key={q} className="lld-pair"><b>{q}</b><p>{a}</p></div>)}</div>;
+}
+
+function LldChapter({ chapter, lang, onLang, open, onToggle }) {
+  const [tab, setTab] = useState("brief");
   const [activeFile, setActiveFile] = useState(0);
+  const [pic, setPic] = useState("overview");
   const Diagram = LLD_DIAGRAMS[chapter.diagram];
+  const Uml = LLD_UML[chapter.uml];
+  const Sim = LLD_SIMS[chapter.sim];
+  const file = chapter.files[activeFile];
+
   return <div className={`lld-chapter${open ? " open" : ""}`} id={chapter.id} style={{ "--lld-accent": chapter.accent }}>
     <button type="button" className="lld-chapter-head" onClick={onToggle}>
       <span className="lld-num">{chapter.num}</span>
       <div className="lld-chapter-title"><h3>{chapter.title}</h3><p>{chapter.tagline}</p></div>
+      <span className="lld-meta">{chapter.level}</span>
       <span className="lld-pattern-chip">{chapter.pattern}</span>
       <span className="collapse-icon">{open ? <ChevronDown size={17} /> : <ChevronRight size={17} />}</span>
     </button>
+
     {open && <div className="lld-chapter-body">
-      <div className="lld-cols">
+      <div className="lld-tabs" role="tablist">
+        {LLD_TABS.map(([k, label, Icon]) => <button type="button" key={k} role="tab" aria-selected={tab === k} className={tab === k ? "active" : ""} onClick={() => setTab(k)}><Icon size={14} />{label}</button>)}
+      </div>
+
+      {tab === "brief" && <div className="lld-panel" key="brief">
+        <div className="lld-cols">
+          <div className="panel lld-inner"><h4><ListChecks size={15} /> Requirements to agree on first</h4><ul className="lld-reqs">{chapter.requirements.map(r => <li key={r}><CheckCircle2 size={13} />{r}</li>)}</ul></div>
+          <div className="panel lld-inner"><h4><ScanLine size={15} /> Complexity contract</h4><div className="lld-cx-grid">{chapter.complexity.map(([k, v]) => <div key={k}><small>{k}</small><b>{v}</b></div>)}</div></div>
+        </div>
+        <div className="panel lld-inner"><h4><MessagesSquare size={15} /> What I ask before writing a line</h4><Pairs rows={chapter.clarify} /></div>
+        <div className="lld-cols">
+          <div className="panel lld-inner"><h4><Grid2x2 size={15} /> Entities and who owns what</h4><Pairs rows={chapter.entities} /></div>
+          <div className="panel lld-inner"><h4><Code2 size={15} /> The API I commit to</h4><pre className="lld-contract">{chapter.contract.join("\n")}</pre></div>
+        </div>
+      </div>}
+
+      {tab === "design" && <div className="lld-panel" key="design">
+        <div className="panel lld-inner"><h4><Lightbulb size={15} /> The design idea</h4>{chapter.idea.map((p, i) => <p key={i} className="lld-idea">{p}</p>)}</div>
+        <div className="panel lld-inner"><h4><Workflow size={15} /> Patterns, and the exact place each one lives</h4>
+          <div className="lld-table-wrap"><table className="lld-table lld-wide"><thead><tr><th>Pattern</th><th>Where it sits</th><th>Why it earns its keep</th></tr></thead>
+          <tbody>{chapter.patterns.map(([n, w, y]) => <tr key={n}><td><b>{n}</b></td><td><code>{w}</code></td><td>{y}</td></tr>)}</tbody></table></div>
+        </div>
+        <div className="panel lld-inner"><h4><ShieldCheck size={15} /> Decisions — what I chose, why, and what I rejected out loud</h4>
+          <div className="lld-dec">{chapter.decisions.map(([choice, why, rejected]) => <div key={choice}><b>{choice}</b><p>{why}</p>{rejected && <p className="lld-rejected">Rejected: {rejected}</p>}</div>)}</div>
+        </div>
+      </div>}
+
+      {tab === "diagrams" && <div className="lld-panel" key="diagrams">
+        <div className="lld-subtabs">
+          <button type="button" className={pic === "overview" ? "active" : ""} onClick={() => setPic("overview")}>The idea in one picture</button>
+          <button type="button" className={pic === "uml" ? "active" : ""} onClick={() => setPic("uml")}>UML class diagram</button>
+        </div>
+        {pic === "overview"
+          ? <figure className="panel lld-figure"><Diagram /><figcaption>{LLD_DIAGRAM_CAPTIONS[chapter.diagram]}</figcaption></figure>
+          : <figure className="panel lld-figure lld-uml-figure"><Uml /><figcaption>{chapter.umlNote || LLD_UML_NOTES[chapter.diagram]}</figcaption></figure>}
+      </div>}
+
+      {tab === "play" && <div className="lld-panel" key="play">
+        <div className="panel lld-inner lld-play">
+          <h4><Play size={15} /> Drive it — {chapter.title.toLowerCase()} step by step</h4>
+          <p className="lld-note">{LLD_SIM_NOTES[chapter.diagram]}</p>
+          <Sim />
+        </div>
+      </div>}
+
+      {tab === "code" && <div className="lld-panel" key="code">
         <div className="panel lld-inner">
-          <h4><ListChecks size={15} /> Requirements to agree on first</h4>
-          <ul className="lld-reqs">{chapter.requirements.map(r => <li key={r}><CheckCircle2 size={13} />{r}</li>)}</ul>
+          <div className="lld-code-head"><h4><Code2 size={15} /> Complete implementation · {chapter.files.length} files</h4>
+            <div className="language-switch" role="group" aria-label="Language">
+              <button type="button" className={lang === "java" ? "active" : ""} onClick={() => lang === "java" || onLang(lang)}>Java</button>
+              <button type="button" className={lang === "csharp" ? "active" : ""} onClick={() => lang === "csharp" || onLang(lang)}>C#</button>
+            </div>
+          </div>
+          <p className="lld-note">Both languages are hand-written, not transpiled: same design, same names, idiomatic collections for each platform.</p>
+          <div className="lld-file-tabs" role="tablist">
+            {chapter.files.map((f, i) => <button type="button" role="tab" aria-selected={activeFile === i} className={activeFile === i ? "active" : ""} key={f.name} onClick={() => setActiveFile(i)}>{f.name}.{lang === "java" ? "java" : "cs"}</button>)}
+          </div>
+          <LldCode {...file} lang={lang} />
         </div>
-        <div className="panel lld-inner">
-          <h4><ScanLine size={15} /> Complexity contract</h4>
-          <div className="lld-cx-grid">{chapter.complexity.map(([k, v]) => <div key={k}><small>{k}</small><b>{v}</b></div>)}</div>
+      </div>}
+
+      {tab === "hard" && <div className="lld-panel" key="hard">
+        <div className="panel lld-inner"><h4><Network size={15} /> Concurrency: who locks what, in which order</h4><Bullets items={chapter.concurrency} /></div>
+        <div className="lld-cols">
+          <div className="panel lld-inner"><h4><ScanLine size={15} /> Edge cases I list before coding</h4><Bullets items={chapter.edgeCases} /></div>
+          <div className="panel lld-inner"><h4><Layers size={15} /> At scale, and what breaks first</h4><Bullets items={chapter.atScale} /></div>
         </div>
-      </div>
-      <div className="panel lld-inner">
-        <h4><Lightbulb size={15} /> The design idea</h4>
-        {chapter.idea.map((p, i) => <p key={i} className="lld-idea">{p}</p>)}
-      </div>
-      <figure className="panel lld-figure">
-        <Diagram />
-        <figcaption>{LLD_DIAGRAM_CAPTIONS[chapter.diagram]}</figcaption>
-      </figure>
-      <div className="panel lld-inner">
-        <h4><Code2 size={15} /> Completed C# implementation</h4>
-        <p className="lld-note">The original notes stopped at the happy path — every missing class below (bold in tabs) completes the design to interview standard.</p>
-        <div className="lld-file-tabs" role="tablist">
-          {chapter.files.map((f, i) => <button type="button" role="tab" aria-selected={activeFile === i} className={activeFile === i ? "active" : ""} key={f.name} onClick={() => setActiveFile(i)}>{f.name}</button>)}
+      </div>}
+
+      {tab === "interview" && <div className="lld-panel" key="interview">
+        <div className="panel lld-inner"><h4><MessagesSquare size={15} /> Questions they will ask about this design</h4><div className="lld-qa">{chapter.qa.map(([q, a]) => <div key={q}><b>{q}</b><p>{a}</p></div>)}</div></div>
+        <div className="panel lld-inner"><h4><Route size={15} /> “Now change it…” — and how to answer</h4><Pairs rows={chapter.followUps} /></div>
+        <div className="lld-cols">
+          <div className="panel lld-inner lld-rubric strong"><h4><CheckCircle2 size={15} /> What reads as SDE-2</h4><Bullets items={chapter.rubric.strong} /></div>
+          <div className="panel lld-inner lld-rubric weak"><h4><ShieldCheck size={15} /> What reads as SDE-1</h4><Bullets items={chapter.rubric.weak} /></div>
         </div>
-        <LldCode {...chapter.files[activeFile]} />
-      </div>
-      <div className="lld-cols">
-        <div className="panel lld-inner">
-          <h4><MessagesSquare size={15} /> Interview questions they'll ask</h4>
-          <div className="lld-qa">{chapter.qa.map(([q, a]) => <div key={q}><b>{q}</b><p>{a}</p></div>)}</div>
-        </div>
-        <div className="panel lld-inner lld-followup">
-          <h4><Route size={15} /> "Now change it…" follow-ups</h4>
-          <ul className="lld-bullets">{chapter.followUps.map(f => <li key={f}>{f}</li>)}</ul>
-        </div>
-      </div>
+      </div>}
     </div>}
   </div>;
 }
@@ -256,14 +326,22 @@ function LldChapter({ chapter, open, onToggle }) {
 
 export function LLDPage() {
   const [openId, setOpenId] = useState(() => new Set([LLD_CHAPTERS[0].id]));
+  const [lang, setLang] = useState("java");
   const toggle = (id) => setOpenId(x => { const next = new Set(x); next.has(id) ? next.delete(id) : next.add(id); return next; });
   return <section className="lld-page">
     <div className="lld-hero">
       <div className="lld-hero-copy">
-        <span className="eyebrow">LOW-LEVEL DESIGN · C#</span>
-        <h2>Four designs that cover most LLD interviews</h2>
-        <p>LRU Cache, Vending Machine, Parking Lot and the Elevator System — completed from skeleton notes into whole, defensible designs with diagrams, full implementations and the follow-up questions interviewers ask next.</p>
-        <div className="lld-hero-chips">{["State Pattern", "Strategy Pattern", "Factory", "SCAN scheduling", "SOLID"].map(c => <span key={c}>{c}</span>)}</div>
+        <span className="eyebrow">LOW-LEVEL DESIGN · JAVA + C# · SDE-2</span>
+        <h2>Four designs, taken to the depth an interview actually goes</h2>
+        <p>Every chapter is one full design, not a sketch: the questions to ask, the API you commit to, the patterns and what they buy, a complete implementation in both languages, the concurrency argument, an animated model you can drive, and the follow-ups that decide the loop.</p>
+        <div className="lld-hero-chips">{["State", "Strategy", "Factory", "CAS claim", "SCAN scheduling", "One writer per car", "SOLID", "Idempotency"].map(c => <span key={c}>{c}</span>)}</div>
+      </div>
+      <div className="lld-hero-tools">
+        <div className="language-switch" role="group" aria-label="Implementation language">
+          <button type="button" className={lang === "java" ? "active" : ""} onClick={() => setLang("java")}>Java</button>
+          <button type="button" className={lang === "csharp" ? "active" : ""} onClick={() => setLang("csharp")}>C#</button>
+        </div>
+        <span className="lld-toollbl">implementation language</span>
       </div>
     </div>
 
@@ -280,7 +358,7 @@ export function LLDPage() {
       <div className="lld-steps">{LLD_STEPS.map(([title, body], i) => <div key={title} className="lld-step"><span>{i + 1}</span><div><b>{title}</b><p>{body}</p></div></div>)}</div>
     </div>
 
-    {LLD_CHAPTERS.map(c => <LldChapter key={c.id} chapter={c} open={openId.has(c.id)} onToggle={() => toggle(c.id)} />)}
+    {LLD_CHAPTERS.map(c => <LldChapter key={c.id} chapter={c} lang={lang} onLang={setLang} open={openId.has(c.id)} onToggle={() => toggle(c.id)} />)}
 
     <div className="lld-cols">
       <div className="panel lld-inner">
