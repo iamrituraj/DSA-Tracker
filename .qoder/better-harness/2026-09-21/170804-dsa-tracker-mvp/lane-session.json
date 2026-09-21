@@ -1,0 +1,174 @@
+{
+ "scope": {
+  "workspace": "/Users/riturajrajput/Downloads/dsa-tracker-mvp",
+  "provider": "qoder",
+  "language": "en",
+  "depth": "normal",
+  "window": {
+   "since": "2026-08-22T11:43:13.141Z",
+   "until": "2026-09-21T11:43:13.141Z"
+  },
+  "evidenceLimit": 5,
+  "authority": {
+   "includeUserHome": true,
+   "includeMemories": true
+  }
+ },
+ "sessionFacts": {
+  "schemaVersion": 3,
+  "kind": "session-core-facts",
+  "scope": {
+   "platform": "qoder",
+   "workspace": "dsa-tracker-mvp",
+   "until": "2026-09-21T11:43:13.141Z",
+   "selection": "all-eligible",
+   "eligibleSessions": 1,
+   "selectedSessions": 1,
+   "sampled": false
+  },
+  "candidateSelection": {
+   "strategy": "agent-work-loop-portfolio-v1",
+   "availableClasses": {
+    "boundary-change": 1,
+    "change-gap": 1
+   },
+   "emittedClasses": {
+    "boundary-change": 1,
+    "change-gap": 1
+   }
+  },
+  "requestRootSelection": {
+   "strategy": "recent-context-first-prompt-v1",
+   "distinctRoots": 1,
+   "emittedRoots": 1
+  },
+  "admission": {
+   "taskEpisodes": 7,
+   "candidateEpisodes": 1,
+   "distinctRequests": 1,
+   "emittedCandidates": 1,
+   "distinctRequestRoots": 1,
+   "emittedRequestRoots": 1
+  },
+  "populationCoverage": {
+   "withChanges": 1,
+   "withChecks": 0,
+   "withReviewedRelevantCheck": 0,
+   "withResultSignal": 0,
+   "withAssistantHandoff": 0,
+   "withStructuredCompletion": 0,
+   "withUserCorrection": 0,
+   "withExecutionFriction": 0,
+   "withFrictionConsequence": 0
+  },
+  "observationCoverage": {
+   "withChanges": 1,
+   "withChecks": 0,
+   "withReviewedRelevantCheck": 0,
+   "withResultSignal": 0,
+   "withAssistantHandoff": 0,
+   "withStructuredCompletion": 0,
+   "withUserCorrection": 0,
+   "withExecutionFriction": 0,
+   "withFrictionConsequence": 0
+  },
+  "admissionSupport": {
+   "semanticGuardrails": [
+    "occurrences-not-distinct-episodes",
+    "coverage-not-suggestion",
+    "omitted-details-not-signal-evidence",
+    "project-capability-inventory-unobserved"
+   ],
+   "sharedFrictionConsequences": []
+  },
+  "candidates": [
+   {
+    "ref": "E1",
+    "contextGroup": "G1",
+    "request": {
+     "summary": "analyze this app suggest improvements, anything be it code related or feature or bug",
+     "key": "req:5ac21e7f5e37",
+     "occurrences": 1,
+     "followUp": "fix bugs and add feature , do not break anything , also the neon table is created now",
+     "observedTurns": 2,
+     "omittedTurns": 0
+    },
+    "changes": {
+     "edits": 1,
+     "files": 1
+    },
+    "evidenceClasses": [
+     "boundary-change",
+     "change-gap"
+    ],
+    "acceptanceSignals": [
+     "project-change"
+    ],
+    "acceptanceEvidenceCeiling": "lead",
+    "frictionConsequenceSignals": [],
+    "activity": {
+     "toolCalls": 29,
+     "classifiedReads": 17
+    },
+    "workTrace": {
+     "steps": [
+      "inspect",
+      "execute",
+      "inspect",
+      "inspect",
+      "execute",
+      "change"
+     ],
+     "gapAfter": 3,
+     "omittedSteps": 5
+    },
+    "checks": [],
+    "closure": "changed-without-check"
+   }
+  ],
+  "requestRoots": [
+   {
+    "ref": "R1",
+    "contextGroup": "G1",
+    "request": {
+     "summary": "analyze this app suggest improvements, anything be it code related or feature or bug",
+     "occurrences": 1
+    },
+    "candidateRef": "E1"
+   }
+  ],
+  "omitted": {
+   "noRequest": 6,
+   "selfAnalysis": 0,
+   "lowSignal": 0,
+   "duplicateRequests": 0,
+   "candidateBudget": 0,
+   "requestRootBudget": 0,
+   "checkBudget": 0,
+   "activeSessions": 0,
+   "homeSessionOnly": 0,
+   "benchmarkGenerated": 0
+  },
+  "warningCodes": [
+   "missing-optional-root",
+   "disabled-source-root"
+  ],
+  "excludes": [
+   "assistantText",
+   "rawPrompts",
+   "commands",
+   "toolOutput",
+   "paths",
+   "rawIds",
+   "secrets"
+  ],
+  "diagnosticFlags": [
+   "no-reviewed-relevant-check-evidence",
+   "no-result-evidence"
+  ],
+  "cost": {
+   "serializedBytes": 2754,
+   "estimatedTokens": 689
+  }
+ }
+}

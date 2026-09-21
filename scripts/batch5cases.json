@@ -1,0 +1,62 @@
+[
+  {
+    "id": "a2z-168",
+    "approach": -1,
+    "main": "class Main{static ListNode build(int[]a){ListNode d=new ListNode(0),t=d;for(int v:a){t.next=new ListNode(v);t=t.next;}return d.next;}static String str(ListNode h){StringBuilder b=new StringBuilder();for(;h!=null;h=h.next)b.append(h.val).append(',');return b.toString();}public static void main(String[]x){Solution s=new Solution();System.out.println(str(s.sortList(build(new int[]{4,2,1,3}))).equals(\"1,2,3,4,\")&&str(s.sortList(build(new int[]{}))).equals(\"\")?\"PASS\":\"FAIL[\"+str(s.sortList(build(new int[]{-1,5,3})))+\"]\");}}"
+  },
+  {
+    "id": "a2z-169",
+    "approach": -1,
+    "main": "class Main{static ListNode build(int[]a){ListNode d=new ListNode(0),t=d;for(int v:a){t.next=new ListNode(v);t=t.next;}return d.next;}static String str(ListNode h){StringBuilder b=new StringBuilder();for(;h!=null;h=h.next)b.append(h.val).append(',');return b.toString();}public static void main(String[]x){Solution s=new Solution();System.out.println(str(s.sortList(build(new int[]{1,2,0,2,1,0}))).equals(\"0,0,1,1,2,2,\")?\"PASS\":\"FAIL\");}}"
+  },
+  {
+    "id": "a2z-170",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();ListNode common=new ListNode(8),c1=new ListNode(10),c2=new ListNode(12);common.next=c1;c1.next=c2;ListNode a=new ListNode(4),b=new ListNode(1);a.next=b;b.next=common;ListNode d=new ListNode(5),e=new ListNode(0),f=new ListNode(15);d.next=e;e.next=f;f.next=common;System.out.println(s.getIntersectionNode(a,d)==common?\"PASS\":\"FAIL\");}}"
+  },
+  {
+    "id": "a2z-171",
+    "approach": -1,
+    "main": "class Main{static ListNode build(int[]a){ListNode d=new ListNode(0),t=d;for(int v:a){t.next=new ListNode(v);t=t.next;}return d.next;}static String str(ListNode h){StringBuilder b=new StringBuilder();for(;h!=null;h=h.next)b.append(h.val);return b.toString();}public static void main(String[]x){Solution s=new Solution();System.out.println(str(s.addOne(build(new int[]{1,2,3}))).equals(\"124\")&&str(s.addOne(build(new int[]{9,9,9}))).equals(\"1000\")?\"PASS\":\"FAIL[\"+str(s.addOne(build(new int[]{9,9,9})))+\"]\");}}"
+  },
+  {
+    "id": "a2z-172",
+    "approach": -1,
+    "main": "class Main{static ListNode build(int[]a){ListNode d=new ListNode(0),t=d;for(int v:a){t.next=new ListNode(v);t=t.next;}return d.next;}static String str(ListNode h){StringBuilder b=new StringBuilder();for(;h!=null;h=h.next)b.append(h.val).append(\",\");return b.toString();}public static void main(String[]x){Solution s=new Solution();System.out.println(str(s.addTwoNumbers(build(new int[]{2,4,3}),build(new int[]{5,6,4}))).equals(\"7,0,8,\")&&str(s.addTwoNumbers(build(new int[]{9,9}),build(new int[]{1}))).equals(\"0,0,1,\")?\"PASS\":\"FAIL[\"+str(s.addTwoNumbers(build(new int[]{9,9}),build(new int[]{1})))+\"]\");}}"
+  },
+  {
+    "id": "a2z-173",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();DNode a=new DNode(2),b=new DNode(2),c=new DNode(10),d=new DNode(2),e=new DNode(2);a.next=b;b.prev=a;b.next=c;c.prev=b;c.next=d;d.prev=c;d.next=e;e.prev=d;DNode h=s.removeAllOccurrences(a,2);StringBuilder r=new StringBuilder();for(DNode p=h;p!=null;p=p.next)r.append(p.val);boolean ok=r.toString().equals(\"10\")&&h.prev==null;System.out.println(ok?\"PASS\":\"FAIL[\"+r+\"]\");}}"
+  },
+  {
+    "id": "a2z-174",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();int[]vals={1,2,3,4,5,6,7,8,9,10};DNode d=new DNode(0),prev=d;for(int v:vals){DNode n=new DNode(v);prev.next=n;n.prev=prev;prev=n;}System.out.println(s.countPairs(d.next,11)==5&&s.countPairs(d.next,5)==2?\"PASS\":\"FAIL \"+s.countPairs(d.next,11)+\" \"+s.countPairs(d.next,5));}}"
+  },
+  {
+    "id": "a2z-175",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();int[]vals={1,1,2,3,3,3,4};DNode d=new DNode(0),prev=d;for(int v:vals){DNode n=new DNode(v);prev.next=n;n.prev=prev;prev=n;}DNode h=s.removeDuplicates(d.next);StringBuilder r=new StringBuilder();for(DNode p=h;p!=null;p=p.next)r.append(p.val);System.out.println(r.toString().equals(\"1234\")?\"PASS\":\"FAIL[\"+r+\"]\");}}"
+  },
+  {
+    "id": "a2z-176",
+    "approach": -1,
+    "main": "class Main{static ListNode build(int[]a){ListNode d=new ListNode(0),t=d;for(int v:a){t.next=new ListNode(v);t=t.next;}return d.next;}static String str(ListNode h){StringBuilder b=new StringBuilder();for(;h!=null;h=h.next)b.append(h.val).append(',');return b.toString();}public static void main(String[]x){Solution s=new Solution();System.out.println(str(s.reverseKGroup(build(new int[]{1,2,3,4,5}),2)).equals(\"2,1,4,3,5,\")&&str(s.reverseKGroup(build(new int[]{1,2,3,4,5}),3)).equals(\"3,2,1,4,5,\")?\"PASS\":\"FAIL\");}}"
+  },
+  {
+    "id": "a2z-177",
+    "approach": -1,
+    "main": "class Main{static ListNode build(int[]a){ListNode d=new ListNode(0),t=d;for(int v:a){t.next=new ListNode(v);t=t.next;}return d.next;}static String str(ListNode h){StringBuilder b=new StringBuilder();for(;h!=null;h=h.next)b.append(h.val).append(',');return b.toString();}public static void main(String[]x){Solution s=new Solution();System.out.println(str(s.rotateRight(build(new int[]{1,2,3,4,5}),2)).equals(\"4,5,1,2,3,\")&&str(s.rotateRight(build(new int[]{0,1,2}),4)).equals(\"2,0,1,\")?\"PASS\":\"FAIL\");}}"
+  },
+  {
+    "id": "a2z-178",
+    "approach": -1,
+    "main": "class Main{static FNode col(int[]a){FNode d=new FNode(0),t=d;for(int v:a){t.bottom=new FNode(v);t=t.bottom;}return d.bottom;}public static void main(String[]x){Solution s=new Solution();FNode a=col(new int[]{5,7,8,30}),b=col(new int[]{10,20}),c=col(new int[]{19,22,50}),d=col(new int[]{28,35,40,45});a.next=b;b.next=c;c.next=d;FNode h=s.flatten(a);StringBuilder r=new StringBuilder();for(FNode p=h;p!=null;p=p.bottom)r.append(p.data).append(',');String exp=\"5,7,8,10,19,20,22,28,30,35,40,45,50,\";System.out.println(r.toString().equals(exp)?\"PASS\":\"FAIL[\"+r+\"]\");}}"
+  },
+  {
+    "id": "a2z-179",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();RNode a=new RNode(7),b=new RNode(10),c=new RNode(11),d=new RNode(20);a.next=b;b.next=c;c.next=d;a.random=d;c.random=b;b.random=null;d.random=null;RNode h=s.copyRandomList(a);boolean ok=h!=a&&h.data==7&&h.next!=b&&h.next.data==10&&h.random==h.next.next.next&&h.next.next.random==h.next;System.out.println(ok?\"PASS\":\"FAIL\");}}"
+  }
+]

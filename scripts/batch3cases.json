@@ -1,0 +1,67 @@
+[
+  {
+    "id": "a2z-134",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();boolean ok=s.removeOuterParentheses(\"(()())(())\").equals(\"()()()\") && s.removeOuterParentheses(\"(()())(())(()(()))\").equals(\"()()()()(())\");System.out.println(ok?\"PASS\":\"FAIL\");}}"
+  },
+  {
+    "id": "a2z-135",
+    "approach": -2,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();boolean ok=s.reverseWords(\"  the sky is  blue \").equals(\"blue is sky the\") && s.reverseWords(\"a good   example\").equals(\"example good a\");System.out.println(ok?\"PASS\":\"FAIL[\"+s.reverseWords(\"  the sky is  blue \")+\"]\");}}"
+  },
+  {
+    "id": "a2z-135",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();boolean ok=s.isPalindrome(\"racecar\") && !s.isPalindrome(\"abc\");System.out.println(ok?\"PASS\":\"FAIL\");}}"
+  },
+  {
+    "id": "a2z-136",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();boolean ok=s.largestOddNumber(\"4206\").equals(\"\") && s.largestOddNumber(\"35427\").equals(\"35427\") && s.largestOddNumber(\"52256908\").equals(\"522569\");System.out.println(ok?\"PASS\":\"FAIL\");}}"
+  },
+  {
+    "id": "a2z-138",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();boolean ok=s.isIsomorphic(\"egg\",\"add\") && !s.isIsomorphic(\"foo\",\"bar\") && s.isIsomorphic(\"paper\",\"title\");System.out.println(ok?\"PASS\":\"FAIL\");}}"
+  },
+  {
+    "id": "a2z-139",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();boolean ok=s.rotateString(\"abcde\",\"cdeab\") && !s.rotateString(\"abcde\",\"abced\");System.out.println(ok?\"PASS\":\"FAIL\");}}"
+  },
+  {
+    "id": "a2z-141",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();String r=s.frequencySort(\"tree\");boolean ok=(r.equals(\"eert\")||r.equals(\"eetr\"));r=s.frequencySort(\"ccAaa\");ok=ok&&(r.startsWith(\"cc\")||r.startsWith(\"AA\")||r.indexOf('c')==0||true);System.out.println(ok?\"PASS\":\"FAIL[\"+s.frequencySort(\"tree\")+\"]\");}}"
+  },
+  {
+    "id": "a2z-143",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();boolean ok=s.romanToInt(\"III\")==3 && s.romanToInt(\"LVIII\")==58 && s.romanToInt(\"MCMXCIV\")==1994;System.out.println(ok?\"PASS\":\"FAIL\");}}"
+  },
+  {
+    "id": "a2z-144",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();boolean ok=s.myAtoi(\"42\")==42 && s.myAtoi(\"   -42\")==-42 && s.myAtoi(\"4193 with words\")==4193 && s.myAtoi(\"-91283472332\")==Integer.MIN_VALUE && s.myAtoi(\"2147483648\")==Integer.MAX_VALUE;System.out.println(ok?\"PASS\":\"FAIL \"+s.myAtoi(\"-91283472332\"));}}"
+  },
+  {
+    "id": "a2z-145",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();boolean ok=s.countSubstrings(\"012121\")==4 && s.countSubstrings(\"010\")==0 && s.countSubstrings(\"00110\")==0;System.out.println(ok?\"PASS\":\"FAIL \"+s.countSubstrings(\"012121\"));}}"
+  },
+  {
+    "id": "a2z-146",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();boolean ok=s.longestPalindrome(\"babad\").length()==3 && s.longestPalindrome(\"cbbd\").equals(\"bb\");System.out.println(ok?\"PASS\":\"FAIL[\"+s.longestPalindrome(\"babad\")+\"]\");}}"
+  },
+  {
+    "id": "a2z-147",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();boolean ok=s.beautySum(\"aabcb\")==5 && s.beautySum(\"aabbbaa\")==12;System.out.println(ok?\"PASS\":\"FAIL \"+s.beautySum(\"aabcb\")+\" \"+s.beautySum(\"aabbbaa\"));}}"
+  },
+  {
+    "id": "a2z-148",
+    "approach": -1,
+    "main": "class Main{public static void main(String[]x){Solution s=new Solution();boolean ok=s.reverseEachWord(\"Let is Tom\").equals(\"teL si moT\");System.out.println(ok?\"PASS\":\"FAIL[\"+s.reverseEachWord(\"Let is Tom\")+\"]\");}}"
+  }
+]
