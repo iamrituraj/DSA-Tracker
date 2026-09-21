@@ -29,3 +29,4 @@ for (const problem of problems) {
 
 await writeFile('public/data/tuf-links.json', `${JSON.stringify(links, null, 2)}\n`);
 console.log(`Extracted ${entries.length} official URLs; mapped ${Object.keys(links).length}/${problems.length} tracker problems.`);
+// sort topics by frequency
