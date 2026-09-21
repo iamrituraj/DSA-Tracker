@@ -99,6 +99,14 @@ function sanitizeCollapse(v) {
   if (!Object.keys(topics).length && !Object.keys(patterns).length) return null;
   return { topics, patterns };
 }
+// Cloud/library merge: keep whichever side has more approaches for a problem.
+function mergeLibs(base, extra) {
+  const merged = { ...extra };
+  Object.entries(base).forEach(([key, entry]) => {
+    if ((entry?.approaches?.length || 0) > (merged[key]?.approaches?.length || 0)) merged[key] = entry;
+  });
+  return merged;
+}
 // Lightweight dependency-free Java/C# syntax highlighter for the solutions viewer.
 const escHtml = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const KEYWORDS_SHARED = "abstract as assert async await base break case catch checked class const continue default delegate do else enum event explicit extends final finally fixed for foreach goto if implements import in instanceof interface internal is lock namespace native new out override package params partial private protected public readonly record ref return sealed sizeof stackalloc static strictfp struct super switch synchronized this throw throws transient try typeof unchecked unsafe using value virtual void volatile when where while with yield true false null";
@@ -152,8 +160,12 @@ function App() {
   const setToast = (text) => setToastValue({ id: ++toastId.current, text });
   const [syncStatus, setSyncStatus] = useState("checking");
   const [cloudReady, setCloudReady] = useState(false);
-  const cloudState = () => ({ progress, notes, solutions, activity, settings, filters: roadmapFilters, collapse });
+  const [libApproaches, setLibApproaches] = useState(0);
+  const cloudLibRef = useRef(0);
+  const libSyncDone = useRef(false);
+  const cloudState = () => ({ progress, notes, solutions, activity, settings, filters: roadmapFilters, collapse, libApproaches });
   const loadCloudState = async () => {
+    libSyncDone.current = false;
     const response = await fetch("/api/state");
     if (!response.ok) throw new Error("Could not load cloud data");
     const { state } = await response.json();
@@ -165,6 +177,9 @@ function App() {
       setSettings(s => ({ ...s, ...(state.settings || {}) }));
       const restoredFilters = sanitizeFilters(state.filters); if (restoredFilters) setRoadmapFilters(restoredFilters);
       const restoredCollapse = sanitizeCollapse(state.collapse); if (restoredCollapse) setCollapse(restoredCollapse);
+      const libCount = Number(state.libApproaches) || 0;
+      cloudLibRef.current = libCount;
+      setLibApproaches(libCount);
     }
     setCloudReady(true);
   };
@@ -187,6 +202,39 @@ function App() {
   };
   useEffect(() => { fetch(SEED).then(r => { if (!r.ok) throw new Error("data"); return r.json() }).then(setProblems).catch(() => setToast("Could not load problem data.")) }, []);
   useEffect(() => { fetch(SOLUTION_SEED).then(r => r.ok ? r.json() : {}).then(setBuiltInSolutions).catch(() => setBuiltInSolutions({})) }, []);
+  // Sync the authored solution library with the cloud copy once per session:
+  // the side with more approaches wins, so deploys and devices converge.
+  useEffect(() => {
+    if (!cloudReady || libSyncDone.current) return;
+    const keys = Object.keys(builtInSolutions);
+    if (!keys.length) return;
+    const total = keys.reduce((n, k) => n + (builtInSolutions[k]?.approaches?.length || 0), 0);
+    if (!total) return;
+    libSyncDone.current = true;
+    if (cloudLibRef.current === total) return;
+    const pushToCloud = cloudLibRef.current < total;
+    (async () => {
+      try {
+        if (pushToCloud) {
+          const response = await fetch("/api/solutions", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ solutions: builtInSolutions }) });
+          if (!response.ok) throw new Error("save failed");
+          setLibApproaches(total);
+          setToast("Solution library synced to cloud.");
+        } else {
+          const response = await fetch("/api/solutions");
+          if (!response.ok) throw new Error("load failed");
+          const { solutions: cloudLib } = await response.json();
+          if (!cloudLib || typeof cloudLib !== "object") return;
+          const nextLib = mergeLibs(builtInSolutions, cloudLib);
+          setBuiltInSolutions(nextLib);
+          setLibApproaches(Object.values(nextLib).reduce((n, v) => n + (v?.approaches?.length || 0), 0));
+          setToast("Solution library pulled from cloud.");
+        }
+      } catch {
+        setToast("Solution library sync failed.");
+      }
+    })();
+  }, [cloudReady, builtInSolutions]);
   useEffect(() => { fetch(TUF_LINK_SEED).then(r => r.ok ? r.json() : {}).then(setTufLinks).catch(() => setTufLinks({})) }, []);
   useEffect(() => {
     fetch("/api/auth").then(r => r.ok ? r.json() : { authenticated: false }).then(async ({ authenticated }) => {
@@ -208,7 +256,7 @@ function App() {
       }
     }, 500);
     return () => clearTimeout(timer);
-  }, [cloudReady, progress, notes, solutions, activity, settings, roadmapFilters, collapse]);
+  }, [cloudReady, progress, notes, solutions, activity, settings, roadmapFilters, collapse, libApproaches]);
   useEffect(() => { if (!toast) return; const t = setTimeout(() => setToastValue(null), 2500); return () => clearTimeout(t) }, [toast]);
   useEffect(() => {
     const onStorageError = () => setToast("Could not save to browser storage — export a backup from Settings.");
@@ -283,7 +331,7 @@ function App() {
       {page === "roadmap" && <Roadmap problems={enriched} topics={topics} patterns={patterns} open={open} filters={roadmapFilters} setFilters={setRoadmapFilters} filtered={filtered} collapse={collapse} setCollapse={setCollapse} />}
       {page === "revision" && <Revision problems={enriched} open={open} update={update} recordActivity={recordActivity} />}
       {page === "patterns" && <Patterns problems={enriched} tufLinks={tufLinks} open={open} />}
-      {page === "analytics" && <Analytics stats={stats} problems={enriched} activity={activity} notes={notes} solutions={solutions} settings={settings} />}
+      {page === "analytics" && <Analytics stats={stats} problems={enriched} activity={activity} notes={notes} solutions={solutions} builtInSolutions={builtInSolutions} settings={settings} />}
       {page === "settings" && <SettingsPage exportData={exportData} importData={importData} resetAll={resetAll} settings={settings} setSettings={setSettings} syncStatus={syncStatus} signIn={signIn} signOut={signOut} hasLocalData={hasLocalData} />}
       {page === "problem" && selectedProblem && <Problem p={selectedProblem} update={update} notes={notes[selectedProblem.id] || {}} setNotes={setNotes} solutions={solutions[selectedProblem.id]} builtInSolutions={builtInSolutions[selectedProblem.id]} tufUrl={tufLinks[selectedProblem.id]} setSolutions={setSolutions} back={() => setPage(originPage)} backLabel={pageLabels[originPage] || "roadmap"} recordActivity={recordActivity} setToast={setToast} />}
     </main>
@@ -395,7 +443,7 @@ function Patterns({ problems, tufLinks, open }) {
   </section>;
 }
 
-function Analytics({ stats, problems, activity, notes, solutions, settings }) {
+function Analytics({ stats, problems, activity, notes, solutions, builtInSolutions, settings }) {
   const statusCounts = { "Not Started": 0, Attempted: 0, Solved: 0, Mastered: 0 };
   const confCounts = { "🔴 Weak": 0, "🟡 Learning": 0, "🟢 Strong": 0, "🔵 Interview Ready": 0, Unset: 0 };
   const topics = {};
@@ -416,10 +464,11 @@ function Analytics({ stats, problems, activity, notes, solutions, settings }) {
     }
     const n = notes[p.id];
     if (n && Object.values(n).some(v => String(v || "").trim())) notesCount++;
-    const sol = solutions[p.id]?.approaches || [];
-    if (sol.some(a => a.explanation?.trim() || codeFilled(a))) {
+    const sol = (solutions[p.id]?.approaches?.length ? solutions[p.id].approaches : builtInSolutions?.[p.id]?.approaches) || [];
+    const available = sol.filter(a => a.explanation?.trim() || codeFilled(a));
+    if (available.length) {
       solutionsCount++;
-      approachesFilled += sol.filter(a => a.explanation?.trim() || codeFilled(a)).length;
+      approachesFilled += available.length;
     }
   });
   const topicRows = Object.entries(topics).map(([k, v]) => ({ name: k, ...v, pct: v.t ? Math.round(v.s / v.t * 100) : 0 })).sort((a, b) => a.pct - b.pct);
@@ -465,7 +514,7 @@ function Analytics({ stats, problems, activity, notes, solutions, settings }) {
     </div>
     <div className="stats-large secondary">
       <div><small>Notes coverage</small><strong>{notesCount}</strong><em>{stats.total ? Math.round(notesCount / stats.total * 100) : 0}% of problems</em></div>
-      <div><small>Solutions written</small><strong>{solutionsCount}</strong><em>{approachesFilled} approaches filled</em></div>
+      <div><small>Solution coverage</small><strong>{solutionsCount}</strong><em>{approachesFilled} approaches available</em></div>
       <div><small>Revisions due</small><strong>{dueNow}</strong><em>{dueSoon} scheduled total</em></div>
       <div><small>Total attempts</small><strong>{totalAttempts}</strong><em>Across all problems</em></div>
     </div>

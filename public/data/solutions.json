@@ -130,9 +130,33 @@
   "a2z-415": {
     "approaches": [
       {
-        "id": "three-dimensional-dp",
-        "title": "3D dynamic programming — synchronize two robots",
+        "id": "cherry-pickup-memo",
+        "title": "Memoized two-robot collection",
+        "level": "Better",
+        "time": "O(rows × cols²)",
+        "space": "O(rows × cols²)",
+        "explanation": "Both robots always share a row, so recursion over (row, col1, col2) with memoization tries all nine move pairs.",
+        "code": {
+          "java": "class Solution {\n    public int maximumChocolates(int r, int c, int[][] grid) {\n        Integer[][][] memo = new Integer[r][c][c];\n        return collect(grid, 0, 0, c - 1, memo);\n    }\n    private int collect(int[][] grid, int row, int col1, int col2, Integer[][][] memo) {\n        int cols = grid[0].length;\n        if (col1 < 0 || col1 >= cols || col2 < 0 || col2 >= cols) return Integer.MIN_VALUE / 2;\n        if (row == grid.length - 1) return grid[row][col1] + (col1 == col2 ? 0 : grid[row][col2]);\n        if (memo[row][col1][col2] != null) return memo[row][col1][col2];\n        int best = Integer.MIN_VALUE;\n        for (int d1 = -1; d1 <= 1; d1++) {\n            for (int d2 = -1; d2 <= 1; d2++) {\n                best = Math.max(best, collect(grid, row + 1, col1 + d1, col2 + d2, memo));\n            }\n        }\n        int here = grid[row][col1] + (col1 == col2 ? 0 : grid[row][col2]);\n        return memo[row][col1][col2] = here + best;\n    }\n}",
+          "csharp": "public class Solution {\n    public int MaximumChocolates(int r, int c, int[][] grid) {\n        int?[,,] memo = new int?[r, c, c];\n        return Collect(grid, 0, 0, c - 1, memo);\n    }\n    private int Collect(int[][] grid, int row, int col1, int col2, int?[,,] memo) {\n        int cols = grid[0].Length;\n        if (col1 < 0 || col1 >= cols || col2 < 0 || col2 >= cols) return int.MinValue / 2;\n        if (row == grid.Length - 1) return grid[row][col1] + (col1 == col2 ? 0 : grid[row][col2]);\n        if (memo[row, col1, col2] != null) return memo[row, col1, col2].Value;\n        int best = int.MinValue;\n        for (int d1 = -1; d1 <= 1; d1++) {\n            for (int d2 = -1; d2 <= 1; d2++) {\n                best = Math.Max(best, Collect(grid, row + 1, col1 + d1, col2 + d2, memo));\n            }\n        }\n        int here = grid[row][col1] + (col1 == col2 ? 0 : grid[row][col2]);\n        memo[row, col1, col2] = here + best;\n        return memo[row, col1, col2].Value;\n    }\n}"
+        }
+      },
+      {
+        "id": "cherry-pickup-3d-tab",
+        "title": "Tabulation — full 3D table over both robots",
         "level": "Optimal",
+        "time": "O(rows × cols²)",
+        "space": "O(rows × cols²)",
+        "explanation": "Fill the table from the last row upwards; each state adds the collected cells and the best of nine next moves.",
+        "code": {
+          "java": "class Solution {\n    public int maximumChocolates(int r, int c, int[][] grid) {\n        int[][][] dp = new int[r][c][c];\n        for (int col1 = 0; col1 < c; col1++) {\n            for (int col2 = 0; col2 < c; col2++) {\n                dp[r - 1][col1][col2] = col1 == col2 ? grid[r - 1][col1] : grid[r - 1][col1] + grid[r - 1][col2];\n            }\n        }\n        for (int row = r - 2; row >= 0; row--) {\n            for (int col1 = 0; col1 < c; col1++) {\n                for (int col2 = 0; col2 < c; col2++) {\n                    int best = Integer.MIN_VALUE;\n                    for (int d1 = -1; d1 <= 1; d1++) {\n                        for (int d2 = -1; d2 <= 1; d2++) {\n                            int p1 = col1 + d1, p2 = col2 + d2;\n                            if (p1 < 0 || p1 >= c || p2 < 0 || p2 >= c) continue;\n                            best = Math.max(best, dp[row + 1][p1][p2]);\n                        }\n                    }\n                    int here = col1 == col2 ? grid[row][col1] : grid[row][col1] + grid[row][col2];\n                    dp[row][col1][col2] = here + best;\n                }\n            }\n        }\n        return dp[0][0][c - 1];\n    }\n}",
+          "csharp": "public class Solution {\n    public int MaximumChocolates(int r, int c, int[][] grid) {\n        int[,,] dp = new int[r, c, c];\n        for (int col1 = 0; col1 < c; col1++) {\n            for (int col2 = 0; col2 < c; col2++) {\n                dp[r - 1, col1, col2] = col1 == col2 ? grid[r - 1][col1] : grid[r - 1][col1] + grid[r - 1][col2];\n            }\n        }\n        for (int row = r - 2; row >= 0; row--) {\n            for (int col1 = 0; col1 < c; col1++) {\n                for (int col2 = 0; col2 < c; col2++) {\n                    int best = int.MinValue;\n                    for (int d1 = -1; d1 <= 1; d1++) {\n                        for (int d2 = -1; d2 <= 1; d2++) {\n                            int p1 = col1 + d1, p2 = col2 + d2;\n                            if (p1 < 0 || p1 >= c || p2 < 0 || p2 >= c) continue;\n                            best = Math.Max(best, dp[row + 1, p1, p2]);\n                        }\n                    }\n                    int here = col1 == col2 ? grid[row][col1] : grid[row][col1] + grid[row][col2];\n                    dp[row, col1, col2] = here + best;\n                }\n            }\n        }\n        return dp[0, 0, c - 1];\n    }\n}"
+        }
+      },
+      {
+        "id": "three-dimensional-dp",
+        "title": "3D dynamic programming — synchronize two robots (space-optimized)",
+        "level": "Optimal+",
         "time": "O(rows × cols²)",
         "space": "O(cols²)",
         "explanation": "Track both robot columns on each row. Try all nine pairs of next moves and count a cell once when both robots occupy it.",
@@ -314,9 +338,21 @@
         }
       },
       {
-        "id": "lcs-tab",
-        "title": "Two rolling rows of the LCS table",
+        "id": "lcs-2d-tab",
+        "title": "Tabulation — full subsequence table",
         "level": "Optimal",
+        "time": "O(m × n)",
+        "space": "O(m × n)",
+        "explanation": "dp[i][j] is the LCS of the first i and j characters — extend diagonally on a match, otherwise carry the better skip.",
+        "code": {
+          "java": "class Solution {\n    public int longestCommonSubsequence(String text1, String text2) {\n        int m = text1.length(), n = text2.length();\n        int[][] dp = new int[m + 1][n + 1];\n        for (int i = 1; i <= m; i++) {\n            for (int j = 1; j <= n; j++) {\n                if (text1.charAt(i - 1) == text2.charAt(j - 1)) {\n                    dp[i][j] = 1 + dp[i - 1][j - 1];\n                } else {\n                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);\n                }\n            }\n        }\n        return dp[m][n];\n    }\n}",
+          "csharp": "public class Solution {\n    public int LongestCommonSubsequence(string text1, string text2) {\n        int m = text1.Length, n = text2.Length;\n        int[,] dp = new int[m + 1, n + 1];\n        for (int i = 1; i <= m; i++) {\n            for (int j = 1; j <= n; j++) {\n                if (text1[i - 1] == text2[j - 1]) {\n                    dp[i, j] = 1 + dp[i - 1, j - 1];\n                } else {\n                    dp[i, j] = Math.Max(dp[i - 1, j], dp[i, j - 1]);\n                }\n            }\n        }\n        return dp[m, n];\n    }\n}"
+        }
+      },
+      {
+        "id": "lcs-tab",
+        "title": "Two rolling rows of the LCS table (space-optimized)",
+        "level": "Optimal+",
         "time": "O(n × m)",
         "space": "O(m)",
         "explanation": "Roll the classic table into previous and current rows — each cell needs only the diagonal and the two neighbours from the row before.",
@@ -370,9 +406,21 @@
         }
       },
       {
-        "id": "edit-distance-tab",
-        "title": "Two-row edit distance table",
+        "id": "edit-distance-2d-tab",
+        "title": "Tabulation — full edit distance table",
         "level": "Optimal",
+        "time": "O(m × n)",
+        "space": "O(m × n)",
+        "explanation": "Base row and column hold growing insert/delete counts; equal characters carry the diagonal, otherwise take one plus the best neighbour.",
+        "code": {
+          "java": "class Solution {\n    public int editDistance(String word1, String word2) {\n        int m = word1.length(), n = word2.length();\n        int[][] dp = new int[m + 1][n + 1];\n        for (int i = 0; i <= m; i++) dp[i][0] = i;\n        for (int j = 0; j <= n; j++) dp[0][j] = j;\n        for (int i = 1; i <= m; i++) {\n            for (int j = 1; j <= n; j++) {\n                if (word1.charAt(i - 1) == word2.charAt(j - 1)) {\n                    dp[i][j] = dp[i - 1][j - 1];\n                } else {\n                    int best = Math.min(dp[i - 1][j - 1], Math.min(dp[i - 1][j], dp[i][j - 1]));\n                    dp[i][j] = 1 + best;\n                }\n            }\n        }\n        return dp[m][n];\n    }\n}",
+          "csharp": "public class Solution {\n    public int EditDistance(string word1, string word2) {\n        int m = word1.Length, n = word2.Length;\n        int[,] dp = new int[m + 1, n + 1];\n        for (int i = 0; i <= m; i++) dp[i, 0] = i;\n        for (int j = 0; j <= n; j++) dp[0, j] = j;\n        for (int i = 1; i <= m; i++) {\n            for (int j = 1; j <= n; j++) {\n                if (word1[i - 1] == word2[j - 1]) {\n                    dp[i, j] = dp[i - 1, j - 1];\n                } else {\n                    int best = Math.Min(dp[i - 1, j - 1], Math.Min(dp[i - 1, j], dp[i, j - 1]));\n                    dp[i, j] = 1 + best;\n                }\n            }\n        }\n        return dp[m, n];\n    }\n}"
+        }
+      },
+      {
+        "id": "edit-distance-tab",
+        "title": "Two-row edit distance table (space-optimized)",
+        "level": "Optimal+",
         "time": "O(n × m)",
         "space": "O(m)",
         "explanation": "The recurrence only reads the previous row, so two rolling arrays replace the full table.",
@@ -482,9 +530,21 @@
         }
       },
       {
-        "id": "climb-stairs-iterative",
-        "title": "Two rolling values — Fibonacci in disguise",
+        "id": "climb-stairs-tab",
+        "title": "Tabulation — count ways for every step",
         "level": "Optimal",
+        "time": "O(n)",
+        "space": "O(n)",
+        "explanation": "Fill a table bottom-up — each step adds the previous two counts, seeded with ways[1] = 1 and ways[2] = 2.",
+        "code": {
+          "java": "class Solution {\n    public int climbStairs(int n) {\n        if (n <= 2) return n;\n        int[] ways = new int[n + 1];\n        ways[1] = 1;\n        ways[2] = 2;\n        for (int step = 3; step <= n; step++) {\n            ways[step] = ways[step - 1] + ways[step - 2];\n        }\n        return ways[n];\n    }\n}",
+          "csharp": "public class Solution {\n    public int ClimbStairs(int n) {\n        if (n <= 2) return n;\n        int[] ways = new int[n + 1];\n        ways[1] = 1;\n        ways[2] = 2;\n        for (int step = 3; step <= n; step++) {\n            ways[step] = ways[step - 1] + ways[step - 2];\n        }\n        return ways[n];\n    }\n}"
+        }
+      },
+      {
+        "id": "climb-stairs-iterative",
+        "title": "Two rolling values — Fibonacci in disguise (space-optimized)",
+        "level": "Optimal+",
         "time": "O(n)",
         "space": "O(1)",
         "explanation": "Only the previous two counts are ever needed, so two variables replace the whole table.",
@@ -510,9 +570,21 @@
         }
       },
       {
-        "id": "frog-jump-iterative",
-        "title": "Rolling the last two stone costs",
+        "id": "frog-jump-tab",
+        "title": "Tabulation — energy for every stone",
         "level": "Optimal",
+        "time": "O(n)",
+        "space": "O(n)",
+        "explanation": "Walk the stones left to right and store the cheapest energy for each — from the previous stone or two stones back.",
+        "code": {
+          "java": "class Solution {\n    public int frogJump(int[] heights) {\n        int n = heights.length;\n        int[] cost = new int[n];\n        for (int i = 1; i < n; i++) {\n            int one = cost[i - 1] + Math.abs(heights[i] - heights[i - 1]);\n            int two = i > 1 ? cost[i - 2] + Math.abs(heights[i] - heights[i - 2]) : Integer.MAX_VALUE;\n            cost[i] = Math.min(one, two);\n        }\n        return cost[n - 1];\n    }\n}",
+          "csharp": "public class Solution {\n    public int FrogJump(int[] heights) {\n        int n = heights.Length;\n        int[] cost = new int[n];\n        for (int i = 1; i < n; i++) {\n            int one = cost[i - 1] + Math.Abs(heights[i] - heights[i - 1]);\n            int two = i > 1 ? cost[i - 2] + Math.Abs(heights[i] - heights[i - 2]) : int.MaxValue;\n            cost[i] = Math.Min(one, two);\n        }\n        return cost[n - 1];\n    }\n}"
+        }
+      },
+      {
+        "id": "frog-jump-iterative",
+        "title": "Rolling the last two stone costs (space-optimized)",
+        "level": "Optimal+",
         "time": "O(n)",
         "space": "O(1)",
         "explanation": "Process stones left to right keeping only the costs of the previous two positions.",
@@ -566,9 +638,21 @@
         }
       },
       {
-        "id": "non-adjacent-rolling",
-        "title": "Two rolling sums — skip or take",
+        "id": "non-adjacent-tab",
+        "title": "Tabulation — best sum up to each index",
         "level": "Optimal",
+        "time": "O(n)",
+        "space": "O(n)",
+        "explanation": "Forward pass: best[i] is the better of skipping nums[i] or taking it plus best[i - 2].",
+        "code": {
+          "java": "class Solution {\n    public int maximumNonAdjacentSum(int[] nums) {\n        int n = nums.length;\n        if (n == 0) return 0;\n        int[] best = new int[n];\n        best[0] = nums[0];\n        for (int i = 1; i < n; i++) {\n            int pick = nums[i] + (i > 1 ? best[i - 2] : 0);\n            best[i] = Math.max(best[i - 1], pick);\n        }\n        return best[n - 1];\n    }\n}",
+          "csharp": "public class Solution {\n    public int MaximumNonAdjacentSum(int[] nums) {\n        int n = nums.Length;\n        if (n == 0) return 0;\n        int[] best = new int[n];\n        best[0] = nums[0];\n        for (int i = 1; i < n; i++) {\n            int pick = nums[i] + (i > 1 ? best[i - 2] : 0);\n            best[i] = Math.Max(best[i - 1], pick);\n        }\n        return best[n - 1];\n    }\n}"
+        }
+      },
+      {
+        "id": "non-adjacent-rolling",
+        "title": "Two rolling sums — skip or take (space-optimized)",
+        "level": "Optimal+",
         "time": "O(n)",
         "space": "O(1)",
         "explanation": "Keep the best sums up to the previous two positions and extend with either decision.",
@@ -594,9 +678,21 @@
         }
       },
       {
-        "id": "house-robber-rolling",
-        "title": "Two rolling values along the street",
+        "id": "house-robber-tab",
+        "title": "Tabulation — loot up to each house",
         "level": "Optimal",
+        "time": "O(n)",
+        "space": "O(n)",
+        "explanation": "loot[i] is the best take from the first i houses — rob this one plus the plan two houses back, or skip it.",
+        "code": {
+          "java": "class Solution {\n    public int rob(int[] nums) {\n        int n = nums.length;\n        int[] loot = new int[n + 1];\n        for (int i = 1; i <= n; i++) {\n            int take = nums[i - 1] + (i > 1 ? loot[i - 2] : 0);\n            loot[i] = Math.max(loot[i - 1], take);\n        }\n        return loot[n];\n    }\n}",
+          "csharp": "public class Solution {\n    public int Rob(int[] nums) {\n        int n = nums.Length;\n        int[] loot = new int[n + 1];\n        for (int i = 1; i <= n; i++) {\n            int take = nums[i - 1] + (i > 1 ? loot[i - 2] : 0);\n            loot[i] = Math.Max(loot[i - 1], take);\n        }\n        return loot[n];\n    }\n}"
+        }
+      },
+      {
+        "id": "house-robber-rolling",
+        "title": "Two rolling values along the street (space-optimized)",
+        "level": "Optimal+",
         "time": "O(n)",
         "space": "O(1)",
         "explanation": "Same recurrence as non-adjacent sums, sweeping the street once with two variables.",
@@ -610,9 +706,33 @@
   "a2z-410": {
     "approaches": [
       {
+        "id": "ninja-training-memo",
+        "title": "Memoized best points per day and last task",
+        "level": "Better",
+        "time": "O(n × 3 × 3)",
+        "space": "O(n × 4)",
+        "explanation": "Recurse day by day, remembering the last task; memoize the best total for (day, last).",
+        "code": {
+          "java": "class Solution {\n    public int ninjaTraining(int[][] points) {\n        Integer[][] memo = new Integer[points.length][4];\n        return best(points, points.length - 1, 3, memo);\n    }\n    private int best(int[][] points, int day, int last, Integer[][] memo) {\n        if (day == 0) {\n            int top = 0;\n            for (int task = 0; task < 3; task++) {\n                if (task != last) top = Math.max(top, points[0][task]);\n            }\n            return top;\n        }\n        if (memo[day][last] != null) return memo[day][last];\n        int top = 0;\n        for (int task = 0; task < 3; task++) {\n            if (task == last) continue;\n            top = Math.max(top, points[day][task] + best(points, day - 1, task, memo));\n        }\n        memo[day][last] = top;\n        return top;\n    }\n}",
+          "csharp": "public class Solution {\n    public int NinjaTraining(int[][] points) {\n        int?[,] memo = new int?[points.Length, 4];\n        return Best(points, points.Length - 1, 3, memo);\n    }\n    private int Best(int[][] points, int day, int last, int?[,] memo) {\n        if (day == 0) {\n            int top = 0;\n            for (int task = 0; task < 3; task++) {\n                if (task != last) top = Math.Max(top, points[0][task]);\n            }\n            return top;\n        }\n        if (memo[day, last] != null) return memo[day, last].Value;\n        int best = 0;\n        for (int task = 0; task < 3; task++) {\n            if (task == last) continue;\n            best = Math.Max(best, points[day][task] + Best(points, day - 1, task, memo));\n        }\n        memo[day, last] = best;\n        return best;\n    }\n}"
+        }
+      },
+      {
+        "id": "ninja-training-dp",
+        "title": "Tabulation — table of days by last task",
+        "level": "Optimal",
+        "time": "O(n × 3 × 3)",
+        "space": "O(n × 3)",
+        "explanation": "dp[day][task] adds today's points to the best of yesterday's other two tasks; the answer is the best of the last day.",
+        "code": {
+          "java": "class Solution {\n    public int ninjaTraining(int[][] points) {\n        int n = points.length;\n        int[][] dp = new int[n][3];\n        for (int task = 0; task < 3; task++) dp[0][task] = points[0][task];\n        for (int day = 1; day < n; day++) {\n            for (int task = 0; task < 3; task++) {\n                int best = 0;\n                for (int prev = 0; prev < 3; prev++) {\n                    if (prev == task) continue;\n                    best = Math.max(best, dp[day - 1][prev]);\n                }\n                dp[day][task] = points[day][task] + best;\n            }\n        }\n        int top = 0;\n        for (int task = 0; task < 3; task++) top = Math.max(top, dp[n - 1][task]);\n        return top;\n    }\n}",
+          "csharp": "public class Solution {\n    public int NinjaTraining(int[][] points) {\n        int n = points.Length;\n        int[][] dp = new int[n][];\n        for (int day = 0; day < n; day++) dp[day] = new int[3];\n        for (int task = 0; task < 3; task++) dp[0][task] = points[0][task];\n        for (int day = 1; day < n; day++) {\n            for (int task = 0; task < 3; task++) {\n                int best = 0;\n                for (int prev = 0; prev < 3; prev++) {\n                    if (prev == task) continue;\n                    best = Math.Max(best, dp[day - 1][prev]);\n                }\n                dp[day][task] = points[day][task] + best;\n            }\n        }\n        int top = 0;\n        for (int task = 0; task < 3; task++) top = Math.Max(top, dp[n - 1][task]);\n        return top;\n    }\n}"
+        }
+      },
+      {
         "id": "ninja-training-tab",
         "title": "Space-optimized sweep over days and last task",
-        "level": "Optimal",
+        "level": "Optimal+",
         "time": "O(n × 3 × 3)",
         "space": "O(3)",
         "explanation": "Keep the best points per last task for the previous day; each new day tries every task except the one just done.",
@@ -626,9 +746,33 @@
   "a2z-411": {
     "approaches": [
       {
-        "id": "unique-paths-dp",
-        "title": "One-dimensional grid DP",
+        "id": "unique-paths-memo",
+        "title": "Memoized paths from each cell",
+        "level": "Better",
+        "time": "O(m × n)",
+        "space": "O(m × n)",
+        "explanation": "paths(r, c) = paths(r - 1, c) + paths(r, c - 1), with the first row and column as the base case.",
+        "code": {
+          "java": "class Solution {\n    public int uniquePaths(int m, int n) {\n        Integer[][] memo = new Integer[m][n];\n        return count(m - 1, n - 1, memo);\n    }\n    private int count(int r, int c, Integer[][] memo) {\n        if (r == 0 || c == 0) return 1;\n        if (memo[r][c] != null) return memo[r][c];\n        return memo[r][c] = count(r - 1, c, memo) + count(r, c - 1, memo);\n    }\n}",
+          "csharp": "public class Solution {\n    public int UniquePaths(int m, int n) {\n        int?[,] memo = new int?[m, n];\n        return Count(m - 1, n - 1, memo);\n    }\n    private int Count(int r, int c, int?[,] memo) {\n        if (r == 0 || c == 0) return 1;\n        if (memo[r, c] != null) return memo[r, c].Value;\n        memo[r, c] = Count(r - 1, c, memo) + Count(r, c - 1, memo);\n        return memo[r, c].Value;\n    }\n}"
+        }
+      },
+      {
+        "id": "unique-paths-2d-tab",
+        "title": "Tabulation — full grid of path counts",
         "level": "Optimal",
+        "time": "O(m × n)",
+        "space": "O(m × n)",
+        "explanation": "Seed the first row and column with ones, then every cell is the sum of its top and left neighbours.",
+        "code": {
+          "java": "class Solution {\n    public int uniquePaths(int m, int n) {\n        int[][] dp = new int[m][n];\n        for (int r = 0; r < m; r++) dp[r][0] = 1;\n        for (int c = 0; c < n; c++) dp[0][c] = 1;\n        for (int r = 1; r < m; r++) {\n            for (int c = 1; c < n; c++) {\n                dp[r][c] = dp[r - 1][c] + dp[r][c - 1];\n            }\n        }\n        return dp[m - 1][n - 1];\n    }\n}",
+          "csharp": "public class Solution {\n    public int UniquePaths(int m, int n) {\n        int[,] dp = new int[m, n];\n        for (int r = 0; r < m; r++) dp[r, 0] = 1;\n        for (int c = 0; c < n; c++) dp[0, c] = 1;\n        for (int r = 1; r < m; r++) {\n            for (int c = 1; c < n; c++) {\n                dp[r, c] = dp[r - 1, c] + dp[r, c - 1];\n            }\n        }\n        return dp[m - 1, n - 1];\n    }\n}"
+        }
+      },
+      {
+        "id": "unique-paths-dp",
+        "title": "One-dimensional grid DP (space-optimized)",
+        "level": "Optimal+",
         "time": "O(m × n)",
         "space": "O(n)",
         "explanation": "Every cell is reached from above or from the left, so dp[j] = dp[j] + dp[j − 1] over a single row array.",
@@ -654,9 +798,33 @@
   "a2z-412": {
     "approaches": [
       {
-        "id": "unique-paths-2-dp",
-        "title": "Row sweep with obstacle resets",
+        "id": "unique-paths-2-memo",
+        "title": "Memoized paths around obstacles",
+        "level": "Better",
+        "time": "O(m × n)",
+        "space": "O(m × n)",
+        "explanation": "Same recursion as unique paths, but a cell holding an obstacle contributes zero ways.",
+        "code": {
+          "java": "class Solution {\n    public int uniquePathsWithObstacles(int[][] grid) {\n        int m = grid.length, n = grid[0].length;\n        Integer[][] memo = new Integer[m][n];\n        return count(grid, m - 1, n - 1, memo);\n    }\n    private int count(int[][] grid, int r, int c, Integer[][] memo) {\n        if (grid[r][c] == 1) return 0;\n        if (r == 0 && c == 0) return 1;\n        if (memo[r][c] != null) return memo[r][c];\n        int ways = 0;\n        if (r > 0) ways += count(grid, r - 1, c, memo);\n        if (c > 0) ways += count(grid, r, c - 1, memo);\n        return memo[r][c] = ways;\n    }\n}",
+          "csharp": "public class Solution {\n    public int UniquePathsWithObstacles(int[][] grid) {\n        int m = grid.Length, n = grid[0].Length;\n        int?[,] memo = new int?[m, n];\n        return Count(grid, m - 1, n - 1, memo);\n    }\n    private int Count(int[][] grid, int r, int c, int?[,] memo) {\n        if (grid[r][c] == 1) return 0;\n        if (r == 0 && c == 0) return 1;\n        if (memo[r, c] != null) return memo[r, c].Value;\n        int ways = 0;\n        if (r > 0) ways += Count(grid, r - 1, c, memo);\n        if (c > 0) ways += Count(grid, r, c - 1, memo);\n        memo[r, c] = ways;\n        return ways;\n    }\n}"
+        }
+      },
+      {
+        "id": "unique-paths-2-2d-tab",
+        "title": "Tabulation — grid with obstacle resets",
         "level": "Optimal",
+        "time": "O(m × n)",
+        "space": "O(m × n)",
+        "explanation": "Fill top-left to bottom-right; obstacle cells stay zero and block the paths behind them.",
+        "code": {
+          "java": "class Solution {\n    public int uniquePathsWithObstacles(int[][] grid) {\n        int m = grid.length, n = grid[0].length;\n        int[][] dp = new int[m][n];\n        for (int r = 0; r < m; r++) {\n            for (int c = 0; c < n; c++) {\n                if (grid[r][c] == 1) {\n                    dp[r][c] = 0;\n                } else if (r == 0 && c == 0) {\n                    dp[r][c] = 1;\n                } else {\n                    int top = r > 0 ? dp[r - 1][c] : 0;\n                    int left = c > 0 ? dp[r][c - 1] : 0;\n                    dp[r][c] = top + left;\n                }\n            }\n        }\n        return dp[m - 1][n - 1];\n    }\n}",
+          "csharp": "public class Solution {\n    public int UniquePathsWithObstacles(int[][] grid) {\n        int m = grid.Length, n = grid[0].Length;\n        int[,] dp = new int[m, n];\n        for (int r = 0; r < m; r++) {\n            for (int c = 0; c < n; c++) {\n                if (grid[r][c] == 1) {\n                    dp[r, c] = 0;\n                } else if (r == 0 && c == 0) {\n                    dp[r, c] = 1;\n                } else {\n                    int top = r > 0 ? dp[r - 1, c] : 0;\n                    int left = c > 0 ? dp[r, c - 1] : 0;\n                    dp[r, c] = top + left;\n                }\n            }\n        }\n        return dp[m - 1, n - 1];\n    }\n}"
+        }
+      },
+      {
+        "id": "unique-paths-2-dp",
+        "title": "Row sweep with obstacle resets (space-optimized)",
+        "level": "Optimal+",
         "time": "O(m × n)",
         "space": "O(n)",
         "explanation": "Reuse the 1-D DP; an obstacle zeroes its cell, everything else keeps the from-above plus from-left sum.",
@@ -670,9 +838,33 @@
   "a2z-413": {
     "approaches": [
       {
-        "id": "falling-path-tab",
-        "title": "Row-by-row DP over the three neighbours",
+        "id": "falling-path-memo",
+        "title": "Memoized cheapest fall from each cell",
+        "level": "Better",
+        "time": "O(m × n)",
+        "space": "O(m × n)",
+        "explanation": "Start from every cell of the last row and recurse upwards, trying the three cells above; memoize each cell once.",
+        "code": {
+          "java": "class Solution {\n    public int minFallingPathSum(int[][] matrix) {\n        int n = matrix.length;\n        Integer[][] memo = new Integer[n][n];\n        int best = Integer.MAX_VALUE;\n        for (int c = 0; c < n; c++) best = Math.min(best, path(matrix, n - 1, c, memo));\n        return best;\n    }\n    private int path(int[][] matrix, int r, int c, Integer[][] memo) {\n        if (c < 0 || c >= matrix.length) return Integer.MAX_VALUE / 2;\n        if (r == 0) return matrix[0][c];\n        if (memo[r][c] != null) return memo[r][c];\n        int top = Math.min(path(matrix, r - 1, c - 1, memo), path(matrix, r - 1, c, memo));\n        top = Math.min(top, path(matrix, r - 1, c + 1, memo));\n        return memo[r][c] = matrix[r][c] + top;\n    }\n}",
+          "csharp": "public class Solution {\n    public int MinFallingPathSum(int[][] matrix) {\n        int n = matrix.Length;\n        int?[,] memo = new int?[n, n];\n        int best = int.MaxValue;\n        for (int c = 0; c < n; c++) best = Math.Min(best, Path(matrix, n - 1, c, memo));\n        return best;\n    }\n    private int Path(int[][] matrix, int r, int c, int?[,] memo) {\n        if (c < 0 || c >= matrix.Length) return int.MaxValue / 2;\n        if (r == 0) return matrix[0][c];\n        if (memo[r, c] != null) return memo[r, c].Value;\n        int top = Math.Min(Path(matrix, r - 1, c - 1, memo), Path(matrix, r - 1, c, memo));\n        top = Math.Min(top, Path(matrix, r - 1, c + 1, memo));\n        memo[r, c] = matrix[r][c] + top;\n        return memo[r, c].Value;\n    }\n}"
+        }
+      },
+      {
+        "id": "falling-path-dp",
+        "title": "Tabulation — full cost matrix",
         "level": "Optimal",
+        "time": "O(m × n)",
+        "space": "O(m × n)",
+        "explanation": "Each cell stores its value plus the cheapest of the three cells above it; the answer is the minimum of the last row.",
+        "code": {
+          "java": "class Solution {\n    public int minFallingPathSum(int[][] matrix) {\n        int n = matrix.length;\n        int[][] dp = new int[n][n];\n        for (int c = 0; c < n; c++) dp[0][c] = matrix[0][c];\n        for (int r = 1; r < n; r++) {\n            for (int c = 0; c < n; c++) {\n                int top = dp[r - 1][c];\n                if (c > 0) top = Math.min(top, dp[r - 1][c - 1]);\n                if (c < n - 1) top = Math.min(top, dp[r - 1][c + 1]);\n                dp[r][c] = matrix[r][c] + top;\n            }\n        }\n        int best = Integer.MAX_VALUE;\n        for (int c = 0; c < n; c++) best = Math.min(best, dp[n - 1][c]);\n        return best;\n    }\n}",
+          "csharp": "public class Solution {\n    public int MinFallingPathSum(int[][] matrix) {\n        int n = matrix.Length;\n        int[,] dp = new int[n, n];\n        for (int c = 0; c < n; c++) dp[0, c] = matrix[0][c];\n        for (int r = 1; r < n; r++) {\n            for (int c = 0; c < n; c++) {\n                int top = dp[r - 1, c];\n                if (c > 0) top = Math.Min(top, dp[r - 1, c - 1]);\n                if (c < n - 1) top = Math.Min(top, dp[r - 1, c + 1]);\n                dp[r, c] = matrix[r][c] + top;\n            }\n        }\n        int best = int.MaxValue;\n        for (int c = 0; c < n; c++) best = Math.Min(best, dp[n - 1, c]);\n        return best;\n    }\n}"
+        }
+      },
+      {
+        "id": "falling-path-tab",
+        "title": "Row-by-row DP over the three neighbours (space-optimized)",
+        "level": "Optimal+",
         "time": "O(n²)",
         "space": "O(n)",
         "explanation": "For every cell take the cheapest of the three cells above it and add its own value.",
@@ -686,9 +878,33 @@
   "a2z-414": {
     "approaches": [
       {
-        "id": "triangle-bottom-up",
-        "title": "Bottom-up triangle reduction in place",
+        "id": "triangle-memo",
+        "title": "Memoized minimum path from the apex",
+        "level": "Better",
+        "time": "O(n²)",
+        "space": "O(n²)",
+        "explanation": "From the apex, step down to either child and memoize the cheapest remaining path from every cell.",
+        "code": {
+          "java": "class Solution {\n    public int minimumTotal(List<List<Integer>> triangle) {\n        int n = triangle.size();\n        Integer[][] memo = new Integer[n][n];\n        return path(triangle, 0, 0, memo);\n    }\n    private int path(List<List<Integer>> triangle, int r, int c, Integer[][] memo) {\n        if (r == triangle.size() - 1) return triangle.get(r).get(c);\n        if (memo[r][c] != null) return memo[r][c];\n        int best = Math.min(path(triangle, r + 1, c, memo), path(triangle, r + 1, c + 1, memo));\n        return memo[r][c] = triangle.get(r).get(c) + best;\n    }\n}",
+          "csharp": "public class Solution {\n    public int MinimumTotal(IList<IList<int>> triangle) {\n        int n = triangle.Count;\n        int?[,] memo = new int?[n, n];\n        return Path(triangle, 0, 0, memo);\n    }\n    private int Path(IList<IList<int>> triangle, int r, int c, int?[,] memo) {\n        if (r == triangle.Count - 1) return triangle[r][c];\n        if (memo[r, c] != null) return memo[r, c].Value;\n        int best = Math.Min(Path(triangle, r + 1, c, memo), Path(triangle, r + 1, c + 1, memo));\n        memo[r, c] = triangle[r][c] + best;\n        return memo[r, c].Value;\n    }\n}"
+        }
+      },
+      {
+        "id": "triangle-2d-tab",
+        "title": "Tabulation — full triangle table",
         "level": "Optimal",
+        "time": "O(n²)",
+        "space": "O(n²)",
+        "explanation": "Copy the last row into a full table and fold upwards so every cell stores its own subtotal explicitly.",
+        "code": {
+          "java": "class Solution {\n    public int minimumTotal(List<List<Integer>> triangle) {\n        int n = triangle.size();\n        int[][] dp = new int[n][n];\n        for (int c = 0; c < n; c++) dp[n - 1][c] = triangle.get(n - 1).get(c);\n        for (int r = n - 2; r >= 0; r--) {\n            for (int c = 0; c <= r; c++) {\n                int below = Math.min(dp[r + 1][c], dp[r + 1][c + 1]);\n                dp[r][c] = triangle.get(r).get(c) + below;\n            }\n        }\n        return dp[0][0];\n    }\n}",
+          "csharp": "public class Solution {\n    public int MinimumTotal(IList<IList<int>> triangle) {\n        int n = triangle.Count;\n        int[,] dp = new int[n, n];\n        for (int c = 0; c < n; c++) dp[n - 1, c] = triangle[n - 1][c];\n        for (int r = n - 2; r >= 0; r--) {\n            for (int c = 0; c <= r; c++) {\n                int below = Math.Min(dp[r + 1, c], dp[r + 1, c + 1]);\n                dp[r, c] = triangle[r][c] + below;\n            }\n        }\n        return dp[0, 0];\n    }\n}"
+        }
+      },
+      {
+        "id": "triangle-bottom-up",
+        "title": "Bottom-up triangle reduction in place (space-optimized)",
+        "level": "Optimal+",
         "time": "O(n²)",
         "space": "O(n)",
         "explanation": "Start from the last row and fold upward: each cell takes itself plus the smaller of its two children.",
@@ -1112,6 +1328,18 @@
           "java": "class Solution {\n    int[][] memo;\n\n    int minCost(int n, int[] cuts) {\n        int m = cuts.length;\n        int[] c = new int[m + 2];\n        for (int i = 0; i < m; i++) c[i + 1] = cuts[i];\n        c[m + 1] = n;\n        Arrays.sort(c);\n        memo = new int[m + 2][m + 2];\n        return solve(c, 1, m);\n    }\n\n    int solve(int[] c, int i, int j) {\n        if (i > j) return 0;\n        if (memo[i][j] != 0) return memo[i][j];\n        int best = Integer.MAX_VALUE;\n        for (int k = i; k <= j; k++)\n            best = Math.min(best, c[j + 1] - c[i - 1] + solve(c, i, k - 1) + solve(c, k + 1, j));\n        return memo[i][j] = best;\n    }\n}",
           "csharp": "public class Solution {\n    private int[,] memo;\n\n    public int MinCost(int n, int[] cuts) {\n        int m = cuts.Length;\n        var c = new int[m + 2];\n        for (int i = 0; i < m; i++) c[i + 1] = cuts[i];\n        c[m + 1] = n;\n        Array.Sort(c);\n        memo = new int[m + 2, m + 2];\n        return Solve(c, 1, m);\n    }\n\n    private int Solve(int[] c, int i, int j) {\n        if (i > j) return 0;\n        if (memo[i, j] != 0) return memo[i, j];\n        int best = int.MaxValue;\n        for (int k = i; k <= j; k++)\n            best = Math.Min(best, c[j + 1] - c[i - 1] + Solve(c, i, k - 1) + Solve(c, k + 1, j));\n        memo[i, j] = best;\n        return best;\n    }\n}"
         }
+      },
+      {
+        "id": "cut-stick-tab",
+        "title": "Tabulation — interval table over sorted cuts",
+        "level": "Optimal",
+        "time": "O(c³)",
+        "space": "O(c²)",
+        "explanation": "Sort the cuts with 0 and n as sentinels, then build interval answers from shortest to longest — each pick pays the stick length plus both halves.",
+        "code": {
+          "java": "class Solution {\n    public int minCost(int n, int[] cuts) {\n        int m = cuts.length;\n        int[] points = new int[m + 2];\n        for (int i = 0; i < m; i++) points[i + 1] = cuts[i];\n        points[m + 1] = n;\n        Arrays.sort(points);\n        int[][] dp = new int[m + 2][m + 2];\n        for (int len = 2; len <= m + 1; len++) {\n            for (int left = 0; left + len <= m + 1; left++) {\n                int right = left + len;\n                int best = Integer.MAX_VALUE;\n                for (int cut = left + 1; cut < right; cut++) {\n                    best = Math.min(best, dp[left][cut] + dp[cut][right]);\n                }\n                if (best != Integer.MAX_VALUE) dp[left][right] = points[right] - points[left] + best;\n            }\n        }\n        return dp[0][m + 1];\n    }\n}",
+          "csharp": "public class Solution {\n    public int MinCost(int n, int[] cuts) {\n        int m = cuts.Length;\n        int[] points = new int[m + 2];\n        for (int i = 0; i < m; i++) points[i + 1] = cuts[i];\n        points[m + 1] = n;\n        Array.Sort(points);\n        int[,] dp = new int[m + 2, m + 2];\n        for (int len = 2; len <= m + 1; len++) {\n            for (int left = 0; left + len <= m + 1; left++) {\n                int right = left + len;\n                int best = int.MaxValue;\n                for (int cut = left + 1; cut < right; cut++) {\n                    best = Math.Min(best, dp[left, cut] + dp[cut, right]);\n                }\n                if (best != int.MaxValue) dp[left, right] = points[right] - points[left] + best;\n            }\n        }\n        return dp[0, m + 1];\n    }\n}"
+        }
       }
     ]
   },
@@ -1127,6 +1355,18 @@
         "code": {
           "java": "class Solution {\n    Long[][][] memo;\n\n    long evaluateWays(String s) {\n        int n = s.length();\n        memo = new Long[n][n][2];\n        return solve(s, 0, n - 1, 1);\n    }\n\n    long solve(String s, int i, int j, int want) {\n        if (i == j) return s.charAt(i) - '0' == want ? 1 : 0;\n        if (memo[i][j][want] != null) return memo[i][j][want];\n        long ways = 0;\n        for (int k = i + 1; k < j; k += 2) {\n            long lt = solve(s, i, k - 1, 1), lf = solve(s, i, k - 1, 0);\n            long rt = solve(s, k + 1, j, 1), rf = solve(s, k + 1, j, 0);\n            char op = s.charAt(k);\n            if (op == '&') ways += want == 1 ? lt * rt : lt * rf + lf * rt + lf * rf;\n            else if (op == '|') ways += want == 1 ? lt * rt + lt * rf + lf * rt : lf * rf;\n            else ways += want == 1 ? lt * rf + lf * rt : lt * rt + lf * rf;\n        }\n        return memo[i][j][want] = ways;\n    }\n}",
           "csharp": "public class Solution {\n    private long?[,,] memo;\n\n    public long EvaluateWays(string s) {\n        int n = s.Length;\n        memo = new long?[n, n, 2];\n        return Solve(s, 0, n - 1, 1);\n    }\n\n    private long Solve(string s, int i, int j, int want) {\n        if (i == j) return s[i] - '0' == want ? 1 : 0;\n        if (memo[i, j, want] != null) return memo[i, j, want].Value;\n        long ways = 0;\n        for (int k = i + 1; k < j; k += 2) {\n            long lt = Solve(s, i, k - 1, 1), lf = Solve(s, i, k - 1, 0);\n            long rt = Solve(s, k + 1, j, 1), rf = Solve(s, k + 1, j, 0);\n            char op = s[k];\n            if (op == '&') ways += want == 1 ? lt * rt : lt * rf + lf * rt + lf * rf;\n            else if (op == '|') ways += want == 1 ? lt * rt + lt * rf + lf * rt : lf * rf;\n            else ways += want == 1 ? lt * rf + lf * rt : lt * rt + lf * rf;\n        }\n        memo[i, j, want] = ways;\n        return ways;\n    }\n}"
+        }
+      },
+      {
+        "id": "boolean-parens-tab",
+        "title": "Tabulation — true and false counts per interval",
+        "level": "Optimal",
+        "time": "O(n³)",
+        "space": "O(n²)",
+        "explanation": "Store true/false expression counts for every interval; each split combines the two halves per operator with mod arithmetic.",
+        "code": {
+          "java": "class Solution {\n    public int countWays(String exp) {\n        int n = exp.length();\n        long MOD = 1_000_000_007L;\n        long[][] trueWays = new long[n][n];\n        long[][] falseWays = new long[n][n];\n        for (int i = 0; i < n; i += 2) {\n            trueWays[i][i] = exp.charAt(i) == 'T' ? 1 : 0;\n            falseWays[i][i] = exp.charAt(i) == 'F' ? 1 : 0;\n        }\n        for (int len = 3; len <= n; len += 2) {\n            for (int left = 0; left + len <= n; left += 2) {\n                int right = left + len - 1;\n                for (int split = left + 1; split < right; split += 2) {\n                    long lt = trueWays[left][split - 1];\n                    long lf = falseWays[left][split - 1];\n                    long rt = trueWays[split + 1][right];\n                    long rf = falseWays[split + 1][right];\n                    char op = exp.charAt(split);\n                    long total = (lt + lf) * (rt + rf) % MOD;\n                    long t = 0;\n                    if (op == '&') {\n                        t = lt * rt % MOD;\n                    } else if (op == '|') {\n                        t = (total - lf * rf % MOD + MOD) % MOD;\n                    } else {\n                        t = (lt * rf + lf * rt) % MOD;\n                    }\n                    trueWays[left][right] = (trueWays[left][right] + t) % MOD;\n                    falseWays[left][right] = (falseWays[left][right] + total - t + MOD) % MOD;\n                }\n            }\n        }\n        return (int) trueWays[0][n - 1];\n    }\n}",
+          "csharp": "public class Solution {\n    public int CountWays(string exp) {\n        int n = exp.Length;\n        long MOD = 1_000_000_007L;\n        long[,] trueWays = new long[n, n];\n        long[,] falseWays = new long[n, n];\n        for (int i = 0; i < n; i += 2) {\n            trueWays[i, i] = exp[i] == 'T' ? 1 : 0;\n            falseWays[i, i] = exp[i] == 'F' ? 1 : 0;\n        }\n        for (int len = 3; len <= n; len += 2) {\n            for (int left = 0; left + len <= n; left += 2) {\n                int right = left + len - 1;\n                for (int split = left + 1; split < right; split += 2) {\n                    long lt = trueWays[left, split - 1];\n                    long lf = falseWays[left, split - 1];\n                    long rt = trueWays[split + 1, right];\n                    long rf = falseWays[split + 1, right];\n                    char op = exp[split];\n                    long total = (lt + lf) * (rt + rf) % MOD;\n                    long t = 0;\n                    if (op == '&') {\n                        t = lt * rt % MOD;\n                    } else if (op == '|') {\n                        t = (total - lf * rf % MOD + MOD) % MOD;\n                    } else {\n                        t = (lt * rf + lf * rt) % MOD;\n                    }\n                    trueWays[left, right] = (trueWays[left, right] + t) % MOD;\n                    falseWays[left, right] = (falseWays[left, right] + total - t + MOD) % MOD;\n                }\n            }\n        }\n        return (int) trueWays[0, n - 1];\n    }\n}"
         }
       }
     ]
@@ -2287,6 +2527,310 @@
         "code": {
           "java": "class Solution {\n    int[] rearrangeArray(int[] nums) {\n        int[] res = new int[nums.length];\n        int pos = 0, neg = 1;\n        for (int v : nums) {\n            if (v > 0) {\n                res[pos] = v;\n                pos += 2;\n            } else {\n                res[neg] = v;\n                neg += 2;\n            }\n        }\n        return res;\n    }\n}",
           "csharp": "public class Solution {\n    public int[] RearrangeArray(int[] nums) {\n        var res = new int[nums.Length];\n        int pos = 0, neg = 1;\n        foreach (int v in nums) {\n            if (v > 0) {\n                res[pos] = v;\n                pos += 2;\n            } else {\n                res[neg] = v;\n                neg += 2;\n            }\n        }\n        return res;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-083": {
+    "approaches": [
+      {
+        "id": "next-permutation-scan",
+        "title": "Pivot, swap and reverse — the O(n) scan",
+        "level": "Optimal",
+        "time": "O(n)",
+        "space": "O(1)",
+        "explanation": "Find the longest decreasing suffix; the element before it is the pivot. Swap the pivot with the smallest larger element in the suffix, then reverse the suffix to get the next permutation.",
+        "code": {
+          "java": "class Solution {\n    public void nextPermutation(int[] nums) {\n        int n = nums.length;\n        int pivot = n - 2;\n        while (pivot >= 0 && nums[pivot] >= nums[pivot + 1]) pivot--;\n        if (pivot >= 0) {\n            int swapWith = n - 1;\n            while (nums[swapWith] <= nums[pivot]) swapWith--;\n            int temp = nums[pivot];\n            nums[pivot] = nums[swapWith];\n            nums[swapWith] = temp;\n        }\n        for (int left = pivot + 1, right = n - 1; left < right; left++, right--) {\n            int temp = nums[left];\n            nums[left] = nums[right];\n            nums[right] = temp;\n        }\n    }\n}",
+          "csharp": "public class Solution {\n    public void NextPermutation(int[] nums) {\n        int n = nums.Length;\n        int pivot = n - 2;\n        while (pivot >= 0 && nums[pivot] >= nums[pivot + 1]) pivot--;\n        if (pivot >= 0) {\n            int swapWith = n - 1;\n            while (nums[swapWith] <= nums[pivot]) swapWith--;\n            (nums[pivot], nums[swapWith]) = (nums[swapWith], nums[pivot]);\n        }\n        for (int left = pivot + 1, right = n - 1; left < right; left++, right--) {\n            (nums[left], nums[right]) = (nums[right], nums[left]);\n        }\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-084": {
+    "approaches": [
+      {
+        "id": "leaders-suffix-scan",
+        "title": "Suffix maximum sweep",
+        "level": "Optimal",
+        "time": "O(n)",
+        "space": "O(1)",
+        "explanation": "Scan from the right, keeping the running maximum. An element is a leader when nothing to its right is larger.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> leaders(int[] nums) {\n        List<Integer> res = new ArrayList<>();\n        int max = Integer.MIN_VALUE;\n        for (int i = nums.length - 1; i >= 0; i--) {\n            if (nums[i] >= max) {\n                res.add(nums[i]);\n                max = nums[i];\n            }\n        }\n        Collections.reverse(res);\n        return res;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> Leaders(int[] nums) {\n        List<int> res = new List<int>();\n        int max = int.MinValue;\n        for (int i = nums.Length - 1; i >= 0; i--) {\n            if (nums[i] >= max) {\n                res.Add(nums[i]);\n                max = nums[i];\n            }\n        }\n        res.Reverse();\n        return res;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-085": {
+    "approaches": [
+      {
+        "id": "longest-consecutive-hashset",
+        "title": "Hash set with sequence-start detection",
+        "level": "Optimal",
+        "time": "O(n) average",
+        "space": "O(n)",
+        "explanation": "Put every number in a hash set and only start counting from sequence starts — numbers whose predecessor is absent.",
+        "code": {
+          "java": "class Solution {\n    public int longestConsecutive(int[] nums) {\n        Set<Integer> values = new HashSet<>();\n        for (int num : nums) values.add(num);\n        int best = 0;\n        for (int num : values) {\n            if (values.contains(num - 1)) continue;\n            int length = 1;\n            while (values.contains(num + length)) length++;\n            best = Math.max(best, length);\n        }\n        return best;\n    }\n}",
+          "csharp": "public class Solution {\n    public int LongestConsecutive(int[] nums) {\n        HashSet<int> values = new HashSet<int>(nums);\n        int best = 0;\n        foreach (int num in values) {\n            if (values.Contains(num - 1)) continue;\n            int length = 1;\n            while (values.Contains(num + length)) length++;\n            best = Math.Max(best, length);\n        }\n        return best;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-086": {
+    "approaches": [
+      {
+        "id": "set-matrix-zeroes-markers",
+        "title": "First row and column as markers",
+        "level": "Optimal",
+        "time": "O(m × n)",
+        "space": "O(1)",
+        "explanation": "Use the first row and column as markers for which lines must be zeroed, remember whether they themselves had a zero, then fix the markers last.",
+        "code": {
+          "java": "class Solution {\n    public void setZeroes(int[][] matrix) {\n        int rows = matrix.length, cols = matrix[0].length;\n        boolean firstRow = false, firstCol = false;\n        for (int c = 0; c < cols; c++) if (matrix[0][c] == 0) firstRow = true;\n        for (int r = 0; r < rows; r++) if (matrix[r][0] == 0) firstCol = true;\n        for (int r = 1; r < rows; r++) {\n            for (int c = 1; c < cols; c++) {\n                if (matrix[r][c] == 0) {\n                    matrix[r][0] = 0;\n                    matrix[0][c] = 0;\n                }\n            }\n        }\n        for (int r = 1; r < rows; r++) {\n            for (int c = 1; c < cols; c++) {\n                if (matrix[r][0] == 0 || matrix[0][c] == 0) matrix[r][c] = 0;\n            }\n        }\n        if (firstRow) for (int c = 0; c < cols; c++) matrix[0][c] = 0;\n        if (firstCol) for (int r = 0; r < rows; r++) matrix[r][0] = 0;\n    }\n}",
+          "csharp": "public class Solution {\n    public void SetZeroes(int[][] matrix) {\n        int rows = matrix.Length, cols = matrix[0].Length;\n        bool firstRow = false, firstCol = false;\n        for (int c = 0; c < cols; c++) if (matrix[0][c] == 0) firstRow = true;\n        for (int r = 0; r < rows; r++) if (matrix[r][0] == 0) firstCol = true;\n        for (int r = 1; r < rows; r++) {\n            for (int c = 1; c < cols; c++) {\n                if (matrix[r][c] == 0) {\n                    matrix[r][0] = 0;\n                    matrix[0][c] = 0;\n                }\n            }\n        }\n        for (int r = 1; r < rows; r++) {\n            for (int c = 1; c < cols; c++) {\n                if (matrix[r][0] == 0 || matrix[0][c] == 0) matrix[r][c] = 0;\n            }\n        }\n        if (firstRow) for (int c = 0; c < cols; c++) matrix[0][c] = 0;\n        if (firstCol) for (int r = 0; r < rows; r++) matrix[r][0] = 0;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-087": {
+    "approaches": [
+      {
+        "id": "rotate-matrix-transpose-reverse",
+        "title": "Transpose, then reverse each row",
+        "level": "Optimal",
+        "time": "O(n²)",
+        "space": "O(1)",
+        "explanation": "Transposing mirrors the matrix across the main diagonal; reversing every row afterwards completes an in-place 90 degree clockwise rotation.",
+        "code": {
+          "java": "class Solution {\n    public void rotate(int[][] matrix) {\n        int n = matrix.length;\n        for (int r = 0; r < n; r++) {\n            for (int c = r + 1; c < n; c++) {\n                int temp = matrix[r][c];\n                matrix[r][c] = matrix[c][r];\n                matrix[c][r] = temp;\n            }\n        }\n        for (int r = 0; r < n; r++) {\n            for (int left = 0, right = n - 1; left < right; left++, right--) {\n                int temp = matrix[r][left];\n                matrix[r][left] = matrix[r][right];\n                matrix[r][right] = temp;\n            }\n        }\n    }\n}",
+          "csharp": "public class Solution {\n    public void Rotate(int[][] matrix) {\n        int n = matrix.Length;\n        for (int r = 0; r < n; r++) {\n            for (int c = r + 1; c < n; c++) {\n                (matrix[r][c], matrix[c][r]) = (matrix[c][r], matrix[r][c]);\n            }\n        }\n        for (int r = 0; r < n; r++) {\n            for (int left = 0, right = n - 1; left < right; left++, right--) {\n                (matrix[r][left], matrix[r][right]) = (matrix[r][right], matrix[r][left]);\n            }\n        }\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-088": {
+    "approaches": [
+      {
+        "id": "spiral-boundary-simulation",
+        "title": "Shrinking boundary simulation",
+        "level": "Optimal",
+        "time": "O(m × n)",
+        "space": "O(1)",
+        "explanation": "Walk four shrinking boundaries — top row, right column, bottom row, left column — and close each side after it is consumed.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> spiralOrder(int[][] matrix) {\n        List<Integer> res = new ArrayList<>();\n        int top = 0, bottom = matrix.length - 1;\n        int left = 0, right = matrix[0].length - 1;\n        while (top <= bottom && left <= right) {\n            for (int c = left; c <= right; c++) res.add(matrix[top][c]);\n            top++;\n            for (int r = top; r <= bottom; r++) res.add(matrix[r][right]);\n            right--;\n            if (top <= bottom) {\n                for (int c = right; c >= left; c--) res.add(matrix[bottom][c]);\n                bottom--;\n            }\n            if (left <= right) {\n                for (int r = bottom; r >= top; r--) res.add(matrix[r][left]);\n                left++;\n            }\n        }\n        return res;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> SpiralOrder(int[][] matrix) {\n        List<int> res = new List<int>();\n        int top = 0, bottom = matrix.Length - 1;\n        int left = 0, right = matrix[0].Length - 1;\n        while (top <= bottom && left <= right) {\n            for (int c = left; c <= right; c++) res.Add(matrix[top][c]);\n            top++;\n            for (int r = top; r <= bottom; r++) res.Add(matrix[r][right]);\n            right--;\n            if (top <= bottom) {\n                for (int c = right; c >= left; c--) res.Add(matrix[bottom][c]);\n                bottom--;\n            }\n            if (left <= right) {\n                for (int r = bottom; r >= top; r--) res.Add(matrix[r][left]);\n                left++;\n            }\n        }\n        return res;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-089": {
+    "approaches": [
+      {
+        "id": "subarray-sum-prefix-map",
+        "title": "Prefix sums in a hash map",
+        "level": "Optimal",
+        "time": "O(n)",
+        "space": "O(n)",
+        "explanation": "Keep a running prefix sum and a map of how often each sum was seen; a subarray ends in k whenever sum - k was seen before.",
+        "code": {
+          "java": "class Solution {\n    public int subarraySum(int[] nums, int k) {\n        Map<Integer, Integer> seen = new HashMap<>();\n        seen.put(0, 1);\n        int sum = 0, count = 0;\n        for (int num : nums) {\n            sum += num;\n            count += seen.getOrDefault(sum - k, 0);\n            seen.put(sum, seen.getOrDefault(sum, 0) + 1);\n        }\n        return count;\n    }\n}",
+          "csharp": "public class Solution {\n    public int SubarraySum(int[] nums, int k) {\n        Dictionary<int, int> seen = new Dictionary<int, int> { [0] = 1 };\n        int sum = 0, count = 0;\n        foreach (int num in nums) {\n            sum += num;\n            int hits;\n            seen.TryGetValue(sum - k, out hits);\n            count += hits;\n            seen.TryGetValue(sum, out hits);\n            seen[sum] = hits + 1;\n        }\n        return count;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-090": {
+    "approaches": [
+      {
+        "id": "pascal-row-ncr",
+        "title": "Nth row via the nCr recurrence",
+        "level": "Optimal",
+        "time": "O(row)",
+        "space": "O(1) extra",
+        "explanation": "Build the row with the nCr recurrence: each value is the previous one times (row - col) over (col + 1), so no factorials are needed.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> pascalRow(int rowIndex) {\n        List<Integer> row = new ArrayList<>();\n        long value = 1;\n        for (int col = 0; col <= rowIndex; col++) {\n            row.add((int) value);\n            value = value * (rowIndex - col) / (col + 1);\n        }\n        return row;\n    }\n}",
+          "csharp": "public class Solution {\n    public IList<int> PascalRow(int rowIndex) {\n        List<int> row = new List<int>();\n        long value = 1;\n        for (int col = 0; col <= rowIndex; col++) {\n            row.Add((int) value);\n            value = value * (rowIndex - col) / (col + 1);\n        }\n        return row;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-091": {
+    "approaches": [
+      {
+        "id": "majority-ii-moore",
+        "title": "Extended Boyer-Moore — two candidates",
+        "level": "Optimal",
+        "time": "O(n)",
+        "space": "O(1)",
+        "explanation": "Keep two candidates with two counters; a second pass verifies which of them actually appear more than n/3 times.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> majorityElement(int[] nums) {\n        int cand1 = 0, cand2 = 1, count1 = 0, count2 = 0;\n        for (int num : nums) {\n            if (num == cand1) count1++;\n            else if (num == cand2) count2++;\n            else if (count1 == 0) { cand1 = num; count1 = 1; }\n            else if (count2 == 0) { cand2 = num; count2 = 1; }\n            else { count1--; count2--; }\n        }\n        count1 = 0; count2 = 0;\n        for (int num : nums) {\n            if (num == cand1) count1++;\n            else if (num == cand2) count2++;\n        }\n        List<Integer> res = new ArrayList<>();\n        int threshold = nums.length / 3;\n        if (count1 > threshold) res.add(cand1);\n        if (count2 > threshold) res.add(cand2);\n        return res;\n    }\n}",
+          "csharp": "public class Solution {\n    public IList<int> MajorityElement(int[] nums) {\n        int cand1 = 0, cand2 = 1, count1 = 0, count2 = 0;\n        foreach (int num in nums) {\n            if (num == cand1) count1++;\n            else if (num == cand2) count2++;\n            else if (count1 == 0) { cand1 = num; count1 = 1; }\n            else if (count2 == 0) { cand2 = num; count2 = 1; }\n            else { count1--; count2--; }\n        }\n        count1 = 0; count2 = 0;\n        foreach (int num in nums) {\n            if (num == cand1) count1++;\n            else if (num == cand2) count2++;\n        }\n        List<int> res = new List<int>();\n        int threshold = nums.Length / 3;\n        if (count1 > threshold) res.Add(cand1);\n        if (count2 > threshold) res.Add(cand2);\n        return res;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-092": {
+    "approaches": [
+      {
+        "id": "three-sum-sort-two-pointers",
+        "title": "Sort, fix one, two-pointer the rest",
+        "level": "Optimal",
+        "time": "O(n²)",
+        "space": "O(1)",
+        "explanation": "Sort the array, fix one element, then run two pointers towards a zero sum — skipping duplicates at every level.",
+        "code": {
+          "java": "class Solution {\n    public List<List<Integer>> threeSum(int[] nums) {\n        Arrays.sort(nums);\n        List<List<Integer>> res = new ArrayList<>();\n        int n = nums.length;\n        for (int i = 0; i < n - 2; i++) {\n            if (i > 0 && nums[i] == nums[i - 1]) continue;\n            int left = i + 1, right = n - 1;\n            while (left < right) {\n                int sum = nums[i] + nums[left] + nums[right];\n                if (sum == 0) {\n                    res.add(Arrays.asList(nums[i], nums[left], nums[right]));\n                    while (left < right && nums[left] == nums[left + 1]) left++;\n                    while (left < right && nums[right] == nums[right - 1]) right--;\n                    left++;\n                    right--;\n                } else if (sum < 0) {\n                    left++;\n                } else {\n                    right--;\n                }\n            }\n        }\n        return res;\n    }\n}",
+          "csharp": "public class Solution {\n    public IList<IList<int>> ThreeSum(int[] nums) {\n        Array.Sort(nums);\n        List<IList<int>> res = new List<IList<int>>();\n        int n = nums.Length;\n        for (int i = 0; i < n - 2; i++) {\n            if (i > 0 && nums[i] == nums[i - 1]) continue;\n            int left = i + 1, right = n - 1;\n            while (left < right) {\n                int sum = nums[i] + nums[left] + nums[right];\n                if (sum == 0) {\n                    res.Add(new List<int> { nums[i], nums[left], nums[right] });\n                    while (left < right && nums[left] == nums[left + 1]) left++;\n                    while (left < right && nums[right] == nums[right - 1]) right--;\n                    left++;\n                    right--;\n                } else if (sum < 0) {\n                    left++;\n                } else {\n                    right--;\n                }\n            }\n        }\n        return res;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-093": {
+    "approaches": [
+      {
+        "id": "four-sum-fixed-pairs",
+        "title": "Two fixed loops plus two pointers",
+        "level": "Optimal",
+        "time": "O(n³)",
+        "space": "O(1)",
+        "explanation": "Sort, fix two indices with nested loops, then two-pointer the remaining pair to reach the target — long arithmetic guards the sums.",
+        "code": {
+          "java": "class Solution {\n    public List<List<Integer>> fourSum(int[] nums, int target) {\n        Arrays.sort(nums);\n        List<List<Integer>> res = new ArrayList<>();\n        int n = nums.length;\n        for (int i = 0; i < n - 3; i++) {\n            if (i > 0 && nums[i] == nums[i - 1]) continue;\n            for (int j = i + 1; j < n - 2; j++) {\n                if (j > i + 1 && nums[j] == nums[j - 1]) continue;\n                int left = j + 1, right = n - 1;\n                while (left < right) {\n                    long sum = (long) nums[i] + nums[j] + nums[left] + nums[right];\n                    if (sum == target) {\n                        res.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));\n                        while (left < right && nums[left] == nums[left + 1]) left++;\n                        while (left < right && nums[right] == nums[right - 1]) right--;\n                        left++;\n                        right--;\n                    } else if (sum < target) {\n                        left++;\n                    } else {\n                        right--;\n                    }\n                }\n            }\n        }\n        return res;\n    }\n}",
+          "csharp": "public class Solution {\n    public IList<IList<int>> FourSum(int[] nums, int target) {\n        Array.Sort(nums);\n        List<IList<int>> res = new List<IList<int>>();\n        int n = nums.Length;\n        for (int i = 0; i < n - 3; i++) {\n            if (i > 0 && nums[i] == nums[i - 1]) continue;\n            for (int j = i + 1; j < n - 2; j++) {\n                if (j > i + 1 && nums[j] == nums[j - 1]) continue;\n                int left = j + 1, right = n - 1;\n                while (left < right) {\n                    long sum = (long) nums[i] + nums[j] + nums[left] + nums[right];\n                    if (sum == target) {\n                        res.Add(new List<int> { nums[i], nums[j], nums[left], nums[right] });\n                        while (left < right && nums[left] == nums[left + 1]) left++;\n                        while (left < right && nums[right] == nums[right - 1]) right--;\n                        left++;\n                        right--;\n                    } else if (sum < target) {\n                        left++;\n                    } else {\n                        right--;\n                    }\n                }\n            }\n        }\n        return res;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-094": {
+    "approaches": [
+      {
+        "id": "zero-sum-first-prefix-index",
+        "title": "First index of each prefix sum",
+        "level": "Optimal",
+        "time": "O(n)",
+        "space": "O(n)",
+        "explanation": "A zero-sum subarray lies between two equal prefix sums — store the earliest index of each sum and update the best gap.",
+        "code": {
+          "java": "class Solution {\n    public int maxLength(int[] nums) {\n        Map<Integer, Integer> first = new HashMap<>();\n        int sum = 0, best = 0;\n        for (int i = 0; i < nums.length; i++) {\n            sum += nums[i];\n            if (sum == 0) best = i + 1;\n            if (first.containsKey(sum)) {\n                best = Math.max(best, i - first.get(sum));\n            } else {\n                first.put(sum, i);\n            }\n        }\n        return best;\n    }\n}",
+          "csharp": "public class Solution {\n    public int MaxLength(int[] nums) {\n        Dictionary<int, int> first = new Dictionary<int, int>();\n        int sum = 0, best = 0;\n        for (int i = 0; i < nums.Length; i++) {\n            sum += nums[i];\n            if (sum == 0) best = i + 1;\n            int seen;\n            if (first.TryGetValue(sum, out seen)) {\n                best = Math.Max(best, i - seen);\n            } else {\n                first[sum] = i;\n            }\n        }\n        return best;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-095": {
+    "approaches": [
+      {
+        "id": "subarray-xor-prefix-map",
+        "title": "Prefix XOR with a hash map",
+        "level": "Optimal",
+        "time": "O(n)",
+        "space": "O(n)",
+        "explanation": "Keep the running prefix XOR in a map; a subarray ends in k whenever the current prefix and prefix XOR k were both seen.",
+        "code": {
+          "java": "class Solution {\n    public int subarraysWithXorK(int[] nums, int k) {\n        Map<Integer, Integer> seen = new HashMap<>();\n        seen.put(0, 1);\n        int xor = 0, count = 0;\n        for (int num : nums) {\n            xor ^= num;\n            count += seen.getOrDefault(xor ^ k, 0);\n            seen.put(xor, seen.getOrDefault(xor, 0) + 1);\n        }\n        return count;\n    }\n}",
+          "csharp": "public class Solution {\n    public int SubarraysWithXorK(int[] nums, int k) {\n        Dictionary<int, int> seen = new Dictionary<int, int> { [0] = 1 };\n        int xor = 0, count = 0;\n        foreach (int num in nums) {\n            xor ^= num;\n            int hits;\n            seen.TryGetValue(xor ^ k, out hits);\n            count += hits;\n            seen.TryGetValue(xor, out hits);\n            seen[xor] = hits + 1;\n        }\n        return count;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-096": {
+    "approaches": [
+      {
+        "id": "merge-intervals-sort-sweep",
+        "title": "Sort by start and extend the end",
+        "level": "Optimal",
+        "time": "O(n log n)",
+        "space": "O(n)",
+        "explanation": "Sort by start time and merge into the last interval while it overlaps; a start beyond the current end opens a new interval.",
+        "code": {
+          "java": "class Solution {\n    public int[][] merge(int[][] intervals) {\n        Arrays.sort(intervals, (a, b) -> a[0] - b[0]);\n        List<int[]> merged = new ArrayList<>();\n        for (int[] interval : intervals) {\n            if (merged.isEmpty() || merged.get(merged.size() - 1)[1] < interval[0]) {\n                merged.add(interval);\n            } else {\n                int[] last = merged.get(merged.size() - 1);\n                last[1] = Math.max(last[1], interval[1]);\n            }\n        }\n        return merged.toArray(new int[merged.size()][]);\n    }\n}",
+          "csharp": "public class Solution {\n    public int[][] Merge(int[][] intervals) {\n        Array.Sort(intervals, (a, b) => a[0] - b[0]);\n        List<int[]> merged = new List<int[]>();\n        foreach (int[] interval in intervals) {\n            if (merged.Count == 0 || merged[merged.Count - 1][1] < interval[0]) {\n                merged.Add(interval);\n            } else {\n                int[] last = merged[merged.Count - 1];\n                last[1] = Math.Max(last[1], interval[1]);\n            }\n        }\n        return merged.ToArray();\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-097": {
+    "approaches": [
+      {
+        "id": "merge-sorted-gap-method",
+        "title": "Gap method — Shell sort style",
+        "level": "Optimal",
+        "time": "O((m + n) log(m + n))",
+        "space": "O(1)",
+        "explanation": "Compare elements one gap apart across both arrays as if they were concatenated, halving the gap each round until it is one.",
+        "code": {
+          "java": "class Solution {\n    public void merge(int[] a, int m, int[] b, int n) {\n        int len = m + n;\n        int gap = (len + 1) / 2;\n        while (gap > 0) {\n            int left = 0, right = left + gap;\n            while (right < len) {\n                if (left < m && right < m) compareSwap(a, a, left, right);\n                else if (left < m) compareSwap(a, b, left, right - m);\n                else compareSwap(b, b, left - m, right - m);\n                left++;\n                right++;\n            }\n            if (gap == 1) break;\n            gap = (gap + 1) / 2;\n        }\n    }\n    private void compareSwap(int[] x, int[] y, int i, int j) {\n        if (x[i] > y[j]) {\n            int temp = x[i];\n            x[i] = y[j];\n            y[j] = temp;\n        }\n    }\n}",
+          "csharp": "public class Solution {\n    public void Merge(int[] a, int m, int[] b, int n) {\n        int len = m + n;\n        int gap = (len + 1) / 2;\n        while (gap > 0) {\n            int left = 0, right = left + gap;\n            while (right < len) {\n                if (left < m && right < m) CompareSwap(a, a, left, right);\n                else if (left < m) CompareSwap(a, b, left, right - m);\n                else CompareSwap(b, b, left - m, right - m);\n                left++;\n                right++;\n            }\n            if (gap == 1) break;\n            gap = (gap + 1) / 2;\n        }\n    }\n    private void CompareSwap(int[] x, int[] y, int i, int j) {\n        if (x[i] > y[j]) {\n            int temp = x[i];\n            x[i] = y[j];\n            y[j] = temp;\n        }\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-098": {
+    "approaches": [
+      {
+        "id": "repeating-missing-xor-split",
+        "title": "XOR split by the lowest set bit",
+        "level": "Optimal",
+        "time": "O(n)",
+        "space": "O(1)",
+        "explanation": "XOR of all values with 1..n leaves missing XOR repeating; split every number by the lowest set bit to separate the two groups.",
+        "code": {
+          "java": "class Solution {\n    public int[] findTwoElement(int[] nums) {\n        int xor = 0;\n        for (int i = 0; i < nums.length; i++) xor ^= nums[i] ^ (i + 1);\n        int bit = xor & -xor;\n        int group1 = 0, group2 = 0;\n        for (int i = 0; i < nums.length; i++) {\n            int value = nums[i];\n            if ((value & bit) != 0) group1 ^= value;\n            else group2 ^= value;\n            int natural = i + 1;\n            if ((natural & bit) != 0) group1 ^= natural;\n            else group2 ^= natural;\n        }\n        int repeating = group1, missing = group2;\n        for (int num : nums) {\n            if (num == group1) {\n                repeating = group1;\n                missing = group2;\n                break;\n            }\n        }\n        return new int[] { repeating, missing };\n    }\n}",
+          "csharp": "public class Solution {\n    public int[] FindTwoElement(int[] nums) {\n        int xor = 0;\n        for (int i = 0; i < nums.Length; i++) xor ^= nums[i] ^ (i + 1);\n        int bit = xor & -xor;\n        int group1 = 0, group2 = 0;\n        for (int i = 0; i < nums.Length; i++) {\n            int value = nums[i];\n            if ((value & bit) != 0) group1 ^= value;\n            else group2 ^= value;\n            int natural = i + 1;\n            if ((natural & bit) != 0) group1 ^= natural;\n            else group2 ^= natural;\n        }\n        int repeating = group1, missing = group2;\n        foreach (int num in nums) {\n            if (num == group1) {\n                repeating = group1;\n                missing = group2;\n                break;\n            }\n        }\n        return new[] { repeating, missing };\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-099": {
+    "approaches": [
+      {
+        "id": "count-inversions-merge-sort",
+        "title": "Merge sort that counts while merging",
+        "level": "Optimal",
+        "time": "O(n log n)",
+        "space": "O(n)",
+        "explanation": "Every element taken from the right half during a merge forms inversions with all remaining elements of the left half.",
+        "code": {
+          "java": "class Solution {\n    public long inversionCount(long[] arr) {\n        return mergeSort(arr, new long[arr.length], 0, arr.length - 1);\n    }\n    private long mergeSort(long[] arr, long[] buffer, int left, int right) {\n        if (left >= right) return 0;\n        int mid = (left + right) / 2;\n        long count = mergeSort(arr, buffer, left, mid) + mergeSort(arr, buffer, mid + 1, right);\n        int i = left, j = mid + 1, k = left;\n        while (i <= mid && j <= right) {\n            if (arr[i] <= arr[j]) {\n                buffer[k++] = arr[i++];\n            } else {\n                count += mid - i + 1;\n                buffer[k++] = arr[j++];\n            }\n        }\n        while (i <= mid) buffer[k++] = arr[i++];\n        while (j <= right) buffer[k++] = arr[j++];\n        for (int x = left; x <= right; x++) arr[x] = buffer[x];\n        return count;\n    }\n}",
+          "csharp": "public class Solution {\n    public long InversionCount(long[] arr) {\n        return MergeSort(arr, new long[arr.Length], 0, arr.Length - 1);\n    }\n    private long MergeSort(long[] arr, long[] buffer, int left, int right) {\n        if (left >= right) return 0;\n        int mid = (left + right) / 2;\n        long count = MergeSort(arr, buffer, left, mid) + MergeSort(arr, buffer, mid + 1, right);\n        int i = left, j = mid + 1, k = left;\n        while (i <= mid && j <= right) {\n            if (arr[i] <= arr[j]) {\n                buffer[k++] = arr[i++];\n            } else {\n                count += mid - i + 1;\n                buffer[k++] = arr[j++];\n            }\n        }\n        while (i <= mid) buffer[k++] = arr[i++];\n        while (j <= right) buffer[k++] = arr[j++];\n        for (int x = left; x <= right; x++) arr[x] = buffer[x];\n        return count;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-100": {
+    "approaches": [
+      {
+        "id": "reverse-pairs-merge-sort",
+        "title": "Merge sort with a counting pass",
+        "level": "Optimal",
+        "time": "O(n log n)",
+        "space": "O(n)",
+        "explanation": "Before each merge, count pairs with a monotone pointer — advance while arr[i] exceeds twice arr[j], then merge as usual.",
+        "code": {
+          "java": "class Solution {\n    public int reversePairs(int[] nums) {\n        return mergeSort(nums, new int[nums.length], 0, nums.length - 1);\n    }\n    private int mergeSort(int[] arr, int[] buffer, int left, int right) {\n        if (left >= right) return 0;\n        int mid = (left + right) / 2;\n        int count = mergeSort(arr, buffer, left, mid) + mergeSort(arr, buffer, mid + 1, right);\n        int j = mid + 1;\n        for (int i = left; i <= mid; i++) {\n            while (j <= right && arr[i] > 2L * arr[j]) j++;\n            count += j - (mid + 1);\n        }\n        int i2 = left;\n        j = mid + 1;\n        int k = left;\n        while (i2 <= mid && j <= right) {\n            buffer[k++] = arr[i2] <= arr[j] ? arr[i2++] : arr[j++];\n        }\n        while (i2 <= mid) buffer[k++] = arr[i2++];\n        while (j <= right) buffer[k++] = arr[j++];\n        for (int x = left; x <= right; x++) arr[x] = buffer[x];\n        return count;\n    }\n}",
+          "csharp": "public class Solution {\n    public int ReversePairs(int[] nums) {\n        return MergeSort(nums, new int[nums.Length], 0, nums.Length - 1);\n    }\n    private int MergeSort(int[] arr, int[] buffer, int left, int right) {\n        if (left >= right) return 0;\n        int mid = (left + right) / 2;\n        int count = MergeSort(arr, buffer, left, mid) + MergeSort(arr, buffer, mid + 1, right);\n        int j = mid + 1;\n        for (int i = left; i <= mid; i++) {\n            while (j <= right && arr[i] > 2L * arr[j]) j++;\n            count += j - (mid + 1);\n        }\n        int i2 = left;\n        j = mid + 1;\n        int k = left;\n        while (i2 <= mid && j <= right) {\n            buffer[k++] = arr[i2] <= arr[j] ? arr[i2++] : arr[j++];\n        }\n        while (i2 <= mid) buffer[k++] = arr[i2++];\n        while (j <= right) buffer[k++] = arr[j++];\n        for (int x = left; x <= right; x++) arr[x] = buffer[x];\n        return count;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-101": {
+    "approaches": [
+      {
+        "id": "max-product-running-min-max",
+        "title": "Running maximum and minimum product",
+        "level": "Optimal",
+        "time": "O(n)",
+        "space": "O(1)",
+        "explanation": "Track both the running maximum and minimum product, swapping them whenever a negative number flips the signs.",
+        "code": {
+          "java": "class Solution {\n    public int maxProduct(int[] nums) {\n        int best = nums[0], max = nums[0], min = nums[0];\n        for (int i = 1; i < nums.length; i++) {\n            int num = nums[i];\n            if (num < 0) {\n                int temp = max;\n                max = min;\n                min = temp;\n            }\n            max = Math.max(num, max * num);\n            min = Math.min(num, min * num);\n            best = Math.max(best, max);\n        }\n        return best;\n    }\n}",
+          "csharp": "public class Solution {\n    public int MaxProduct(int[] nums) {\n        int best = nums[0], max = nums[0], min = nums[0];\n        for (int i = 1; i < nums.Length; i++) {\n            int num = nums[i];\n            if (num < 0) {\n                int temp = max;\n                max = min;\n                min = temp;\n            }\n            max = Math.Max(num, max * num);\n            min = Math.Min(num, min * num);\n            best = Math.Max(best, max);\n        }\n        return best;\n    }\n}"
         }
       }
     ]

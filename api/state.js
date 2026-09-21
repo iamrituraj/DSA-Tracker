@@ -19,6 +19,7 @@ function sanitize(value) {
     settings: { ...emptyState.settings, ...object(state.settings) },
     filters: object(state.filters),
     collapse: object(state.collapse),
+    libApproaches: Number.isFinite(Number(state.libApproaches)) ? Math.max(0, Math.floor(Number(state.libApproaches))) : 0,
   };
 }
 
