@@ -1,0 +1,1523 @@
+Absolutely. Continuing **backward from the end of your list**, the next section is **Tries**, starting from **a2z-465 → a2z-459**. 
+
+# TRIES
+
+---
+
+# 1. Maximum XOR with an Element from an Array
+
+**a2z-465 — Maximum Xor with an element from an array · Hard** 
+
+Typical problem:
+
+Given:
+
+```text
+nums = [0, 1, 2, 3, 4]
+queries = [[3, 1], [1, 3], [5, 6]]
+```
+
+For each query:
+
+```text
+[x, m]
+```
+
+find:
+
+```text
+max(x XOR num)
+```
+
+where:
+
+```text
+num <= m
+```
+
+---
+
+## Approach 1 — Brute Force
+
+For every query:
+
+```text
+for every number:
+    if number <= m:
+        answer = max(answer, x ^ number)
+```
+
+### Complexity
+
+If:
+
+```text
+N = number of nums
+Q = number of queries
+```
+
+then:
+
+```text
+Time: O(N × Q)
+Space: O(Q)
+```
+
+This is usually too slow.
+
+---
+
+# Approach 2 — Binary Trie + Offline Queries
+
+This is the important interview solution.
+
+The key observation:
+
+For maximizing:
+
+```text
+x XOR num
+```
+
+we want the opposite bit whenever possible.
+
+Suppose:
+
+```text
+x = 10110
+```
+
+At the highest bit:
+
+```text
+x = 1
+```
+
+we prefer:
+
+```text
+num bit = 0
+```
+
+because:
+
+```text
+1 XOR 0 = 1
+```
+
+instead of:
+
+```text
+1 XOR 1 = 0
+```
+
+So a binary Trie lets us greedily choose the opposite bit.
+
+### But there's a constraint:
+
+```text
+num <= m
+```
+
+We therefore process queries offline.
+
+### Steps
+
+1. Sort `nums`.
+2. Sort queries by `m`.
+3. As `m` increases, insert every `num <= m` into the Trie.
+4. Query the Trie for maximum XOR.
+
+This means each number is inserted only once.
+
+---
+
+## Java
+
+```java
+import java.util.*;
+
+public class Solution {
+
+    static class TrieNode {
+        TrieNode[] child = new TrieNode[2];
+    }
+
+    static class BinaryTrie {
+
+        TrieNode root = new TrieNode();
+
+        void insert(int num) {
+
+            TrieNode node = root;
+
+            for (int bit = 31; bit >= 0; bit--) {
+
+                int b = (num >>> bit) & 1;
+
+                if (node.child[b] == null) {
+                    node.child[b] = new TrieNode();
+                }
+
+                node = node.child[b];
+            }
+        }
+
+        int maxXor(int num) {
+
+            TrieNode node = root;
+
+            int answer = 0;
+
+            for (int bit = 31; bit >= 0; bit--) {
+
+                int b = (num >>> bit) & 1;
+
+                int opposite = b ^ 1;
+
+                if (node.child[opposite] != null) {
+
+                    answer |= (1 << bit);
+
+                    node = node.child[opposite];
+
+                } else {
+
+                    node = node.child[b];
+                }
+            }
+
+            return answer;
+        }
+    }
+
+    public static int[] maximizeXor(
+            int[] nums,
+            int[][] queries) {
+
+        Arrays.sort(nums);
+
+        int q = queries.length;
+
+        // {x, m, originalIndex}
+        int[][] sortedQueries = new int[q][3];
+
+        for (int i = 0; i < q; i++) {
+
+            sortedQueries[i][0] = queries[i][0];
+            sortedQueries[i][1] = queries[i][1];
+            sortedQueries[i][2] = i;
+        }
+
+        Arrays.sort(
+                sortedQueries,
+                Comparator.comparingInt(a -> a[1])
+        );
+
+        int[] answer = new int[q];
+
+        BinaryTrie trie = new BinaryTrie();
+
+        int index = 0;
+
+        for (int[] query : sortedQueries) {
+
+            int x = query[0];
+            int m = query[1];
+
+            while (
+                    index < nums.length
+                    && nums[index] <= m
+            ) {
+                trie.insert(nums[index]);
+                index++;
+            }
+
+            if (index == 0) {
+                answer[query[2]] = -1;
+            } else {
+                answer[query[2]] = trie.maxXor(x);
+            }
+        }
+
+        return answer;
+    }
+}
+```
+
+---
+
+## C#
+
+```csharp
+using System;
+using System.Collections.Generic;
+
+public class Solution
+{
+    class TrieNode
+    {
+        public TrieNode[] Child = new TrieNode[2];
+    }
+
+    class BinaryTrie
+    {
+        private TrieNode root = new TrieNode();
+
+        public void Insert(int num)
+        {
+            TrieNode node = root;
+
+            for (int bit = 31; bit >= 0; bit--)
+            {
+                int b = (num >> bit) & 1;
+
+                if (node.Child[b] == null)
+                    node.Child[b] = new TrieNode();
+
+                node = node.Child[b];
+            }
+        }
+
+        public int MaxXor(int num)
+        {
+            TrieNode node = root;
+
+            int answer = 0;
+
+            for (int bit = 31; bit >= 0; bit--)
+            {
+                int b = (num >> bit) & 1;
+                int opposite = b ^ 1;
+
+                if (node.Child[opposite] != null)
+                {
+                    answer |= (1 << bit);
+                    node = node.Child[opposite];
+                }
+                else
+                {
+                    node = node.Child[b];
+                }
+            }
+
+            return answer;
+        }
+    }
+
+    public static int[] MaximizeXor(
+        int[] nums,
+        int[][] queries)
+    {
+        Array.Sort(nums);
+
+        int q = queries.Length;
+
+        // x, m, originalIndex
+        int[][] sortedQueries = new int[q][];
+
+        for (int i = 0; i < q; i++)
+        {
+            sortedQueries[i] = new[]
+            {
+                queries[i][0],
+                queries[i][1],
+                i
+            };
+        }
+
+        Array.Sort(
+            sortedQueries,
+            (a, b) => a[1].CompareTo(b[1])
+        );
+
+        int[] answer = new int[q];
+
+        BinaryTrie trie = new BinaryTrie();
+
+        int index = 0;
+
+        foreach (int[] query in sortedQueries)
+        {
+            int x = query[0];
+            int m = query[1];
+            int originalIndex = query[2];
+
+            while (
+                index < nums.Length &&
+                nums[index] <= m)
+            {
+                trie.Insert(nums[index]);
+                index++;
+            }
+
+            if (index == 0)
+                answer[originalIndex] = -1;
+            else
+                answer[originalIndex] = trie.MaxXor(x);
+        }
+
+        return answer;
+    }
+}
+```
+
+### Complexity
+
+Trie height is 32 for integers.
+
+```text
+Sorting nums:       O(N log N)
+Sorting queries:    O(Q log Q)
+Trie insertion:     O(32N)
+Trie query:         O(32Q)
+```
+
+Therefore:
+
+```text
+Time:  O(N log N + Q log Q + 32(N + Q))
+     ≈ O(N log N + Q log Q)
+
+Space: O(32N)
+```
+
+---
+
+# 2. Maximum XOR of Two Numbers in an Array
+
+**a2z-464 — Maximum XOR of two numbers in an array · Hard** 
+
+Given:
+
+```text
+nums = [3, 10, 5, 25, 2, 8]
+```
+
+Find:
+
+```text
+max(nums[i] XOR nums[j])
+```
+
+Answer:
+
+```text
+28
+```
+
+because:
+
+```text
+5 XOR 25 = 28
+```
+
+---
+
+## Approach 1 — Brute Force
+
+```java
+int max = 0;
+
+for (int i = 0; i < nums.length; i++) {
+    for (int j = i + 1; j < nums.length; j++) {
+        max = Math.max(max, nums[i] ^ nums[j]);
+    }
+}
+```
+
+Complexity:
+
+```text
+Time: O(N²)
+Space: O(1)
+```
+
+---
+
+# Approach 2 — Binary Trie
+
+Insert all numbers into a binary Trie.
+
+For every number `x`, find the number in the Trie that maximizes:
+
+```text
+x XOR y
+```
+
+At every bit, prefer:
+
+```text
+1 - currentBit
+```
+
+### Java
+
+```java
+class BinaryTrie {
+
+    static class Node {
+        Node[] child = new Node[2];
+    }
+
+    private final Node root = new Node();
+
+    void insert(int num) {
+
+        Node node = root;
+
+        for (int bit = 31; bit >= 0; bit--) {
+
+            int b = (num >>> bit) & 1;
+
+            if (node.child[b] == null)
+                node.child[b] = new Node();
+
+            node = node.child[b];
+        }
+    }
+
+    int maxXor(int num) {
+
+        Node node = root;
+
+        int result = 0;
+
+        for (int bit = 31; bit >= 0; bit--) {
+
+            int b = (num >>> bit) & 1;
+
+            int opposite = b ^ 1;
+
+            if (node.child[opposite] != null) {
+
+                result |= (1 << bit);
+
+                node = node.child[opposite];
+
+            } else {
+                node = node.child[b];
+            }
+        }
+
+        return result;
+    }
+}
+
+public static int findMaximumXOR(int[] nums) {
+
+    BinaryTrie trie = new BinaryTrie();
+
+    for (int num : nums)
+        trie.insert(num);
+
+    int answer = 0;
+
+    for (int num : nums)
+        answer = Math.max(answer, trie.maxXor(num));
+
+    return answer;
+}
+```
+
+### C#
+
+```csharp
+class BinaryTrie
+{
+    class Node
+    {
+        public Node[] Child = new Node[2];
+    }
+
+    private readonly Node root = new Node();
+
+    public void Insert(int num)
+    {
+        Node node = root;
+
+        for (int bit = 31; bit >= 0; bit--)
+        {
+            int b = (num >> bit) & 1;
+
+            if (node.Child[b] == null)
+                node.Child[b] = new Node();
+
+            node = node.Child[b];
+        }
+    }
+
+    public int MaxXor(int num)
+    {
+        Node node = root;
+
+        int result = 0;
+
+        for (int bit = 31; bit >= 0; bit--)
+        {
+            int b = (num >> bit) & 1;
+            int opposite = b ^ 1;
+
+            if (node.Child[opposite] != null)
+            {
+                result |= (1 << bit);
+                node = node.Child[opposite];
+            }
+            else
+            {
+                node = node.Child[b];
+            }
+        }
+
+        return result;
+    }
+}
+
+public static int FindMaximumXOR(int[] nums)
+{
+    BinaryTrie trie = new BinaryTrie();
+
+    foreach (int num in nums)
+        trie.Insert(num);
+
+    int answer = 0;
+
+    foreach (int num in nums)
+        answer = Math.Max(
+            answer,
+            trie.MaxXor(num)
+        );
+
+    return answer;
+}
+```
+
+### Complexity
+
+```text
+Time:  O(32N) = O(N)
+Space: O(32N) = O(N)
+```
+
+---
+
+# 3. Bit Prerequisites for Trie Problems
+
+**a2z-463 — Bit Prerequisites for TRIE Problems · Easy** 
+
+Before the next Trie problems, these operations are essential.
+
+## Get bit
+
+```java
+int bit = (num >>> i) & 1;
+```
+
+C#:
+
+```csharp
+int bit = (num >> i) & 1;
+```
+
+---
+
+## Set bit
+
+```java
+num = num | (1 << i);
+```
+
+C#:
+
+```csharp
+num = num | (1 << i);
+```
+
+---
+
+## Check bit
+
+```java
+if ((num & (1 << i)) != 0)
+```
+
+---
+
+## Toggle bit
+
+```java
+num = num ^ (1 << i);
+```
+
+---
+
+## Why XOR is useful for Trie?
+
+Remember:
+
+```text
+0 XOR 0 = 0
+0 XOR 1 = 1
+1 XOR 0 = 1
+1 XOR 1 = 0
+```
+
+Therefore, to maximize XOR:
+
+```text
+current bit = 0
+→ prefer 1
+
+current bit = 1
+→ prefer 0
+```
+
+That's the fundamental idea behind maximum-XOR Trie problems.
+
+---
+
+# 4. Number of Distinct Substrings
+
+**a2z-462 — Number of distinct substrings in a string · Medium** 
+
+Example:
+
+```text
+s = "aaa"
+```
+
+Distinct substrings:
+
+```text
+"a"
+"aa"
+"aaa"
+```
+
+Answer:
+
+```text
+3
+```
+
+---
+
+# Approach 1 — HashSet
+
+Generate every substring and put it into a set.
+
+### Java
+
+```java
+import java.util.*;
+
+public static int countDistinctSubstrings(String s) {
+
+    Set<String> set = new HashSet<>();
+
+    for (int i = 0; i < s.length(); i++) {
+
+        for (int j = i + 1; j <= s.length(); j++) {
+
+            set.add(s.substring(i, j));
+        }
+    }
+
+    return set.size();
+}
+```
+
+### C#
+
+```csharp
+using System.Collections.Generic;
+
+public static int CountDistinctSubstrings(string s)
+{
+    HashSet<string> set = new HashSet<string>();
+
+    for (int i = 0; i < s.Length; i++)
+    {
+        for (int j = i + 1; j <= s.Length; j++)
+        {
+            set.Add(s.Substring(i, j - i));
+        }
+    }
+
+    return set.Count;
+}
+```
+
+Conceptually:
+
+```text
+O(N²)
+```
+
+substrings exist, but actually storing/copying strings can make runtime approach:
+
+```text
+O(N³)
+```
+
+depending on language/string implementation.
+
+---
+
+# Approach 2 — Trie
+
+Insert every suffix into a Trie.
+
+For:
+
+```text
+abc
+```
+
+suffixes:
+
+```text
+abc
+bc
+c
+```
+
+While inserting each suffix, every **new Trie node** corresponds to a previously unseen substring.
+
+Therefore:
+
+```text
+number of distinct substrings
+=
+number of Trie nodes
+```
+
+---
+
+### Java
+
+```java
+class TrieNode {
+    TrieNode[] child = new TrieNode[26];
+}
+
+public static int countDistinctSubstrings(String s) {
+
+    TrieNode root = new TrieNode();
+
+    int count = 0;
+
+    for (int i = 0; i < s.length(); i++) {
+
+        TrieNode node = root;
+
+        for (int j = i; j < s.length(); j++) {
+
+            int index = s.charAt(j) - 'a';
+
+            if (node.child[index] == null) {
+
+                node.child[index] = new TrieNode();
+
+                count++;
+            }
+
+            node = node.child[index];
+        }
+    }
+
+    return count;
+}
+```
+
+### C#
+
+```csharp
+class TrieNode
+{
+    public TrieNode[] Child = new TrieNode[26];
+}
+
+public static int CountDistinctSubstrings(string s)
+{
+    TrieNode root = new TrieNode();
+
+    int count = 0;
+
+    for (int i = 0; i < s.Length; i++)
+    {
+        TrieNode node = root;
+
+        for (int j = i; j < s.Length; j++)
+        {
+            int index = s[j] - 'a';
+
+            if (node.Child[index] == null)
+            {
+                node.Child[index] = new TrieNode();
+                count++;
+            }
+
+            node = node.Child[index];
+        }
+    }
+
+    return count;
+}
+```
+
+### Complexity
+
+There are `O(N²)` character insertions:
+
+```text
+Time:  O(N²)
+Space: O(N²)
+```
+
+This is significantly better than constructing all substring objects.
+
+---
+
+# 5. Longest Word With All Prefixes
+
+**a2z-461 — Longest Word with All Prefixes · Medium** 
+
+Given:
+
+```text
+words = [
+    "n",
+    "ni",
+    "nin",
+    "ninj",
+    "ninja"
+]
+```
+
+`ninja` qualifies because:
+
+```text
+n
+ni
+nin
+ninj
+ninja
+```
+
+all exist.
+
+---
+
+## Approach — Trie
+
+Each Trie node stores:
+
+```text
+isEnd
+```
+
+meaning a complete word ends there.
+
+For a candidate word:
+
+```text
+ninja
+```
+
+walk through:
+
+```text
+n
+ni
+nin
+ninj
+ninja
+```
+
+At every node:
+
+```text
+isEnd == true
+```
+
+must hold.
+
+---
+
+### Java
+
+```java
+class TrieNode {
+
+    TrieNode[] child = new TrieNode[26];
+
+    boolean isEnd;
+}
+
+public static String longestWord(String[] words) {
+
+    TrieNode root = new TrieNode();
+
+    for (String word : words) {
+
+        TrieNode node = root;
+
+        for (char c : word.toCharArray()) {
+
+            int index = c - 'a';
+
+            if (node.child[index] == null)
+                node.child[index] = new TrieNode();
+
+            node = node.child[index];
+        }
+
+        node.isEnd = true;
+    }
+
+    String answer = "";
+
+    for (String word : words) {
+
+        TrieNode node = root;
+
+        boolean valid = true;
+
+        for (char c : word.toCharArray()) {
+
+            node = node.child[c - 'a'];
+
+            if (!node.isEnd) {
+                valid = false;
+                break;
+            }
+        }
+
+        if (valid) {
+
+            if (word.length() > answer.length()
+                    || (word.length() == answer.length()
+                    && word.compareTo(answer) < 0)) {
+
+                answer = word;
+            }
+        }
+    }
+
+    return answer;
+}
+```
+
+### C#
+
+```csharp
+class TrieNode
+{
+    public TrieNode[] Child = new TrieNode[26];
+    public bool IsEnd;
+}
+
+public static string LongestWord(string[] words)
+{
+    TrieNode root = new TrieNode();
+
+    foreach (string word in words)
+    {
+        TrieNode node = root;
+
+        foreach (char c in word)
+        {
+            int index = c - 'a';
+
+            if (node.Child[index] == null)
+                node.Child[index] = new TrieNode();
+
+            node = node.Child[index];
+        }
+
+        node.IsEnd = true;
+    }
+
+    string answer = "";
+
+    foreach (string word in words)
+    {
+        TrieNode node = root;
+
+        bool valid = true;
+
+        foreach (char c in word)
+        {
+            node = node.Child[c - 'a'];
+
+            if (!node.IsEnd)
+            {
+                valid = false;
+                break;
+            }
+        }
+
+        if (valid &&
+            (word.Length > answer.Length ||
+             (word.Length == answer.Length &&
+              string.CompareOrdinal(word, answer) < 0)))
+        {
+            answer = word;
+        }
+    }
+
+    return answer;
+}
+```
+
+Complexity:
+
+```text
+Build Trie: O(total characters)
+Check:      O(total characters)
+
+Overall: O(total characters)
+Space:     O(total characters)
+```
+
+---
+
+# 6. Trie Implementation — Advanced Operations
+
+**a2z-460 — Trie Implementation and Advanced Operations · Hard** 
+
+Typical operations:
+
+```text
+insert(word)
+search(word)
+startsWith(prefix)
+erase(word)
+countWordsEqualTo(word)
+countWordsStartingWith(prefix)
+```
+
+For interview preparation, this is the implementation worth memorizing.
+
+---
+
+## Java
+
+```java
+class Trie {
+
+    static class Node {
+
+        Node[] child = new Node[26];
+
+        int prefixCount;
+
+        int wordCount;
+    }
+
+    private final Node root = new Node();
+
+    public void insert(String word) {
+
+        Node node = root;
+
+        for (char c : word.toCharArray()) {
+
+            int index = c - 'a';
+
+            if (node.child[index] == null)
+                node.child[index] = new Node();
+
+            node = node.child[index];
+
+            node.prefixCount++;
+        }
+
+        node.wordCount++;
+    }
+
+    public int countWordsEqualTo(String word) {
+
+        Node node = findNode(word);
+
+        return node == null ? 0 : node.wordCount;
+    }
+
+    public int countWordsStartingWith(String prefix) {
+
+        Node node = findNode(prefix);
+
+        return node == null ? 0 : node.prefixCount;
+    }
+
+    public void erase(String word) {
+
+        Node node = root;
+
+        for (char c : word.toCharArray()) {
+
+            int index = c - 'a';
+
+            node = node.child[index];
+
+            node.prefixCount--;
+        }
+
+        node.wordCount--;
+    }
+
+    public boolean search(String word) {
+        return countWordsEqualTo(word) > 0;
+    }
+
+    public boolean startsWith(String prefix) {
+        return countWordsStartingWith(prefix) > 0;
+    }
+
+    private Node findNode(String s) {
+
+        Node node = root;
+
+        for (char c : s.toCharArray()) {
+
+            int index = c - 'a';
+
+            if (node.child[index] == null)
+                return null;
+
+            node = node.child[index];
+        }
+
+        return node;
+    }
+}
+```
+
+---
+
+## C#
+
+```csharp
+public class Trie
+{
+    class Node
+    {
+        public Node[] Child = new Node[26];
+
+        public int PrefixCount;
+
+        public int WordCount;
+    }
+
+    private readonly Node root = new Node();
+
+    public void Insert(string word)
+    {
+        Node node = root;
+
+        foreach (char c in word)
+        {
+            int index = c - 'a';
+
+            if (node.Child[index] == null)
+                node.Child[index] = new Node();
+
+            node = node.Child[index];
+
+            node.PrefixCount++;
+        }
+
+        node.WordCount++;
+    }
+
+    public int CountWordsEqualTo(string word)
+    {
+        Node node = FindNode(word);
+
+        return node == null ? 0 : node.WordCount;
+    }
+
+    public int CountWordsStartingWith(string prefix)
+    {
+        Node node = FindNode(prefix);
+
+        return node == null ? 0 : node.PrefixCount;
+    }
+
+    public bool Search(string word)
+    {
+        return CountWordsEqualTo(word) > 0;
+    }
+
+    public bool StartsWith(string prefix)
+    {
+        return CountWordsStartingWith(prefix) > 0;
+    }
+
+    public void Erase(string word)
+    {
+        Node node = root;
+
+        foreach (char c in word)
+        {
+            int index = c - 'a';
+
+            node = node.Child[index];
+
+            node.PrefixCount--;
+        }
+
+        node.WordCount--;
+    }
+
+    private Node FindNode(string s)
+    {
+        Node node = root;
+
+        foreach (char c in s)
+        {
+            int index = c - 'a';
+
+            if (node.Child[index] == null)
+                return null;
+
+            node = node.Child[index];
+        }
+
+        return node;
+    }
+}
+```
+
+### Complexity
+
+For word length `L`:
+
+```text
+Insert:       O(L)
+Search:       O(L)
+Prefix search:O(L)
+Erase:        O(L)
+```
+
+Space:
+
+```text
+O(total characters inserted)
+```
+
+---
+
+# 7. Basic Trie Implementation
+
+**a2z-459 — Trie Implementation and Operations · Hard** 
+
+The basic version only needs:
+
+```text
+insert()
+search()
+startsWith()
+```
+
+### Java
+
+```java
+class Trie {
+
+    static class Node {
+        Node[] child = new Node[26];
+        boolean isEnd;
+    }
+
+    private final Node root = new Node();
+
+    public void insert(String word) {
+
+        Node node = root;
+
+        for (char c : word.toCharArray()) {
+
+            int index = c - 'a';
+
+            if (node.child[index] == null)
+                node.child[index] = new Node();
+
+            node = node.child[index];
+        }
+
+        node.isEnd = true;
+    }
+
+    public boolean search(String word) {
+
+        Node node = root;
+
+        for (char c : word.toCharArray()) {
+
+            int index = c - 'a';
+
+            if (node.child[index] == null)
+                return false;
+
+            node = node.child[index];
+        }
+
+        return node.isEnd;
+    }
+
+    public boolean startsWith(String prefix) {
+
+        Node node = root;
+
+        for (char c : prefix.toCharArray()) {
+
+            int index = c - 'a';
+
+            if (node.child[index] == null)
+                return false;
+
+            node = node.child[index];
+        }
+
+        return true;
+    }
+}
+```
+
+### C#
+
+```csharp
+public class Trie
+{
+    class Node
+    {
+        public Node[] Child = new Node[26];
+        public bool IsEnd;
+    }
+
+    private readonly Node root = new Node();
+
+    public void Insert(string word)
+    {
+        Node node = root;
+
+        foreach (char c in word)
+        {
+            int index = c - 'a';
+
+            if (node.Child[index] == null)
+                node.Child[index] = new Node();
+
+            node = node.Child[index];
+        }
+
+        node.IsEnd = true;
+    }
+
+    public bool Search(string word)
+    {
+        Node node = root;
+
+        foreach (char c in word)
+        {
+            int index = c - 'a';
+
+            if (node.Child[index] == null)
+                return false;
+
+            node = node.Child[index];
+        }
+
+        return node.IsEnd;
+    }
+
+    public bool StartsWith(string prefix)
+    {
+        Node node = root;
+
+        foreach (char c in prefix)
+        {
+            int index = c - 'a';
+
+            if (node.Child[index] == null)
+                return false;
+
+            node = node.Child[index];
+        }
+
+        return true;
+    }
+}
+```
+
+---
+
+# Trie — What you should remember for interviews
+
+The important progression is:
+
+```text
+Basic Trie
+    ↓
+count prefix / word
+    ↓
+Longest word with all prefixes
+    ↓
+Distinct substrings
+    ↓
+Binary Trie
+    ↓
+Maximum XOR
+    ↓
+Maximum XOR with constraint
+```
+
+And the two most important patterns are:
+
+### Normal Trie
+
+```text
+character
+   ↓
+children[character]
+   ↓
+next node
+```
+
+### Binary Trie
+
+```text
+bit 31
+  ↓
+bit 30
+  ↓
+...
+  ↓
+bit 0
+```
+
+For maximum XOR:
+
+```text
+want opposite bit
+```
+
+---
+
+## Progress
+
+We've now completed all **7 Trie problems**, moving backward as requested:
+
+```text
+465 Maximum XOR with element
+464 Maximum XOR of two numbers
+463 Bit prerequisites
+462 Number of distinct substrings
+461 Longest word with all prefixes
+460 Advanced Trie
+459 Basic Trie
+```
+
+The next section backward is **BST — 15 problems**, starting with **a2z-350: Largest BST in Binary Tree**, then 349 → 336. 

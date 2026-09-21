@@ -1,0 +1,1 @@
+Node.js serverless functions using `@neondatabase/serverless` for connection-pooled access to Neon PostgreSQL; HMAC-SHA256 signed cookies for stateless sessions without a session store; timing-safe string comparison via `crypto.timingSafeEqual`.

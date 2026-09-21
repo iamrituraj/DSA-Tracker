@@ -3,3 +3,4 @@
 - Secrets and credentials are read exclusively from `process.env` and validated before use, returning or throwing errors when required variables are missing.
 - Sensitive comparisons use `crypto.timingSafeEqual` via the shared `safeEqual` helper rather than direct `===` checks.
 - Database schema initialization is deferred to a module-scoped promise (`ensureTablePromise`) so the `CREATE TABLE IF NOT EXISTS` runs once per cold start instead of per request.
+- User-supplied payloads are sanitized into a strict shape (e.g., `sanitize` for state, `sanitizeLibrary` for solutions) before being persisted to JSONB columns.

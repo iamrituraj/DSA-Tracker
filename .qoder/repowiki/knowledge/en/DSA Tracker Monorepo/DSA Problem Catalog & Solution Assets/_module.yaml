@@ -1,6 +1,6 @@
 schema_version: 1
 module_path: data_assets
-title: DSA Problem Catalog & Solutions Data
+title: DSA Problem Catalog & Solution Assets
 scope:
     - data/
     - public/data/

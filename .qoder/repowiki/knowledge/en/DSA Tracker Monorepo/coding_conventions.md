@@ -1,3 +1,3 @@
-- Data transformation and code-generation tasks are exposed as top-level npm scripts that delegate to Node modules under `scripts/`, keeping them separate from runtime app code.
+- Data transformation and code-generation tasks are exposed as top-level npm scripts that delegate to Node modules under `scripts/`, keeping them separate from runtime application code.
 - Static domain data (problem catalog, taxonomy, editorial links) is stored as JSON files under `data_assets/` and consumed directly by the React UI at build or runtime.
 - Database access uses the shared `@neondatabase/serverless` client so both the API layer and the client-side code target the same Neon PostgreSQL instance.

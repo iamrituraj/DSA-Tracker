@@ -1,0 +1,1 @@
+Node.js serverless functions exposing authentication and JSONB-backed persistence for the DSA tracker's user state and solution library on Neon PostgreSQL.

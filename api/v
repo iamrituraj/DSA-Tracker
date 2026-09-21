@@ -1,0 +1,2189 @@
+Continuing **backward through your list**: **BST, a2z-350 → a2z-336**, with Java + C#, alternative approaches, complexity, and interview follow-ups. Your file lists 15 BST problems in this section. 
+
+I’ll prioritize the **optimal interview approach**, while showing the simpler alternative where it is useful.
+
+---
+
+# BST — 15 Problems
+
+## Quick BST rule
+
+For a valid BST:
+
+```text
+left subtree < root < right subtree
+```
+
+Usually duplicates are **not allowed** in the problems in your sheet. The largest-BST definition also explicitly uses strict inequalities. ([GeeksforGeeks][1])
+
+---
+
+# 15. Largest BST in Binary Tree
+
+**a2z-350**
+
+Given an arbitrary Binary Tree, find the size of the largest subtree that is itself a BST. 
+
+Example:
+
+```text
+        5
+       / \
+      2   4
+     / \
+    1   3
+```
+
+The whole tree isn't a BST because:
+
+```text
+4 < 5
+```
+
+But:
+
+```text
+      2
+     / \
+    1   3
+```
+
+is a BST.
+
+Answer:
+
+```text
+3
+```
+
+The expected solution is a postorder traversal carrying BST validity, size, minimum and maximum values. ([GeeksforGeeks][1])
+
+---
+
+## Approach 1 — Check every subtree
+
+For every node:
+
+1. Check whether its subtree is a BST.
+2. If yes, calculate its size.
+3. Otherwise check left and right.
+
+### Complexity
+
+```text
+Worst case: O(N²)
+Space: O(H)
+```
+
+Good as a first approach, but not the interview-optimal solution.
+
+---
+
+## Approach 2 — Postorder DP
+
+For each node return:
+
+```text
+isBST
+size
+min
+max
+```
+
+A node forms a BST if:
+
+```text
+left.isBST
+AND
+right.isBST
+AND
+left.max < node.val
+AND
+node.val < right.min
+```
+
+Then:
+
+```text
+size = left.size + right.size + 1
+```
+
+### Java
+
+```java
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+}
+
+class Info {
+    boolean isBST;
+    int size;
+    int min;
+    int max;
+
+    Info(boolean isBST, int size, int min, int max) {
+        this.isBST = isBST;
+        this.size = size;
+        this.min = min;
+        this.max = max;
+    }
+}
+
+public class Solution {
+
+    public static int largestBST(TreeNode root) {
+        return solve(root).size;
+    }
+
+    private static Info solve(TreeNode root) {
+
+        if (root == null) {
+            return new Info(
+                true,
+                0,
+                Integer.MAX_VALUE,
+                Integer.MIN_VALUE
+            );
+        }
+
+        Info left = solve(root.left);
+        Info right = solve(root.right);
+
+        if (left.isBST &&
+            right.isBST &&
+            left.max < root.val &&
+            root.val < right.min) {
+
+            return new Info(
+                true,
+                left.size + right.size + 1,
+                Math.min(root.val, left.min),
+                Math.max(root.val, right.max)
+            );
+        }
+
+        return new Info(
+            false,
+            Math.max(left.size, right.size),
+            Integer.MIN_VALUE,
+            Integer.MAX_VALUE
+        );
+    }
+}
+```
+
+### C#
+
+```csharp
+public class TreeNode
+{
+    public int Val;
+    public TreeNode Left;
+    public TreeNode Right;
+
+    public TreeNode(int val)
+    {
+        Val = val;
+    }
+}
+
+public class Info
+{
+    public bool IsBST;
+    public int Size;
+    public int Min;
+    public int Max;
+
+    public Info(bool isBST, int size, int min, int max)
+    {
+        IsBST = isBST;
+        Size = size;
+        Min = min;
+        Max = max;
+    }
+}
+
+public class Solution
+{
+    public static int LargestBST(TreeNode root)
+    {
+        return Solve(root).Size;
+    }
+
+    private static Info Solve(TreeNode root)
+    {
+        if (root == null)
+        {
+            return new Info(
+                true,
+                0,
+                int.MaxValue,
+                int.MinValue
+            );
+        }
+
+        Info left = Solve(root.Left);
+        Info right = Solve(root.Right);
+
+        if (left.IsBST &&
+            right.IsBST &&
+            left.Max < root.Val &&
+            root.Val < right.Min)
+        {
+            return new Info(
+                true,
+                left.Size + right.Size + 1,
+                Math.Min(root.Val, left.Min),
+                Math.Max(root.Val, right.Max)
+            );
+        }
+
+        return new Info(
+            false,
+            Math.Max(left.Size, right.Size),
+            int.MinValue,
+            int.MaxValue
+        );
+    }
+}
+```
+
+### Complexity
+
+```text
+Time:  O(N)
+Space: O(H)
+```
+
+**Interview pattern:** this is a classic **postorder "return information upward" DP**.
+
+---
+
+# 14. Correct BST With Two Nodes Swapped
+
+**a2z-349**
+
+Two nodes of an otherwise valid BST are accidentally swapped. Restore the BST.
+
+Example:
+
+```text
+Original:
+
+      3
+     / \
+    1   4
+       /
+      2
+```
+
+`2` and `3` are misplaced.
+
+---
+
+## Approach 1 — Inorder + sort
+
+BST inorder traversal should be sorted.
+
+Store:
+
+```text
+inorder values
+```
+
+Find the two values that violate sorted order.
+
+Then swap them.
+
+### Complexity
+
+```text
+Time: O(N)
+Space: O(N)
+```
+
+Easy to explain.
+
+---
+
+## Approach 2 — O(H) extra space using inorder
+
+We don't actually need to store the complete inorder traversal.
+
+Maintain:
+
+```text
+prev
+first
+middle
+last
+```
+
+Whenever:
+
+```text
+prev.val > current.val
+```
+
+we found an inversion.
+
+For the first inversion:
+
+```text
+first = prev
+middle = current
+```
+
+For a second inversion:
+
+```text
+last = current
+```
+
+Then:
+
+```text
+if last != null
+    swap(first, last)
+else
+    swap(first, middle)
+```
+
+### Java
+
+```java
+class Solution {
+
+    TreeNode first = null;
+    TreeNode middle = null;
+    TreeNode last = null;
+    TreeNode prev = null;
+
+    public void recoverTree(TreeNode root) {
+
+        inorder(root);
+
+        if (first != null && last != null) {
+            int temp = first.val;
+            first.val = last.val;
+            last.val = temp;
+        }
+        else if (first != null && middle != null) {
+            int temp = first.val;
+            first.val = middle.val;
+            middle.val = temp;
+        }
+    }
+
+    private void inorder(TreeNode root) {
+
+        if (root == null)
+            return;
+
+        inorder(root.left);
+
+        if (prev != null && prev.val > root.val) {
+
+            if (first == null) {
+                first = prev;
+                middle = root;
+            }
+            else {
+                last = root;
+            }
+        }
+
+        prev = root;
+
+        inorder(root.right);
+    }
+}
+```
+
+### C#
+
+```csharp
+public class Solution
+{
+    private TreeNode first;
+    private TreeNode middle;
+    private TreeNode last;
+    private TreeNode prev;
+
+    public void RecoverTree(TreeNode root)
+    {
+        Inorder(root);
+
+        if (first != null && last != null)
+        {
+            Swap(first, last);
+        }
+        else if (first != null && middle != null)
+        {
+            Swap(first, middle);
+        }
+    }
+
+    private void Inorder(TreeNode root)
+    {
+        if (root == null)
+            return;
+
+        Inorder(root.Left);
+
+        if (prev != null && prev.Val > root.Val)
+        {
+            if (first == null)
+            {
+                first = prev;
+                middle = root;
+            }
+            else
+            {
+                last = root;
+            }
+        }
+
+        prev = root;
+
+        Inorder(root.Right);
+    }
+
+    private void Swap(TreeNode a, TreeNode b)
+    {
+        int temp = a.Val;
+        a.Val = b.Val;
+        b.Val = temp;
+    }
+}
+```
+
+### Complexity
+
+```text
+Time:  O(N)
+Space: O(H)
+```
+
+If recursion is counted, `H` is stack space.
+
+---
+
+# 13. Two Sum in BST
+
+**a2z-348**
+
+Find whether two nodes in a BST sum to `K`.
+
+Example:
+
+```text
+        5
+       / \
+      3   6
+     / \   \
+    2   4   7
+```
+
+For:
+
+```text
+K = 9
+```
+
+we have:
+
+```text
+2 + 7
+3 + 6
+4 + 5
+```
+
+Answer:
+
+```text
+true
+```
+
+---
+
+## Approach 1 — Inorder + HashSet
+
+Traverse all values and use:
+
+```text
+needed = K - current
+```
+
+### Java
+
+```java
+public static boolean twoSumBST(TreeNode root, int k) {
+
+    Set<Integer> seen = new HashSet<>();
+
+    return dfs(root, k, seen);
+}
+
+private static boolean dfs(
+        TreeNode root,
+        int k,
+        Set<Integer> seen) {
+
+    if (root == null)
+        return false;
+
+    if (seen.contains(k - root.val))
+        return true;
+
+    seen.add(root.val);
+
+    return dfs(root.left, k, seen)
+        || dfs(root.right, k, seen);
+}
+```
+
+### C#
+
+```csharp
+public static bool TwoSumBST(TreeNode root, int k)
+{
+    HashSet<int> seen = new HashSet<int>();
+
+    return Dfs(root, k, seen);
+}
+
+private static bool Dfs(
+    TreeNode root,
+    int k,
+    HashSet<int> seen)
+{
+    if (root == null)
+        return false;
+
+    if (seen.Contains(k - root.Val))
+        return true;
+
+    seen.Add(root.Val);
+
+    return Dfs(root.Left, k, seen)
+        || Dfs(root.Right, k, seen);
+}
+```
+
+Complexity:
+
+```text
+Time: O(N)
+Space: O(N)
+```
+
+---
+
+## Approach 2 — BST Iterators
+
+This is the interesting interview follow-up.
+
+Use:
+
+```text
+forward iterator
+```
+
+to get smallest → largest.
+
+And:
+
+```text
+reverse iterator
+```
+
+to get largest → smallest.
+
+Then use the classic two-pointer technique.
+
+```text
+left = smallest
+right = largest
+
+if left + right == K → true
+if sum < K → move left
+if sum > K → move right
+```
+
+### Complexity
+
+```text
+Time: O(N)
+Space: O(H)
+```
+
+This is preferable when the interviewer asks:
+
+> Can you use the BST property and reduce auxiliary memory?
+
+---
+
+# 12. Merge Two BSTs
+
+**a2z-347**
+
+Given two BSTs, return their elements in sorted order.
+
+---
+
+## Approach 1 — Inorder arrays + merge
+
+BST inorder is sorted.
+
+```text
+BST1 → sorted array
+BST2 → sorted array
+```
+
+Then merge like merge-sort.
+
+### Java
+
+```java
+public static List<Integer> mergeBSTs(
+        TreeNode root1,
+        TreeNode root2) {
+
+    List<Integer> a = new ArrayList<>();
+    List<Integer> b = new ArrayList<>();
+
+    inorder(root1, a);
+    inorder(root2, b);
+
+    List<Integer> result = new ArrayList<>();
+
+    int i = 0;
+    int j = 0;
+
+    while (i < a.size() && j < b.size()) {
+
+        if (a.get(i) <= b.get(j))
+            result.add(a.get(i++));
+        else
+            result.add(b.get(j++));
+    }
+
+    while (i < a.size())
+        result.add(a.get(i++));
+
+    while (j < b.size())
+        result.add(b.get(j++));
+
+    return result;
+}
+
+private static void inorder(
+        TreeNode root,
+        List<Integer> list) {
+
+    if (root == null)
+        return;
+
+    inorder(root.left, list);
+    list.add(root.val);
+    inorder(root.right, list);
+}
+```
+
+### C#
+
+```csharp
+public static List<int> MergeBSTs(
+    TreeNode root1,
+    TreeNode root2)
+{
+    List<int> a = new List<int>();
+    List<int> b = new List<int>();
+
+    Inorder(root1, a);
+    Inorder(root2, b);
+
+    List<int> result = new List<int>();
+
+    int i = 0;
+    int j = 0;
+
+    while (i < a.Count && j < b.Count)
+    {
+        if (a[i] <= b[j])
+            result.Add(a[i++]);
+        else
+            result.Add(b[j++]);
+    }
+
+    while (i < a.Count)
+        result.Add(a[i++]);
+
+    while (j < b.Count)
+        result.Add(b[j++]);
+
+    return result;
+}
+
+private static void Inorder(
+    TreeNode root,
+    List<int> list)
+{
+    if (root == null)
+        return;
+
+    Inorder(root.Left, list);
+    list.Add(root.Val);
+    Inorder(root.Right, list);
+}
+```
+
+Complexity:
+
+```text
+Time: O(N + M)
+Space: O(N + M)
+```
+
+---
+
+## Approach 2 — Two BST iterators
+
+Use two stacks.
+
+Each stack exposes the next smallest element.
+
+Then merge directly.
+
+```text
+Space: O(H1 + H2)
+```
+
+instead of storing all nodes.
+
+This is the preferred follow-up.
+
+---
+
+# 11. Inorder Successor / Predecessor
+
+**a2z-346**
+
+For a BST:
+
+### Inorder successor
+
+Smallest value:
+
+```text
+> target
+```
+
+### Inorder predecessor
+
+Largest value:
+
+```text
+< target
+```
+
+---
+
+## Successor
+
+If:
+
+```text
+root.val > key
+```
+
+root is a potential successor.
+
+Move left.
+
+Otherwise move right.
+
+### Java
+
+```java
+public static TreeNode successor(
+        TreeNode root,
+        int key) {
+
+    TreeNode answer = null;
+
+    while (root != null) {
+
+        if (root.val > key) {
+            answer = root;
+            root = root.left;
+        }
+        else {
+            root = root.right;
+        }
+    }
+
+    return answer;
+}
+```
+
+### C#
+
+```csharp
+public static TreeNode Successor(
+    TreeNode root,
+    int key)
+{
+    TreeNode answer = null;
+
+    while (root != null)
+    {
+        if (root.Val > key)
+        {
+            answer = root;
+            root = root.Left;
+        }
+        else
+        {
+            root = root.Right;
+        }
+    }
+
+    return answer;
+}
+```
+
+---
+
+## Predecessor
+
+If:
+
+```text
+root.val < key
+```
+
+root is a potential predecessor.
+
+Move right.
+
+Otherwise move left.
+
+### Java
+
+```java
+public static TreeNode predecessor(
+        TreeNode root,
+        int key) {
+
+    TreeNode answer = null;
+
+    while (root != null) {
+
+        if (root.val < key) {
+            answer = root;
+            root = root.right;
+        }
+        else {
+            root = root.left;
+        }
+    }
+
+    return answer;
+}
+```
+
+### C#
+
+```csharp
+public static TreeNode Predecessor(
+    TreeNode root,
+    int key)
+{
+    TreeNode answer = null;
+
+    while (root != null)
+    {
+        if (root.Val < key)
+        {
+            answer = root;
+            root = root.Right;
+        }
+        else
+        {
+            root = root.Left;
+        }
+    }
+
+    return answer;
+}
+```
+
+### Complexity
+
+```text
+Time: O(H)
+Space: O(1)
+```
+
+---
+
+# 10. Construct BST from Preorder
+
+**a2z-345**
+
+Example:
+
+```text
+preorder = [8, 5, 1, 7, 10, 12]
+```
+
+Construct:
+
+```text
+        8
+       / \
+      5   10
+     / \    \
+    1   7    12
+```
+
+---
+
+## Approach 1 — Insert each value
+
+Start with empty BST.
+
+Insert values one by one.
+
+### Complexity
+
+Average:
+
+```text
+O(N log N)
+```
+
+Worst case:
+
+```text
+O(N²)
+```
+
+---
+
+## Approach 2 — Bounds
+
+This is optimal.
+
+Preorder tells us:
+
+```text
+root → left subtree → right subtree
+```
+
+Maintain an upper bound.
+
+For example:
+
+```text
+preorder = 8,5,1,7,10
+```
+
+At node `8`:
+
+```text
+left values < 8
+right values > 8
+```
+
+### Java
+
+```java
+private static int index = 0;
+
+public static TreeNode bstFromPreorder(
+        int[] preorder) {
+
+    index = 0;
+
+    return build(
+        preorder,
+        Integer.MAX_VALUE
+    );
+}
+
+private static TreeNode build(
+        int[] preorder,
+        int upperBound) {
+
+    if (index == preorder.length ||
+        preorder[index] > upperBound) {
+
+        return null;
+    }
+
+    int value = preorder[index++];
+
+    TreeNode root = new TreeNode(value);
+
+    root.left = build(preorder, value);
+
+    root.right = build(preorder, upperBound);
+
+    return root;
+}
+```
+
+### C#
+
+```csharp
+private static int index;
+
+public static TreeNode BstFromPreorder(
+    int[] preorder)
+{
+    index = 0;
+
+    return Build(
+        preorder,
+        int.MaxValue
+    );
+}
+
+private static TreeNode Build(
+    int[] preorder,
+    int upperBound)
+{
+    if (index == preorder.Length ||
+        preorder[index] > upperBound)
+    {
+        return null;
+    }
+
+    int value = preorder[index++];
+
+    TreeNode root = new TreeNode(value);
+
+    root.Left = Build(preorder, value);
+    root.Right = Build(preorder, upperBound);
+
+    return root;
+}
+```
+
+Complexity:
+
+```text
+Time: O(N)
+Space: O(H)
+```
+
+---
+
+# 9. LCA in BST
+
+**a2z-344**
+
+Given:
+
+```text
+        6
+       / \
+      2   8
+     / \ / \
+    0  4 7  9
+```
+
+LCA of:
+
+```text
+2, 8
+```
+
+is:
+
+```text
+6
+```
+
+---
+
+## BST property gives O(H)
+
+At node:
+
+```text
+if p < root && q < root
+    go left
+
+if p > root && q > root
+    go right
+
+otherwise
+    root is LCA
+```
+
+### Java
+
+```java
+public static TreeNode lca(
+        TreeNode root,
+        int p,
+        int q) {
+
+    while (root != null) {
+
+        if (p < root.val && q < root.val) {
+            root = root.left;
+        }
+        else if (p > root.val && q > root.val) {
+            root = root.right;
+        }
+        else {
+            return root;
+        }
+    }
+
+    return null;
+}
+```
+
+### C#
+
+```csharp
+public static TreeNode Lca(
+    TreeNode root,
+    int p,
+    int q)
+{
+    while (root != null)
+    {
+        if (p < root.Val && q < root.Val)
+        {
+            root = root.Left;
+        }
+        else if (p > root.Val && q > root.Val)
+        {
+            root = root.Right;
+        }
+        else
+        {
+            return root;
+        }
+    }
+
+    return null;
+}
+```
+
+Complexity:
+
+```text
+Time: O(H)
+Space: O(1)
+```
+
+---
+
+# 8. Validate BST
+
+**a2z-343**
+
+Check whether a binary tree is a valid BST. 
+
+---
+
+## Approach 1 — Inorder
+
+A valid BST has strictly increasing inorder traversal.
+
+```text
+1 2 3 4 5
+```
+
+If we ever get:
+
+```text
+previous >= current
+```
+
+it's invalid.
+
+### Java
+
+```java
+public static boolean isValidBST(TreeNode root) {
+
+    Stack<TreeNode> stack = new Stack<>();
+
+    TreeNode current = root;
+
+    long previous = Long.MIN_VALUE;
+
+    while (current != null || !stack.isEmpty()) {
+
+        while (current != null) {
+            stack.push(current);
+            current = current.left;
+        }
+
+        current = stack.pop();
+
+        if (current.val <= previous)
+            return false;
+
+        previous = current.val;
+
+        current = current.right;
+    }
+
+    return true;
+}
+```
+
+### C#
+
+```csharp
+public static bool IsValidBST(TreeNode root)
+{
+    Stack<TreeNode> stack = new Stack<TreeNode>();
+
+    TreeNode current = root;
+
+    long previous = long.MinValue;
+
+    while (current != null || stack.Count > 0)
+    {
+        while (current != null)
+        {
+            stack.Push(current);
+            current = current.Left;
+        }
+
+        current = stack.Pop();
+
+        if (current.Val <= previous)
+            return false;
+
+        previous = current.Val;
+
+        current = current.Right;
+    }
+
+    return true;
+}
+```
+
+---
+
+## Approach 2 — Range validation
+
+Every node gets a valid range.
+
+```text
+root:
+(-∞, +∞)
+
+left:
+(-∞, root)
+
+right:
+(root, +∞)
+```
+
+### Java
+
+```java
+public static boolean isValidBST(TreeNode root) {
+    return validate(
+        root,
+        Long.MIN_VALUE,
+        Long.MAX_VALUE
+    );
+}
+
+private static boolean validate(
+        TreeNode root,
+        long min,
+        long max) {
+
+    if (root == null)
+        return true;
+
+    if (root.val <= min ||
+        root.val >= max)
+        return false;
+
+    return validate(
+            root.left,
+            min,
+            root.val)
+        &&
+        validate(
+            root.right,
+            root.val,
+            max);
+}
+```
+
+### C#
+
+```csharp
+public static bool IsValidBST(TreeNode root)
+{
+    return Validate(
+        root,
+        long.MinValue,
+        long.MaxValue
+    );
+}
+
+private static bool Validate(
+    TreeNode root,
+    long min,
+    long max)
+{
+    if (root == null)
+        return true;
+
+    if (root.Val <= min ||
+        root.Val >= max)
+        return false;
+
+    return Validate(root.Left, min, root.Val)
+        && Validate(root.Right, root.Val, max);
+}
+```
+
+### Complexity
+
+```text
+Time: O(N)
+Space: O(H)
+```
+
+**Important trap:** don't use `Integer.MIN_VALUE` / `Integer.MAX_VALUE` as bounds if node values themselves can equal those values. Use `long`/`long.MinValue` and `long.MaxValue`.
+
+---
+
+# 7. Kth Smallest / Kth Largest in BST
+
+**a2z-342**
+
+BST inorder:
+
+```text
+ascending
+```
+
+Reverse inorder:
+
+```text
+descending
+```
+
+Therefore:
+
+```text
+Kth smallest → inorder
+Kth largest  → reverse inorder
+```
+
+---
+
+## Kth smallest — Java
+
+```java
+public static int kthSmallest(
+        TreeNode root,
+        int k) {
+
+    Stack<TreeNode> stack = new Stack<>();
+
+    TreeNode current = root;
+
+    while (true) {
+
+        while (current != null) {
+            stack.push(current);
+            current = current.left;
+        }
+
+        current = stack.pop();
+
+        k--;
+
+        if (k == 0)
+            return current.val;
+
+        current = current.right;
+    }
+}
+```
+
+### C#
+
+```csharp
+public static int KthSmallest(
+    TreeNode root,
+    int k)
+{
+    Stack<TreeNode> stack = new Stack<TreeNode>();
+
+    TreeNode current = root;
+
+    while (true)
+    {
+        while (current != null)
+        {
+            stack.Push(current);
+            current = current.Left;
+        }
+
+        current = stack.Pop();
+
+        k--;
+
+        if (k == 0)
+            return current.Val;
+
+        current = current.Right;
+    }
+}
+```
+
+Complexity:
+
+```text
+Time: O(H + K)
+Space: O(H)
+```
+
+For a balanced tree:
+
+```text
+O(log N + K)
+```
+
+---
+
+# 6. Delete a Node in BST
+
+**a2z-341**
+
+Three cases.
+
+### Case 1 — Leaf
+
+```text
+    5
+
+delete 5
+
+    null
+```
+
+### Case 2 — One child
+
+Replace node with its child.
+
+### Case 3 — Two children
+
+Replace value with:
+
+```text
+inorder successor
+```
+
+which is the minimum node in the right subtree.
+
+Then delete that successor.
+
+---
+
+## Java
+
+```java
+public static TreeNode deleteNode(
+        TreeNode root,
+        int key) {
+
+    if (root == null)
+        return null;
+
+    if (key < root.val) {
+
+        root.left =
+            deleteNode(root.left, key);
+
+    }
+    else if (key > root.val) {
+
+        root.right =
+            deleteNode(root.right, key);
+
+    }
+    else {
+
+        // No left child
+        if (root.left == null)
+            return root.right;
+
+        // No right child
+        if (root.right == null)
+            return root.left;
+
+        // Two children
+        TreeNode successor =
+            findMin(root.right);
+
+        root.val = successor.val;
+
+        root.right =
+            deleteNode(
+                root.right,
+                successor.val
+            );
+    }
+
+    return root;
+}
+
+private static TreeNode findMin(TreeNode root) {
+
+    while (root.left != null)
+        root = root.left;
+
+    return root;
+}
+```
+
+### C#
+
+```csharp
+public static TreeNode DeleteNode(
+    TreeNode root,
+    int key)
+{
+    if (root == null)
+        return null;
+
+    if (key < root.Val)
+    {
+        root.Left = DeleteNode(root.Left, key);
+    }
+    else if (key > root.Val)
+    {
+        root.Right = DeleteNode(root.Right, key);
+    }
+    else
+    {
+        if (root.Left == null)
+            return root.Right;
+
+        if (root.Right == null)
+            return root.Left;
+
+        TreeNode successor =
+            FindMin(root.Right);
+
+        root.Val = successor.Val;
+
+        root.Right =
+            DeleteNode(
+                root.Right,
+                successor.Val);
+    }
+
+    return root;
+}
+
+private static TreeNode FindMin(TreeNode root)
+{
+    while (root.Left != null)
+        root = root.Left;
+
+    return root;
+}
+```
+
+Complexity:
+
+```text
+Time: O(H)
+Space: O(H) recursive
+```
+
+Iterative implementation can achieve:
+
+```text
+Space: O(1)
+```
+
+---
+
+# 5. Insert a Node in BST
+
+**a2z-340**
+
+At every node:
+
+```text
+key < node → left
+key > node → right
+```
+
+---
+
+## Java
+
+```java
+public static TreeNode insert(
+        TreeNode root,
+        int key) {
+
+    if (root == null)
+        return new TreeNode(key);
+
+    TreeNode current = root;
+
+    while (true) {
+
+        if (key < current.val) {
+
+            if (current.left == null) {
+                current.left = new TreeNode(key);
+                break;
+            }
+
+            current = current.left;
+
+        }
+        else {
+
+            if (current.right == null) {
+                current.right = new TreeNode(key);
+                break;
+            }
+
+            current = current.right;
+        }
+    }
+
+    return root;
+}
+```
+
+### C#
+
+```csharp
+public static TreeNode Insert(
+    TreeNode root,
+    int key)
+{
+    if (root == null)
+        return new TreeNode(key);
+
+    TreeNode current = root;
+
+    while (true)
+    {
+        if (key < current.Val)
+        {
+            if (current.Left == null)
+            {
+                current.Left = new TreeNode(key);
+                break;
+            }
+
+            current = current.Left;
+        }
+        else
+        {
+            if (current.Right == null)
+            {
+                current.Right = new TreeNode(key);
+                break;
+            }
+
+            current = current.Right;
+        }
+    }
+
+    return root;
+}
+```
+
+Complexity:
+
+```text
+Time: O(H)
+Space: O(1)
+```
+
+If balanced:
+
+```text
+O(log N)
+```
+
+Worst-case skewed:
+
+```text
+O(N)
+```
+
+---
+
+# 4. Floor in BST
+
+**a2z-339**
+
+Floor of `X`:
+
+> Largest value `<= X`.
+
+Example:
+
+```text
+BST values = [2, 4, 6, 8, 10]
+
+X = 7
+
+floor = 6
+```
+
+---
+
+## Java
+
+```java
+public static int floor(
+        TreeNode root,
+        int x) {
+
+    int answer = -1;
+
+    while (root != null) {
+
+        if (root.val == x)
+            return root.val;
+
+        if (root.val < x) {
+
+            answer = root.val;
+            root = root.right;
+
+        } else {
+
+            root = root.left;
+        }
+    }
+
+    return answer;
+}
+```
+
+### C#
+
+```csharp
+public static int Floor(
+    TreeNode root,
+    int x)
+{
+    int answer = -1;
+
+    while (root != null)
+    {
+        if (root.Val == x)
+            return root.Val;
+
+        if (root.Val < x)
+        {
+            answer = root.Val;
+            root = root.Right;
+        }
+        else
+        {
+            root = root.Left;
+        }
+    }
+
+    return answer;
+}
+```
+
+---
+
+# 3. Floor and Ceil in BST
+
+**a2z-338**
+
+Floor:
+
+```text
+largest <= X
+```
+
+Ceil:
+
+```text
+smallest >= X
+```
+
+Do both simultaneously.
+
+### Java
+
+```java
+public static int[] floorCeil(
+        TreeNode root,
+        int x) {
+
+    int floor = -1;
+    int ceil = -1;
+
+    TreeNode current = root;
+
+    while (current != null) {
+
+        if (current.val == x) {
+            floor = x;
+            ceil = x;
+            break;
+        }
+
+        if (current.val < x) {
+
+            floor = current.val;
+            current = current.right;
+
+        } else {
+
+            ceil = current.val;
+            current = current.left;
+        }
+    }
+
+    return new int[]{floor, ceil};
+}
+```
+
+### C#
+
+```csharp
+public static int[] FloorCeil(
+    TreeNode root,
+    int x)
+{
+    int floor = -1;
+    int ceil = -1;
+
+    TreeNode current = root;
+
+    while (current != null)
+    {
+        if (current.Val == x)
+        {
+            floor = x;
+            ceil = x;
+            break;
+        }
+
+        if (current.Val < x)
+        {
+            floor = current.Val;
+            current = current.Right;
+        }
+        else
+        {
+            ceil = current.Val;
+            current = current.Left;
+        }
+    }
+
+    return new[] { floor, ceil };
+}
+```
+
+Complexity:
+
+```text
+Time: O(H)
+Space: O(1)
+```
+
+---
+
+# 2. Find Minimum / Maximum in BST
+
+**a2z-337**
+
+Minimum:
+
+```text
+keep going left
+```
+
+Maximum:
+
+```text
+keep going right
+```
+
+### Java
+
+```java
+public static int findMin(TreeNode root) {
+
+    if (root == null)
+        throw new IllegalArgumentException();
+
+    while (root.left != null)
+        root = root.left;
+
+    return root.val;
+}
+
+public static int findMax(TreeNode root) {
+
+    if (root == null)
+        throw new IllegalArgumentException();
+
+    while (root.right != null)
+        root = root.right;
+
+    return root.val;
+}
+```
+
+### C#
+
+```csharp
+public static int FindMin(TreeNode root)
+{
+    if (root == null)
+        throw new ArgumentException();
+
+    while (root.Left != null)
+        root = root.Left;
+
+    return root.Val;
+}
+
+public static int FindMax(TreeNode root)
+{
+    if (root == null)
+        throw new ArgumentException();
+
+    while (root.Right != null)
+        root = root.Right;
+
+    return root.Val;
+}
+```
+
+Complexity:
+
+```text
+Time: O(H)
+Space: O(1)
+```
+
+---
+
+# 1. Search in a BST
+
+**a2z-336**
+
+Because of the BST property, don't search both branches.
+
+### Java
+
+```java
+public static TreeNode search(
+        TreeNode root,
+        int key) {
+
+    while (root != null) {
+
+        if (root.val == key)
+            return root;
+
+        if (key < root.val)
+            root = root.left;
+        else
+            root = root.right;
+    }
+
+    return null;
+}
+```
+
+### C#
+
+```csharp
+public static TreeNode Search(
+    TreeNode root,
+    int key)
+{
+    while (root != null)
+    {
+        if (root.Val == key)
+            return root;
+
+        if (key < root.Val)
+            root = root.Left;
+        else
+            root = root.Right;
+    }
+
+    return null;
+}
+```
+
+Complexity:
+
+```text
+Time: O(H)
+Space: O(1)
+```
+
+Balanced BST:
+
+```text
+O(log N)
+```
+
+Worst-case skewed BST:
+
+```text
+O(N)
+```
+
+---
+
+# BST Interview Cheat Sheet
+
+This is the part I'd memorize for interviews:
+
+| Problem            | Core idea                 |   Time | Extra space |
+| ------------------ | ------------------------- | -----: | ----------: |
+| Search             | Compare and go left/right |   O(H) |        O(1) |
+| Min/Max            | Extreme left/right        |   O(H) |        O(1) |
+| Floor/Ceil         | Track candidate           |   O(H) |        O(1) |
+| Insert             | Compare and descend       |   O(H) |        O(1) |
+| Delete             | 0/1/2 child cases         |   O(H) |       O(H)* |
+| Kth smallest       | Inorder                   | O(H+K) |        O(H) |
+| Validate BST       | Range / inorder           |   O(N) |        O(H) |
+| LCA                | BST direction property    |   O(H) |        O(1) |
+| Construct preorder | Bounds                    |   O(N) |        O(H) |
+| Successor          | Candidate + go left       |   O(H) |        O(1) |
+| Merge BSTs         | Two inorder iterators     | O(N+M) |    O(H1+H2) |
+| Two Sum            | HashSet / 2 iterators     |   O(N) | O(N) / O(H) |
+| Recover BST        | Inorder inversions        |   O(N) |        O(H) |
+| Largest BST        | Postorder information DP  |   O(N) |        O(H) |
+
+* Recursive deletion uses call-stack space; iterative deletion can be `O(1)`.
+
+---
+
+## The 5 BST patterns to actually memorize
+
+Instead of memorizing 15 solutions independently, remember these:
+
+### Pattern 1 — Search
+
+```text
+key < root → left
+key > root → right
+```
+
+### Pattern 2 — Inorder
+
+```text
+BST inorder = sorted order
+```
+
+This solves/reduces:
+
+```text
+Validate BST
+Kth smallest
+Kth largest
+Recover BST
+Two Sum
+Merge BSTs
+```
+
+### Pattern 3 — Candidate tracking
+
+Used for:
+
+```text
+Floor
+Ceil
+Successor
+Predecessor
+```
+
+### Pattern 4 — Range propagation
+
+```text
+validate(node, min, max)
+```
+
+Used for:
+
+```text
+Validate BST
+Construct BST from preorder
+```
+
+### Pattern 5 — Postorder information propagation
+
+```text
+left info
+right info
+     ↓
+current node
+     ↓
+return combined info
+```
+
+Used heavily in:
+
+```text
+Largest BST in Binary Tree
+```
+
+This last pattern is especially important for SDE2 interviews because it tests whether you can design a recursive function that returns **multiple pieces of information**, rather than solving every subtree independently. The O(N) postorder approach is also the expected complexity for the standard Largest BST problem. ([GeeksforGeeks][2])
+
+---
+
+### Next in your list
+
+We've now completed:
+
+```text
+Advanced Strings  8/8
+Tries              7/7
+BST               15/15
+```
+
+So the next section, continuing **from the end**, is:
+
+**Binary Trees — a2z-334 → a2z-299, all 36 problems.** 
+
+That section is substantially larger, so I'll keep the same format but group related traversal problems together to avoid repeating nearly identical Java/C# code unnecessarily.
+
+[1]: https://www.geeksforgeeks.org/dsa/largest-bst-binary-tree-set-2/?utm_source=chatgpt.com "Largest BST in a Binary Tree - GeeksforGeeks"
+[2]: https://www.geeksforgeeks.org/problems/largest-bst/1?utm_source=chatgpt.com "Largest BST | Practice | GeeksforGeeks"

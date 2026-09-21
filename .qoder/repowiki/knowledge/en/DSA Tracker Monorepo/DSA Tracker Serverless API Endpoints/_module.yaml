@@ -1,6 +1,6 @@
 schema_version: 1
 module_path: api_server
-title: 'Serverless API: Authentication & User State Persistence'
+title: DSA Tracker Serverless API Endpoints
 scope:
     - api/
 source_files: []

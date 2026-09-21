@@ -1,1 +1,1 @@
-Vite + React frontend; Node.js tooling for scripts and serverless API; Neon Serverless PostgreSQL shared by both the API layer and the client-side state sync via `@neondatabase/serverless`.
+Vite + React frontend; Node.js tooling for scripts and serverless API; `@neondatabase/serverless` shared between the API layer and client-side code to connect to the same Neon PostgreSQL database.

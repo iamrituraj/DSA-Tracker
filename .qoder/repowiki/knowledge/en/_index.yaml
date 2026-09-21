@@ -3,7 +3,7 @@ schema_version: 1
 locale: en-US
 branch: main
 nodes_managed: true
-exported_at: "2026-09-21T09:10:42Z"
+exported_at: "2026-09-21T09:39:23Z"
 modules:
     "":
         dir_name: DSA Tracker Monorepo
@@ -22,8 +22,8 @@ modules:
         depends_on: []
         related_to: []
     api_server:
-        dir_name: Serverless API Authentication & User State Persistence
-        title: 'Serverless API: Authentication & User State Persistence'
+        dir_name: DSA Tracker Serverless API Endpoints
+        title: DSA Tracker Serverless API Endpoints
         scope:
             - api/
         source_files: []
@@ -32,8 +32,8 @@ modules:
         related_to:
             - path: data_assets
     data_assets:
-        dir_name: DSA Problem Catalog & Solutions Data
-        title: DSA Problem Catalog & Solutions Data
+        dir_name: DSA Problem Catalog & Solution Assets
+        title: DSA Problem Catalog & Solution Assets
         scope:
             - data/
             - public/data/

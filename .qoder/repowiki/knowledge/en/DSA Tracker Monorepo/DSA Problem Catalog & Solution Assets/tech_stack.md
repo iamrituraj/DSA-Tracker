@@ -1,0 +1,1 @@
+Plain JSON data files; problem IDs follow the `a2z-NNN` convention from the Take-Forward curriculum, and solution entries embed Java and C# source strings inside JSON.

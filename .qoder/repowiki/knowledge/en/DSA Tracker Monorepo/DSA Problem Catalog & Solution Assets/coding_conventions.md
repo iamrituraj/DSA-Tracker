@@ -1,0 +1,5 @@
+- Every problem record uses a stable `a2z-NNN` identifier that serves as the primary key across `problems.json`, `solutions.json`, and `tuf-links.json`.
+- Problems are classified along three orthogonal axes — `topic` (from `topics.json`), `pattern` (from `patterns.json`), and `difficulty` (`Easy`/`Medium`/`Hard`) — and every entry populates all three fields.
+- Each problem carries both a `url` to the external problem page and an optional `videoUrl` pointing to a YouTube explanation, keeping learning resources co-located with the catalog entry.
+- Solution entries under `public/data/solutions.json` are keyed by problem ID and expose multiple `approaches`, each describing complexity (`time`, `space`), a human-readable `explanation`, and parallel `java`/`csharp` code blocks.
+- External editorial references are kept out of the problem objects and maintained separately in `tuf-links.json` as a `{problemId -> takeuforward URL}` lookup.

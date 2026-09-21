@@ -1,1 +1,0 @@
-Node.js serverless endpoints that authenticate users via HMAC-signed cookies and persist the DSA tracker's JSONB user state to a Neon PostgreSQL database.

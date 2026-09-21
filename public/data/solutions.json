@@ -2834,5 +2834,809 @@
         }
       }
     ]
+  },
+  "a2z-466": {
+    "approaches": [
+      {
+        "id": "bracket-reversals-stack",
+        "title": "Stack — cancel matched pairs, then count the rest",
+        "level": "Optimal",
+        "time": "O(n)",
+        "space": "O(n)",
+        "explanation": "Push an open bracket, pop it whenever a closing bracket finds an open on top; the leftover closes and opens each cost half their count rounded up in reversals.",
+        "code": {
+          "java": "class Solution {\n    public int minReversals(String s) {\n        int n = s.length();\n        if (n % 2 != 0) return -1;\n        Deque<Character> stack = new ArrayDeque<>();\n        for (int i = 0; i < n; i++) {\n            char c = s.charAt(i);\n            if (c == '{') stack.push(c);\n            else if (!stack.isEmpty() && stack.peek() == '{') stack.pop();\n            else stack.push(c);\n        }\n        int open = 0, close = 0;\n        while (!stack.isEmpty()) {\n            if (stack.pop() == '{') open++;\n            else close++;\n        }\n        return (open + 1) / 2 + (close + 1) / 2;\n    }\n}",
+          "csharp": "public class Solution {\n    public int MinReversals(string s) {\n        int n = s.Length;\n        if (n % 2 != 0) return -1;\n        Stack<char> stack = new Stack<char>();\n        for (int i = 0; i < n; i++) {\n            char c = s[i];\n            if (c == '{') stack.Push(c);\n            else if (stack.Count > 0 && stack.Peek() == '{') stack.Pop();\n            else stack.Push(c);\n        }\n        int open = 0, close = 0;\n        while (stack.Count > 0) {\n            if (stack.Pop() == '{') open++;\n            else close++;\n        }\n        return (open + 1) / 2 + (close + 1) / 2;\n    }\n}"
+        }
+      },
+      {
+        "id": "bracket-reversals-counting",
+        "title": "Two counters — cancel pairs on the fly (space-optimized)",
+        "level": "Optimal+",
+        "time": "O(n)",
+        "space": "O(1)",
+        "explanation": "A running open counter cancels matches without a stack; whatever stays unmatched is fixed with ceil(open/2) + ceil(close/2) reversals.",
+        "code": {
+          "java": "class Solution {\n    public int minReversals(String s) {\n        int n = s.length();\n        if (n % 2 != 0) return -1;\n        int open = 0, close = 0;\n        for (int i = 0; i < n; i++) {\n            if (s.charAt(i) == '{') open++;\n            else if (open > 0) open--;\n            else close++;\n        }\n        return (open + 1) / 2 + (close + 1) / 2;\n    }\n}",
+          "csharp": "public class Solution {\n    public int MinReversals(string s) {\n        int n = s.Length;\n        if (n % 2 != 0) return -1;\n        int open = 0, close = 0;\n        for (int i = 0; i < n; i++) {\n            if (s[i] == '{') open++;\n            else if (open > 0) open--;\n            else close++;\n        }\n        return (open + 1) / 2 + (close + 1) / 2;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-467": {
+    "approaches": [
+      {
+        "id": "count-and-say-rle",
+        "title": "Run-length encoding, generation by generation",
+        "level": "Optimal",
+        "time": "O(n × L)",
+        "space": "O(L)",
+        "explanation": "Each new row reads the previous row in runs, emitting the run length followed by the digit, repeated for n - 1 generations.",
+        "code": {
+          "java": "class Solution {\n    public String countAndSay(int n) {\n        String result = \"1\";\n        for (int step = 2; step <= n; step++) {\n            StringBuilder next = new StringBuilder();\n            int i = 0;\n            while (i < result.length()) {\n                char current = result.charAt(i);\n                int count = 0;\n                while (i < result.length() && result.charAt(i) == current) {\n                    count++;\n                    i++;\n                }\n                next.append(count).append(current);\n            }\n            result = next.toString();\n        }\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    public string CountAndSay(int n) {\n        string result = \"1\";\n        for (int step = 2; step <= n; step++) {\n            StringBuilder next = new StringBuilder();\n            int i = 0;\n            while (i < result.Length) {\n                char current = result[i];\n                int count = 0;\n                while (i < result.Length && result[i] == current) {\n                    count++;\n                    i++;\n                }\n                next.Append(count).Append(current);\n            }\n            result = next.ToString();\n        }\n        return result;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-469": {
+    "approaches": [
+      {
+        "id": "rabin-karp-naive",
+        "title": "Window-by-window character scan — baseline",
+        "level": "Brute",
+        "time": "O(n × m)",
+        "space": "O(1)",
+        "explanation": "Compare every window of the text against the pattern character by character and report the first full match.",
+        "code": {
+          "java": "class Solution {\n    public int search(String text, String pattern) {\n        int n = text.length(), m = pattern.length();\n        for (int i = 0; i + m <= n; i++) {\n            int j = 0;\n            while (j < m && text.charAt(i + j) == pattern.charAt(j)) j++;\n            if (j == m) return i;\n        }\n        return -1;\n    }\n}",
+          "csharp": "public class Solution {\n    public int Search(string text, string pattern) {\n        int n = text.Length, m = pattern.Length;\n        for (int i = 0; i + m <= n; i++) {\n            int j = 0;\n            while (j < m && text[i + j] == pattern[j]) j++;\n            if (j == m) return i;\n        }\n        return -1;\n    }\n}"
+        }
+      },
+      {
+        "id": "rabin-karp-hash",
+        "title": "Rabin-Karp — rolling hash with collision checks",
+        "level": "Optimal",
+        "time": "O(n + m) average",
+        "space": "O(1)",
+        "explanation": "Hash the pattern and the first window, then roll the window hash by removing the leaving character and adding the entering one; verify real matches to guard against collisions.",
+        "code": {
+          "java": "class Solution {\n    public int search(String text, String pattern) {\n        int n = text.length(), m = pattern.length();\n        if (m > n) return -1;\n        long base = 31, mod = 1_000_000_007L;\n        long patternHash = 0, windowHash = 0, highestPower = 1;\n        for (int i = 0; i < m - 1; i++) highestPower = highestPower * base % mod;\n        for (int i = 0; i < m; i++) {\n            patternHash = (patternHash * base + pattern.charAt(i)) % mod;\n            windowHash = (windowHash * base + text.charAt(i)) % mod;\n        }\n        for (int i = 0; i + m <= n; i++) {\n            if (patternHash == windowHash && matches(text, pattern, i)) return i;\n            if (i + m < n)\n                windowHash = ((windowHash - text.charAt(i) * highestPower % mod + mod) * base\n                        + text.charAt(i + m)) % mod;\n        }\n        return -1;\n    }\n\n    private boolean matches(String text, String pattern, int start) {\n        for (int j = 0; j < pattern.length(); j++)\n            if (text.charAt(start + j) != pattern.charAt(j)) return false;\n        return true;\n    }\n}",
+          "csharp": "public class Solution {\n    public int Search(string text, string pattern) {\n        int n = text.Length, m = pattern.Length;\n        if (m > n) return -1;\n        long baseValue = 31, mod = 1_000_000_007;\n        long patternHash = 0, windowHash = 0, highestPower = 1;\n        for (int i = 0; i < m - 1; i++) highestPower = highestPower * baseValue % mod;\n        for (int i = 0; i < m; i++) {\n            patternHash = (patternHash * baseValue + pattern[i]) % mod;\n            windowHash = (windowHash * baseValue + text[i]) % mod;\n        }\n        for (int i = 0; i + m <= n; i++) {\n            if (patternHash == windowHash && Matches(text, pattern, i)) return i;\n            if (i + m < n)\n                windowHash = ((windowHash - text[i] * highestPower % mod + mod) * baseValue\n                        + text[i + m]) % mod;\n        }\n        return -1;\n    }\n\n    private bool Matches(string text, string pattern, int start) {\n        for (int j = 0; j < pattern.Length; j++)\n            if (text[start + j] != pattern[j]) return false;\n        return true;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-470": {
+    "approaches": [
+      {
+        "id": "z-brute",
+        "title": "Direct comparison from every index — baseline",
+        "level": "Brute",
+        "time": "O(n²)",
+        "space": "O(1)",
+        "explanation": "For every index compare characters against the prefix directly until one differs; the compared count is z[i].",
+        "code": {
+          "java": "class Solution {\n    public int[] zFunction(String s) {\n        int n = s.length();\n        int[] z = new int[n];\n        for (int i = 1; i < n; i++)\n            while (i + z[i] < n && s.charAt(z[i]) == s.charAt(i + z[i])) z[i]++;\n        return z;\n    }\n}",
+          "csharp": "public class Solution {\n    public int[] ZFunction(string s) {\n        int n = s.Length;\n        int[] z = new int[n];\n        for (int i = 1; i < n; i++)\n            while (i + z[i] < n && s[z[i]] == s[i + z[i]]) z[i]++;\n        return z;\n    }\n}"
+        }
+      },
+      {
+        "id": "z-linear",
+        "title": "Z algorithm — reuse the current Z-box",
+        "level": "Optimal",
+        "time": "O(n)",
+        "space": "O(n)",
+        "explanation": "Maintain the rightmost Z-box [left, right]: inside it copy z[i - left] capped by the box edge, then extend with direct comparisons.",
+        "code": {
+          "java": "class Solution {\n    public int[] zFunction(String s) {\n        int n = s.length();\n        int[] z = new int[n];\n        int left = 0, right = 0;\n        for (int i = 1; i < n; i++) {\n            if (i <= right) z[i] = Math.min(right - i + 1, z[i - left]);\n            while (i + z[i] < n && s.charAt(z[i]) == s.charAt(i + z[i])) z[i]++;\n            if (i + z[i] - 1 > right) {\n                left = i;\n                right = i + z[i] - 1;\n            }\n        }\n        return z;\n    }\n}",
+          "csharp": "public class Solution {\n    public int[] ZFunction(string s) {\n        int n = s.Length;\n        int[] z = new int[n];\n        int left = 0, right = 0;\n        for (int i = 1; i < n; i++) {\n            if (i <= right) z[i] = Math.Min(right - i + 1, z[i - left]);\n            while (i + z[i] < n && s[z[i]] == s[i + z[i]]) z[i]++;\n            if (i + z[i] - 1 > right) {\n                left = i;\n                right = i + z[i] - 1;\n            }\n        }\n        return z;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-471": {
+    "approaches": [
+      {
+        "id": "kmp-naive",
+        "title": "Slide and compare every start — baseline",
+        "level": "Brute",
+        "time": "O(n × m)",
+        "space": "O(1)",
+        "explanation": "Slide the start index across the text and compare characters with the pattern until a full match is found.",
+        "code": {
+          "java": "class Solution {\n    public int search(String text, String pattern) {\n        int n = text.length(), m = pattern.length();\n        for (int i = 0; i + m <= n; i++) {\n            int j = 0;\n            while (j < m && text.charAt(i + j) == pattern.charAt(j)) j++;\n            if (j == m) return i;\n        }\n        return -1;\n    }\n}",
+          "csharp": "public class Solution {\n    public int Search(string text, string pattern) {\n        int n = text.Length, m = pattern.Length;\n        for (int i = 0; i + m <= n; i++) {\n            int j = 0;\n            while (j < m && text[i + j] == pattern[j]) j++;\n            if (j == m) return i;\n        }\n        return -1;\n    }\n}"
+        }
+      },
+      {
+        "id": "kmp-lps",
+        "title": "KMP — LPS skips redundant fallbacks",
+        "level": "Optimal",
+        "time": "O(n + m)",
+        "space": "O(m)",
+        "explanation": "Precompute the LPS of the pattern so a mismatch falls back to the longest reusable border instead of restarting from the pattern start.",
+        "code": {
+          "java": "class Solution {\n    public int search(String text, String pattern) {\n        if (pattern.isEmpty()) return 0;\n        int[] lps = buildLps(pattern);\n        int i = 0, j = 0;\n        while (i < text.length()) {\n            if (text.charAt(i) == pattern.charAt(j)) {\n                i++;\n                j++;\n                if (j == pattern.length()) return i - j;\n            } else if (j > 0) {\n                j = lps[j - 1];\n            } else {\n                i++;\n            }\n        }\n        return -1;\n    }\n\n    private int[] buildLps(String pattern) {\n        int[] lps = new int[pattern.length()];\n        int len = 0;\n        for (int i = 1; i < pattern.length(); ) {\n            if (pattern.charAt(i) == pattern.charAt(len)) {\n                len++;\n                lps[i] = len;\n                i++;\n            } else if (len > 0) {\n                len = lps[len - 1];\n            } else {\n                i++;\n            }\n        }\n        return lps;\n    }\n}",
+          "csharp": "public class Solution {\n    public int Search(string text, string pattern) {\n        if (pattern.Length == 0) return 0;\n        int[] lps = BuildLps(pattern);\n        int i = 0, j = 0;\n        while (i < text.Length) {\n            if (text[i] == pattern[j]) {\n                i++;\n                j++;\n                if (j == pattern.Length) return i - j;\n            } else if (j > 0) {\n                j = lps[j - 1];\n            } else {\n                i++;\n            }\n        }\n        return -1;\n    }\n\n    private int[] BuildLps(string pattern) {\n        int[] lps = new int[pattern.Length];\n        int len = 0;\n        for (int i = 1; i < pattern.Length; ) {\n            if (pattern[i] == pattern[len]) {\n                len++;\n                lps[i] = len;\n                i++;\n            } else if (len > 0) {\n                len = lps[len - 1];\n            } else {\n                i++;\n            }\n        }\n        return lps;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-472": {
+    "approaches": [
+      {
+        "id": "shortest-palindrome-brute",
+        "title": "Shrink the palindrome prefix — check each end",
+        "level": "Brute",
+        "time": "O(n²)",
+        "space": "O(1)",
+        "explanation": "Move a candidate end from the last index leftward until s[0..end] is a palindrome, then mirror the remaining suffix in front.",
+        "code": {
+          "java": "class Solution {\n    public String shortestPalindrome(String s) {\n        int end = s.length() - 1;\n        while (end > 0 && !isPalindrome(s, 0, end)) end--;\n        StringBuilder prefix = new StringBuilder(s.substring(end + 1));\n        return prefix.reverse().append(s).toString();\n    }\n\n    private boolean isPalindrome(String s, int left, int right) {\n        while (left < right) {\n            if (s.charAt(left) != s.charAt(right)) return false;\n            left++;\n            right--;\n        }\n        return true;\n    }\n}",
+          "csharp": "public class Solution {\n    public string ShortestPalindrome(string s) {\n        int end = s.Length - 1;\n        while (end > 0 && !IsPalindrome(s, 0, end)) end--;\n        char[] prefix = s.Substring(end + 1).ToCharArray();\n        Array.Reverse(prefix);\n        return new string(prefix) + s;\n    }\n\n    private bool IsPalindrome(string s, int left, int right) {\n        while (left < right) {\n            if (s[left] != s[right]) return false;\n            left++;\n            right--;\n        }\n        return true;\n    }\n}"
+        }
+      },
+      {
+        "id": "shortest-palindrome-kmp",
+        "title": "KMP on s + '#' + reverse(s)",
+        "level": "Optimal",
+        "time": "O(n)",
+        "space": "O(n)",
+        "explanation": "The final LPS value of s + '#' + reverse(s) equals the longest palindromic prefix; reverse the leftover tail and prepend it.",
+        "code": {
+          "java": "class Solution {\n    public String shortestPalindrome(String s) {\n        if (s.length() <= 1) return s;\n        String reversed = new StringBuilder(s).reverse().toString();\n        int[] lps = buildLps(s + \"#\" + reversed);\n        int keep = lps[lps.length - 1];\n        StringBuilder prefix = new StringBuilder(s.substring(keep));\n        return prefix.reverse().append(s).toString();\n    }\n\n    private int[] buildLps(String pattern) {\n        int[] lps = new int[pattern.length()];\n        int len = 0;\n        for (int i = 1; i < pattern.length(); ) {\n            if (pattern.charAt(i) == pattern.charAt(len)) {\n                len++;\n                lps[i] = len;\n                i++;\n            } else if (len > 0) {\n                len = lps[len - 1];\n            } else {\n                i++;\n            }\n        }\n        return lps;\n    }\n}",
+          "csharp": "public class Solution {\n    public string ShortestPalindrome(string s) {\n        if (s.Length <= 1) return s;\n        string reversed = Reverse(s);\n        int[] lps = BuildLps(s + \"#\" + reversed);\n        int keep = lps[lps.Length - 1];\n        return Reverse(s.Substring(keep)) + s;\n    }\n\n    private string Reverse(string s) {\n        char[] chars = s.ToCharArray();\n        Array.Reverse(chars);\n        return new string(chars);\n    }\n\n    private int[] BuildLps(string pattern) {\n        int[] lps = new int[pattern.Length];\n        int len = 0;\n        for (int i = 1; i < pattern.Length; ) {\n            if (pattern[i] == pattern[len]) {\n                len++;\n                lps[i] = len;\n                i++;\n            } else if (len > 0) {\n                len = lps[len - 1];\n            } else {\n                i++;\n            }\n        }\n        return lps;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-473": {
+    "approaches": [
+      {
+        "id": "happy-prefix-brute",
+        "title": "Direct compare — shrink the candidate length",
+        "level": "Brute",
+        "time": "O(n²)",
+        "space": "O(1)",
+        "explanation": "Try every proper prefix length from longest to shortest and compare it against the equally long ending suffix.",
+        "code": {
+          "java": "class Solution {\n    public String longestHappyPrefix(String s) {\n        int n = s.length();\n        for (int len = n - 1; len >= 1; len--) {\n            if (s.substring(0, len).equals(s.substring(n - len)))\n                return s.substring(0, len);\n        }\n        return \"\";\n    }\n}",
+          "csharp": "public class Solution {\n    public string LongestHappyPrefix(string s) {\n        int n = s.Length;\n        for (int len = n - 1; len >= 1; len--) {\n            if (s.Substring(0, len) == s.Substring(n - len))\n                return s.Substring(0, len);\n        }\n        return \"\";\n    }\n}"
+        }
+      },
+      {
+        "id": "happy-prefix-kmp",
+        "title": "KMP — the last LPS value is the answer",
+        "level": "Optimal",
+        "time": "O(n)",
+        "space": "O(n)",
+        "explanation": "In the LPS array the last entry is by definition the longest proper prefix that is also a suffix, so return it directly.",
+        "code": {
+          "java": "class Solution {\n    public String longestHappyPrefix(String s) {\n        int n = s.length();\n        int[] lps = new int[n];\n        int len = 0;\n        for (int i = 1; i < n; ) {\n            if (s.charAt(i) == s.charAt(len)) {\n                len++;\n                lps[i] = len;\n                i++;\n            } else if (len > 0) {\n                len = lps[len - 1];\n            } else {\n                lps[i] = 0;\n                i++;\n            }\n        }\n        return s.substring(0, lps[n - 1]);\n    }\n}",
+          "csharp": "public class Solution {\n    public string LongestHappyPrefix(string s) {\n        int n = s.Length;\n        int[] lps = new int[n];\n        int len = 0;\n        for (int i = 1; i < n; ) {\n            if (s[i] == s[len]) {\n                len++;\n                lps[i] = len;\n                i++;\n            } else if (len > 0) {\n                len = lps[len - 1];\n            } else {\n                lps[i] = 0;\n                i++;\n            }\n        }\n        return s.Substring(0, lps[n - 1]);\n    }\n}"
+        }
+      },
+      {
+        "id": "happy-prefix-hash",
+        "title": "Rolling hash — match prefix and suffix incrementally (space-optimized)",
+        "level": "Optimal+",
+        "time": "O(n)",
+        "space": "O(1)",
+        "explanation": "Grow length by length while keeping the prefix hash forward and the suffix hash backward; the largest length where both hashes agree is the answer.",
+        "code": {
+          "java": "class Solution {\n    public String longestHappyPrefix(String s) {\n        int n = s.length();\n        long base = 31, mod = 1_000_000_007L;\n        long prefixHash = 0, suffixHash = 0, power = 1;\n        int best = 0;\n        for (int len = 1; len < n; len++) {\n            prefixHash = (prefixHash * base + s.charAt(len - 1)) % mod;\n            suffixHash = (s.charAt(n - len) * power + suffixHash) % mod;\n            if (prefixHash == suffixHash) best = len;\n            power = power * base % mod;\n        }\n        return s.substring(0, best);\n    }\n}",
+          "csharp": "public class Solution {\n    public string LongestHappyPrefix(string s) {\n        int n = s.Length;\n        long baseValue = 31, mod = 1_000_000_007;\n        long prefixHash = 0, suffixHash = 0, power = 1;\n        int best = 0;\n        for (int len = 1; len < n; len++) {\n            prefixHash = (prefixHash * baseValue + s[len - 1]) % mod;\n            suffixHash = (s[n - len] * power + suffixHash) % mod;\n            if (prefixHash == suffixHash) best = len;\n            power = power * baseValue % mod;\n        }\n        return s.Substring(0, best);\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-474": {
+    "approaches": [
+      {
+        "id": "pal-subseq-memo",
+        "title": "Memoized interval counting",
+        "level": "Better",
+        "time": "O(n²)",
+        "space": "O(n²)",
+        "explanation": "solve(i, j) counts palindromic subsequences inside s[i..j]: matching ends combine both shorter intervals plus one for the outer pair, otherwise subtract the overlap counted twice.",
+        "code": {
+          "java": "class Solution {\n    Long[][] memo;\n\n    long countPalindromicSubsequences(String s) {\n        int n = s.length();\n        memo = new Long[n][n];\n        return solve(s, 0, n - 1);\n    }\n\n    long solve(String s, int i, int j) {\n        if (i > j) return 0;\n        if (i == j) return 1;\n        if (memo[i][j] != null) return memo[i][j];\n        long result;\n        if (s.charAt(i) == s.charAt(j))\n            result = solve(s, i + 1, j) + solve(s, i, j - 1) + 1;\n        else\n            result = solve(s, i + 1, j) + solve(s, i, j - 1) - solve(s, i + 1, j - 1);\n        memo[i][j] = result;\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    private long?[,] memo;\n\n    public long CountPalindromicSubsequences(string s) {\n        int n = s.Length;\n        memo = new long?[n, n];\n        return Solve(s, 0, n - 1);\n    }\n\n    private long Solve(string s, int i, int j) {\n        if (i > j) return 0;\n        if (i == j) return 1;\n        if (memo[i, j].HasValue) return memo[i, j].Value;\n        long result;\n        if (s[i] == s[j])\n            result = Solve(s, i + 1, j) + Solve(s, i, j - 1) + 1;\n        else\n            result = Solve(s, i + 1, j) + Solve(s, i, j - 1) - Solve(s, i + 1, j - 1);\n        memo[i, j] = result;\n        return result;\n    }\n}"
+        }
+      },
+      {
+        "id": "pal-subseq-tab",
+        "title": "Tabulation — grow intervals by length",
+        "level": "Optimal",
+        "time": "O(n²)",
+        "space": "O(n²)",
+        "explanation": "Fill intervals in increasing length order so every i+1 and j-1 state is already computed; matching ends add one for the outer pair.",
+        "code": {
+          "java": "class Solution {\n    public long countPalindromicSubsequences(String s) {\n        int n = s.length();\n        long[][] dp = new long[n][n];\n        for (int i = 0; i < n; i++) dp[i][i] = 1;\n        for (int len = 2; len <= n; len++) {\n            for (int i = 0; i + len - 1 < n; i++) {\n                int j = i + len - 1;\n                if (s.charAt(i) == s.charAt(j))\n                    dp[i][j] = dp[i + 1][j] + dp[i][j - 1] + 1;\n                else\n                    dp[i][j] = dp[i + 1][j] + dp[i][j - 1] - dp[i + 1][j - 1];\n            }\n        }\n        return dp[0][n - 1];\n    }\n}",
+          "csharp": "public class Solution {\n    public long CountPalindromicSubsequences(string s) {\n        int n = s.Length;\n        long[,] dp = new long[n, n];\n        for (int i = 0; i < n; i++) dp[i, i] = 1;\n        for (int len = 2; len <= n; len++) {\n            for (int i = 0; i + len - 1 < n; i++) {\n                int j = i + len - 1;\n                if (s[i] == s[j])\n                    dp[i, j] = dp[i + 1, j] + dp[i, j - 1] + 1;\n                else\n                    dp[i, j] = dp[i + 1, j] + dp[i, j - 1] - dp[i + 1, j - 1];\n            }\n        }\n        return dp[0, n - 1];\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-459": {
+    "approaches": [
+      {
+        "id": "trie-basic",
+        "title": "Basic trie — insert, search, startsWith",
+        "level": "Optimal",
+        "time": "O(L) per operation",
+        "space": "O(total characters)",
+        "explanation": "A 26-way child array per node plus an end-of-word flag powers insert, search and startsWith as simple node walks.",
+        "code": {
+          "java": "class Trie {\n    static class Node {\n        Node[] child = new Node[26];\n        boolean isEnd;\n    }\n\n    private final Node root = new Node();\n\n    public void insert(String word) {\n        Node node = root;\n        for (int i = 0; i < word.length(); i++) {\n            int index = word.charAt(i) - 'a';\n            if (node.child[index] == null) node.child[index] = new Node();\n            node = node.child[index];\n        }\n        node.isEnd = true;\n    }\n\n    public boolean search(String word) {\n        Node node = root;\n        for (int i = 0; i < word.length(); i++) {\n            int index = word.charAt(i) - 'a';\n            if (node.child[index] == null) return false;\n            node = node.child[index];\n        }\n        return node.isEnd;\n    }\n\n    public boolean startsWith(String prefix) {\n        Node node = root;\n        for (int i = 0; i < prefix.length(); i++) {\n            int index = prefix.charAt(i) - 'a';\n            if (node.child[index] == null) return false;\n            node = node.child[index];\n        }\n        return true;\n    }\n}",
+          "csharp": "public class Trie {\n    private class Node {\n        public Node[] Child = new Node[26];\n        public bool IsEnd;\n    }\n\n    private readonly Node root = new Node();\n\n    public void Insert(string word) {\n        Node node = root;\n        for (int i = 0; i < word.Length; i++) {\n            int index = word[i] - 'a';\n            if (node.Child[index] == null) node.Child[index] = new Node();\n            node = node.Child[index];\n        }\n        node.IsEnd = true;\n    }\n\n    public bool Search(string word) {\n        Node node = root;\n        for (int i = 0; i < word.Length; i++) {\n            int index = word[i] - 'a';\n            if (node.Child[index] == null) return false;\n            node = node.Child[index];\n        }\n        return node.IsEnd;\n    }\n\n    public bool StartsWith(string prefix) {\n        Node node = root;\n        for (int i = 0; i < prefix.Length; i++) {\n            int index = prefix[i] - 'a';\n            if (node.Child[index] == null) return false;\n            node = node.Child[index];\n        }\n        return true;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-460": {
+    "approaches": [
+      {
+        "id": "trie-advanced",
+        "title": "Node counters — equal, prefix count and erase",
+        "level": "Optimal",
+        "time": "O(L) per operation",
+        "space": "O(total characters)",
+        "explanation": "Each node tracks how many words pass through it and how many end there, so equality, prefix counting and erasing are all O(L) walks.",
+        "code": {
+          "java": "class Trie {\n    static class Node {\n        Node[] child = new Node[26];\n        int prefixCount;\n        int wordCount;\n    }\n\n    private final Node root = new Node();\n\n    public void insert(String word) {\n        Node node = root;\n        for (int i = 0; i < word.length(); i++) {\n            int index = word.charAt(i) - 'a';\n            if (node.child[index] == null) node.child[index] = new Node();\n            node = node.child[index];\n            node.prefixCount++;\n        }\n        node.wordCount++;\n    }\n\n    public int countWordsEqualTo(String word) {\n        Node node = findNode(word);\n        return node == null ? 0 : node.wordCount;\n    }\n\n    public int countWordsStartingWith(String prefix) {\n        Node node = findNode(prefix);\n        return node == null ? 0 : node.prefixCount;\n    }\n\n    public void erase(String word) {\n        Node node = root;\n        for (int i = 0; i < word.length(); i++) {\n            node = node.child[word.charAt(i) - 'a'];\n            node.prefixCount--;\n        }\n        node.wordCount--;\n    }\n\n    public boolean search(String word) {\n        return countWordsEqualTo(word) > 0;\n    }\n\n    public boolean startsWith(String prefix) {\n        return countWordsStartingWith(prefix) > 0;\n    }\n\n    private Node findNode(String s) {\n        Node node = root;\n        for (int i = 0; i < s.length(); i++) {\n            int index = s.charAt(i) - 'a';\n            if (node.child[index] == null) return null;\n            node = node.child[index];\n        }\n        return node;\n    }\n}",
+          "csharp": "public class Trie {\n    private class Node {\n        public Node[] Child = new Node[26];\n        public int PrefixCount;\n        public int WordCount;\n    }\n\n    private readonly Node root = new Node();\n\n    public void Insert(string word) {\n        Node node = root;\n        for (int i = 0; i < word.Length; i++) {\n            int index = word[i] - 'a';\n            if (node.Child[index] == null) node.Child[index] = new Node();\n            node = node.Child[index];\n            node.PrefixCount++;\n        }\n        node.WordCount++;\n    }\n\n    public int CountWordsEqualTo(string word) {\n        Node node = FindNode(word);\n        return node == null ? 0 : node.WordCount;\n    }\n\n    public int CountWordsStartingWith(string prefix) {\n        Node node = FindNode(prefix);\n        return node == null ? 0 : node.PrefixCount;\n    }\n\n    public void Erase(string word) {\n        Node node = root;\n        for (int i = 0; i < word.Length; i++) {\n            node = node.Child[word[i] - 'a'];\n            node.PrefixCount--;\n        }\n        node.WordCount--;\n    }\n\n    public bool Search(string word) {\n        return CountWordsEqualTo(word) > 0;\n    }\n\n    public bool StartsWith(string prefix) {\n        return CountWordsStartingWith(prefix) > 0;\n    }\n\n    private Node FindNode(string s) {\n        Node node = root;\n        for (int i = 0; i < s.Length; i++) {\n            int index = s[i] - 'a';\n            if (node.Child[index] == null) return null;\n            node = node.Child[index];\n        }\n        return node;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-461": {
+    "approaches": [
+      {
+        "id": "longest-word-trie",
+        "title": "Trie of words — every prefix must end another word",
+        "level": "Optimal",
+        "time": "O(total characters)",
+        "space": "O(total characters)",
+        "explanation": "Build a trie of all words, then accept a word only when every node along its path is marked as the end of some word; prefer longer words and break ties lexicographically.",
+        "code": {
+          "java": "class Solution {\n    static class Node {\n        Node[] child = new Node[26];\n        boolean isEnd;\n    }\n\n    public String longestWord(String[] words) {\n        Node root = new Node();\n        for (String word : words) {\n            Node node = root;\n            for (int i = 0; i < word.length(); i++) {\n                int index = word.charAt(i) - 'a';\n                if (node.child[index] == null) node.child[index] = new Node();\n                node = node.child[index];\n            }\n            node.isEnd = true;\n        }\n        String answer = \"\";\n        for (String word : words) {\n            Node node = root;\n            boolean valid = true;\n            for (int i = 0; i < word.length(); i++) {\n                node = node.child[word.charAt(i) - 'a'];\n                if (!node.isEnd) {\n                    valid = false;\n                    break;\n                }\n            }\n            if (valid && (word.length() > answer.length()\n                    || (word.length() == answer.length() && word.compareTo(answer) < 0)))\n                answer = word;\n        }\n        return answer;\n    }\n}",
+          "csharp": "public class Solution {\n    private class Node {\n        public Node[] Child = new Node[26];\n        public bool IsEnd;\n    }\n\n    public string LongestWord(string[] words) {\n        Node root = new Node();\n        foreach (string word in words) {\n            Node node = root;\n            for (int i = 0; i < word.Length; i++) {\n                int index = word[i] - 'a';\n                if (node.Child[index] == null) node.Child[index] = new Node();\n                node = node.Child[index];\n            }\n            node.IsEnd = true;\n        }\n        string answer = \"\";\n        foreach (string word in words) {\n            Node node = root;\n            bool valid = true;\n            for (int i = 0; i < word.Length; i++) {\n                node = node.Child[word[i] - 'a'];\n                if (!node.IsEnd) {\n                    valid = false;\n                    break;\n                }\n            }\n            if (valid && (word.Length > answer.Length\n                    || (word.Length == answer.Length && string.CompareOrdinal(word, answer) < 0)))\n                answer = word;\n        }\n        return answer;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-462": {
+    "approaches": [
+      {
+        "id": "distinct-substrings-set",
+        "title": "Hash set of every substring — baseline",
+        "level": "Brute",
+        "time": "O(n³) worst-case",
+        "space": "O(n³)",
+        "explanation": "Generate every substring and deduplicate them in a hash set; copying and hashing each substring is the hidden cost.",
+        "code": {
+          "java": "class Solution {\n    public int countDistinctSubstrings(String s) {\n        Set<String> seen = new HashSet<>();\n        for (int i = 0; i < s.length(); i++)\n            for (int j = i + 1; j <= s.length(); j++)\n                seen.add(s.substring(i, j));\n        return seen.size();\n    }\n}",
+          "csharp": "public class Solution {\n    public int CountDistinctSubstrings(string s) {\n        HashSet<string> seen = new HashSet<string>();\n        for (int i = 0; i < s.Length; i++)\n            for (int j = i + 1; j <= s.Length; j++)\n                seen.Add(s.Substring(i, j - i));\n        return seen.Count;\n    }\n}"
+        }
+      },
+      {
+        "id": "distinct-substrings-trie",
+        "title": "Insert all suffixes — count new trie nodes",
+        "level": "Optimal",
+        "time": "O(n²)",
+        "space": "O(n²)",
+        "explanation": "Insert every suffix into a trie; each newly created node is a substring seen for the first time, so the node count is the answer.",
+        "code": {
+          "java": "class Solution {\n    static class Node {\n        Node[] child = new Node[26];\n    }\n\n    public int countDistinctSubstrings(String s) {\n        Node root = new Node();\n        int count = 0;\n        for (int i = 0; i < s.length(); i++) {\n            Node node = root;\n            for (int j = i; j < s.length(); j++) {\n                int index = s.charAt(j) - 'a';\n                if (node.child[index] == null) {\n                    node.child[index] = new Node();\n                    count++;\n                }\n                node = node.child[index];\n            }\n        }\n        return count;\n    }\n}",
+          "csharp": "public class Solution {\n    private class Node {\n        public Node[] Child = new Node[26];\n    }\n\n    public int CountDistinctSubstrings(string s) {\n        Node root = new Node();\n        int count = 0;\n        for (int i = 0; i < s.Length; i++) {\n            Node node = root;\n            for (int j = i; j < s.Length; j++) {\n                int index = s[j] - 'a';\n                if (node.Child[index] == null) {\n                    node.Child[index] = new Node();\n                    count++;\n                }\n                node = node.Child[index];\n            }\n        }\n        return count;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-463": {
+    "approaches": [
+      {
+        "id": "bit-ops-cheatsheet",
+        "title": "Bit operations cheat sheet",
+        "level": "Optimal",
+        "time": "O(1) per operation",
+        "space": "O(1)",
+        "explanation": "Get, set, check, toggle and clear single bits — the exact primitives every binary-trie solution is built from.",
+        "code": {
+          "java": "class Solution {\n    int getBit(int num, int i) {\n        return (num >>> i) & 1;\n    }\n\n    int setBit(int num, int i) {\n        return num | (1 << i);\n    }\n\n    int clearBit(int num, int i) {\n        return num & ~(1 << i);\n    }\n\n    boolean checkBit(int num, int i) {\n        return (num & (1 << i)) != 0;\n    }\n\n    int toggleBit(int num, int i) {\n        return num ^ (1 << i);\n    }\n}",
+          "csharp": "public class Solution {\n    public int GetBit(int num, int i) {\n        return (num >> i) & 1;\n    }\n\n    public int SetBit(int num, int i) {\n        return num | (1 << i);\n    }\n\n    public int ClearBit(int num, int i) {\n        return num & ~(1 << i);\n    }\n\n    public bool CheckBit(int num, int i) {\n        return (num & (1 << i)) != 0;\n    }\n\n    public int ToggleBit(int num, int i) {\n        return num ^ (1 << i);\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-464": {
+    "approaches": [
+      {
+        "id": "max-xor-pair-brute",
+        "title": "Try all pairs — baseline",
+        "level": "Brute",
+        "time": "O(n²)",
+        "space": "O(1)",
+        "explanation": "Test every pair and keep the largest XOR.",
+        "code": {
+          "java": "class Solution {\n    public int findMaximumXOR(int[] nums) {\n        int best = 0;\n        for (int i = 0; i < nums.length; i++)\n            for (int j = i + 1; j < nums.length; j++)\n                best = Math.max(best, nums[i] ^ nums[j]);\n        return best;\n    }\n}",
+          "csharp": "public class Solution {\n    public int FindMaximumXOR(int[] nums) {\n        int best = 0;\n        for (int i = 0; i < nums.Length; i++)\n            for (int j = i + 1; j < nums.Length; j++)\n                best = Math.Max(best, nums[i] ^ nums[j]);\n        return best;\n    }\n}"
+        }
+      },
+      {
+        "id": "max-xor-pair-trie",
+        "title": "Binary trie — greedily take the opposite bit",
+        "level": "Optimal",
+        "time": "O(32n)",
+        "space": "O(32n)",
+        "explanation": "Insert all numbers into a bit trie, then for each number walk 31 down to 0 preferring the opposite bit so the XOR stays maximal.",
+        "code": {
+          "java": "class Solution {\n    static class Node {\n        Node[] child = new Node[2];\n    }\n\n    public int findMaximumXOR(int[] nums) {\n        Node root = new Node();\n        for (int num : nums) insert(root, num);\n        int answer = 0;\n        for (int num : nums) answer = Math.max(answer, maxXor(root, num));\n        return answer;\n    }\n\n    private void insert(Node root, int num) {\n        Node node = root;\n        for (int bit = 31; bit >= 0; bit--) {\n            int b = (num >>> bit) & 1;\n            if (node.child[b] == null) node.child[b] = new Node();\n            node = node.child[b];\n        }\n    }\n\n    private int maxXor(Node root, int num) {\n        Node node = root;\n        int result = 0;\n        for (int bit = 31; bit >= 0; bit--) {\n            int b = (num >>> bit) & 1;\n            int opposite = b ^ 1;\n            if (node.child[opposite] != null) {\n                result |= 1 << bit;\n                node = node.child[opposite];\n            } else {\n                node = node.child[b];\n            }\n        }\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    private class Node {\n        public Node[] Child = new Node[2];\n    }\n\n    public int FindMaximumXOR(int[] nums) {\n        Node root = new Node();\n        foreach (int num in nums) Insert(root, num);\n        int answer = 0;\n        foreach (int num in nums) answer = Math.Max(answer, MaxXor(root, num));\n        return answer;\n    }\n\n    private void Insert(Node root, int num) {\n        Node node = root;\n        for (int bit = 31; bit >= 0; bit--) {\n            int b = (num >> bit) & 1;\n            if (node.Child[b] == null) node.Child[b] = new Node();\n            node = node.Child[b];\n        }\n    }\n\n    private int MaxXor(Node root, int num) {\n        Node node = root;\n        int result = 0;\n        for (int bit = 31; bit >= 0; bit--) {\n            int b = (num >> bit) & 1;\n            int opposite = b ^ 1;\n            if (node.Child[opposite] != null) {\n                result |= 1 << bit;\n                node = node.Child[opposite];\n            } else {\n                node = node.Child[b];\n            }\n        }\n        return result;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-465": {
+    "approaches": [
+      {
+        "id": "maximize-xor-brute",
+        "title": "Scan every number per query — baseline",
+        "level": "Brute",
+        "time": "O(N × Q)",
+        "space": "O(1)",
+        "explanation": "For every query scan all numbers and keep the best x XOR num among those with num <= m.",
+        "code": {
+          "java": "class Solution {\n    public int[] maximizeXor(int[] nums, int[][] queries) {\n        int[] answer = new int[queries.length];\n        for (int i = 0; i < queries.length; i++) {\n            int x = queries[i][0], m = queries[i][1];\n            int best = -1;\n            for (int num : nums)\n                if (num <= m) best = Math.max(best, x ^ num);\n            answer[i] = best;\n        }\n        return answer;\n    }\n}",
+          "csharp": "public class Solution {\n    public int[] MaximizeXor(int[] nums, int[][] queries) {\n        int[] answer = new int[queries.Length];\n        for (int i = 0; i < queries.Length; i++) {\n            int x = queries[i][0], m = queries[i][1];\n            int best = -1;\n            foreach (int num in nums)\n                if (num <= m) best = Math.Max(best, x ^ num);\n            answer[i] = best;\n        }\n        return answer;\n    }\n}"
+        }
+      },
+      {
+        "id": "maximize-xor-trie",
+        "title": "Offline queries — grow the binary trie as m increases",
+        "level": "Optimal",
+        "time": "O(N log N + Q log Q + 32(N + Q))",
+        "space": "O(32N)",
+        "explanation": "Sort queries by m and insert each number into a binary trie as soon as it becomes eligible, so every query greedily walks the opposite bit.",
+        "code": {
+          "java": "class Solution {\n    static class Node {\n        Node[] child = new Node[2];\n    }\n\n    public int[] maximizeXor(int[] nums, int[][] queries) {\n        Arrays.sort(nums);\n        int q = queries.length;\n        int[][] sorted = new int[q][3];\n        for (int i = 0; i < q; i++) {\n            sorted[i][0] = queries[i][0];\n            sorted[i][1] = queries[i][1];\n            sorted[i][2] = i;\n        }\n        Arrays.sort(sorted, (a, b) -> a[1] - b[1]);\n        Node root = new Node();\n        int[] answer = new int[q];\n        int index = 0;\n        for (int[] query : sorted) {\n            while (index < nums.length && nums[index] <= query[1]) {\n                insert(root, nums[index]);\n                index++;\n            }\n            answer[query[2]] = index == 0 ? -1 : maxXor(root, query[0]);\n        }\n        return answer;\n    }\n\n    private void insert(Node root, int num) {\n        Node node = root;\n        for (int bit = 31; bit >= 0; bit--) {\n            int b = (num >>> bit) & 1;\n            if (node.child[b] == null) node.child[b] = new Node();\n            node = node.child[b];\n        }\n    }\n\n    private int maxXor(Node root, int num) {\n        Node node = root;\n        int result = 0;\n        for (int bit = 31; bit >= 0; bit--) {\n            int b = (num >>> bit) & 1;\n            int opposite = b ^ 1;\n            if (node.child[opposite] != null) {\n                result |= 1 << bit;\n                node = node.child[opposite];\n            } else {\n                node = node.child[b];\n            }\n        }\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    private class Node {\n        public Node[] Child = new Node[2];\n    }\n\n    public int[] MaximizeXor(int[] nums, int[][] queries) {\n        Array.Sort(nums);\n        int q = queries.Length;\n        int[][] sorted = new int[q][];\n        for (int i = 0; i < q; i++)\n            sorted[i] = new[] { queries[i][0], queries[i][1], i };\n        Array.Sort(sorted, (a, b) => a[1].CompareTo(b[1]));\n        Node root = new Node();\n        int[] answer = new int[q];\n        int index = 0;\n        foreach (int[] query in sorted) {\n            while (index < nums.Length && nums[index] <= query[1]) {\n                Insert(root, nums[index]);\n                index++;\n            }\n            answer[query[2]] = index == 0 ? -1 : MaxXor(root, query[0]);\n        }\n        return answer;\n    }\n\n    private void Insert(Node root, int num) {\n        Node node = root;\n        for (int bit = 31; bit >= 0; bit--) {\n            int b = (num >> bit) & 1;\n            if (node.Child[b] == null) node.Child[b] = new Node();\n            node = node.Child[b];\n        }\n    }\n\n    private int MaxXor(Node root, int num) {\n        Node node = root;\n        int result = 0;\n        for (int bit = 31; bit >= 0; bit--) {\n            int b = (num >> bit) & 1;\n            int opposite = b ^ 1;\n            if (node.Child[opposite] != null) {\n                result |= 1 << bit;\n                node = node.Child[opposite];\n            } else {\n                node = node.Child[b];\n            }\n        }\n        return result;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-336": {
+    "approaches": [
+      {
+        "id": "search-bst-brute",
+        "title": "Brute force — search both branches",
+        "level": "Brute",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "No BST ordering is used — every node is visited, so the tree is treated as a plain binary tree.",
+        "code": {
+          "java": "class Solution {\n    public TreeNode searchBrute(TreeNode root, int key) {\n        if (root == null) return null;\n        if (root.val == key) return root;\n        TreeNode found = searchBrute(root.left, key);\n        return found != null ? found : searchBrute(root.right, key);\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode SearchBrute(TreeNode root, int key) {\n        if (root == null) return null;\n        if (root.Val == key) return root;\n        TreeNode found = SearchBrute(root.Left, key);\n        return found != null ? found : SearchBrute(root.Right, key);\n    }\n}"
+        }
+      },
+      {
+        "id": "search-bst-walk",
+        "title": "Guided walk — O(H) search",
+        "level": "Optimal",
+        "time": "O(H)",
+        "space": "O(1)",
+        "explanation": "At each step compare with the current node and descend only one side; the search path is a root-to-node walk of height H.",
+        "code": {
+          "java": "class Solution {\n    public TreeNode search(TreeNode root, int key) {\n        while (root != null) {\n            if (root.val == key) return root;\n            root = key < root.val ? root.left : root.right;\n        }\n        return null;\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode Search(TreeNode root, int key) {\n        while (root != null) {\n            if (root.Val == key) return root;\n            root = key < root.Val ? root.Left : root.Right;\n        }\n        return null;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-337": {
+    "approaches": [
+      {
+        "id": "min-max-brute",
+        "title": "Brute force — traverse everything",
+        "level": "Brute",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Full traversal that keeps the running minimum and maximum; works on any binary tree but visits all N nodes.",
+        "code": {
+          "java": "class Solution {\n    public int minValueBrute(TreeNode root) {\n        if (root == null) return Integer.MAX_VALUE;\n        return Math.min(root.val, Math.min(minValueBrute(root.left), minValueBrute(root.right)));\n    }\n\n    public int maxValueBrute(TreeNode root) {\n        if (root == null) return Integer.MIN_VALUE;\n        return Math.max(root.val, Math.max(maxValueBrute(root.left), maxValueBrute(root.right)));\n    }\n}",
+          "csharp": "public class Solution {\n    public int MinValueBrute(TreeNode root) {\n        if (root == null) return int.MaxValue;\n        return Math.Min(root.Val, Math.Min(MinValueBrute(root.Left), MinValueBrute(root.Right)));\n    }\n\n    public int MaxValueBrute(TreeNode root) {\n        if (root == null) return int.MinValue;\n        return Math.Max(root.Val, Math.Max(MaxValueBrute(root.Left), MaxValueBrute(root.Right)));\n    }\n}"
+        }
+      },
+      {
+        "id": "min-max-extreme",
+        "title": "Extreme walk — leftmost and rightmost",
+        "level": "Optimal",
+        "time": "O(H)",
+        "space": "O(1)",
+        "explanation": "The minimum of a BST is its leftmost node and the maximum is its rightmost — follow one chain of pointers.",
+        "code": {
+          "java": "class Solution {\n    public int findMin(TreeNode root) {\n        if (root == null) throw new IllegalArgumentException();\n        while (root.left != null) root = root.left;\n        return root.val;\n    }\n\n    public int findMax(TreeNode root) {\n        if (root == null) throw new IllegalArgumentException();\n        while (root.right != null) root = root.right;\n        return root.val;\n    }\n}",
+          "csharp": "public class Solution {\n    public int FindMin(TreeNode root) {\n        if (root == null) throw new ArgumentException();\n        while (root.Left != null) root = root.Left;\n        return root.Val;\n    }\n\n    public int FindMax(TreeNode root) {\n        if (root == null) throw new ArgumentException();\n        while (root.Right != null) root = root.Right;\n        return root.Val;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-338": {
+    "approaches": [
+      {
+        "id": "floor-ceil-brute",
+        "title": "Brute force — scan the whole tree",
+        "level": "Brute",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Visits every node and records the best floor and ceil candidates regardless of the BST property.",
+        "code": {
+          "java": "class Solution {\n    public int[] floorCeilBrute(TreeNode root, int x) {\n        int[] best = {-1, -1};\n        search(root, x, best);\n        return best;\n    }\n\n    private void search(TreeNode node, int x, int[] best) {\n        if (node == null) return;\n        if (node.val <= x && node.val > best[0]) best[0] = node.val;\n        if (node.val >= x && (best[1] == -1 || node.val < best[1])) best[1] = node.val;\n        search(node.left, x, best);\n        search(node.right, x, best);\n    }\n}",
+          "csharp": "public class Solution {\n    public int[] FloorCeilBrute(TreeNode root, int x) {\n        int[] best = { -1, -1 };\n        Search(root, x, best);\n        return best;\n    }\n\n    private void Search(TreeNode node, int x, int[] best) {\n        if (node == null) return;\n        if (node.Val <= x && node.Val > best[0]) best[0] = node.Val;\n        if (node.Val >= x && (best[1] == -1 || node.Val < best[1])) best[1] = node.Val;\n        Search(node.Left, x, best);\n        Search(node.Right, x, best);\n    }\n}"
+        }
+      },
+      {
+        "id": "floor-ceil-walk",
+        "title": "Lower and upper bound in one walk",
+        "level": "Optimal",
+        "time": "O(H)",
+        "space": "O(1)",
+        "explanation": "One walk tracks both bounds: when the value is smaller than X it is a floor candidate, otherwise a ceil candidate; an exact match is both.",
+        "code": {
+          "java": "class Solution {\n    public int[] floorCeil(TreeNode root, int x) {\n        int floor = -1;\n        int ceil = -1;\n        while (root != null) {\n            if (root.val == x) {\n                floor = x;\n                ceil = x;\n                break;\n            }\n            if (root.val < x) {\n                floor = root.val;\n                root = root.right;\n            } else {\n                ceil = root.val;\n                root = root.left;\n            }\n        }\n        return new int[]{floor, ceil};\n    }\n}",
+          "csharp": "public class Solution {\n    public int[] FloorCeil(TreeNode root, int x) {\n        int floor = -1;\n        int ceil = -1;\n        while (root != null) {\n            if (root.Val == x) {\n                floor = x;\n                ceil = x;\n                break;\n            }\n            if (root.Val < x) {\n                floor = root.Val;\n                root = root.Right;\n            } else {\n                ceil = root.Val;\n                root = root.Left;\n            }\n        }\n        return new[] { floor, ceil };\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-339": {
+    "approaches": [
+      {
+        "id": "floor-bst-brute",
+        "title": "Brute force — scan the whole tree",
+        "level": "Brute",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Full traversal keeping the best value not exceeding X, without using BST ordering.",
+        "code": {
+          "java": "class Solution {\n    public int floorBrute(TreeNode root, int x) {\n        return search(root, x);\n    }\n\n    private int search(TreeNode node, int x) {\n        if (node == null) return -1;\n        int candidate = node.val <= x ? node.val : -1;\n        return Math.max(candidate, Math.max(search(node.left, x), search(node.right, x)));\n    }\n}",
+          "csharp": "public class Solution {\n    public int FloorBrute(TreeNode root, int x) {\n        return Search(root, x);\n    }\n\n    private int Search(TreeNode node, int x) {\n        if (node == null) return -1;\n        int candidate = node.Val <= x ? node.Val : -1;\n        return Math.Max(candidate, Math.Max(Search(node.Left, x), Search(node.Right, x)));\n    }\n}"
+        }
+      },
+      {
+        "id": "floor-bst-walk",
+        "title": "Guided walk — track best candidate",
+        "level": "Optimal",
+        "time": "O(H)",
+        "space": "O(1)",
+        "explanation": "At each node: if it is <= X remember it and move right to look for something closer, otherwise move left.",
+        "code": {
+          "java": "class Solution {\n    public int floor(TreeNode root, int x) {\n        int answer = -1;\n        while (root != null) {\n            if (root.val == x) return root.val;\n            if (root.val < x) {\n                answer = root.val;\n                root = root.right;\n            } else {\n                root = root.left;\n            }\n        }\n        return answer;\n    }\n}",
+          "csharp": "public class Solution {\n    public int Floor(TreeNode root, int x) {\n        int answer = -1;\n        while (root != null) {\n            if (root.Val == x) return root.Val;\n            if (root.Val < x) {\n                answer = root.Val;\n                root = root.Right;\n            } else {\n                root = root.Left;\n            }\n        }\n        return answer;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-340": {
+    "approaches": [
+      {
+        "id": "insert-bst-recursive",
+        "title": "Recursive insert",
+        "level": "Better",
+        "time": "O(H)",
+        "space": "O(H)",
+        "explanation": "Recursive compare-and-descend; the new node is attached when a null child slot is reached.",
+        "code": {
+          "java": "class Solution {\n    public TreeNode insertRecursive(TreeNode root, int key) {\n        if (root == null) return new TreeNode(key);\n        if (key < root.val) root.left = insertRecursive(root.left, key);\n        else root.right = insertRecursive(root.right, key);\n        return root;\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode InsertRecursive(TreeNode root, int key) {\n        if (root == null) return new TreeNode(key);\n        if (key < root.Val) root.Left = InsertRecursive(root.Left, key);\n        else root.Right = InsertRecursive(root.Right, key);\n        return root;\n    }\n}"
+        }
+      },
+      {
+        "id": "insert-bst-iterative",
+        "title": "Iterative insert — O(1) space",
+        "level": "Optimal",
+        "time": "O(H)",
+        "space": "O(1)",
+        "explanation": "Iterative compare-and-descend with a loop; only one path of length H is visited and no call stack is used.",
+        "code": {
+          "java": "class Solution {\n    public TreeNode insert(TreeNode root, int key) {\n        if (root == null) return new TreeNode(key);\n        TreeNode current = root;\n        while (true) {\n            if (key < current.val) {\n                if (current.left == null) {\n                    current.left = new TreeNode(key);\n                    break;\n                }\n                current = current.left;\n            } else {\n                if (current.right == null) {\n                    current.right = new TreeNode(key);\n                    break;\n                }\n                current = current.right;\n            }\n        }\n        return root;\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode Insert(TreeNode root, int key) {\n        if (root == null) return new TreeNode(key);\n        TreeNode current = root;\n        while (true) {\n            if (key < current.Val) {\n                if (current.Left == null) {\n                    current.Left = new TreeNode(key);\n                    break;\n                }\n                current = current.Left;\n            } else {\n                if (current.Right == null) {\n                    current.Right = new TreeNode(key);\n                    break;\n                }\n                current = current.Right;\n            }\n        }\n        return root;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-341": {
+    "approaches": [
+      {
+        "id": "delete-bst-recursive",
+        "title": "Recursive delete — successor replacement",
+        "level": "Optimal",
+        "time": "O(H)",
+        "space": "O(H)",
+        "explanation": "Standard recursive delete: the 0/1 child cases reattach the single child, and the 2-children case copies the inorder successor (minimum of the right subtree) and deletes it from there.",
+        "code": {
+          "java": "class Solution {\n    public TreeNode deleteNodeRecursive(TreeNode root, int key) {\n        if (root == null) return null;\n        if (key < root.val) root.left = deleteNodeRecursive(root.left, key);\n        else if (key > root.val) root.right = deleteNodeRecursive(root.right, key);\n        else {\n            if (root.left == null) return root.right;\n            if (root.right == null) return root.left;\n            TreeNode successor = findMin(root.right);\n            root.val = successor.val;\n            root.right = deleteNodeRecursive(root.right, successor.val);\n        }\n        return root;\n    }\n\n    private TreeNode findMin(TreeNode node) {\n        while (node.left != null) node = node.left;\n        return node;\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode DeleteNodeRecursive(TreeNode root, int key) {\n        if (root == null) return null;\n        if (key < root.Val) root.Left = DeleteNodeRecursive(root.Left, key);\n        else if (key > root.Val) root.Right = DeleteNodeRecursive(root.Right, key);\n        else {\n            if (root.Left == null) return root.Right;\n            if (root.Right == null) return root.Left;\n            TreeNode successor = FindMin(root.Right);\n            root.Val = successor.Val;\n            root.Right = DeleteNodeRecursive(root.Right, successor.Val);\n        }\n        return root;\n    }\n\n    private TreeNode FindMin(TreeNode node) {\n        while (node.Left != null) node = node.Left;\n        return node;\n    }\n}"
+        }
+      },
+      {
+        "id": "delete-bst-iterative",
+        "title": "Iterative delete — O(1) auxiliary space",
+        "level": "Optimal+",
+        "time": "O(H)",
+        "space": "O(1)",
+        "explanation": "Find the node and its parent first, copy the inorder successor, then splice the successor's child — no recursion, so the call stack is avoided entirely.",
+        "code": {
+          "java": "class Solution {\n    public TreeNode deleteNode(TreeNode root, int key) {\n        TreeNode parent = null;\n        TreeNode current = root;\n        while (current != null && current.val != key) {\n            parent = current;\n            current = key < current.val ? current.left : current.right;\n        }\n        if (current == null) return root;\n        if (current.left != null && current.right != null) {\n            parent = current;\n            TreeNode successor = current.right;\n            while (successor.left != null) {\n                parent = successor;\n                successor = successor.left;\n            }\n            current.val = successor.val;\n            current = successor;\n        }\n        TreeNode child = current.left != null ? current.left : current.right;\n        if (parent == null) return child;\n        if (parent.left == current) parent.left = child;\n        else parent.right = child;\n        return root;\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode DeleteNode(TreeNode root, int key) {\n        TreeNode parent = null;\n        TreeNode current = root;\n        while (current != null && current.Val != key) {\n            parent = current;\n            current = key < current.Val ? current.Left : current.Right;\n        }\n        if (current == null) return root;\n        if (current.Left != null && current.Right != null) {\n            parent = current;\n            TreeNode successor = current.Right;\n            while (successor.Left != null) {\n                parent = successor;\n                successor = successor.Left;\n            }\n            current.Val = successor.Val;\n            current = successor;\n        }\n        TreeNode child = current.Left != null ? current.Left : current.Right;\n        if (parent == null) return child;\n        if (parent.Left == current) parent.Left = child;\n        else parent.Right = child;\n        return root;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-342": {
+    "approaches": [
+      {
+        "id": "kth-bst-inorder-array",
+        "title": "Inorder array — index the kth element",
+        "level": "Better",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Inorder traversal of a BST is sorted, so the kth smallest is element k-1 and the kth largest is element N-k.",
+        "code": {
+          "java": "class Solution {\n    public int kthSmallestArray(TreeNode root, int k) {\n        List<Integer> values = new ArrayList<>();\n        inorder(root, values);\n        return values.get(k - 1);\n    }\n\n    public int kthLargestArray(TreeNode root, int k) {\n        List<Integer> values = new ArrayList<>();\n        inorder(root, values);\n        return values.get(values.size() - k);\n    }\n\n    private void inorder(TreeNode node, List<Integer> values) {\n        if (node == null) return;\n        inorder(node.left, values);\n        values.add(node.val);\n        inorder(node.right, values);\n    }\n}",
+          "csharp": "public class Solution {\n    public int KthSmallestArray(TreeNode root, int k) {\n        List<int> values = new List<int>();\n        Inorder(root, values);\n        return values[k - 1];\n    }\n\n    public int KthLargestArray(TreeNode root, int k) {\n        List<int> values = new List<int>();\n        Inorder(root, values);\n        return values[values.Count - k];\n    }\n\n    private void Inorder(TreeNode node, List<int> values) {\n        if (node == null) return;\n        Inorder(node.Left, values);\n        values.Add(node.Val);\n        Inorder(node.Right, values);\n    }\n}"
+        }
+      },
+      {
+        "id": "kth-bst-iterative",
+        "title": "Iterative inorder — early stop at kth",
+        "level": "Optimal",
+        "time": "O(H + K)",
+        "space": "O(H)",
+        "explanation": "Walk the tree iteratively and stop as soon as the kth node is popped; the largest side mirrors the same walk in reverse inorder.",
+        "code": {
+          "java": "class Solution {\n    public int kthSmallest(TreeNode root, int k) {\n        Deque<TreeNode> stack = new ArrayDeque<>();\n        TreeNode current = root;\n        while (true) {\n            while (current != null) {\n                stack.push(current);\n                current = current.left;\n            }\n            current = stack.pop();\n            if (--k == 0) return current.val;\n            current = current.right;\n        }\n    }\n\n    public int kthLargest(TreeNode root, int k) {\n        Deque<TreeNode> stack = new ArrayDeque<>();\n        TreeNode current = root;\n        while (true) {\n            while (current != null) {\n                stack.push(current);\n                current = current.right;\n            }\n            current = stack.pop();\n            if (--k == 0) return current.val;\n            current = current.left;\n        }\n    }\n}",
+          "csharp": "public class Solution {\n    public int KthSmallest(TreeNode root, int k) {\n        Stack<TreeNode> stack = new Stack<TreeNode>();\n        TreeNode current = root;\n        while (true) {\n            while (current != null) {\n                stack.Push(current);\n                current = current.Left;\n            }\n            current = stack.Pop();\n            if (--k == 0) return current.Val;\n            current = current.Right;\n        }\n    }\n\n    public int KthLargest(TreeNode root, int k) {\n        Stack<TreeNode> stack = new Stack<TreeNode>();\n        TreeNode current = root;\n        while (true) {\n            while (current != null) {\n                stack.Push(current);\n                current = current.Right;\n            }\n            current = stack.Pop();\n            if (--k == 0) return current.Val;\n            current = current.Left;\n        }\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-343": {
+    "approaches": [
+      {
+        "id": "validate-bst-brute",
+        "title": "Brute force — check every node against its subtrees",
+        "level": "Brute",
+        "time": "O(N²)",
+        "space": "O(H)",
+        "explanation": "Each node is validated against every value in its two subtrees, making the check quadratic in the worst case.",
+        "code": {
+          "java": "class Solution {\n    public boolean isValidBSTBrute(TreeNode root) {\n        if (root == null) return true;\n        if (!allLess(root.left, root.val) || !allGreater(root.right, root.val)) return false;\n        return isValidBSTBrute(root.left) && isValidBSTBrute(root.right);\n    }\n\n    private boolean allLess(TreeNode node, int limit) {\n        if (node == null) return true;\n        if (node.val >= limit) return false;\n        return allLess(node.left, limit) && allLess(node.right, limit);\n    }\n\n    private boolean allGreater(TreeNode node, int limit) {\n        if (node == null) return true;\n        if (node.val <= limit) return false;\n        return allGreater(node.left, limit) && allGreater(node.right, limit);\n    }\n}",
+          "csharp": "public class Solution {\n    public bool IsValidBSTBrute(TreeNode root) {\n        if (root == null) return true;\n        if (!AllLess(root.Left, root.Val) || !AllGreater(root.Right, root.Val)) return false;\n        return IsValidBSTBrute(root.Left) && IsValidBSTBrute(root.Right);\n    }\n\n    private bool AllLess(TreeNode node, int limit) {\n        if (node == null) return true;\n        if (node.Val >= limit) return false;\n        return AllLess(node.Left, limit) && AllLess(node.Right, limit);\n    }\n\n    private bool AllGreater(TreeNode node, int limit) {\n        if (node == null) return true;\n        if (node.Val <= limit) return false;\n        return AllGreater(node.Left, limit) && AllGreater(node.Right, limit);\n    }\n}"
+        }
+      },
+      {
+        "id": "validate-bst-inorder",
+        "title": "Iterative inorder — values must strictly increase",
+        "level": "Better",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "A strictly increasing inorder sequence is exactly the BST condition; the walk uses an explicit stack and a long previous value.",
+        "code": {
+          "java": "class Solution {\n    public boolean isValidBSTInorder(TreeNode root) {\n        Deque<TreeNode> stack = new ArrayDeque<>();\n        TreeNode current = root;\n        long previous = Long.MIN_VALUE;\n        while (current != null || !stack.isEmpty()) {\n            while (current != null) {\n                stack.push(current);\n                current = current.left;\n            }\n            current = stack.pop();\n            if (current.val <= previous) return false;\n            previous = current.val;\n            current = current.right;\n        }\n        return true;\n    }\n}",
+          "csharp": "public class Solution {\n    public bool IsValidBSTInorder(TreeNode root) {\n        Stack<TreeNode> stack = new Stack<TreeNode>();\n        TreeNode current = root;\n        long previous = long.MinValue;\n        while (current != null || stack.Count > 0) {\n            while (current != null) {\n                stack.Push(current);\n                current = current.Left;\n            }\n            current = stack.Pop();\n            if (current.Val <= previous) return false;\n            previous = current.Val;\n            current = current.Right;\n        }\n        return true;\n    }\n}"
+        }
+      },
+      {
+        "id": "validate-bst-range",
+        "title": "Range propagation — long bounds",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Every node is validated against an open interval; using long bounds avoids the Integer.MIN_VALUE/MAX_VALUE trap when node values equal those extremes.",
+        "code": {
+          "java": "class Solution {\n    public boolean isValidBST(TreeNode root) {\n        return validate(root, Long.MIN_VALUE, Long.MAX_VALUE);\n    }\n\n    private boolean validate(TreeNode node, long min, long max) {\n        if (node == null) return true;\n        if (node.val <= min || node.val >= max) return false;\n        return validate(node.left, min, node.val) && validate(node.right, node.val, max);\n    }\n}",
+          "csharp": "public class Solution {\n    public bool IsValidBST(TreeNode root) {\n        return Validate(root, long.MinValue, long.MaxValue);\n    }\n\n    private bool Validate(TreeNode node, long min, long max) {\n        if (node == null) return true;\n        if (node.Val <= min || node.Val >= max) return false;\n        return Validate(node.Left, min, node.Val) && Validate(node.Right, node.Val, max);\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-344": {
+    "approaches": [
+      {
+        "id": "lca-bst-paths",
+        "title": "Brute force — root-to-node paths",
+        "level": "Brute",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Build the root-to-p path and the root-to-q path, then the last common node is the LCA — works on any binary tree.",
+        "code": {
+          "java": "class Solution {\n    public TreeNode lcaPaths(TreeNode root, int p, int q) {\n        List<TreeNode> pathP = new ArrayList<>();\n        List<TreeNode> pathQ = new ArrayList<>();\n        findPath(root, p, pathP);\n        findPath(root, q, pathQ);\n        TreeNode answer = null;\n        int i = 0;\n        while (i < pathP.size() && i < pathQ.size() && pathP.get(i) == pathQ.get(i)) {\n            answer = pathP.get(i);\n            i++;\n        }\n        return answer;\n    }\n\n    private boolean findPath(TreeNode node, int target, List<TreeNode> path) {\n        if (node == null) return false;\n        path.add(node);\n        if (node.val == target) return true;\n        if (findPath(node.left, target, path) || findPath(node.right, target, path)) return true;\n        path.remove(path.size() - 1);\n        return false;\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode LcaPaths(TreeNode root, int p, int q) {\n        List<TreeNode> pathP = new List<TreeNode>();\n        List<TreeNode> pathQ = new List<TreeNode>();\n        FindPath(root, p, pathP);\n        FindPath(root, q, pathQ);\n        TreeNode answer = null;\n        int i = 0;\n        while (i < pathP.Count && i < pathQ.Count && pathP[i] == pathQ[i]) {\n            answer = pathP[i];\n            i++;\n        }\n        return answer;\n    }\n\n    private bool FindPath(TreeNode node, int target, List<TreeNode> path) {\n        if (node == null) return false;\n        path.Add(node);\n        if (node.Val == target) return true;\n        if (FindPath(node.Left, target, path) || FindPath(node.Right, target, path)) return true;\n        path.RemoveAt(path.Count - 1);\n        return false;\n    }\n}"
+        }
+      },
+      {
+        "id": "lca-bst-property",
+        "title": "BST direction property — single walk",
+        "level": "Optimal",
+        "time": "O(H)",
+        "space": "O(1)",
+        "explanation": "At each node: if both targets are smaller go left, if both are larger go right, otherwise the current node separates them and is the LCA.",
+        "code": {
+          "java": "class Solution {\n    public TreeNode lca(TreeNode root, int p, int q) {\n        while (root != null) {\n            if (p < root.val && q < root.val) root = root.left;\n            else if (p > root.val && q > root.val) root = root.right;\n            else return root;\n        }\n        return null;\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode Lca(TreeNode root, int p, int q) {\n        while (root != null) {\n            if (p < root.Val && q < root.Val) root = root.Left;\n            else if (p > root.Val && q > root.Val) root = root.Right;\n            else return root;\n        }\n        return null;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-345": {
+    "approaches": [
+      {
+        "id": "bst-preorder-insert",
+        "title": "Insert one by one",
+        "level": "Brute",
+        "time": "O(N²) worst case",
+        "space": "O(H)",
+        "explanation": "Insert the values one by one into an initially empty BST; each insert costs O(H), so a skewed input degrades to quadratic time.",
+        "code": {
+          "java": "class Solution {\n    public TreeNode bstFromPreorderInsert(int[] preorder) {\n        TreeNode root = null;\n        for (int value : preorder) root = insert(root, value);\n        return root;\n    }\n\n    private TreeNode insert(TreeNode root, int value) {\n        if (root == null) return new TreeNode(value);\n        if (value < root.val) root.left = insert(root.left, value);\n        else root.right = insert(root.right, value);\n        return root;\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode BstFromPreorderInsert(int[] preorder) {\n        TreeNode root = null;\n        foreach (int value in preorder) root = Insert(root, value);\n        return root;\n    }\n\n    private TreeNode Insert(TreeNode root, int value) {\n        if (root == null) return new TreeNode(value);\n        if (value < root.Val) root.Left = Insert(root.Left, value);\n        else root.Right = Insert(root.Right, value);\n        return root;\n    }\n}"
+        }
+      },
+      {
+        "id": "bst-preorder-bounds",
+        "title": "Recursive bounds — upper limit per call",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Preorder gives root, then left subtree, then right subtree; a running index and an upper bound decide when a subtree ends, giving a single O(N) pass.",
+        "code": {
+          "java": "class Solution {\n    private int index;\n\n    public TreeNode bstFromPreorder(int[] preorder) {\n        index = 0;\n        return build(preorder, Integer.MAX_VALUE);\n    }\n\n    private TreeNode build(int[] preorder, int upperBound) {\n        if (index == preorder.length || preorder[index] > upperBound) return null;\n        int value = preorder[index++];\n        TreeNode root = new TreeNode(value);\n        root.left = build(preorder, value);\n        root.right = build(preorder, upperBound);\n        return root;\n    }\n}",
+          "csharp": "public class Solution {\n    private int index;\n\n    public TreeNode BstFromPreorder(int[] preorder) {\n        index = 0;\n        return Build(preorder, int.MaxValue);\n    }\n\n    private TreeNode Build(int[] preorder, int upperBound) {\n        if (index == preorder.Length || preorder[index] > upperBound) return null;\n        int value = preorder[index++];\n        TreeNode root = new TreeNode(value);\n        root.Left = Build(preorder, value);\n        root.Right = Build(preorder, upperBound);\n        return root;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-346": {
+    "approaches": [
+      {
+        "id": "succ-pred-brute",
+        "title": "Brute force — store the inorder traversal",
+        "level": "Brute",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Store the full inorder sequence; the successor is the first value greater than the key and the predecessor is the last value smaller.",
+        "code": {
+          "java": "class Solution {\n    public TreeNode inorderSuccessorBrute(TreeNode root, int key) {\n        List<TreeNode> nodes = new ArrayList<>();\n        inorder(root, nodes);\n        for (int i = 0; i < nodes.size(); i++) {\n            if (nodes.get(i).val > key) return nodes.get(i);\n        }\n        return null;\n    }\n\n    public TreeNode inorderPredecessorBrute(TreeNode root, int key) {\n        List<TreeNode> nodes = new ArrayList<>();\n        inorder(root, nodes);\n        TreeNode answer = null;\n        for (TreeNode node : nodes) {\n            if (node.val >= key) break;\n            answer = node;\n        }\n        return answer;\n    }\n\n    private void inorder(TreeNode node, List<TreeNode> nodes) {\n        if (node == null) return;\n        inorder(node.left, nodes);\n        nodes.add(node);\n        inorder(node.right, nodes);\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode InorderSuccessorBrute(TreeNode root, int key) {\n        List<TreeNode> nodes = new List<TreeNode>();\n        Inorder(root, nodes);\n        for (int i = 0; i < nodes.Count; i++) {\n            if (nodes[i].Val > key) return nodes[i];\n        }\n        return null;\n    }\n\n    public TreeNode InorderPredecessorBrute(TreeNode root, int key) {\n        List<TreeNode> nodes = new List<TreeNode>();\n        Inorder(root, nodes);\n        TreeNode answer = null;\n        foreach (TreeNode node in nodes) {\n            if (node.Val >= key) break;\n            answer = node;\n        }\n        return answer;\n    }\n\n    private void Inorder(TreeNode node, List<TreeNode> nodes) {\n        if (node == null) return;\n        Inorder(node.Left, nodes);\n        nodes.Add(node);\n        Inorder(node.Right, nodes);\n    }\n}"
+        }
+      },
+      {
+        "id": "succ-pred-candidate",
+        "title": "Candidate tracking — walk down once",
+        "level": "Optimal",
+        "time": "O(H)",
+        "space": "O(1)",
+        "explanation": "Walk down once while remembering the best candidate: go left whenever the current value is greater than the key (successor), right otherwise (predecessor).",
+        "code": {
+          "java": "class Solution {\n    public TreeNode inorderSuccessor(TreeNode root, int key) {\n        TreeNode answer = null;\n        while (root != null) {\n            if (root.val > key) {\n                answer = root;\n                root = root.left;\n            } else {\n                root = root.right;\n            }\n        }\n        return answer;\n    }\n\n    public TreeNode inorderPredecessor(TreeNode root, int key) {\n        TreeNode answer = null;\n        while (root != null) {\n            if (root.val < key) {\n                answer = root;\n                root = root.right;\n            } else {\n                root = root.left;\n            }\n        }\n        return answer;\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode InorderSuccessor(TreeNode root, int key) {\n        TreeNode answer = null;\n        while (root != null) {\n            if (root.Val > key) {\n                answer = root;\n                root = root.Left;\n            } else {\n                root = root.Right;\n            }\n        }\n        return answer;\n    }\n\n    public TreeNode InorderPredecessor(TreeNode root, int key) {\n        TreeNode answer = null;\n        while (root != null) {\n            if (root.Val < key) {\n                answer = root;\n                root = root.Right;\n            } else {\n                root = root.Left;\n            }\n        }\n        return answer;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-347": {
+    "approaches": [
+      {
+        "id": "merge-bsts-inorder",
+        "title": "Inorder arrays — merge sorted lists",
+        "level": "Better",
+        "time": "O(N + M)",
+        "space": "O(N + M)",
+        "explanation": "Take the inorder sequence of both trees and merge them like merge sort.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> mergeBSTs(TreeNode root1, TreeNode root2) {\n        List<Integer> a = new ArrayList<>();\n        List<Integer> b = new ArrayList<>();\n        inorder(root1, a);\n        inorder(root2, b);\n        List<Integer> result = new ArrayList<>();\n        int i = 0;\n        int j = 0;\n        while (i < a.size() && j < b.size()) {\n            if (a.get(i) <= b.get(j)) result.add(a.get(i++));\n            else result.add(b.get(j++));\n        }\n        while (i < a.size()) result.add(a.get(i++));\n        while (j < b.size()) result.add(b.get(j++));\n        return result;\n    }\n\n    private void inorder(TreeNode node, List<Integer> list) {\n        if (node == null) return;\n        inorder(node.left, list);\n        list.add(node.val);\n        inorder(node.right, list);\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> MergeBSTs(TreeNode root1, TreeNode root2) {\n        List<int> a = new List<int>();\n        List<int> b = new List<int>();\n        Inorder(root1, a);\n        Inorder(root2, b);\n        List<int> result = new List<int>();\n        int i = 0;\n        int j = 0;\n        while (i < a.Count && j < b.Count) {\n            if (a[i] <= b[j]) result.Add(a[i++]);\n            else result.Add(b[j++]);\n        }\n        while (i < a.Count) result.Add(a[i++]);\n        while (j < b.Count) result.Add(b[j++]);\n        return result;\n    }\n\n    private void Inorder(TreeNode node, List<int> list) {\n        if (node == null) return;\n        Inorder(node.Left, list);\n        list.Add(node.Val);\n        Inorder(node.Right, list);\n    }\n}"
+        }
+      },
+      {
+        "id": "merge-bsts-iterators",
+        "title": "Two iterators — merge in O(H1 + H2) space",
+        "level": "Optimal",
+        "time": "O(N + M)",
+        "space": "O(H1 + H2)",
+        "explanation": "Two stack-based iterators expose the next smallest value of each tree and are advanced like a merge, using only the height of both trees.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> mergeBSTs(TreeNode root1, TreeNode root2) {\n        List<Integer> result = new ArrayList<>();\n        Deque<TreeNode> stack1 = new ArrayDeque<>();\n        Deque<TreeNode> stack2 = new ArrayDeque<>();\n        pushLeft(stack1, root1);\n        pushLeft(stack2, root2);\n        while (!stack1.isEmpty() || !stack2.isEmpty()) {\n            Deque<TreeNode> source;\n            if (stack1.isEmpty()) source = stack2;\n            else if (stack2.isEmpty()) source = stack1;\n            else source = stack1.peek().val <= stack2.peek().val ? stack1 : stack2;\n            TreeNode node = source.pop();\n            result.add(node.val);\n            pushLeft(source, node.right);\n        }\n        return result;\n    }\n\n    private void pushLeft(Deque<TreeNode> stack, TreeNode node) {\n        while (node != null) {\n            stack.push(node);\n            node = node.left;\n        }\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> MergeBSTs(TreeNode root1, TreeNode root2) {\n        List<int> result = new List<int>();\n        Stack<TreeNode> stack1 = new Stack<TreeNode>();\n        Stack<TreeNode> stack2 = new Stack<TreeNode>();\n        PushLeft(stack1, root1);\n        PushLeft(stack2, root2);\n        while (stack1.Count > 0 || stack2.Count > 0) {\n            Stack<TreeNode> source;\n            if (stack1.Count == 0) source = stack2;\n            else if (stack2.Count == 0) source = stack1;\n            else source = stack1.Peek().Val <= stack2.Peek().Val ? stack1 : stack2;\n            TreeNode node = source.Pop();\n            result.Add(node.Val);\n            PushLeft(source, node.Right);\n        }\n        return result;\n    }\n\n    private void PushLeft(Stack<TreeNode> stack, TreeNode node) {\n        while (node != null) {\n            stack.Push(node);\n            node = node.Left;\n        }\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-348": {
+    "approaches": [
+      {
+        "id": "two-sum-bst-hashset",
+        "title": "Inorder DFS — HashSet of seen values",
+        "level": "Better",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "DFS with a hash set — at every node check whether k - value was seen before; works on any tree.",
+        "code": {
+          "java": "class Solution {\n    public boolean twoSumBST(TreeNode root, int k) {\n        Set<Integer> seen = new HashSet<>();\n        return dfs(root, k, seen);\n    }\n\n    private boolean dfs(TreeNode node, int k, Set<Integer> seen) {\n        if (node == null) return false;\n        if (seen.contains(k - node.val)) return true;\n        seen.add(node.val);\n        return dfs(node.left, k, seen) || dfs(node.right, k, seen);\n    }\n}",
+          "csharp": "public class Solution {\n    public bool TwoSumBST(TreeNode root, int k) {\n        HashSet<int> seen = new HashSet<int>();\n        return Dfs(root, k, seen);\n    }\n\n    private bool Dfs(TreeNode node, int k, HashSet<int> seen) {\n        if (node == null) return false;\n        if (seen.Contains(k - node.Val)) return true;\n        seen.Add(node.Val);\n        return Dfs(node.Left, k, seen) || Dfs(node.Right, k, seen);\n    }\n}"
+        }
+      },
+      {
+        "id": "two-sum-bst-iterators",
+        "title": "Two BST iterators — two pointers in order",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Forward and reverse iterators expose the smallest and largest remaining values; move the low pointer up or the high pointer down like two pointers on a sorted array, stopping when both meet on the same node.",
+        "code": {
+          "java": "class Solution {\n    public boolean twoSumBST(TreeNode root, int k) {\n        Deque<TreeNode> asc = new ArrayDeque<>();\n        Deque<TreeNode> desc = new ArrayDeque<>();\n        pushLeft(asc, root);\n        pushRight(desc, root);\n        while (!asc.isEmpty() && !desc.isEmpty()) {\n            TreeNode low = asc.peek();\n            TreeNode high = desc.peek();\n            if (low == high) return false;\n            int sum = low.val + high.val;\n            if (sum == k) return true;\n            if (sum < k) pushLeft(asc, asc.pop().right);\n            else pushRight(desc, desc.pop().left);\n        }\n        return false;\n    }\n\n    private void pushLeft(Deque<TreeNode> stack, TreeNode node) {\n        while (node != null) {\n            stack.push(node);\n            node = node.left;\n        }\n    }\n\n    private void pushRight(Deque<TreeNode> stack, TreeNode node) {\n        while (node != null) {\n            stack.push(node);\n            node = node.right;\n        }\n    }\n}",
+          "csharp": "public class Solution {\n    public bool TwoSumBST(TreeNode root, int k) {\n        Stack<TreeNode> asc = new Stack<TreeNode>();\n        Stack<TreeNode> desc = new Stack<TreeNode>();\n        PushLeft(asc, root);\n        PushRight(desc, root);\n        while (asc.Count > 0 && desc.Count > 0) {\n            TreeNode low = asc.Peek();\n            TreeNode high = desc.Peek();\n            if (low == high) return false;\n            int sum = low.Val + high.Val;\n            if (sum == k) return true;\n            if (sum < k) PushLeft(asc, asc.Pop().Right);\n            else PushRight(desc, desc.Pop().Left);\n        }\n        return false;\n    }\n\n    private void PushLeft(Stack<TreeNode> stack, TreeNode node) {\n        while (node != null) {\n            stack.Push(node);\n            node = node.Left;\n        }\n    }\n\n    private void PushRight(Stack<TreeNode> stack, TreeNode node) {\n        while (node != null) {\n            stack.Push(node);\n            node = node.Right;\n        }\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-349": {
+    "approaches": [
+      {
+        "id": "recover-bst-inorder",
+        "title": "Inorder traversal — collect and find inversions",
+        "level": "Better",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Store the inorder nodes, find the first and the last inversion, and swap those two values back.",
+        "code": {
+          "java": "class Solution {\n    public void recoverTreeInorder(TreeNode root) {\n        List<TreeNode> nodes = new ArrayList<>();\n        inorder(root, nodes);\n        TreeNode first = null;\n        TreeNode last = null;\n        for (int i = 0; i < nodes.size() - 1; i++) {\n            if (nodes.get(i).val > nodes.get(i + 1).val) {\n                if (first == null) first = nodes.get(i);\n                last = nodes.get(i + 1);\n            }\n        }\n        int temp = first.val;\n        first.val = last.val;\n        last.val = temp;\n    }\n\n    private void inorder(TreeNode node, List<TreeNode> nodes) {\n        if (node == null) return;\n        inorder(node.left, nodes);\n        nodes.add(node);\n        inorder(node.right, nodes);\n    }\n}",
+          "csharp": "public class Solution {\n    public void RecoverTreeInorder(TreeNode root) {\n        List<TreeNode> nodes = new List<TreeNode>();\n        Inorder(root, nodes);\n        TreeNode first = null;\n        TreeNode last = null;\n        for (int i = 0; i < nodes.Count - 1; i++) {\n            if (nodes[i].Val > nodes[i + 1].Val) {\n                if (first == null) first = nodes[i];\n                last = nodes[i + 1];\n            }\n        }\n        int temp = first.Val;\n        first.Val = last.Val;\n        last.Val = temp;\n    }\n\n    private void Inorder(TreeNode node, List<TreeNode> nodes) {\n        if (node == null) return;\n        Inorder(node.Left, nodes);\n        nodes.Add(node);\n        Inorder(node.Right, nodes);\n    }\n}"
+        }
+      },
+      {
+        "id": "recover-bst-pointers",
+        "title": "Constant tracking — first, middle, last",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Track prev/first/middle/last during one inorder walk: a single inversion swaps first and middle, while two inversions swap first and last.",
+        "code": {
+          "java": "class Solution {\n    private TreeNode first = null;\n    private TreeNode middle = null;\n    private TreeNode last = null;\n    private TreeNode prev = null;\n\n    public void recoverTree(TreeNode root) {\n        inorder(root);\n        if (first != null && last != null) swap(first, last);\n        else if (first != null && middle != null) swap(first, middle);\n    }\n\n    private void inorder(TreeNode node) {\n        if (node == null) return;\n        inorder(node.left);\n        if (prev != null && prev.val > node.val) {\n            if (first == null) {\n                first = prev;\n                middle = node;\n            } else {\n                last = node;\n            }\n        }\n        prev = node;\n        inorder(node.right);\n    }\n\n    private void swap(TreeNode a, TreeNode b) {\n        int temp = a.val;\n        a.val = b.val;\n        b.val = temp;\n    }\n}",
+          "csharp": "public class Solution {\n    private TreeNode first = null;\n    private TreeNode middle = null;\n    private TreeNode last = null;\n    private TreeNode prev = null;\n\n    public void RecoverTree(TreeNode root) {\n        Inorder(root);\n        if (first != null && last != null) Swap(first, last);\n        else if (first != null && middle != null) Swap(first, middle);\n    }\n\n    private void Inorder(TreeNode node) {\n        if (node == null) return;\n        Inorder(node.Left);\n        if (prev != null && prev.Val > node.Val) {\n            if (first == null) {\n                first = prev;\n                middle = node;\n            } else {\n                last = node;\n            }\n        }\n        prev = node;\n        Inorder(node.Right);\n    }\n\n    private void Swap(TreeNode a, TreeNode b) {\n        int temp = a.Val;\n        a.Val = b.Val;\n        b.Val = temp;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-350": {
+    "approaches": [
+      {
+        "id": "largest-bst-brute",
+        "title": "Brute force — validate every subtree",
+        "level": "Brute",
+        "time": "O(N²)",
+        "space": "O(H)",
+        "explanation": "For every node check whether its subtree is a BST and take the largest size found; each check re-walks the subtree, hence O(N²).",
+        "code": {
+          "java": "class Solution {\n    public int largestBSTBrute(TreeNode root) {\n        if (root == null) return 0;\n        if (isBST(root, Long.MIN_VALUE, Long.MAX_VALUE)) return size(root);\n        return Math.max(largestBSTBrute(root.left), largestBSTBrute(root.right));\n    }\n\n    private boolean isBST(TreeNode node, long min, long max) {\n        if (node == null) return true;\n        if (node.val <= min || node.val >= max) return false;\n        return isBST(node.left, min, node.val) && isBST(node.right, node.val, max);\n    }\n\n    private int size(TreeNode node) {\n        if (node == null) return 0;\n        return 1 + size(node.left) + size(node.right);\n    }\n}",
+          "csharp": "public class Solution {\n    public int LargestBSTBrute(TreeNode root) {\n        if (root == null) return 0;\n        if (IsBST(root, long.MinValue, long.MaxValue)) return Size(root);\n        return Math.Max(LargestBSTBrute(root.Left), LargestBSTBrute(root.Right));\n    }\n\n    private bool IsBST(TreeNode node, long min, long max) {\n        if (node == null) return true;\n        if (node.Val <= min || node.Val >= max) return false;\n        return IsBST(node.Left, min, node.Val) && IsBST(node.Right, node.Val, max);\n    }\n\n    private int Size(TreeNode node) {\n        if (node == null) return 0;\n        return 1 + Size(node.Left) + Size(node.Right);\n    }\n}"
+        }
+      },
+      {
+        "id": "largest-bst-postorder",
+        "title": "Postorder DP — carry BST info upward",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Postorder returns isBST/size/min/max for each subtree, so every node decides validity from its children's info in a single pass — a classic return-information-upward DP.",
+        "code": {
+          "java": "class Solution {\n    static class Info {\n        boolean isBST;\n        int size;\n        int min;\n        int max;\n\n        Info(boolean isBST, int size, int min, int max) {\n            this.isBST = isBST;\n            this.size = size;\n            this.min = min;\n            this.max = max;\n        }\n    }\n\n    public int largestBST(TreeNode root) {\n        return solve(root).size;\n    }\n\n    private Info solve(TreeNode node) {\n        if (node == null) return new Info(true, 0, Integer.MAX_VALUE, Integer.MIN_VALUE);\n        Info left = solve(node.left);\n        Info right = solve(node.right);\n        if (left.isBST && right.isBST && left.max < node.val && node.val < right.min) {\n            return new Info(true, left.size + right.size + 1, Math.min(node.val, left.min), Math.max(node.val, right.max));\n        }\n        return new Info(false, Math.max(left.size, right.size), Integer.MIN_VALUE, Integer.MAX_VALUE);\n    }\n}",
+          "csharp": "public class Solution {\n    private class Info {\n        public bool IsBST;\n        public int Size;\n        public int Min;\n        public int Max;\n\n        public Info(bool isBST, int size, int min, int max) {\n            IsBST = isBST;\n            Size = size;\n            Min = min;\n            Max = max;\n        }\n    }\n\n    public int LargestBST(TreeNode root) {\n        return Solve(root).Size;\n    }\n\n    private Info Solve(TreeNode node) {\n        if (node == null) return new Info(true, 0, int.MaxValue, int.MinValue);\n        Info left = Solve(node.Left);\n        Info right = Solve(node.Right);\n        if (left.IsBST && right.IsBST && left.Max < node.Val && node.Val < right.Min) {\n            return new Info(true, left.Size + right.Size + 1, Math.Min(node.Val, left.Min), Math.Max(node.Val, right.Max));\n        }\n        return new Info(false, Math.Max(left.Size, right.Size), int.MinValue, int.MaxValue);\n    }\n}"
+        }
+      }
+    ]
   }
 }
