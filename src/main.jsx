@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Search, LayoutDashboard, BookOpen, RefreshCw, Brain, BarChart3, Settings, CheckCircle2, Clock3, Download, Upload, ExternalLink, ChevronRight, ChevronDown, Flame, Star, Filter, CalendarDays, Target, RotateCcw, Trash2, Timer, Lightbulb, BookmarkCheck, Lock, Unlock, Pencil, Plus, Code2 } from "lucide-react";
+import { Search, LayoutDashboard, BookOpen, RefreshCw, Brain, BarChart3, Settings, CheckCircle2, Clock3, Download, Upload, ExternalLink, ChevronRight, ChevronDown, Flame, Star, Filter, CalendarDays, Target, RotateCcw, Trash2, Timer, Lightbulb, BookmarkCheck, Lock, Unlock, Pencil, Plus, Code2, Moon, Sun, Copy, Check } from "lucide-react";
 import "./styles.css";
 
 const SEED = "/data/problems.json";
+const SOLUTION_SEED = "/data/solutions.json";
+const TUF_LINK_SEED = "/data/tuf-links.json";
 const statuses = ["Not Started", "Attempted", "Solved", "Mastered"];
 const confidence = ["🔴 Weak", "🟡 Learning", "🟢 Strong", "🔵 Interview Ready"];
 const revisionSteps = [1, 3, 7, 14, 30];
@@ -40,6 +42,11 @@ function practiceLink(p) {
   if (isHttp(p.videoUrl)) return { href: p.videoUrl, label: "Watch video" };
   return null;
 }
+function sourceLink(p, extractedUrl) {
+  if (isHttp(extractedUrl)) return { href: extractedUrl, label: "Open TakeUForward solution" };
+  if (isHttp(p.url) && /takeuforward\.org/i.test(p.url)) return { href: p.url, label: "View official TakeUForward solution" };
+  return null;
+}
 
 function App() {
   const [problems, setProblems] = useState([]);
@@ -47,13 +54,17 @@ function App() {
   const [notes, setNotes] = useLocalState("dsa-notes", {});
   const [solutions, setSolutions] = useLocalState("dsa-solutions", {});
   const [activity, setActivity] = useLocalState("dsa-activity", {});
-  const [settings, setSettings] = useLocalState("dsa-settings", { dailyGoal: 3 });
+  const [settings, setSettings] = useLocalState("dsa-settings", { dailyGoal: 3, theme: "light" });
+  const [builtInSolutions, setBuiltInSolutions] = useState({});
+  const [tufLinks, setTufLinks] = useState({});
   const [page, setPage] = useState("dashboard");
   const [selected, setSelected] = useState(null);
   const [query, setQuery] = useState("");
   const [roadmapFilters, setRoadmapFilters] = useState({ topic: "All", status: "All", difficulty: "All", pattern: "All", favorites: false, sort: "Order" });
   const [toast, setToast] = useState("");
   useEffect(() => fetch(SEED).then(r => { if (!r.ok) throw new Error("data"); return r.json() }).then(setProblems).catch(() => setToast("Could not load problem data.")), []);
+  useEffect(() => fetch(SOLUTION_SEED).then(r => r.ok ? r.json() : {}).then(setBuiltInSolutions).catch(() => setBuiltInSolutions({})), []);
+  useEffect(() => fetch(TUF_LINK_SEED).then(r => r.ok ? r.json() : {}).then(setTufLinks).catch(() => setTufLinks({})), []);
   useEffect(() => { if (!toast) return; const t = setTimeout(() => setToast(""), 2500); return () => clearTimeout(t) }, [toast]);
   const enriched = useMemo(() => problems.map((p, i) => ({ ...p, index: i, ...(progress[p.id] || {}) })), [problems, progress]);
   const stats = useMemo(() => {
@@ -96,10 +107,11 @@ function App() {
       setRoadmapFilters(f => ({ ...f, pattern: "All" }));
     }
   }, [roadmapFilters.topic, roadmapFilters.pattern, patterns]);
-  return <div className="app">
+  return <div className={`app theme-${settings.theme || "light"}`}>
     <aside><div className="brand"><div className="logo">DS</div><div><b>DSA Tracker</b><small>A2Z Learning System</small></div></div>
       <nav>{[["dashboard", "Dashboard", LayoutDashboard], ["roadmap", "A2Z Roadmap", BookOpen], ["revision", "Revision", RefreshCw], ["patterns", "Patterns", Brain], ["analytics", "Analytics", BarChart3], ["settings", "Settings", Settings]].map(([id, label, I]) => <button className={page === id ? "active" : ""} onClick={() => setPage(id)} key={id}><I size={18} /><span>{label}</span></button>)}</nav>
       <div className="sidebar-foot"><Flame size={16} /> Local-first • no account</div>
+      <button className="theme-toggle" type="button" onClick={() => setSettings(s => ({ ...s, theme: s.theme === "dark" ? "light" : "dark" }))} aria-label="Toggle dark mode">{settings.theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}<span>{settings.theme === "dark" ? "Light mode" : "Dark mode"}</span></button>
     </aside>
     <main><header><div><h1>{page === "dashboard" ? "Dashboard" : page === "roadmap" ? "A2Z Roadmap" : page === "problem" ? "Problem" : page[0].toUpperCase() + page.slice(1)}</h1><p>Practice, track, revise, master.</p></div><div className="search"><Search size={17} /><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search problems, topics, patterns…" /></div></header>
       {page === "dashboard" && <Dashboard stats={stats} problems={enriched} open={open} setPage={setPage} settings={settings} />}
@@ -108,7 +120,7 @@ function App() {
       {page === "patterns" && <Patterns problems={enriched} open={open} />}
       {page === "analytics" && <Analytics stats={stats} problems={enriched} activity={activity} notes={notes} solutions={solutions} />}
       {page === "settings" && <SettingsPage exportData={exportData} importData={importData} resetAll={resetAll} settings={settings} setSettings={setSettings} />}
-      {page === "problem" && selectedProblem && <Problem p={selectedProblem} update={update} notes={notes[selectedProblem.id] || {}} setNotes={setNotes} solutions={solutions[selectedProblem.id]} setSolutions={setSolutions} back={() => setPage("roadmap")} recordActivity={recordActivity} setToast={setToast} />}
+      {page === "problem" && selectedProblem && <Problem p={selectedProblem} update={update} notes={notes[selectedProblem.id] || {}} setNotes={setNotes} solutions={solutions[selectedProblem.id]} builtInSolutions={builtInSolutions[selectedProblem.id]} tufUrl={tufLinks[selectedProblem.id]} setSolutions={setSolutions} back={() => setPage("roadmap")} recordActivity={recordActivity} setToast={setToast} />}
     </main>
     {toast && <div className="toast">{toast}</div>}
   </div>
@@ -322,25 +334,29 @@ function Analytics({ stats, problems, activity, notes, solutions }) {
   </section>;
 }
 
-function Problem({ p, update, notes, setNotes, solutions, setSolutions, back, recordActivity, setToast }) {
+function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufUrl, setSolutions, back, recordActivity, setToast }) {
+  const supplied = solutions?.approaches?.length ? solutions : builtInSolutions;
   const [tab, setTab] = useState("notes");
   const [localNotes, setLocalNotes] = useState(() => ({ ...emptyNotes(), ...notes }));
   const [editingNotes, setEditingNotes] = useState(() => !Object.values(notes || {}).some(v => String(v || "").trim()));
-  const [localSol, setLocalSol] = useState(() => (solutions?.approaches?.length ? solutions.approaches : defaultApproaches()));
+  const [localSol, setLocalSol] = useState(() => (supplied?.approaches?.length ? supplied.approaches : defaultApproaches()));
   const [editingSol, setEditingSol] = useState(false);
   const [openApproach, setOpenApproach] = useState(0);
+  const [language, setLanguage] = useState("java");
+  const [copied, setCopied] = useState("");
 
   useEffect(() => {
     setLocalNotes({ ...emptyNotes(), ...notes });
     setEditingNotes(!Object.values(notes || {}).some(v => String(v || "").trim()));
-    setLocalSol(solutions?.approaches?.length ? solutions.approaches : defaultApproaches());
+    setLocalSol(supplied?.approaches?.length ? supplied.approaches : defaultApproaches());
     setEditingSol(false);
     setOpenApproach(0);
     setTab("notes");
-  }, [p.id]);
+  }, [p.id, builtInSolutions, solutions]);
 
   const status = p.status || "Not Started";
   const link = practiceLink(p);
+  const official = sourceLink(p, tufUrl);
   const filledNotes = NOTE_FIELDS.filter(([k]) => localNotes[k]?.trim()).length;
   const filledApproaches = localSol.filter(a => a.explanation?.trim() || a.code?.trim()).length;
 
@@ -363,7 +379,7 @@ function Problem({ p, update, notes, setNotes, solutions, setSolutions, back, re
     setToast("Solutions locked & saved.");
   };
   const cancelSolEdit = () => {
-    setLocalSol(solutions?.approaches?.length ? solutions.approaches : defaultApproaches());
+    setLocalSol(supplied?.approaches?.length ? supplied.approaches : defaultApproaches());
     setEditingSol(false);
     setToast("Solution edits discarded.");
   };
@@ -401,6 +417,7 @@ function Problem({ p, update, notes, setNotes, solutions, setSolutions, back, re
         <div className="meta">
           <span className={`diff ${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>
           {link ? <a href={link.href} target="_blank" rel="noreferrer">{link.label} <ExternalLink size={13} /></a> : <span className="no-link">No practice link available</span>}
+          {official && official.href !== link?.href && <a className="tuf-link" href={official.href} target="_blank" rel="noreferrer">{official.label} <ExternalLink size={13} /></a>}
         </div>
       </div>
       <div className="actions">
@@ -418,7 +435,7 @@ function Problem({ p, update, notes, setNotes, solutions, setSolutions, back, re
 
     <div className="problem-tabs">
       <button type="button" className={tab === "notes" ? "active" : ""} onClick={() => setTab("notes")}>Learning notes <em>{filledNotes}/5</em></button>
-      <button type="button" className={tab === "solutions" ? "active" : ""} onClick={() => setTab("solutions")}>Solutions <em>{filledApproaches}/{localSol.length}</em></button>
+      <button type="button" className={tab === "solutions" ? "active" : ""} onClick={() => setTab("solutions")}>Java & C# solutions <em>{filledApproaches}/{localSol.length}</em></button>
       <button type="button" className={tab === "meta" ? "active" : ""} onClick={() => setTab("meta")}>Revision & meta</button>
     </div>
 
@@ -465,12 +482,12 @@ function Problem({ p, update, notes, setNotes, solutions, setSolutions, back, re
     {tab === "solutions" && <div className="panel solutions-panel visible-block">
       <div className="notes-head">
         <div>
-          <h3>Solutions — brute → optimal</h3>
-          <p>{editingSol ? "Unlocked for editing. Lock when finished so you don’t overwrite by accident." : "Locked. Open an approach to read; unlock only when you intend to edit."}</p>
+          <h3>Java & C# solutions — brute → optimal</h3>
+          <p>{editingSol ? "Edit your personal copy, then save it locally." : supplied?.approaches?.length ? "Original reference implementations. Choose a named approach and language." : "No reference solution is available yet; unlock to add your own."}</p>
         </div>
         <div className="notes-actions">
           {!editingSol ? (
-            <button type="button" className="status-btn" onClick={() => setEditingSol(true)}><Unlock size={14} /> Unlock to edit</button>
+            <button type="button" className="status-btn" onClick={() => setEditingSol(true)}><Unlock size={14} /> {supplied?.approaches?.length ? "Create personal copy" : "Unlock to edit"}</button>
           ) : (
             <>
               <button type="button" className="status-btn" onClick={addApproach}><Plus size={14} /> Add approach</button>
@@ -503,8 +520,8 @@ function Problem({ p, update, notes, setNotes, solutions, setSolutions, back, re
                 {editingSol ? <textarea rows={4} value={a.explanation} onChange={e => updateApproach(idx, { explanation: e.target.value })} placeholder={a.level === "Brute" ? "Most straightforward idea — often nested loops / all possibilities…" : a.level === "Better" ? "Improve with hashing, sorting, two pointers, prefix…" : "Best interview solution for this pattern…"} /> : <div className={`note-view${a.explanation?.trim() ? "" : " empty"}`}>{a.explanation?.trim() || "No explanation yet."}</div>}
               </div>
               <div className="note-field">
-                <span className="with-icon"><Code2 size={13} /> Code / pseudocode</span>
-                {editingSol ? <textarea className="code" rows={8} value={a.code} onChange={e => updateApproach(idx, { code: e.target.value })} placeholder="// Write code or pseudocode here" /> : <pre className={`code-view${a.code?.trim() ? "" : " empty"}`}>{a.code?.trim() || "No code yet."}</pre>}
+                <div className="code-label"><span className="with-icon"><Code2 size={13} /> {editingSol ? "Code / pseudocode" : "Implementation"}</span>{!editingSol && <><div className="language-switch" role="group" aria-label="Select solution language"><button type="button" className={language === "java" ? "active" : ""} onClick={() => setLanguage("java")}>Java</button><button type="button" className={language === "csharp" ? "active" : ""} onClick={() => setLanguage("csharp")}>C#</button></div><button type="button" className="copy-code" onClick={() => { const code = a.code?.[language] || a[language] || a.code || ""; navigator.clipboard?.writeText(code); setCopied(a.id); setTimeout(() => setCopied(""), 1400); }}>{copied === a.id ? <Check size={13} /> : <Copy size={13} />}{copied === a.id ? "Copied" : "Copy"}</button></>}</div>
+                {editingSol ? <textarea className="code" rows={8} value={typeof a.code === "string" ? a.code : a.code?.[language] || ""} onChange={e => updateApproach(idx, { code: e.target.value })} placeholder="// Write code or pseudocode here" /> : <pre className={`code-view${(a.code?.[language] || a[language] || a.code)?.trim?.() ? "" : " empty"}`}>{a.code?.[language] || a[language] || a.code || "No code yet."}</pre>}
               </div>
             </div>}
           </div>;
