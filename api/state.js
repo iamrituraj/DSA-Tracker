@@ -20,6 +20,23 @@ function sanitize(value) {
   };
 }
 
+// The table is already provisioned in production; create it once per cold start
+// (instead of on every request) and retry if the first attempt fails.
+let ensureTablePromise = null;
+function ensureTable(sql) {
+  if (!ensureTablePromise) {
+    ensureTablePromise = sql`CREATE TABLE IF NOT EXISTS dsa_tracker_state (
+      id SMALLINT PRIMARY KEY CHECK (id = 1),
+      state JSONB NOT NULL,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`.catch(error => {
+      ensureTablePromise = null;
+      throw error;
+    });
+  }
+  return ensureTablePromise;
+}
+
 module.exports = async (req, res) => {
   if (!hasSession(req)) return res.status(401).json({ error: "Sign in required" });
   if (!process.env.DATABASE_URL) return res.status(500).json({ error: "DATABASE_URL is not configured" });
@@ -27,11 +44,7 @@ module.exports = async (req, res) => {
 
   try {
     const sql = neon(process.env.DATABASE_URL);
-    await sql`CREATE TABLE IF NOT EXISTS dsa_tracker_state (
-      id SMALLINT PRIMARY KEY CHECK (id = 1),
-      state JSONB NOT NULL,
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    )`;
+    await ensureTable(sql);
 
     if (req.method === "GET") {
       const rows = await sql`SELECT state, updated_at FROM dsa_tracker_state WHERE id = 1`;

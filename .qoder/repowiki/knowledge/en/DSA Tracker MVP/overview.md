@@ -1,0 +1,1 @@
+Vite + React single-page application that renders a DSA problem tracker, backed by serverless API endpoints and static JSON datasets for problems and solutions.

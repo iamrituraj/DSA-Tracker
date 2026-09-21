@@ -26,15 +26,21 @@ function safeEqual(left, right) {
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
-function issueSession(res) {
+function isSecureRequest(req) {
+  const proto = String(req?.headers?.["x-forwarded-proto"] || "").split(",")[0].trim().toLowerCase();
+  if (proto) return proto === "https";
+  return Boolean(process.env.VERCEL);
+}
+
+function issueSession(res, req) {
   const payload = Buffer.from(JSON.stringify({ exp: Date.now() + MAX_AGE_SECONDS * 1000 })).toString("base64url");
   const value = `${payload}.${sign(payload)}`;
-  const secure = process.env.VERCEL ? "; Secure" : "";
+  const secure = isSecureRequest(req) ? "; Secure" : "";
   res.setHeader("Set-Cookie", `${COOKIE_NAME}=${value}; Path=/; HttpOnly${secure}; SameSite=Lax; Max-Age=${MAX_AGE_SECONDS}`);
 }
 
-function clearSession(res) {
-  const secure = process.env.VERCEL ? "; Secure" : "";
+function clearSession(res, req) {
+  const secure = isSecureRequest(req) ? "; Secure" : "";
   res.setHeader("Set-Cookie", `${COOKIE_NAME}=; Path=/; HttpOnly${secure}; SameSite=Lax; Max-Age=0`);
 }
 

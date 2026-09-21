@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Search, LayoutDashboard, BookOpen, RefreshCw, Brain, BarChart3, Settings, CheckCircle2, Clock3, Download, Upload, ExternalLink, ChevronRight, ChevronDown, Flame, Star, Filter, CalendarDays, Target, RotateCcw, Trash2, Timer, Lightbulb, BookmarkCheck, Lock, Unlock, Pencil, Plus, Code2, Moon, Sun, Copy, Check } from "lucide-react";
+import { Search, LayoutDashboard, BookOpen, RefreshCw, Brain, BarChart3, Settings, CheckCircle2, Clock3, Download, Upload, ExternalLink, ChevronRight, ChevronDown, Flame, Star, Filter, CalendarDays, Target, RotateCcw, Trash2, Timer, Lightbulb, BookmarkCheck, Lock, Unlock, Pencil, Plus, Code2, Moon, Sun, Copy, Check, Play } from "lucide-react";
 import "./styles.css";
+import "./cloud-sync.css";
 
 const SEED = "/data/problems.json";
 const SOLUTION_SEED = "/data/solutions.json";
@@ -25,12 +26,33 @@ const defaultApproaches = () => ([
 ]);
 function uid() { return `a-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}` }
 
+let storageWarned = false;
+function warnStorageError() {
+  if (storageWarned) return;
+  storageWarned = true;
+  try { window.dispatchEvent(new CustomEvent("dsa-storage-error")); } catch { /* storage unavailable */ }
+}
 function useLocalState(key, initial) {
   const [v, setV] = useState(() => { try { return JSON.parse(localStorage.getItem(key)) ?? initial } catch { return initial } });
-  useEffect(() => localStorage.setItem(key, JSON.stringify(v)), [key, v]);
+  useEffect(() => {
+    try {
+      const next = JSON.stringify(v);
+      if (typeof next === "string" && localStorage.getItem(key) !== next) localStorage.setItem(key, next);
+    } catch { warnStorageError(); }
+  }, [key, v]);
+  useEffect(() => {
+    const onStorage = (event) => {
+      if (event.key !== key || (event.storageArea && event.storageArea !== localStorage)) return;
+      try { setV(event.newValue === null ? initial : JSON.parse(event.newValue)); } catch { /* ignore malformed cross-tab writes */ }
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, [key]);
   return [v, setV];
 }
-const todayKey = () => new Date().toISOString().slice(0, 10);
+const pad2 = (n) => String(n).padStart(2, "0");
+const localDayKey = (d = new Date()) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+const todayKey = () => localDayKey();
 const addDays = (days) => new Date(Date.now() + days * 86400000).toISOString();
 const daysBetween = (a, b) => Math.max(0, Math.ceil((new Date(b) - new Date(a)) / 86400000));
 const isHttp = (u) => typeof u === "string" && /^https?:\/\//i.test(u);
@@ -42,6 +64,11 @@ function leetCodeLink(p) {
   if (isHttp(p.url) && /leetcode\.com/i.test(p.url)) return { href: p.url, label: "Open on LeetCode" };
   return null;
 }
+const VALID_PAGES = ["dashboard", "roadmap", "revision", "patterns", "analytics", "settings"];
+const pageLabels = { dashboard: "Dashboard", roadmap: "A2Z Roadmap", revision: "Revision", patterns: "Patterns", analytics: "Analytics", settings: "Settings" };
+function parseHash() {
+  try { return decodeURIComponent(window.location.hash.replace(/^#\/?/, "")); } catch { return ""; }
+}
 
 function App() {
   const [problems, setProblems] = useState([]);
@@ -52,11 +79,14 @@ function App() {
   const [settings, setSettings] = useLocalState("dsa-settings", { dailyGoal: 3, theme: "light" });
   const [builtInSolutions, setBuiltInSolutions] = useState({});
   const [tufLinks, setTufLinks] = useState({});
-  const [page, setPage] = useState("dashboard");
-  const [selected, setSelected] = useState(null);
+  const [page, setPage] = useState(() => { const hash = parseHash(); if (hash.startsWith("problem/")) return "problem"; return VALID_PAGES.includes(hash) ? hash : "dashboard"; });
+  const [selected, setSelected] = useState(() => { const hash = parseHash(); return hash.startsWith("problem/") ? hash.slice("problem/".length) : null; });
+  const [originPage, setOriginPage] = useState("roadmap");
   const [query, setQuery] = useState("");
   const [roadmapFilters, setRoadmapFilters] = useState({ topic: "All", status: "All", difficulty: "All", pattern: "All", favorites: false, sort: "Order" });
-  const [toast, setToast] = useState("");
+  const [toast, setToastValue] = useState(null);
+  const toastId = useRef(0);
+  const setToast = (text) => setToastValue({ id: ++toastId.current, text });
   const [syncStatus, setSyncStatus] = useState("checking");
   const [cloudReady, setCloudReady] = useState(false);
   const cloudState = () => ({ progress, notes, solutions, activity, settings });
@@ -75,20 +105,24 @@ function App() {
   };
   const signIn = async password => {
     const response = await fetch("/api/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password }) });
-    if (!response.ok) throw new Error((await response.json()).error || "Could not sign in");
+    if (!response.ok) {
+      let message = "Could not sign in";
+      try { message = (await response.json()).error || message } catch { /* non-JSON error body */ }
+      throw new Error(message);
+    }
     await loadCloudState();
     setSyncStatus("synced");
     setToast("Cloud sync connected.");
   };
   const signOut = async () => {
-    await fetch("/api/auth", { method: "DELETE" });
+    try { await fetch("/api/auth", { method: "DELETE" }) } catch { /* offline: still switch this device to local mode */ }
     setCloudReady(false);
     setSyncStatus("signed-out");
     setToast("Cloud sync disconnected on this device.");
   };
-  useEffect(() => fetch(SEED).then(r => { if (!r.ok) throw new Error("data"); return r.json() }).then(setProblems).catch(() => setToast("Could not load problem data.")), []);
-  useEffect(() => fetch(SOLUTION_SEED).then(r => r.ok ? r.json() : {}).then(setBuiltInSolutions).catch(() => setBuiltInSolutions({})), []);
-  useEffect(() => fetch(TUF_LINK_SEED).then(r => r.ok ? r.json() : {}).then(setTufLinks).catch(() => setTufLinks({})), []);
+  useEffect(() => { fetch(SEED).then(r => { if (!r.ok) throw new Error("data"); return r.json() }).then(setProblems).catch(() => setToast("Could not load problem data.")) }, []);
+  useEffect(() => { fetch(SOLUTION_SEED).then(r => r.ok ? r.json() : {}).then(setBuiltInSolutions).catch(() => setBuiltInSolutions({})) }, []);
+  useEffect(() => { fetch(TUF_LINK_SEED).then(r => r.ok ? r.json() : {}).then(setTufLinks).catch(() => setTufLinks({})) }, []);
   useEffect(() => {
     fetch("/api/auth").then(r => r.ok ? r.json() : { authenticated: false }).then(async ({ authenticated }) => {
       if (!authenticated) { setSyncStatus("signed-out"); return; }
@@ -110,7 +144,12 @@ function App() {
     }, 500);
     return () => clearTimeout(timer);
   }, [cloudReady, progress, notes, solutions, activity, settings]);
-  useEffect(() => { if (!toast) return; const t = setTimeout(() => setToast(""), 2500); return () => clearTimeout(t) }, [toast]);
+  useEffect(() => { if (!toast) return; const t = setTimeout(() => setToastValue(null), 2500); return () => clearTimeout(t) }, [toast]);
+  useEffect(() => {
+    const onStorageError = () => setToast("Could not save to browser storage — export a backup from Settings.");
+    window.addEventListener("dsa-storage-error", onStorageError);
+    return () => window.removeEventListener("dsa-storage-error", onStorageError);
+  }, []);
   const enriched = useMemo(() => problems.map((p, i) => ({ ...p, index: i, ...(progress[p.id] || {}) })), [problems, progress]);
   const stats = useMemo(() => {
     const solved = enriched.filter(p => p.status === "Solved" || p.status === "Mastered").length;
@@ -120,7 +159,8 @@ function App() {
     const attempted = enriched.filter(p => p.status === "Attempted").length;
     const today = activity[todayKey()] || 0;
     let streak = 0; let d = new Date();
-    while (activity[d.toISOString().slice(0, 10)] > 0) { streak++; d.setDate(d.getDate() - 1) }
+    if (!(activity[localDayKey(d)] > 0)) d.setDate(d.getDate() - 1);
+    while (activity[localDayKey(d)] > 0) { streak++; d.setDate(d.getDate() - 1) }
     return { solved, mastered, weak, due, total: enriched.length, attempted, today, streak };
   }, [enriched, activity]);
   const filtered = useMemo(() => {
@@ -138,11 +178,19 @@ function App() {
   }, [enriched, query, roadmapFilters]);
   const update = (id, patch) => setProgress(x => ({ ...x, [id]: { ...(x[id] || {}), ...patch } }));
   const recordActivity = () => setActivity(x => ({ ...x, [todayKey()]: ((x[todayKey()] || 0) + 1) }));
-  const open = (p) => { setSelected(p.id); setPage("problem") };
+  const open = (p) => { if (page !== "problem") setOriginPage(page); setSelected(p.id); setPage("problem") };
   const selectedProblem = useMemo(() => enriched.find(p => p.id === selected) || null, [enriched, selected]);
+  useEffect(() => {
+    const target = page === "problem" && selected ? `#problem/${encodeURIComponent(selected)}` : `#${page}`;
+    if (window.location.hash !== target) window.history.replaceState(null, "", target);
+  }, [page, selected]);
+  useEffect(() => {
+    if (page === "problem" && problems.length && !selectedProblem) setPage(originPage);
+  }, [page, problems.length, selectedProblem, originPage]);
   const exportData = () => { const blob = new Blob([JSON.stringify({ version: 3, progress, notes, solutions, activity, settings, exportedAt: new Date().toISOString() }, null, 2)], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "dsa-tracker-backup.json"; a.click(); URL.revokeObjectURL(a.href) };
-  const importData = e => { const f = e.target.files?.[0]; if (!f) return; const r = new FileReader(); r.onload = () => { try { const d = JSON.parse(r.result); if (d.progress) setProgress(d.progress); if (d.notes) setNotes(d.notes); if (d.solutions) setSolutions(d.solutions); if (d.activity) setActivity(d.activity); if (d.settings) setSettings(d.settings); setToast("Backup restored.") } catch { setToast("Invalid backup file.") } }; r.readAsText(f); e.target.value = "" };
+  const importData = e => { const f = e.target.files?.[0]; if (!f) return; const r = new FileReader(); r.onload = () => { try { const d = JSON.parse(r.result); const isObj = v => v && typeof v === "object" && !Array.isArray(v) ? v : null; const next = { progress: isObj(d.progress), notes: isObj(d.notes), solutions: isObj(d.solutions), activity: isObj(d.activity) }; if (!next.progress && !next.notes && !next.solutions && !next.activity) throw new Error("no tracker data"); if (next.progress) setProgress(next.progress); if (next.notes) setNotes(next.notes); if (next.solutions) setSolutions(next.solutions); if (next.activity) setActivity(next.activity); if (d.settings) setSettings(s => ({ ...s, dailyGoal: Math.min(50, Math.max(1, Number(d.settings.dailyGoal) || s.dailyGoal)), theme: d.settings.theme === "dark" ? "dark" : d.settings.theme === "light" ? "light" : s.theme })); setToast("Backup restored.") } catch { setToast("Invalid backup file.") } }; r.readAsText(f); e.target.value = "" };
   const resetAll = () => { if (confirm("Reset all progress, notes, solutions and activity? This cannot be undone unless you have a backup.")) { setProgress({}); setNotes({}); setSolutions({}); setActivity({}); setToast("All local progress reset.") } };
+  const hasLocalData = [progress, notes, solutions, activity].some(x => Object.keys(x).length > 0);
   const topics = ["All", ...new Set(problems.map(p => p.topic))];
   const patterns = ["All", ...new Set(
     (roadmapFilters.topic === "All" ? problems : problems.filter(p => p.topic === roadmapFilters.topic)).map(p => p.pattern)
@@ -158,16 +206,16 @@ function App() {
       <div className="sidebar-foot"><Flame size={16} /> {syncStatus === "synced" ? "Cloud sync on" : syncStatus === "syncing" ? "Saving changes…" : "Local data"}</div>
       <button className="theme-toggle" type="button" onClick={() => setSettings(s => ({ ...s, theme: s.theme === "dark" ? "light" : "dark" }))} aria-label="Toggle dark mode">{settings.theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}<span>{settings.theme === "dark" ? "Light mode" : "Dark mode"}</span></button>
     </aside>
-    <main><header><div><h1>{page === "dashboard" ? "Dashboard" : page === "roadmap" ? "A2Z Roadmap" : page === "problem" ? "Problem" : page[0].toUpperCase() + page.slice(1)}</h1><p>Practice, track, revise, master.</p></div><div className="search"><Search size={17} /><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search problems, topics, patterns…" /></div></header>
+    <main><header><div><h1>{page === "problem" ? "Problem" : pageLabels[page]}</h1><p>Practice, track, revise, master.</p></div><div className="search"><Search size={17} /><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search problems, topics, patterns…" /></div></header>
       {page === "dashboard" && <Dashboard stats={stats} problems={enriched} open={open} setPage={setPage} settings={settings} />}
       {page === "roadmap" && <Roadmap problems={enriched} topics={topics} patterns={patterns} open={open} filters={roadmapFilters} setFilters={setRoadmapFilters} filtered={filtered} />}
       {page === "revision" && <Revision problems={enriched} open={open} update={update} recordActivity={recordActivity} />}
       {page === "patterns" && <Patterns problems={enriched} tufLinks={tufLinks} open={open} />}
       {page === "analytics" && <Analytics stats={stats} problems={enriched} activity={activity} notes={notes} solutions={solutions} />}
-      {page === "settings" && <SettingsPage exportData={exportData} importData={importData} resetAll={resetAll} settings={settings} setSettings={setSettings} syncStatus={syncStatus} signIn={signIn} signOut={signOut} />}
-      {page === "problem" && selectedProblem && <Problem p={selectedProblem} update={update} notes={notes[selectedProblem.id] || {}} setNotes={setNotes} solutions={solutions[selectedProblem.id]} builtInSolutions={builtInSolutions[selectedProblem.id]} tufUrl={tufLinks[selectedProblem.id]} setSolutions={setSolutions} back={() => setPage("roadmap")} recordActivity={recordActivity} setToast={setToast} />}
+      {page === "settings" && <SettingsPage exportData={exportData} importData={importData} resetAll={resetAll} settings={settings} setSettings={setSettings} syncStatus={syncStatus} signIn={signIn} signOut={signOut} hasLocalData={hasLocalData} />}
+      {page === "problem" && selectedProblem && <Problem p={selectedProblem} update={update} notes={notes[selectedProblem.id] || {}} setNotes={setNotes} solutions={solutions[selectedProblem.id]} builtInSolutions={builtInSolutions[selectedProblem.id]} tufUrl={tufLinks[selectedProblem.id]} setSolutions={setSolutions} back={() => setPage(originPage)} backLabel={pageLabels[originPage] || "roadmap"} recordActivity={recordActivity} setToast={setToast} />}
     </main>
-    {toast && <div className="toast">{toast}</div>}
+    {toast && <div className="toast" key={toast.id}>{toast.text}</div>}
   </div>
 }
 
@@ -177,7 +225,7 @@ function Dashboard({ stats, problems, open, setPage, settings }) {
   const next = problems.filter(p => p.status === "Not Started").slice(0, 5);
   const weak = problems.filter(p => p.confidence === "🔴 Weak").slice(0, 4);
   return <section>
-    <div className="hero"><div><span className="eyebrow">YOUR DSA JOURNEY</span><h2>{stats.solved} / {stats.total} problems completed</h2><p>Build consistency, revisit weak patterns, and turn solved problems into interview-ready knowledge.</p><div className="goal"><Target size={15} /> Today: <b>{Math.min(stats.today, settings.dailyGoal)}/{settings.dailyGoal}</b> activity{settings.dailyGoal !== 1 ? "ies" : ""}</div></div><div className="ring" style={{ "--pct": `${pct * 3.6}deg` }}><span>{pct}%</span></div></div>
+    <div className="hero"><div><span className="eyebrow">YOUR DSA JOURNEY</span><h2>{stats.solved} / {stats.total} problems completed</h2><p>Build consistency, revisit weak patterns, and turn solved problems into interview-ready knowledge.</p><div className="goal"><Target size={15} /> Today: <b>{Math.min(stats.today, settings.dailyGoal)}/{settings.dailyGoal}</b> activit{settings.dailyGoal !== 1 ? "ies" : "y"}</div></div><div className="ring" style={{ "--pct": `${pct * 3.6}deg` }}><span>{pct}%</span></div></div>
     <div className="cards">{[["🔥", "Streak", `${stats.streak} day${stats.streak !== 1 ? "s" : ""}`, "Consecutive active days"], ["🔁", "Due today", stats.due, "Revision queue"], ["🔴", "Weak", stats.weak, "Needs practice"], ["⭐", "Mastered", stats.mastered, "Interview ready"]].map((x, i) => <div className="card" key={i}><span className="card-icon">{x[0]}</span><div><small>{x[1]}</small><strong>{x[2]}</strong><em>{x[3]}</em></div></div>)}</div>
     <div className="grid2"><DashboardPanel title="Revision due" subtitle="Try from memory before opening notes." action="View all" onClick={() => setPage("revision")}>{due.length ? due.map(p => <ProblemRow key={p.id} p={p} open={open} tag="Due" />) : <Empty text="No revisions due. Nice work!" />}</DashboardPanel><DashboardPanel title="Continue A2Z" subtitle="Pick up where you left off." action="Open roadmap" onClick={() => setPage("roadmap")}>{next.map(p => <ProblemRow key={p.id} p={p} open={open} />)}</DashboardPanel></div>
     <div className="grid2"><DashboardPanel title="Weak problems" subtitle="Prioritize these before learning more." action="Open roadmap" onClick={() => setPage("roadmap")}>{weak.length ? weak.map(p => <ProblemRow key={p.id} p={p} open={open} tag="Weak" />) : <Empty text="No weak problems marked." />}</DashboardPanel><div className="panel quick"><h3>Study loop</h3><div><span>1</span><p><b>Attempt</b><small>Think before checking anything.</small></p></div><div><span>2</span><p><b>Record</b><small>Save insight, mistake and complexity.</small></p></div><div><span>3</span><p><b>Revise</b><small>Follow the spaced schedule.</small></p></div></div></div>
@@ -198,12 +246,18 @@ function groupByTopicPattern(list) {
 function Roadmap({ problems, topics, patterns, open, filters, setFilters, filtered }) {
   const set = (k, v) => setFilters(x => ({ ...x, [k]: v }));
   const grouped = useMemo(() => groupByTopicPattern(filtered), [filtered]);
-  const [collapsedTopics, setCollapsedTopics] = useState({});
-  const [collapsedPatterns, setCollapsedPatterns] = useState({});
-  const toggleTopic = (topic) => setCollapsedTopics(x => ({ ...x, [topic]: !x[topic] }));
+  // Collapse state is remembered in localStorage: topic sections stay open by default,
+  // pattern sub-sections start collapsed, and every toggle survives navigation and reloads.
+  const [collapse, setCollapse] = useLocalState("dsa-collapse", { topics: {}, patterns: {} });
+  const collapsedTopics = collapse.topics || {};
+  const collapsedPatterns = collapse.patterns || {};
+  const toggleTopic = (topic) => setCollapse(x => ({ ...x, topics: { ...(x.topics || {}), [topic]: !(x.topics || {})[topic] } }));
   const togglePattern = (topic, pattern) => {
     const key = `${topic}::${pattern}`;
-    setCollapsedPatterns(x => ({ ...x, [key]: !x[key] }));
+    setCollapse(x => {
+      const stored = x.patterns || {};
+      return { ...x, patterns: { ...stored, [key]: !(stored[key] ?? true) } };
+    });
   };
   return <section>
     <div className="roadmap-summary">
@@ -228,7 +282,7 @@ function Roadmap({ problems, topics, patterns, open, filters, setFilters, filter
         {!topicClosed && Object.entries(pats).map(([pattern, ps]) => {
           const solved = ps.filter(p => p.status === "Solved" || p.status === "Mastered").length;
           const key = `${topic}::${pattern}`;
-          const closed = !!collapsedPatterns[key];
+          const closed = collapsedPatterns[key] ?? true;
           return <div className={`pattern-block${closed ? " collapsed" : ""}`} key={pattern}>
             <button type="button" className="pattern-head" onClick={() => togglePattern(topic, pattern)}>
               <span className="collapse-icon">{closed ? <ChevronRight size={15} /> : <ChevronDown size={15} />}</span>
@@ -302,7 +356,7 @@ function Analytics({ stats, problems, activity, notes, solutions }) {
   const last14 = [];
   for (let i = 13; i >= 0; i--) {
     const d = new Date(); d.setDate(d.getDate() - i);
-    const key = d.toISOString().slice(0, 10);
+    const key = localDayKey(d);
     last14.push({ key, label: d.toLocaleDateString(undefined, { weekday: "short" }), count: activity[key] || 0 });
   }
   const maxAct = Math.max(1, ...last14.map(d => d.count));
@@ -333,6 +387,7 @@ function Analytics({ stats, problems, activity, notes, solutions }) {
         ))}
       </div>
     </div>
+    <ActivityHeatmap activity={activity} />
     <div className="grid2">
       <div className="panel">
         <h3>Status breakdown</h3>
@@ -379,7 +434,26 @@ function Analytics({ stats, problems, activity, notes, solutions }) {
   </section>;
 }
 
-function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufUrl, setSolutions, back, recordActivity, setToast }) {
+function ActivityHeatmap({ activity }) {
+  const days = useMemo(() => {
+    const list = [];
+    const end = new Date(); end.setHours(0, 0, 0, 0);
+    const start = new Date(end); start.setDate(start.getDate() - 363); start.setDate(start.getDate() - start.getDay());
+    for (const d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      const key = localDayKey(d);
+      list.push({ key, count: activity[key] || 0, day: d.toLocaleDateString() });
+    }
+    return list;
+  }, [activity]);
+  const level = n => n === 0 ? "h0" : n <= 2 ? "h1" : n <= 5 ? "h2" : "h3";
+  return <div className="panel">
+    <h3>Yearly activity</h3>
+    <p>One cell per day — darker means more activity. Hover a cell for details.</p>
+    <div className="heatmap-scroll"><div className="heatmap">{days.map(d => <i key={d.key} className={level(d.count)} title={`${d.day}: ${d.count} activit${d.count === 1 ? "y" : "ies"}`} />)}</div></div>
+    <div className="heat-legend"><span>Less</span><i className="h0" /><i className="h1" /><i className="h2" /><i className="h3" /><span>More</span></div>
+  </div>;
+}
+function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufUrl, setSolutions, back, backLabel, recordActivity, setToast }) {
   const supplied = solutions?.approaches?.length ? solutions : builtInSolutions;
   const [tab, setTab] = useState("notes");
   const [localNotes, setLocalNotes] = useState(() => ({ ...emptyNotes(), ...notes }));
@@ -397,11 +471,13 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
     setEditingSol(false);
     setOpenApproach(0);
     setTab("notes");
-  }, [p.id, builtInSolutions, solutions]);
+    // Saved solutions are intentionally not a dependency: saving must not reset the tab or accordion.
+  }, [p.id, builtInSolutions]);
 
   const status = p.status || "Not Started";
   const link = solutionLink(tufUrl);
   const leetCode = leetCodeLink(p);
+  const video = isHttp(p.videoUrl) ? p.videoUrl : null;
   const filledNotes = NOTE_FIELDS.filter(([k]) => localNotes[k]?.trim()).length;
   const filledApproaches = localSol.filter(a => a.explanation?.trim() || a.code?.trim()).length;
 
@@ -440,12 +516,15 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
   };
   const mark = (nextStatus) => {
     if (status === nextStatus) { setToast(`Already marked ${nextStatus}.`); return; }
+    // Attempts count fresh starts only: leaving "Not Started" (including after a Reset).
+    // Re-labelling progress between active statuses must not inflate the counter.
+    const startsNewAttempt = status === "Not Started" && nextStatus !== "Not Started";
     update(p.id, {
       status: nextStatus,
       lastRevised: new Date().toISOString(),
       nextRevision: nextStatus === "Not Started" ? null : addDays(revisionSteps[Math.min(p.revisionCount || 0, revisionSteps.length - 1)]),
       revisionCount: p.revisionCount || 0,
-      attempts: (p.attempts || 0) + (nextStatus !== "Not Started" ? 1 : 0),
+      attempts: (p.attempts || 0) + (startsNewAttempt ? 1 : 0),
       favorite: !!p.favorite,
       confidence: nextStatus === "Mastered" ? "🔵 Interview Ready" : (p.confidence || "🟡 Learning")
     });
@@ -454,7 +533,7 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
   };
 
   return <section className="problem-page">
-    <button type="button" className="back" onClick={back}>← Back to roadmap</button>
+    <button type="button" className="back" onClick={back}>← Back to {backLabel || "roadmap"}</button>
     <div className="problem-header">
       <div>
         <span className="eyebrow">{p.topic} · {p.pattern}</span>
@@ -463,6 +542,7 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
           <span className={`diff ${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>
           {link ? <a href={link.href} target="_blank" rel="noreferrer">{link.label} <ExternalLink size={13} /></a> : <span className="no-link">No TakeUForward solution available</span>}
           {leetCode && <a className="tuf-link" href={leetCode.href} target="_blank" rel="noreferrer">{leetCode.label} <ExternalLink size={13} /></a>}
+          {video && <a className="tuf-link" href={video} target="_blank" rel="noreferrer"><Play size={13} /> Watch explanation video</a>}
         </div>
       </div>
       <div className="actions">
@@ -582,13 +662,14 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
   </section>;
 }
 
-function SettingsPage({ exportData, importData, resetAll, settings, setSettings, syncStatus, signIn, signOut }) {
+function SettingsPage({ exportData, importData, resetAll, settings, setSettings, syncStatus, signIn, signOut, hasLocalData }) {
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
   const connected = ["synced", "syncing", "error"].includes(syncStatus);
   const connect = async e => {
     e.preventDefault();
     setAuthError("");
+    if (hasLocalData && !confirm("Connect cloud sync? If the cloud already contains data, this browser's local copy will be replaced by it. Export a backup first if you are unsure.")) return;
     try {
       await signIn(password);
       setPassword("");
@@ -599,9 +680,15 @@ function SettingsPage({ exportData, importData, resetAll, settings, setSettings,
   return <section>
     <div className="panel settings">
       <h3>Cloud sync</h3>
-      {connected ? <div className="setting-row"><div><b>{syncStatus === "syncing" ? "Saving changes…" : syncStatus === "error" ? "Sync needs attention" : "Connected"}</b><span>Your progress, notes, solutions, activity and settings are synced to your private Neon database.</span></div><button onClick={signOut}>Disconnect</button></div> : <form className="setting-row" onSubmit={connect}><div><b>Connect this device</b><span>Enter the single app password configured in Vercel to load and sync your tracker data.</span>{authError && <em className="auth-error">{authError}</em>}</div><div className="cloud-login"><input type="password" required value={password} onChange={e => setPassword(e.target.value)} placeholder="App password" /><button className="primary" type="submit">Connect</button></div></form>}
+      {connected ? <div className="setting-row"><div><b>{syncStatus === "syncing" ? "Saving changes…" : syncStatus === "error" ? "Sync needs attention" : "Connected"}</b><span>Your progress, notes, solutions, activity and settings are synced to your private Neon database.</span></div><button onClick={signOut}>Disconnect</button></div> : <form className="setting-row cloud-sync-row" onSubmit={connect}><div><b>Connect this device</b><span>Enter the single app password configured in Vercel to load and sync your tracker data.</span>{authError && <em className="auth-error">{authError}</em>}</div><div className="cloud-login"><input type="password" required value={password} onChange={e => setPassword(e.target.value)} placeholder="App password" /><button className="primary" type="submit">Connect</button></div></form>}
     </div>
     <div className="panel settings"><h3>Data & Privacy</h3><p>{connected ? "Cloud sync is enabled. Your local browser copy is also retained for offline use." : "Your progress stays in this browser until you connect cloud sync."}</p><div className="setting-row"><div><b>Daily goal</b><span>How many problem activities count toward your daily target.</span></div><input className="goal-input" type="number" min="1" max="50" value={settings.dailyGoal} onChange={e => setSettings({ ...settings, dailyGoal: Math.max(1, Number(e.target.value) || 1) })} /></div><div className="setting-row"><div><b>Export backup</b><span>Download all progress, notes, solutions, activity and settings as JSON.</span></div><button onClick={exportData}><Download size={16} /> Export</button></div><div className="setting-row"><div><b>Import backup</b><span>Restore a previous DSA Tracker backup.</span></div><label className="file-btn"><Upload size={16} /> Import<input type="file" accept=".json" onChange={importData} /></label></div><div className="setting-row danger-row"><div><b>Reset local data</b><span>{connected ? "Clear your synced and local progress, notes, solutions and activity." : "Delete all progress, notes, solutions and activity from this browser."}</span></div><button className="danger" onClick={resetAll}><Trash2 size={16} /> Reset</button></div></div><div className="panel settings"><h3>How the tracker works</h3><div className="help-grid"><div><Timer size={18} /><b>Revision</b><p>Attempted → 1 day, then 3 → 7 → 14 → 30 day spacing.</p></div><div><BookmarkCheck size={18} /><b>Mastery</b><p>Mastered marks the problem interview-ready and keeps it on a longer review cycle.</p></div><div><Download size={18} /><b>Backup</b><p>Export regularly because local browser storage is device/browser specific.</p></div></div></div></section>
 }
 function Empty({ text }) { return <div className="empty"><Clock3 size={22} /><span>{text}</span></div> }
-createRoot(document.getElementById("root")).render(<App />);
+class ErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { error: null }; }
+  static getDerivedStateFromError(error) { return { error }; }
+  componentDidCatch(error, info) { console.error("DSA Tracker crashed", error, info); }
+  render() { if (!this.state.error) return this.props.children; return <div className="crash"><h2>Something went wrong</h2><p>Your saved progress is still in this browser. Reload to continue.</p><button onClick={() => window.location.reload()}>Reload</button></div>; }
+}
+createRoot(document.getElementById("root")).render(<ErrorBoundary><App /></ErrorBoundary>);

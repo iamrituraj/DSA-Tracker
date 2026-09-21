@@ -1,0 +1,5 @@
+- Text normalization for fuzzy matching is done via a small helper that lowercases, strips punctuation/apostrophes, collapses whitespace, and trims — reused across title/topic/slug comparisons.
+- Rule tables are declared as plain JS objects/arrays mapping a category label to arrays of regular expressions, keeping classification logic declarative and easy to extend.
+- File I/O uses `node:fs/promises` with `mkdir(..., { recursive: true })` followed by `writeFile` to ensure output directories exist before writing JSON files.
+- Output paths are duplicated per script (e.g. both `data/` and `public/data/`) via array-of-outputs loops rather than hard-coded per-file calls.
+- Java-to-C# conversion is implemented as a single function composed of sequential `String.prototype.replace` calls ordered from most specific patterns (e.g. generic collection types) to broadest token swaps.

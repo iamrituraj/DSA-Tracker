@@ -1,0 +1,53 @@
+# 知识卡导出索引文件
+schema_version: 1
+locale: en-US
+branch: main
+nodes_managed: true
+exported_at: "2026-09-21T08:05:39Z"
+modules:
+    "":
+        dir_name: DSA Tracker MVP
+        title: DSA Tracker MVP
+        scope:
+            - README.md
+            - .gitignore
+            - package.json
+            - package-lock.json
+            - index.html
+        source_files: []
+        children:
+            - api_server
+            - data_assets
+            - scripts
+        depends_on: []
+        related_to: []
+    api_server:
+        dir_name: API Server (Auth & State Persistence)
+        title: API Server (Auth & State Persistence)
+        scope:
+            - api/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: data_assets
+    data_assets:
+        dir_name: DSA Problem Catalog & Solutions Data
+        title: DSA Problem Catalog & Solutions Data
+        scope:
+            - data/
+            - public/data/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: api_server
+    scripts:
+        dir_name: Data Preparation & Code-Generation Scripts
+        title: Data Preparation & Code-Generation Scripts
+        scope:
+            - scripts/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []

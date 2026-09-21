@@ -1,0 +1,1 @@
+`npm run dev` starts the Vite dev server; `npm run build`/`preview` produce and serve the static bundle; `npm run prepare-data` and `npm run extract-tuf-links` regenerate the JSON datasets under `data_assets` using the scripts in the `scripts/` directory.

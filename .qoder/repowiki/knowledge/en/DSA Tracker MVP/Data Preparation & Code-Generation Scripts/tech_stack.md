@@ -1,0 +1,1 @@
+Plain Node.js ES modules (`node:fs/promises`); no external dependencies — all parsing and transformation use built-in regex/string operations.

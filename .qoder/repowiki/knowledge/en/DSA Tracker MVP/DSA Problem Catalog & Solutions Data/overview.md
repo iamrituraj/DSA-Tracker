@@ -1,0 +1,1 @@
+Static JSON datasets that define the DSA problem catalog, topic/pattern taxonomy, Take-Forward editorial links, and per-problem solution approaches consumed by the tracker UI.

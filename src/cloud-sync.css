@@ -1,0 +1,57 @@
+.cloud-sync-row > div:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.cloud-login {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.cloud-login input {
+  width: 170px;
+  min-width: 0;
+  border: 1px solid #dce1e9;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.cloud-login .primary {
+  background: #172033;
+  border-color: #172033;
+  color: #fff;
+  justify-content: center;
+  min-width: 86px;
+  white-space: nowrap;
+}
+
+.cloud-login .primary:hover {
+  background: #2a3a52;
+  border-color: #2a3a52;
+}
+
+.auth-error {
+  display: block;
+  margin-top: 5px;
+  color: #b33a45;
+  font-size: 11px;
+  font-style: normal;
+}
+
+@media (max-width: 700px) {
+  .cloud-sync-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .cloud-login {
+    width: 100%;
+  }
+
+  .cloud-login input {
+    flex: 1;
+    width: auto;
+  }
+}

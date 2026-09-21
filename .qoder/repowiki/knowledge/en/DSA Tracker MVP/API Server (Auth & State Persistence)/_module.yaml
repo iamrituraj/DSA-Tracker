@@ -1,0 +1,9 @@
+schema_version: 1
+module_path: api_server
+title: API Server (Auth & State Persistence)
+scope:
+    - api/
+source_files: []
+depends_on: []
+related_to:
+    - path: data_assets

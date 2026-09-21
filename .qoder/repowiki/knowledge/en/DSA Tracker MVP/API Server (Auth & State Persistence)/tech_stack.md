@@ -1,0 +1,1 @@
+Node.js serverless functions using `@neondatabase/serverless` for PostgreSQL access; HMAC-SHA256 signed cookies for session management instead of a session store; environment-driven configuration via `SESSION_SECRET`, `APP_ACCESS_PASSWORD`, and `DATABASE_URL`.

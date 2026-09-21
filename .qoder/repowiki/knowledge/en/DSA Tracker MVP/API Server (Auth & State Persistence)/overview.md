@@ -1,0 +1,1 @@
+Serverless API endpoints for password-based session authentication and cloud persistence of the DSA tracker's user state via a Neon PostgreSQL database.

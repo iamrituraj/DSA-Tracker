@@ -1,0 +1,2 @@
+- Data transformations and code-generation tasks are exposed as top-level npm scripts that call Node modules under `scripts/`, keeping them separate from the runtime app code.
+- Static domain data (problem catalog, taxonomy, editorial links) is stored as JSON files under `data_assets/` and consumed directly by the React UI at build or runtime.
