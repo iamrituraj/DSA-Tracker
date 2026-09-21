@@ -599,3 +599,82 @@
 .theme-dark .sim-dest-grid button.on{background:#2e8b62;color:#fff;border-color:#2e8b62}
 @media(max-width:900px){.sim-vend-stage,.sim-park-stage{grid-template-columns:1fr}.lld-hero-tools{margin:0;padding:0 22px 20px;justify-items:start}.lld-hero{flex-direction:column;align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){.sim-col,.sim-sentinel,.sim-car,.sim-door,.uml-class,.uml-edge,.sim-log li:first-child,.sim-spot.is-win,.sim-probe-row{animation:none;transition:none}}
+
+/* ── Patterns page: coverage strip, triage filters, compact pattern cards ── */
+.patterns-overview{padding:16px 18px 14px}
+.po-stats{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;gap:14px;align-items:end}
+.po-stats>div{display:flex;flex-direction:column;gap:2px}
+.po-stats small,.po-stats b{font-size:22px;font-weight:800;line-height:1.15;color:#172033}
+.po-stats span{font-size:11px;color:#657187}
+.po-bar{height:7px;background:#edf0f4;border-radius:99px;overflow:hidden;margin:13px 0 11px}
+.po-bar i{display:block;height:100%;background:#2e8b62;border-radius:99px}
+.po-focus{display:flex;align-items:center;gap:8px;width:100%;border:0;background:#f4f2ff;color:#574b8e;border-radius:9px;padding:9px 11px;font-size:11.5px;text-align:left}
+.po-focus:hover{background:#ebe7ff}
+.po-focus>span{flex:1}
+.po-focus b{font-weight:700}
+.po-focus svg{flex:none}
+.patterns-filters{padding:14px 16px 15px;margin-bottom:14px}
+.pattern-filter-grid{grid-template-columns:1.5fr repeat(3,1fr) auto}
+.pattern-search{display:flex;align-items:center;gap:7px;border:1px solid #dfe4eb;border-radius:8px;background:#fff;padding:0 9px;color:#8791a2}
+.pattern-search input{border:0;outline:0;background:transparent;width:100%;padding:8px 0;color:#172033;font-size:12px}
+.pattern-search:focus-within{border-color:#9aa8bc;box-shadow:0 0 0 3px #e8eef8}
+.patterns-page .pattern-card{display:flex;flex-direction:column;gap:9px;padding:15px 15px 13px}
+.pattern-card button.pc-head{width:100%;border:0;background:transparent;border-radius:0;padding:0;margin:0;display:flex;align-items:center;gap:8px;text-align:left;color:inherit;font-size:13px}
+.pc-title{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.pc-title b{font-size:13.5px;font-weight:700;color:#172033;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-title small{font-size:10px;color:#7b879a;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.pc-pct{flex:none;font-size:11px;font-weight:800;color:#3d4a5c;background:#f0f3f8;padding:3px 8px;border-radius:999px}
+.pc-meta{display:flex;flex-wrap:wrap;align-items:center;gap:5px}
+.pc-count{font-size:11px;font-weight:600;color:#657187;margin-right:1px}
+.pc-chip{font-size:10px;font-weight:700;padding:3px 7px;border-radius:6px;background:#eef1f5;color:#59667a}
+.pc-chip.mastered{background:#e4f4ec;color:#25724f}
+.pc-chip.attempted{background:#fdf1de;color:#8a5a10}
+.pc-chip.weak{background:#fdecef;color:#a1303b}
+.pc-chip.diff-easy{background:#eef7f1;color:#177245}
+.pc-chip.diff-medium{background:#fdf4e6;color:#a35b00}
+.pc-chip.diff-hard{background:#fdeef0;color:#b33a45}
+.pattern-card button.pc-next{width:100%;border:1px dashed #cfd7e4;background:#fbfcfe;border-radius:9px;padding:8px 10px;display:flex;align-items:center;justify-content:space-between;gap:6px;text-align:left;font-size:11.5px;color:#3d4a5c}
+.pattern-card button.pc-next:hover{background:#f1f5fb;border-color:#b6c3d6}
+.pc-complete .bar i{background:#2e8b62}
+.pc-not-started .bar i{background:#cbd2dc}
+.patterns-page .pattern-list{margin-top:1px;max-height:262px}
+.pattern-card.expanded .pattern-list{border-top:1px solid #edf0f4;padding-top:7px}
+.theme-dark .po-stats small,.theme-dark .po-stats b{color:#f1f5f9}
+.theme-dark .po-stats span,.theme-dark .pc-count{color:#a8b7cc}
+.theme-dark .po-bar{background:#1c2a45}
+.theme-dark .po-bar i,.theme-dark .pc-complete .bar i{background:#4ade80}
+.theme-dark .pc-not-started .bar i{background:#3b4f6e}
+.theme-dark .po-focus{background:#27204b;color:#ded6ff}
+.theme-dark .po-focus:hover{background:#2f2759}
+.theme-dark .pattern-card button.pc-head{background:transparent;color:#e2e8f0}
+.theme-dark .pc-title b{color:#f1f5f9}
+.theme-dark .pc-pct{background:#1f2f49;color:#dbe4f2}
+.theme-dark .pc-chip{background:#1f2f49;color:#cbd5e1}
+.theme-dark .pc-chip.mastered,.theme-dark .pc-chip.diff-easy{background:#12291f;color:#7fd3a4}
+.theme-dark .pc-chip.attempted,.theme-dark .pc-chip.diff-medium{background:#2b2415;color:#f0c674}
+.theme-dark .pc-chip.weak,.theme-dark .pc-chip.diff-hard{background:#2a1720;color:#f8919d}
+.theme-dark .pattern-card button.pc-next{background:#152238;color:#cbd5e1;border-color:#3b4f6e}
+.theme-dark .pattern-card button.pc-next:hover{background:#1b2c4d;border-color:#4c6488}
+.theme-dark .patterns-page .pattern-list,.theme-dark .pattern-card.expanded .pattern-list{border-top-color:#26354b}
+/* Card diamond keeps the purple pattern accent, and every small label clears AA on both themes */
+.pc-head .pattern-icon{color:#6d57a8;font-size:12px}
+.theme-dark .pc-head .pattern-icon{color:#a5b4ff}
+.pc-title small{color:#5f6d82}
+.theme-dark .pc-title small{color:#9fb0c8}
+.topic-head>span:last-child{color:#5f6d82}
+.theme-dark .patterns-page .topic-head>span:last-child{color:#a8b7cc}
+.patterns-page .filter-title button{color:#516078}
+.theme-dark .patterns-page .filter-title button{color:#9fb0c8}
+.theme-dark .pattern-search{background:#111c2e;border-color:#26354b;color:#8ba0be}
+.theme-dark .pattern-search input{color:#e2e8f0}
+.theme-dark .pattern-search:focus-within{border-color:#4c6488;box-shadow:0 0 0 3px #1b2c4d}
+.po-bar,.patterns-page .bar{background:#dfe5ee}
+.theme-dark .po-bar,.theme-dark .patterns-page .bar{background:#24344f}
+.patterns-page .mini-status{font-size:10px;font-weight:700;color:#516078;background:#eef1f5;padding:3px 6px;border-radius:5px;white-space:nowrap}
+.patterns-page .mini-status.solved,.patterns-page .mini-status.mastered{background:#e4f4ec;color:#1d6a49}
+.patterns-page .mini-status.attempted{background:#fdf1de;color:#7a4f0d}
+.theme-dark .patterns-page .mini-status{background:#1f2f49;color:#cbd5e1}
+.theme-dark .patterns-page .mini-status.solved,.theme-dark .patterns-page .mini-status.mastered{background:#12291f;color:#7fd3a4}
+.theme-dark .patterns-page .mini-status.attempted{background:#2b2415;color:#f0c674}
+@media(max-width:900px){.po-stats{grid-template-columns:1fr 1fr}.pattern-filter-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.po-stats{grid-template-columns:1fr}.pattern-filter-grid{grid-template-columns:1fr}}

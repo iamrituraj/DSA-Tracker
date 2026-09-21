@@ -1,6 +1,6 @@
 schema_version: 1
 module_path: scripts
-title: Data Preparation & Code-Generation Scripts
+title: Problem Data Pipeline & Batch Solution Scripts
 scope:
     - scripts/
 source_files: []

@@ -1,0 +1,6 @@
+- Text normalization for fuzzy matching is implemented as a small helper that lowercases, strips punctuation/apostrophes, collapses whitespace, and trims — reused across title/topic/slug comparisons in multiple scripts.
+- Classification and filtering rules are declared as plain JS objects/arrays mapping a category label to arrays of regular expressions, keeping logic declarative and extensible.
+- File I/O uses `node:fs/promises` with `mkdir(..., { recursive: true })` followed by `writeFile` to ensure output directories exist before writing JSON.
+- Output paths are duplicated per script (e.g. both `data/` and `public/data/`) via array-of-outputs loops rather than hard-coded per-file calls.
+- Batch solution modules export a default object keyed by problem ID whose values contain `approaches[]` entries with `id`, `title`, `level`, `time`, `space`, `explanation`, and parallel `code.java` / `code.csharp` strings.
+- Java-to-C# conversion is implemented as a single function composed of sequential `String.prototype.replace` calls ordered from most specific patterns (e.g. generic collection types) to broadest token swaps.

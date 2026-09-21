@@ -1,0 +1,1 @@
+Plain Node.js ES modules using only built-ins (`node:fs/promises`, `node:child_process`, `node:os`, `node:path`); all parsing/transformation relies on regex and string operations with zero external dependencies.

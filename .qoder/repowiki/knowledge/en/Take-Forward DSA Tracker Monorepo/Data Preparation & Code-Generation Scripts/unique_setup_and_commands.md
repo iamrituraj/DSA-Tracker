@@ -1,1 +1,0 @@
-`prepare-data.mjs` requires a local `data/problems.raw.json` file containing at least ~100 entries before it will run. `extract-tuf-links.mjs` expects an offline copy of the A2Z page saved at `/private/tmp/tuf-a2z.html` prior to execution.

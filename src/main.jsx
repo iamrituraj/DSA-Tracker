@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Search, LayoutDashboard, BookOpen, RefreshCw, Brain, BarChart3, Settings, CheckCircle2, Clock3, Download, Upload, ExternalLink, ChevronRight, ChevronDown, Flame, Star, Filter, CalendarDays, Target, RotateCcw, Trash2, Timer, Lightbulb, BookmarkCheck, Lock, Unlock, Pencil, Plus, Code2, Moon, Sun, Copy, Check, Play, Layers } from "lucide-react";
+import { Search, LayoutDashboard, BookOpen, RefreshCw, Brain, BarChart3, Settings, CheckCircle2, Clock3, Download, Upload, ExternalLink, ChevronRight, ChevronDown, Flame, Star, Filter, CalendarDays, Target, RotateCcw, Trash2, Timer, Lightbulb, BookmarkCheck, Lock, Unlock, Pencil, Plus, Code2, Moon, Sun, Copy, Check, Play, Layers, List, LayoutGrid, AlertCircle } from "lucide-react";
 import "./styles.css";
 import "./cloud-sync.css";
 import { highlightCode } from "./highlight.js";
@@ -58,6 +58,7 @@ const todayKey = () => localDayKey();
 const addDays = (days) => new Date(Date.now() + days * 86400000).toISOString();
 const daysBetween = (a, b) => Math.max(0, Math.ceil((new Date(b) - new Date(a)) / 86400000));
 const isHttp = (u) => typeof u === "string" && /^https?:\/\//i.test(u);
+const isSolved = (p) => p.status === "Solved" || p.status === "Mastered";
 function solutionLink(extractedUrl) {
   if (isHttp(extractedUrl)) return { href: extractedUrl, label: "View TakeUForward solution" };
   return null;
@@ -98,8 +99,9 @@ function sanitizeCollapse(v) {
   if (!v || typeof v !== "object" || Array.isArray(v)) return null;
   const topics = asBoolMap(v.topics);
   const patterns = asBoolMap(v.patterns);
-  if (!Object.keys(topics).length && !Object.keys(patterns).length) return null;
-  return { topics, patterns };
+  const cards = asBoolMap(v.cards);
+  if (!Object.keys(topics).length && !Object.keys(patterns).length && !Object.keys(cards).length) return null;
+  return { topics, patterns, cards };
 }
 // Cloud/library merge: keep whichever side has more approaches for a problem.
 function mergeLibs(base, extra) {
@@ -125,7 +127,7 @@ function App() {
   const [originPage, setOriginPage] = useState("roadmap");
   const [query, setQuery] = useState("");
   const [roadmapFilters, setRoadmapFilters] = useLocalState("dsa-filters", defaultFilters);
-  const [collapse, setCollapse] = useLocalState("dsa-collapse", { topics: {}, patterns: {} });
+  const [collapse, setCollapse] = useLocalState("dsa-collapse", { topics: {}, patterns: {}, cards: {} });
   const [toast, setToastValue] = useState(null);
   const toastId = useRef(0);
   const setToast = (text) => setToastValue({ id: ++toastId.current, text });
@@ -302,7 +304,7 @@ function App() {
       {page === "roadmap" && <Roadmap problems={enriched} topics={topics} patterns={patterns} open={open} filters={roadmapFilters} setFilters={setRoadmapFilters} filtered={filtered} collapse={collapse} setCollapse={setCollapse} />}
       {page === "revision" && <Revision problems={enriched} open={open} update={update} recordActivity={recordActivity} />}
       {page === "lld" && <LLDPage />}
-      {page === "patterns" && <Patterns problems={enriched} tufLinks={tufLinks} open={open} />}
+      {page === "patterns" && <Patterns problems={enriched} tufLinks={tufLinks} open={open} collapse={collapse} setCollapse={setCollapse} />}
       {page === "analytics" && <Analytics stats={stats} problems={enriched} activity={activity} notes={notes} solutions={solutions} builtInSolutions={builtInSolutions} settings={settings} />}
       {page === "settings" && <SettingsPage exportData={exportData} importData={importData} resetAll={resetAll} settings={settings} setSettings={setSettings} syncStatus={syncStatus} signIn={signIn} signOut={signOut} hasLocalData={hasLocalData} />}
       {page === "problem" && selectedProblem && <Problem p={selectedProblem} update={update} notes={notes[selectedProblem.id] || {}} setNotes={setNotes} solutions={solutions[selectedProblem.id]} builtInSolutions={builtInSolutions[selectedProblem.id]} tufUrl={tufLinks[selectedProblem.id]} setSolutions={setSolutions} back={() => setPage(originPage)} backLabel={pageLabels[originPage] || "roadmap"} recordActivity={recordActivity} setToast={setToast} />}
@@ -392,26 +394,131 @@ function Roadmap({ problems, topics, patterns, open, filters, setFilters, filter
 function Revision({ problems, open, update, recordActivity }) { const now = Date.now(); const due = problems.filter(p => p.nextRevision && new Date(p.nextRevision).getTime() <= now).sort((a, b) => new Date(a.nextRevision) - new Date(b.nextRevision)); const upcoming = problems.filter(p => p.nextRevision && new Date(p.nextRevision) > now).sort((a, b) => new Date(a.nextRevision) - new Date(b.nextRevision)).slice(0, 10); const complete = (p) => { const count = p.revisionCount || 0; const step = revisionSteps[Math.min(count, revisionSteps.length - 1)]; update(p.id, { revisionCount: count + 1, lastRevised: new Date().toISOString(), nextRevision: addDays(step), status: p.status === "Attempted" ? "Solved" : p.status }); recordActivity() }; return <section><div className="callout"><RefreshCw size={22} /><div><b>{due.length} revisions due</b><span>Attempt first. Mark reviewed after you can explain the approach without notes.</span></div></div><div className="revision-columns"><div><h3 className="section-title">Due now</h3><div className="problem-list">{due.length ? due.map(p => <RevisionRow key={p.id} p={p} open={open} complete={complete} />) : <Empty text="Nothing is due right now." />}</div></div><div><h3 className="section-title">Upcoming</h3><div className="panel upcoming">{upcoming.length ? upcoming.map(p => <button key={p.id} onClick={() => open(p)}><div><b>{p.title}</b><span>{new Date(p.nextRevision).toLocaleDateString()} · {daysBetween(new Date(), p.nextRevision)} day{daysBetween(new Date(), p.nextRevision) !== 1 ? "s" : ""}</span></div><ChevronRight size={15} /></button>) : <Empty text="No scheduled revisions yet." />}</div></div></div></section> }
 function RevisionRow({ p, open, complete }) { return <div className="revision-row"><button className="revision-main" onClick={() => open(p)}><div className="status-dot" /><div><b>{p.title}</b><span>{p.topic} · Revision #{(p.revisionCount || 0) + 1}</span></div></button><button className="review-btn" onClick={() => complete(p)}><CheckCircle2 size={15} />Reviewed</button></div> }
 
-function Patterns({ problems, tufLinks, open }) {
-  const grouped = useMemo(() => groupByTopicPattern(problems), [problems]);
+const defaultPatternFilters = { q: "", topic: "All", progress: "All", sort: "Order" };
+const patternProgressLabels = ["All", "In progress", "Complete", "Not started"];
+
+// One card per (topic, pattern) pair, with the numbers the page needs for triage:
+// solved/total, difficulty mix, weak count and the next problem to work on.
+function buildPatternCards(problems) {
+  const grouped = groupByTopicPattern(problems);
+  return Object.entries(grouped).flatMap(([topic, pats]) => Object.entries(pats).map(([pattern, ps]) => {
+    const solved = ps.filter(isSolved).length;
+    const attempted = ps.filter(p => p.status === "Attempted").length;
+    const mastered = ps.filter(p => p.status === "Mastered").length;
+    const weak = ps.filter(p => p.confidence === "🔴 Weak").length;
+    const diff = { Easy: 0, Medium: 0, Hard: 0 };
+    ps.forEach(p => { if (diff[p.difficulty] !== undefined) diff[p.difficulty]++ });
+    const pct = ps.length ? Math.round(solved / ps.length * 100) : 0;
+    const progress = solved === ps.length ? "Complete" : solved + attempted === 0 ? "Not started" : "In progress";
+    // Weak problems come back first, even when already solved — they need another pass.
+    const next = ps.find(p => p.confidence === "🔴 Weak") || ps.find(p => !isSolved(p)) || null;
+    return { topic, pattern, ps, solved, attempted, mastered, weak, diff, pct, progress, next };
+  }));
+}
+
+function Patterns({ problems, tufLinks, open, collapse, setCollapse }) {
+  const [filters, setFilters] = useLocalState("dsa-pattern-filters", defaultPatternFilters);
+  // Card expansion rides on the same cloud-synced collapse payload as the roadmap, under its own
+  // `cards` map so a pattern's roadmap state and its patterns-page state stay independent.
+  const expanded = collapse.cards || {};
+  const set = (k, v) => setFilters(x => ({ ...x, [k]: v }));
+  const topicNames = useMemo(() => ["All", ...new Set(problems.map(p => p.topic))], [problems]);
+  useEffect(() => {
+    if (filters.topic !== "All" && !topicNames.includes(filters.topic)) set("topic", "All");
+  }, [topicNames, filters.topic]);
+  const cards = useMemo(() => buildPatternCards(problems), [problems]);
+  const q = String(filters.q || "").trim().toLowerCase();
+  const visible = useMemo(() => {
+    let arr = cards.filter(c =>
+      (filters.topic === "All" || c.topic === filters.topic) &&
+      (filters.progress === "All" || c.progress === filters.progress) &&
+      (!q || c.pattern.toLowerCase().includes(q) || c.topic.toLowerCase().includes(q) || c.ps.some(p => p.title.toLowerCase().includes(q)))
+    );
+    if (filters.sort === "Weakest") arr = [...arr].sort((a, b) => a.pct - b.pct || b.ps.length - a.ps.length);
+    if (filters.sort === "Strongest") arr = [...arr].sort((a, b) => b.pct - a.pct || b.ps.length - a.ps.length);
+    if (filters.sort === "Most problems") arr = [...arr].sort((a, b) => b.ps.length - a.ps.length);
+    if (filters.sort === "Pattern A-Z") arr = [...arr].sort((a, b) => a.pattern.localeCompare(b.pattern));
+    return arr;
+  }, [cards, filters, q]);
+  const byTopic = useMemo(() => {
+    const out = {};
+    // Re-group so topics keep catalog order and empty topics drop out after filtering.
+    visible.forEach(c => { (out[c.topic] ??= []).push(c) });
+    return out;
+  }, [visible]);
+  const totals = useMemo(() => {
+    const problemsAll = cards.reduce((n, c) => n + c.ps.length, 0);
+    const solvedAll = cards.reduce((n, c) => n + c.solved, 0);
+    const focus = cards.filter(c => c.weak || c.pct < 100).sort((a, b) => a.pct - b.pct || b.weak - a.weak)[0] || null;
+    return {
+      patterns: cards.length,
+      complete: cards.filter(c => c.progress === "Complete").length,
+      partial: cards.filter(c => c.progress === "In progress").length,
+      untouched: cards.filter(c => c.progress === "Not started").length,
+      pct: problemsAll ? Math.round(solvedAll / problemsAll * 100) : 0,
+      focus,
+    };
+  }, [cards]);
+  const toggleCard = (key) => setCollapse(x => ({ ...x, cards: { ...(x.cards || {}), [key]: !((x.cards || {})[key]) } }));
+  const expandAll = () => setCollapse(x => ({ ...x, cards: { ...(x.cards || {}), ...Object.fromEntries(visible.map(c => [`${c.topic}::${c.pattern}`, true])) } }));
+  const collapseAll = () => setCollapse(x => ({ ...x, cards: {} }));
+  const goFocus = () => { const f = totals.focus; if (!f) return; setFilters(x => ({ ...x, topic: f.topic, progress: "All", q: "" })); setCollapse(x => ({ ...x, cards: { ...(x.cards || {}), [`${f.topic}::${f.pattern}`]: true } })) };
+  const anyExpanded = visible.some(c => expanded[`${c.topic}::${c.pattern}`] === true);
   return <section className="patterns-page">
-    {Object.entries(grouped).map(([topic, pats]) => {
-      const all = Object.values(pats).flat();
-      const topicSolved = all.filter(p => p.status === "Solved" || p.status === "Mastered").length;
+    <div className="panel patterns-overview">
+      <div className="po-stats">
+        <div><small>{totals.pct}%</small><span>of all problems solved across {totals.patterns} patterns</span></div>
+        <div><b>{totals.complete}</b><span>patterns complete</span></div>
+        <div><b>{totals.partial}</b><span>in progress</span></div>
+        <div><b>{totals.untouched}</b><span>not started</span></div>
+      </div>
+      <div className="po-bar"><i style={{ width: `${totals.pct}%` }} /></div>
+      {totals.focus && <button type="button" className="po-focus" onClick={goFocus}><AlertCircle size={15} /><span>Weakest pattern right now: <b>{totals.focus.pattern}</b> ({totals.focus.topic}) — {totals.focus.solved}/{totals.focus.ps.length} solved{totals.focus.weak ? `, ${totals.focus.weak} flagged weak` : ""}</span><ChevronRight size={15} /></button>}
+    </div>
+    <div className="filters panel patterns-filters">
+      <div className="filter-title"><Filter size={15} /> Patterns <button onClick={() => setFilters({ ...defaultPatternFilters })}><RotateCcw size={13} />Reset</button></div>
+      <div className="filter-grid pattern-filter-grid">
+        <label className="pattern-search"><Search size={14} /><input value={filters.q || ""} onChange={e => set("q", e.target.value)} placeholder="Search patterns or problems…" /></label>
+        <select value={filters.topic} onChange={e => set("topic", e.target.value)}>{topicNames.map(x => <option key={x}>{x}</option>)}</select>
+        <select value={filters.progress} onChange={e => set("progress", e.target.value)}>{patternProgressLabels.map(x => <option key={x}>{x}</option>)}</select>
+        <select value={filters.sort} onChange={e => set("sort", e.target.value)}><option>Order</option><option>Weakest</option><option>Strongest</option><option>Most problems</option><option>Pattern A-Z</option></select>
+        <button className="toggle" onClick={() => (anyExpanded ? collapseAll() : expandAll())}>{anyExpanded ? <List size={14} /> : <LayoutGrid size={14} />}{anyExpanded ? "Collapse all" : "Expand all"}</button>
+      </div>
+    </div>
+    {visible.length ? Object.entries(byTopic).map(([topic, list]) => {
+      const all = list.flatMap(c => c.ps);
+      const topicSolved = all.filter(isSolved).length;
       return <div className="topic-block" key={topic}>
-        <div className="topic-head"><h3>{topic}</h3><span>{topicSolved}/{all.length} completed</span></div>
+        <div className="topic-head"><h3>{topic}</h3><span>{topicSolved}/{all.length} problems · {list.filter(c => c.progress === "Complete").length}/{list.length} patterns done</span></div>
         <div className="pattern-grid">
-          {Object.entries(pats).map(([pattern, ps]) => {
-            const solved = ps.filter(p => p.status === "Solved" || p.status === "Mastered").length;
-            return <div className="pattern-card" key={pattern}>
-              <div className="pattern-top"><div><span className="pattern-icon">◆</span><h3>{pattern}</h3><p>{solved}/{ps.length} completed</p></div><strong>{ps.length ? Math.round(solved / ps.length * 100) : 0}%</strong></div>
-              <div className="bar"><i style={{ width: `${ps.length ? solved / ps.length * 100 : 0}%` }} /></div>
-              <div className="pattern-list">{ps.map(p => { const link = solutionLink(tufLinks[p.id]); return <div className="pattern-row" key={p.id}><button onClick={() => open(p)}><span>{p.title}</span><span className={`mini-status ${String(p.status || "Not Started").toLowerCase().replace(/\s+/g, "-")}`}>{p.status || "Not Started"}</span></button>{link && <a className="pattern-ext" href={link.href} target="_blank" rel="noreferrer" title={link.label} onClick={e => e.stopPropagation()}><ExternalLink size={13} /></a>}</div> })}</div>
-            </div>;
+          {list.map(c => {
+            const key = `${topic}::${c.pattern}`;
+            // A search that lands on one of this pattern's problems opens the card, unless it was
+            // toggled deliberately — a manual open/close always wins over the auto-expand.
+            const hitByQuery = q !== "" && c.ps.some(p => p.title.toLowerCase().includes(q));
+            const isExpanded = key in expanded ? !!expanded[key] : hitByQuery;
+            return <article className={`pattern-card pc-${c.progress.toLowerCase().replace(/\s+/g, "-")}${isExpanded ? " expanded" : ""}`} key={c.pattern}>
+              <button type="button" className="pc-head" onClick={() => toggleCard(key)} aria-expanded={isExpanded}>
+                <span className="collapse-icon">{isExpanded ? <ChevronDown size={15} /> : <ChevronRight size={15} />}</span>
+                <span className="pattern-icon" aria-hidden="true">◆</span>
+                <div className="pc-title"><b>{c.pattern}</b><small>{topic}</small></div>
+                <span className="pc-pct">{c.pct}%</span>
+              </button>
+              <div className="bar"><i style={{ width: `${c.pct}%` }} /></div>
+              <div className="pc-meta">
+                <span className="pc-count">{c.solved}/{c.ps.length} solved</span>
+                {c.mastered > 0 && <span className="pc-chip mastered">{c.mastered} mastered</span>}
+                {c.attempted > 0 && <span className="pc-chip attempted">{c.attempted} attempted</span>}
+                {c.weak > 0 && <span className="pc-chip weak">{c.weak} weak</span>}
+                {["Easy", "Medium", "Hard"].map(d => c.diff[d] > 0 && <span className={`pc-chip diff-${d.toLowerCase()}`} key={d}>{c.diff[d]} {d[0]}</span>)}
+              </div>
+              {c.next && !isExpanded && <button type="button" className="pc-next" onClick={() => open(c.next)}>Next up · {c.next.title}<ChevronRight size={14} /></button>}
+              {isExpanded && <div className="pattern-list">{c.ps.map(p => { const link = solutionLink(tufLinks[p.id]); return <div className="pattern-row" key={p.id}><button onClick={() => open(p)}><span>{p.title}</span><span className={`mini-status ${String(p.status || "Not Started").toLowerCase().replace(/\s+/g, "-")}`}>{p.status || "Not Started"}</span></button>{link && <a className="pattern-ext" href={link.href} target="_blank" rel="noreferrer" title={link.label} onClick={e => e.stopPropagation()}><ExternalLink size={13} /></a>}</div>; })}</div>}
+            </article>;
           })}
         </div>
       </div>;
-    })}
+    }) : <Empty text="No patterns match these filters." />}
   </section>;
 }
 

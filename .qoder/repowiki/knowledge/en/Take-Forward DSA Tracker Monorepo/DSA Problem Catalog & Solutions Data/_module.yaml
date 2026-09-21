@@ -1,6 +1,6 @@
 schema_version: 1
 module_path: data_assets
-title: Take-Forward DSA Problem Catalog Data
+title: DSA Problem Catalog & Solutions Data
 scope:
     - data/
     - public/data/

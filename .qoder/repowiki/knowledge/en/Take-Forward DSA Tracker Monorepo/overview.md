@@ -1,1 +1,1 @@
-Monorepo that composes a Vite/React SPA, Neon-backed serverless API functions, and static problem/solution datasets into a single Take-Forward DSA tracker project.
+Monorepo wiring a Vite/React SPA, Neon-backed serverless API functions, and curated problem/solution JSON datasets into a single Take-Forward DSA tracker application.

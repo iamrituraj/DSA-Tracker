@@ -3,7 +3,7 @@ schema_version: 1
 locale: en-US
 branch: main
 nodes_managed: true
-exported_at: "2026-09-21T11:30:19Z"
+exported_at: "2026-09-21T13:47:30Z"
 modules:
     "":
         dir_name: Take-Forward DSA Tracker Monorepo
@@ -32,8 +32,8 @@ modules:
         related_to:
             - path: data_assets
     data_assets:
-        dir_name: Take-Forward DSA Problem Catalog Data
-        title: Take-Forward DSA Problem Catalog Data
+        dir_name: DSA Problem Catalog & Solutions Data
+        title: DSA Problem Catalog & Solutions Data
         scope:
             - data/
             - public/data/
@@ -43,8 +43,8 @@ modules:
         related_to:
             - path: api_server
     scripts:
-        dir_name: Data Preparation & Code-Generation Scripts
-        title: Data Preparation & Code-Generation Scripts
+        dir_name: Problem Data Pipeline & Batch Solution Scripts
+        title: Problem Data Pipeline & Batch Solution Scripts
         scope:
             - scripts/
         source_files: []
