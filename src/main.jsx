@@ -34,17 +34,12 @@ const todayKey = () => new Date().toISOString().slice(0, 10);
 const addDays = (days) => new Date(Date.now() + days * 86400000).toISOString();
 const daysBetween = (a, b) => Math.max(0, Math.ceil((new Date(b) - new Date(a)) / 86400000));
 const isHttp = (u) => typeof u === "string" && /^https?:\/\//i.test(u);
-function practiceLink(p) {
-  if (isHttp(p.url)) {
-    const label = /leetcode\.com/i.test(p.url) ? "Open on LeetCode" : /geeksforgeeks\.org/i.test(p.url) ? "Open on GFG" : /takeuforward\.org/i.test(p.url) ? "Open practice" : "Open problem";
-    return { href: p.url, label };
-  }
-  if (isHttp(p.videoUrl)) return { href: p.videoUrl, label: "Watch video" };
+function solutionLink(extractedUrl) {
+  if (isHttp(extractedUrl)) return { href: extractedUrl, label: "View TakeUForward solution" };
   return null;
 }
-function sourceLink(p, extractedUrl) {
-  if (isHttp(extractedUrl)) return { href: extractedUrl, label: "Open TakeUForward solution" };
-  if (isHttp(p.url) && /takeuforward\.org/i.test(p.url)) return { href: p.url, label: "View official TakeUForward solution" };
+function leetCodeLink(p) {
+  if (isHttp(p.url) && /leetcode\.com/i.test(p.url)) return { href: p.url, label: "Open on LeetCode" };
   return null;
 }
 
@@ -62,9 +57,59 @@ function App() {
   const [query, setQuery] = useState("");
   const [roadmapFilters, setRoadmapFilters] = useState({ topic: "All", status: "All", difficulty: "All", pattern: "All", favorites: false, sort: "Order" });
   const [toast, setToast] = useState("");
+  const [syncStatus, setSyncStatus] = useState("checking");
+  const [cloudReady, setCloudReady] = useState(false);
+  const cloudState = () => ({ progress, notes, solutions, activity, settings });
+  const loadCloudState = async () => {
+    const response = await fetch("/api/state");
+    if (!response.ok) throw new Error("Could not load cloud data");
+    const { state } = await response.json();
+    if (state) {
+      setProgress(state.progress || {});
+      setNotes(state.notes || {});
+      setSolutions(state.solutions || {});
+      setActivity(state.activity || {});
+      setSettings(s => ({ ...s, ...(state.settings || {}) }));
+    }
+    setCloudReady(true);
+  };
+  const signIn = async password => {
+    const response = await fetch("/api/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password }) });
+    if (!response.ok) throw new Error((await response.json()).error || "Could not sign in");
+    await loadCloudState();
+    setSyncStatus("synced");
+    setToast("Cloud sync connected.");
+  };
+  const signOut = async () => {
+    await fetch("/api/auth", { method: "DELETE" });
+    setCloudReady(false);
+    setSyncStatus("signed-out");
+    setToast("Cloud sync disconnected on this device.");
+  };
   useEffect(() => fetch(SEED).then(r => { if (!r.ok) throw new Error("data"); return r.json() }).then(setProblems).catch(() => setToast("Could not load problem data.")), []);
   useEffect(() => fetch(SOLUTION_SEED).then(r => r.ok ? r.json() : {}).then(setBuiltInSolutions).catch(() => setBuiltInSolutions({})), []);
   useEffect(() => fetch(TUF_LINK_SEED).then(r => r.ok ? r.json() : {}).then(setTufLinks).catch(() => setTufLinks({})), []);
+  useEffect(() => {
+    fetch("/api/auth").then(r => r.ok ? r.json() : { authenticated: false }).then(async ({ authenticated }) => {
+      if (!authenticated) { setSyncStatus("signed-out"); return; }
+      await loadCloudState();
+      setSyncStatus("synced");
+    }).catch(() => setSyncStatus("unavailable"));
+  }, []);
+  useEffect(() => {
+    if (!cloudReady) return;
+    const timer = setTimeout(async () => {
+      setSyncStatus("syncing");
+      try {
+        const response = await fetch("/api/state", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ state: cloudState() }) });
+        if (!response.ok) throw new Error("save failed");
+        setSyncStatus("synced");
+      } catch {
+        setSyncStatus("error");
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [cloudReady, progress, notes, solutions, activity, settings]);
   useEffect(() => { if (!toast) return; const t = setTimeout(() => setToast(""), 2500); return () => clearTimeout(t) }, [toast]);
   const enriched = useMemo(() => problems.map((p, i) => ({ ...p, index: i, ...(progress[p.id] || {}) })), [problems, progress]);
   const stats = useMemo(() => {
@@ -110,16 +155,16 @@ function App() {
   return <div className={`app theme-${settings.theme || "light"}`}>
     <aside><div className="brand"><div className="logo">DS</div><div><b>DSA Tracker</b><small>A2Z Learning System</small></div></div>
       <nav>{[["dashboard", "Dashboard", LayoutDashboard], ["roadmap", "A2Z Roadmap", BookOpen], ["revision", "Revision", RefreshCw], ["patterns", "Patterns", Brain], ["analytics", "Analytics", BarChart3], ["settings", "Settings", Settings]].map(([id, label, I]) => <button className={page === id ? "active" : ""} onClick={() => setPage(id)} key={id}><I size={18} /><span>{label}</span></button>)}</nav>
-      <div className="sidebar-foot"><Flame size={16} /> Local-first • no account</div>
+      <div className="sidebar-foot"><Flame size={16} /> {syncStatus === "synced" ? "Cloud sync on" : syncStatus === "syncing" ? "Saving changes…" : "Local data"}</div>
       <button className="theme-toggle" type="button" onClick={() => setSettings(s => ({ ...s, theme: s.theme === "dark" ? "light" : "dark" }))} aria-label="Toggle dark mode">{settings.theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}<span>{settings.theme === "dark" ? "Light mode" : "Dark mode"}</span></button>
     </aside>
     <main><header><div><h1>{page === "dashboard" ? "Dashboard" : page === "roadmap" ? "A2Z Roadmap" : page === "problem" ? "Problem" : page[0].toUpperCase() + page.slice(1)}</h1><p>Practice, track, revise, master.</p></div><div className="search"><Search size={17} /><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search problems, topics, patterns…" /></div></header>
       {page === "dashboard" && <Dashboard stats={stats} problems={enriched} open={open} setPage={setPage} settings={settings} />}
       {page === "roadmap" && <Roadmap problems={enriched} topics={topics} patterns={patterns} open={open} filters={roadmapFilters} setFilters={setRoadmapFilters} filtered={filtered} />}
       {page === "revision" && <Revision problems={enriched} open={open} update={update} recordActivity={recordActivity} />}
-      {page === "patterns" && <Patterns problems={enriched} open={open} />}
+      {page === "patterns" && <Patterns problems={enriched} tufLinks={tufLinks} open={open} />}
       {page === "analytics" && <Analytics stats={stats} problems={enriched} activity={activity} notes={notes} solutions={solutions} />}
-      {page === "settings" && <SettingsPage exportData={exportData} importData={importData} resetAll={resetAll} settings={settings} setSettings={setSettings} />}
+      {page === "settings" && <SettingsPage exportData={exportData} importData={importData} resetAll={resetAll} settings={settings} setSettings={setSettings} syncStatus={syncStatus} signIn={signIn} signOut={signOut} />}
       {page === "problem" && selectedProblem && <Problem p={selectedProblem} update={update} notes={notes[selectedProblem.id] || {}} setNotes={setNotes} solutions={solutions[selectedProblem.id]} builtInSolutions={builtInSolutions[selectedProblem.id]} tufUrl={tufLinks[selectedProblem.id]} setSolutions={setSolutions} back={() => setPage("roadmap")} recordActivity={recordActivity} setToast={setToast} />}
     </main>
     {toast && <div className="toast">{toast}</div>}
@@ -201,7 +246,7 @@ function Roadmap({ problems, topics, patterns, open, filters, setFilters, filter
 function Revision({ problems, open, update, recordActivity }) { const now = Date.now(); const due = problems.filter(p => p.nextRevision && new Date(p.nextRevision).getTime() <= now).sort((a, b) => new Date(a.nextRevision) - new Date(b.nextRevision)); const upcoming = problems.filter(p => p.nextRevision && new Date(p.nextRevision) > now).sort((a, b) => new Date(a.nextRevision) - new Date(b.nextRevision)).slice(0, 10); const complete = (p) => { const count = p.revisionCount || 0; const step = revisionSteps[Math.min(count, revisionSteps.length - 1)]; update(p.id, { revisionCount: count + 1, lastRevised: new Date().toISOString(), nextRevision: addDays(step), status: p.status === "Attempted" ? "Solved" : p.status }); recordActivity() }; return <section><div className="callout"><RefreshCw size={22} /><div><b>{due.length} revisions due</b><span>Attempt first. Mark reviewed after you can explain the approach without notes.</span></div></div><div className="revision-columns"><div><h3 className="section-title">Due now</h3><div className="problem-list">{due.length ? due.map(p => <RevisionRow key={p.id} p={p} open={open} complete={complete} />) : <Empty text="Nothing is due right now." />}</div></div><div><h3 className="section-title">Upcoming</h3><div className="panel upcoming">{upcoming.length ? upcoming.map(p => <button key={p.id} onClick={() => open(p)}><div><b>{p.title}</b><span>{new Date(p.nextRevision).toLocaleDateString()} · {daysBetween(new Date(), p.nextRevision)} day{daysBetween(new Date(), p.nextRevision) !== 1 ? "s" : ""}</span></div><ChevronRight size={15} /></button>) : <Empty text="No scheduled revisions yet." />}</div></div></div></section> }
 function RevisionRow({ p, open, complete }) { return <div className="revision-row"><button className="revision-main" onClick={() => open(p)}><div className="status-dot" /><div><b>{p.title}</b><span>{p.topic} · Revision #{(p.revisionCount || 0) + 1}</span></div></button><button className="review-btn" onClick={() => complete(p)}><CheckCircle2 size={15} />Reviewed</button></div> }
 
-function Patterns({ problems, open }) {
+function Patterns({ problems, tufLinks, open }) {
   const grouped = useMemo(() => groupByTopicPattern(problems), [problems]);
   return <section className="patterns-page">
     {Object.entries(grouped).map(([topic, pats]) => {
@@ -215,7 +260,7 @@ function Patterns({ problems, open }) {
             return <div className="pattern-card" key={pattern}>
               <div className="pattern-top"><div><span className="pattern-icon">◆</span><h3>{pattern}</h3><p>{solved}/{ps.length} completed</p></div><strong>{ps.length ? Math.round(solved / ps.length * 100) : 0}%</strong></div>
               <div className="bar"><i style={{ width: `${ps.length ? solved / ps.length * 100 : 0}%` }} /></div>
-              <div className="pattern-list">{ps.map(p => { const link = practiceLink(p); return <div className="pattern-row" key={p.id}><button onClick={() => open(p)}><span>{p.title}</span><span className={`mini-status ${String(p.status || "Not Started").toLowerCase().replace(/\s+/g, "-")}`}>{p.status || "Not Started"}</span></button>{link && <a className="pattern-ext" href={link.href} target="_blank" rel="noreferrer" title={link.label} onClick={e => e.stopPropagation()}><ExternalLink size={13} /></a>}</div> })}</div>
+              <div className="pattern-list">{ps.map(p => { const link = solutionLink(tufLinks[p.id]); return <div className="pattern-row" key={p.id}><button onClick={() => open(p)}><span>{p.title}</span><span className={`mini-status ${String(p.status || "Not Started").toLowerCase().replace(/\s+/g, "-")}`}>{p.status || "Not Started"}</span></button>{link && <a className="pattern-ext" href={link.href} target="_blank" rel="noreferrer" title={link.label} onClick={e => e.stopPropagation()}><ExternalLink size={13} /></a>}</div> })}</div>
             </div>;
           })}
         </div>
@@ -355,8 +400,8 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
   }, [p.id, builtInSolutions, solutions]);
 
   const status = p.status || "Not Started";
-  const link = practiceLink(p);
-  const official = sourceLink(p, tufUrl);
+  const link = solutionLink(tufUrl);
+  const leetCode = leetCodeLink(p);
   const filledNotes = NOTE_FIELDS.filter(([k]) => localNotes[k]?.trim()).length;
   const filledApproaches = localSol.filter(a => a.explanation?.trim() || a.code?.trim()).length;
 
@@ -416,8 +461,8 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
         <h2>{p.title}</h2>
         <div className="meta">
           <span className={`diff ${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>
-          {link ? <a href={link.href} target="_blank" rel="noreferrer">{link.label} <ExternalLink size={13} /></a> : <span className="no-link">No practice link available</span>}
-          {official && official.href !== link?.href && <a className="tuf-link" href={official.href} target="_blank" rel="noreferrer">{official.label} <ExternalLink size={13} /></a>}
+          {link ? <a href={link.href} target="_blank" rel="noreferrer">{link.label} <ExternalLink size={13} /></a> : <span className="no-link">No TakeUForward solution available</span>}
+          {leetCode && <a className="tuf-link" href={leetCode.href} target="_blank" rel="noreferrer">{leetCode.label} <ExternalLink size={13} /></a>}
         </div>
       </div>
       <div className="actions">
@@ -537,6 +582,26 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
   </section>;
 }
 
-function SettingsPage({ exportData, importData, resetAll, settings, setSettings }) { return <section><div className="panel settings"><h3>Data & Privacy</h3><p>Your progress, notes, solutions and activity are stored only in this browser. There is no account or server database.</p><div className="setting-row"><div><b>Daily goal</b><span>How many problem activities count toward your daily target.</span></div><input className="goal-input" type="number" min="1" max="50" value={settings.dailyGoal} onChange={e => setSettings({ ...settings, dailyGoal: Math.max(1, Number(e.target.value) || 1) })} /></div><div className="setting-row"><div><b>Export backup</b><span>Download all progress, notes, solutions, activity and settings as JSON.</span></div><button onClick={exportData}><Download size={16} /> Export</button></div><div className="setting-row"><div><b>Import backup</b><span>Restore a previous DSA Tracker backup.</span></div><label className="file-btn"><Upload size={16} /> Import<input type="file" accept=".json" onChange={importData} /></label></div><div className="setting-row danger-row"><div><b>Reset local data</b><span>Delete all progress, notes, solutions and activity from this browser.</span></div><button className="danger" onClick={resetAll}><Trash2 size={16} /> Reset</button></div></div><div className="panel settings"><h3>How the tracker works</h3><div className="help-grid"><div><Timer size={18} /><b>Revision</b><p>Attempted → 1 day, then 3 → 7 → 14 → 30 day spacing.</p></div><div><BookmarkCheck size={18} /><b>Mastery</b><p>Mastered marks the problem interview-ready and keeps it on a longer review cycle.</p></div><div><Download size={18} /><b>Backup</b><p>Export regularly because local browser storage is device/browser specific.</p></div></div></div></section> }
+function SettingsPage({ exportData, importData, resetAll, settings, setSettings, syncStatus, signIn, signOut }) {
+  const [password, setPassword] = useState("");
+  const [authError, setAuthError] = useState("");
+  const connected = ["synced", "syncing", "error"].includes(syncStatus);
+  const connect = async e => {
+    e.preventDefault();
+    setAuthError("");
+    try {
+      await signIn(password);
+      setPassword("");
+    } catch (error) {
+      setAuthError(error.message || "Could not connect cloud sync.");
+    }
+  };
+  return <section>
+    <div className="panel settings">
+      <h3>Cloud sync</h3>
+      {connected ? <div className="setting-row"><div><b>{syncStatus === "syncing" ? "Saving changes…" : syncStatus === "error" ? "Sync needs attention" : "Connected"}</b><span>Your progress, notes, solutions, activity and settings are synced to your private Neon database.</span></div><button onClick={signOut}>Disconnect</button></div> : <form className="setting-row" onSubmit={connect}><div><b>Connect this device</b><span>Enter the single app password configured in Vercel to load and sync your tracker data.</span>{authError && <em className="auth-error">{authError}</em>}</div><div className="cloud-login"><input type="password" required value={password} onChange={e => setPassword(e.target.value)} placeholder="App password" /><button className="primary" type="submit">Connect</button></div></form>}
+    </div>
+    <div className="panel settings"><h3>Data & Privacy</h3><p>{connected ? "Cloud sync is enabled. Your local browser copy is also retained for offline use." : "Your progress stays in this browser until you connect cloud sync."}</p><div className="setting-row"><div><b>Daily goal</b><span>How many problem activities count toward your daily target.</span></div><input className="goal-input" type="number" min="1" max="50" value={settings.dailyGoal} onChange={e => setSettings({ ...settings, dailyGoal: Math.max(1, Number(e.target.value) || 1) })} /></div><div className="setting-row"><div><b>Export backup</b><span>Download all progress, notes, solutions, activity and settings as JSON.</span></div><button onClick={exportData}><Download size={16} /> Export</button></div><div className="setting-row"><div><b>Import backup</b><span>Restore a previous DSA Tracker backup.</span></div><label className="file-btn"><Upload size={16} /> Import<input type="file" accept=".json" onChange={importData} /></label></div><div className="setting-row danger-row"><div><b>Reset local data</b><span>{connected ? "Clear your synced and local progress, notes, solutions and activity." : "Delete all progress, notes, solutions and activity from this browser."}</span></div><button className="danger" onClick={resetAll}><Trash2 size={16} /> Reset</button></div></div><div className="panel settings"><h3>How the tracker works</h3><div className="help-grid"><div><Timer size={18} /><b>Revision</b><p>Attempted → 1 day, then 3 → 7 → 14 → 30 day spacing.</p></div><div><BookmarkCheck size={18} /><b>Mastery</b><p>Mastered marks the problem interview-ready and keeps it on a longer review cycle.</p></div><div><Download size={18} /><b>Backup</b><p>Export regularly because local browser storage is device/browser specific.</p></div></div></div></section>
+}
 function Empty({ text }) { return <div className="empty"><Clock3 size={22} /><span>{text}</span></div> }
 createRoot(document.getElementById("root")).render(<App />);
