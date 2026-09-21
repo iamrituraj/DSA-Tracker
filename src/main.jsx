@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Search, LayoutDashboard, BookOpen, RefreshCw, Brain, BarChart3, Settings, CheckCircle2, Clock3, Download, Upload, ExternalLink, ChevronRight, ChevronDown, Flame, Star, Filter, CalendarDays, Target, RotateCcw, Trash2, Timer, Lightbulb, BookmarkCheck, Lock, Unlock, Pencil, Plus, Code2, Moon, Sun, Copy, Check, Play } from "lucide-react";
+import { Search, LayoutDashboard, BookOpen, RefreshCw, Brain, BarChart3, Settings, CheckCircle2, Clock3, Download, Upload, ExternalLink, ChevronRight, ChevronDown, Flame, Star, Filter, CalendarDays, Target, RotateCcw, Trash2, Timer, Lightbulb, BookmarkCheck, Lock, Unlock, Pencil, Plus, Code2, Moon, Sun, Copy, Check, Play, Layers } from "lucide-react";
 import "./styles.css";
 import "./cloud-sync.css";
+import { highlightCode } from "./highlight.js";
+import { LLDPage } from "./lld.jsx";
 
 const SEED = "/data/problems.json";
 const SOLUTION_SEED = "/data/solutions.json";
@@ -64,8 +66,8 @@ function leetCodeLink(p) {
   if (isHttp(p.url) && /leetcode\.com/i.test(p.url)) return { href: p.url, label: "Open on LeetCode" };
   return null;
 }
-const VALID_PAGES = ["dashboard", "roadmap", "revision", "patterns", "analytics", "settings"];
-const pageLabels = { dashboard: "Dashboard", roadmap: "A2Z Roadmap", revision: "Revision", patterns: "Patterns", analytics: "Analytics", settings: "Settings" };
+const VALID_PAGES = ["dashboard", "roadmap", "revision", "lld", "patterns", "analytics", "settings"];
+const pageLabels = { dashboard: "Dashboard", roadmap: "A2Z Roadmap", revision: "Revision", lld: "LLD Lab", patterns: "Patterns", analytics: "Analytics", settings: "Settings" };
 function parseHash() {
   try { return decodeURIComponent(window.location.hash.replace(/^#\/?/, "")); } catch { return ""; }
 }
@@ -107,38 +109,7 @@ function mergeLibs(base, extra) {
   });
   return merged;
 }
-// Lightweight dependency-free Java/C# syntax highlighter for the solutions viewer.
-const escHtml = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const KEYWORDS_SHARED = "abstract as assert async await base break case catch checked class const continue default delegate do else enum event explicit extends final finally fixed for foreach goto if implements import in instanceof interface internal is lock namespace native new out override package params partial private protected public readonly record ref return sealed sizeof stackalloc static strictfp struct super switch synchronized this throw throws transient try typeof unchecked unsafe using value virtual void volatile when where while with yield true false null";
-const KEYWORDS_JAVA = `${KEYWORDS_SHARED} boolean byte char double float int long var short permits non-sealed`;
-const KEYWORDS_CSHARP = `${KEYWORDS_SHARED} bool decimal dynamic float get init int long object sbyte set short string uint ulong ushort var nint nuint required file scoped global`;
-function highlightCode(code, lang) {
-  const kw = new Set((lang === "csharp" ? KEYWORDS_CSHARP : KEYWORDS_JAVA).split(" "));
-  const lines = [[]];
-  const push = (cls, text) => {
-    const parts = String(text).split("\n");
-    parts.forEach((part, i) => {
-      if (i > 0) lines.push([]);
-      if (part) lines[lines.length - 1].push(cls ? `<span class="${cls}">${escHtml(part)}</span>` : escHtml(part));
-    });
-  };
-  const re = /\/\/[^\n]*|\/\*[\s\S]*?\*\/|"(?:\\.|[^"\\\n])*"?|'(?:\\.|[^'\\\n])*'?|@[A-Za-z_]\w*|\d[\w.]*|[A-Za-z_$][\w$]*|\s+|[\s\S]/g;
-  let m;
-  while ((m = re.exec(code || "")) !== null) {
-    const t = m[0];
-    let cls = null;
-    if (t.startsWith("//") || t.startsWith("/*")) cls = "tok-com";
-    else if (t[0] === '"' || t[0] === "'") cls = "tok-str";
-    else if (t[0] === "@") cls = "tok-ann";
-    else if (/^\d/.test(t)) cls = "tok-num";
-    else if (kw.has(t)) cls = "tok-key";
-    else if (/^[A-Z]/.test(t)) cls = "tok-type";
-    push(cls, t);
-  }
-  const out = lines.map(l => l.join(""));
-  while (out.length > 1 && out[out.length - 1] === "") out.pop();
-  return out;
-}
+// Syntax highlighting lives in ./highlight.js (shared with the LLD lab).
 
 function App() {
   const [problems, setProblems] = useState([]);
@@ -322,7 +293,7 @@ function App() {
   }, [roadmapFilters.topic, roadmapFilters.pattern, patterns, topics]);
   return <div className={`app theme-${settings.theme || "light"}`}>
     <aside><div className="brand"><div className="logo">DS</div><div><b>DSA Tracker</b><small>A2Z Learning System</small></div></div>
-      <nav>{[["dashboard", "Dashboard", LayoutDashboard], ["roadmap", "A2Z Roadmap", BookOpen], ["revision", "Revision", RefreshCw], ["patterns", "Patterns", Brain], ["analytics", "Analytics", BarChart3], ["settings", "Settings", Settings]].map(([id, label, I]) => <button className={page === id ? "active" : ""} onClick={() => setPage(id)} key={id}><I size={18} /><span>{label}</span></button>)}</nav>
+      <nav>{[["dashboard", "Dashboard", LayoutDashboard], ["roadmap", "A2Z Roadmap", BookOpen], ["revision", "Revision", RefreshCw], ["lld", "LLD Lab", Layers], ["patterns", "Patterns", Brain], ["analytics", "Analytics", BarChart3], ["settings", "Settings", Settings]].map(([id, label, I]) => <button className={page === id ? "active" : ""} onClick={() => setPage(id)} key={id}><I size={18} /><span>{label}</span></button>)}</nav>
       <div className="sidebar-foot"><Flame size={16} /> {syncStatus === "synced" ? "Cloud sync on" : syncStatus === "syncing" ? "Saving changes…" : "Local data"}</div>
       <button className="theme-toggle" type="button" onClick={() => setSettings(s => ({ ...s, theme: s.theme === "dark" ? "light" : "dark" }))} aria-label="Toggle dark mode">{settings.theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}<span>{settings.theme === "dark" ? "Light mode" : "Dark mode"}</span></button>
     </aside>
@@ -330,6 +301,7 @@ function App() {
       {page === "dashboard" && <Dashboard stats={stats} problems={enriched} open={open} setPage={setPage} settings={settings} viewWeak={viewWeak} />}
       {page === "roadmap" && <Roadmap problems={enriched} topics={topics} patterns={patterns} open={open} filters={roadmapFilters} setFilters={setRoadmapFilters} filtered={filtered} collapse={collapse} setCollapse={setCollapse} />}
       {page === "revision" && <Revision problems={enriched} open={open} update={update} recordActivity={recordActivity} />}
+      {page === "lld" && <LLDPage />}
       {page === "patterns" && <Patterns problems={enriched} tufLinks={tufLinks} open={open} />}
       {page === "analytics" && <Analytics stats={stats} problems={enriched} activity={activity} notes={notes} solutions={solutions} builtInSolutions={builtInSolutions} settings={settings} />}
       {page === "settings" && <SettingsPage exportData={exportData} importData={importData} resetAll={resetAll} settings={settings} setSettings={setSettings} syncStatus={syncStatus} signIn={signIn} signOut={signOut} hasLocalData={hasLocalData} />}

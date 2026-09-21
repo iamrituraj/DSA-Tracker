@@ -1,0 +1,976 @@
+1. **LRU Cache** — easiest, tests core DS + OOP
+2. **Vending Machine** — State Pattern + extensibility
+3. **Parking Lot** — Strategy/Factory + object modeling
+4. **Elevator System** — State + Strategy + scheduling/concurrency
+
+https://chatgpt.com/share/6aac1791-e534-83e8-91e2-893550f70bbc
+
+---
+
+# 1. LRU Cache — C#
+
+### Requirements
+
+- `Get(key)` → return value and mark it recently used.
+- `Put(key, value)` → insert/update.
+- When capacity is exceeded, remove **least recently used** item.
+- `Get` and `Put` should be **O(1)**.
+
+### Design
+
+Use:
+
+```
+Dictionary<TKey, Node>
+              +
+      Doubly Linked List
+
+Head → Most Recently Used
+Tail → Least Recently Used
+```
+
+### Why both?
+
+`Dictionary` gives O(1) lookup.
+
+Doubly linked list gives O(1) removal and insertion.
+
+```
+HEAD
+ ↓
+[A] ↔ [B] ↔ [C] ↔ [D]
+                    ↑
+                   TAIL
+
+A = recently used
+D = least recently used
+```
+
+### C# Implementation
+
+```csharp
+public class LruCache<TKey, TValue>
+{
+    private class Node
+    {
+        public TKey Key;
+        public TValue Value;
+        public Node Prev;
+        public Node Next;
+
+        public Node(TKey key, TValue value)
+        {
+            Key = key;
+            Value = value;
+        }
+    }
+
+    private readonly int _capacity;
+    private readonly Dictionary<TKey, Node> _map;
+
+    private readonly Node _head;
+    private readonly Node _tail;
+
+    private readonly object _lock = new();
+
+    public LruCache(int capacity)
+    {
+        if (capacity <= 0)
+            throw new ArgumentException("Capacity must be positive");
+
+        _capacity = capacity;
+        _map = new Dictionary<TKey, Node>();
+
+        _head = new Node(default, default);
+        _tail = new Node(default, default);
+
+        _head.Next = _tail;
+        _tail.Prev = _head;
+    }
+
+    public TValue Get(TKey key)
+    {
+        lock (_lock)
+        {
+            if (!_map.TryGetValue(key, out var node))
+                return default;
+
+            MoveToFront(node);
+
+            return node.Value;
+        }
+    }
+
+    public void Put(TKey key, TValue value)
+    {
+        lock (_lock)
+        {
+            if (_map.TryGetValue(key, out var existing))
+            {
+                existing.Value = value;
+                MoveToFront(existing);
+                return;
+            }
+
+            var node = new Node(key, value);
+
+            _map[key] = node;
+            AddToFront(node);
+
+            if (_map.Count > _capacity)
+            {
+                var lru = _tail.Prev;
+
+                Remove(lru);
+                _map.Remove(lru.Key);
+            }
+        }
+    }
+
+    private void MoveToFront(Node node)
+    {
+        Remove(node);
+        AddToFront(node);
+    }
+
+    private void AddToFront(Node node)
+    {
+        node.Next = _head.Next;
+        node.Prev = _head;
+
+        _head.Next.Prev = node;
+        _head.Next = node;
+    }
+
+    private void Remove(Node node)
+    {
+        node.Prev.Next = node.Next;
+        node.Next.Prev = node.Prev;
+    }
+}
+```
+
+### Interview questions
+
+**Why not just use Dictionary?**
+
+Dictionary doesn't maintain ordering.
+
+**Why doubly linked list instead of singly?**
+
+Because removing an arbitrary node requires O(1). With a singly linked list, we'd need to find its previous node.
+
+**Why lock?**
+
+Because concurrent `Get` and `Put` modify both the dictionary and linked list.
+
+---
+
+# 2. Vending Machine — C#
+
+This is a classic **State Pattern** problem.
+
+### Requirements
+
+- Select product
+- Insert money
+- Validate balance
+- Dispense product
+- Return change
+- Cancel transaction
+- Handle out-of-stock
+- Handle insufficient money
+
+---
+
+## State Machine
+
+```
+             Insert Money
+IDLE ----------------------> HAS_MONEY
+                               |
+                               | Select Product
+                               ↓
+                         PRODUCT_SELECTED
+                               |
+                               | Enough Money
+                               ↓
+                            DISPENSE
+                               |
+                               ↓
+                              IDLE
+```
+
+Cancellation can happen from states where money has been inserted.
+
+---
+
+## Main Classes
+
+```
+VendingMachine
+      |
+      +---- Inventory
+      |
+      +---- Payment
+      |
+      +---- VendingMachineState
+                 |
+                 +-- IdleState
+                 +-- HasMoneyState
+                 +-- ProductSelectedState
+                 +-- DispensingState
+```
+
+---
+
+## Product
+
+```csharp
+public class Product
+{
+    public string Code { get; }
+    public string Name { get; }
+    public decimal Price { get; }
+
+    public Product(string code, string name, decimal price)
+    {
+        Code = code;
+        Name = name;
+        Price = price;
+    }
+}
+```
+
+---
+
+## Inventory
+
+```csharp
+public class Inventory
+{
+    private readonly Dictionary<string, (Product Product, int Quantity)> _items
+        = new();
+
+    public void AddProduct(Product product, int quantity)
+    {
+        if (_items.ContainsKey(product.Code))
+        {
+            var existing = _items[product.Code];
+
+            _items[product.Code] =
+                (existing.Product, existing.Quantity + quantity);
+        }
+        else
+        {
+            _items[product.Code] = (product, quantity);
+        }
+    }
+
+    public bool IsAvailable(string code)
+    {
+        return _items.TryGetValue(code, out var item)
+               && item.Quantity > 0;
+    }
+
+    public Product GetProduct(string code)
+    {
+        return _items[code].Product;
+    }
+
+    public void RemoveProduct(string code)
+    {
+        var item = _items[code];
+
+        if (item.Quantity <= 0)
+            throw new InvalidOperationException("Out of stock");
+
+        _items[code] = (item.Product, item.Quantity - 1);
+    }
+}
+```
+
+---
+
+# State Pattern
+
+```csharp
+public interface IVendingMachineState
+{
+    void InsertMoney(decimal amount);
+    void SelectProduct(string code);
+    void Dispense();
+    void Cancel();
+}
+```
+
+Machine:
+
+```csharp
+public class VendingMachine
+{
+    public IVendingMachineState State { get; private set; }
+
+    public Inventory Inventory { get; }
+
+    public decimal Balance { get; set; }
+
+    public Product SelectedProduct { get; set; }
+
+    public VendingMachine()
+    {
+        Inventory = new Inventory();
+        State = new IdleState(this);
+    }
+
+    public void SetState(IVendingMachineState state)
+    {
+        State = state;
+    }
+
+    public void InsertMoney(decimal amount)
+    {
+        State.InsertMoney(amount);
+    }
+
+    public void SelectProduct(string code)
+    {
+        State.SelectProduct(code);
+    }
+
+    public void Dispense()
+    {
+        State.Dispense();
+    }
+
+    public void Cancel()
+    {
+        State.Cancel();
+    }
+}
+```
+
+Example state:
+
+```csharp
+public class IdleState : IVendingMachineState
+{
+    private readonly VendingMachine _machine;
+
+    public IdleState(VendingMachine machine)
+    {
+        _machine = machine;
+    }
+
+    public void InsertMoney(decimal amount)
+    {
+        if (amount <= 0)
+            throw new ArgumentException("Invalid amount");
+
+        _machine.Balance += amount;
+        _machine.SetState(new HasMoneyState(_machine));
+    }
+
+    public void SelectProduct(string code)
+    {
+        throw new InvalidOperationException("Insert money first");
+    }
+
+    public void Dispense()
+    {
+        throw new InvalidOperationException("No product selected");
+    }
+
+    public void Cancel()
+    {
+        throw new InvalidOperationException("No active transaction");
+    }
+}
+```
+
+The key interview point isn't writing 200 lines of state classes.
+
+It's explaining:
+
+> **I use State Pattern because the valid operations and behavior depend heavily on the machine's current state. This avoids a large conditional/switch statement inside VendingMachine.**
+> 
+
+---
+
+# 3. Parking Lot — C#
+
+This is primarily an **object modeling + Strategy Pattern** problem.
+
+### Requirements
+
+- Multiple floors
+- Multiple spot types
+- Different vehicle types
+- Entry/exit
+- Ticket generation
+- Parking spot allocation
+- Pricing
+
+---
+
+## Basic Model
+
+```
+ParkingLot
+   |
+   +---- ParkingFloor
+             |
+             +---- ParkingSpot
+                      |
+                      +-- CompactSpot
+                      +-- LargeSpot
+                      +-- MotorcycleSpot
+
+Vehicle
+   |
+   +-- Car
+   +-- Truck
+   +-- Motorcycle
+```
+
+---
+
+## Vehicle
+
+```csharp
+public enum VehicleType
+{
+    Motorcycle,
+    Car,
+    Truck
+}
+
+public abstract class Vehicle
+{
+    public string LicensePlate { get; }
+    public VehicleType Type { get; }
+
+    protected Vehicle(string licensePlate, VehicleType type)
+    {
+        LicensePlate = licensePlate;
+        Type = type;
+    }
+}
+
+public class Car : Vehicle
+{
+    public Car(string plate)
+        : base(plate, VehicleType.Car) { }
+}
+
+public class Truck : Vehicle
+{
+    public Truck(string plate)
+        : base(plate, VehicleType.Truck) { }
+}
+
+public class Motorcycle : Vehicle
+{
+    public Motorcycle(string plate)
+        : base(plate, VehicleType.Motorcycle) { }
+}
+```
+
+---
+
+## Parking Spot
+
+```csharp
+public enum SpotType
+{
+    Motorcycle,
+    Compact,
+    Large
+}
+
+public abstract class ParkingSpot
+{
+    public string Id { get; }
+    public SpotType Type { get; }
+
+    protected Vehicle Vehicle { get; private set; }
+
+    protected ParkingSpot(string id, SpotType type)
+    {
+        Id = id;
+        Type = type;
+    }
+
+    public bool IsFree => Vehicle == null;
+
+    public virtual bool CanFit(Vehicle vehicle)
+    {
+        return false;
+    }
+
+    public void Park(Vehicle vehicle)
+    {
+        if (!IsFree)
+            throw new InvalidOperationException("Spot occupied");
+
+        if (!CanFit(vehicle))
+            throw new InvalidOperationException("Vehicle cannot fit");
+
+        Vehicle = vehicle;
+    }
+
+    public void Vacate()
+    {
+        Vehicle = null;
+    }
+}
+```
+
+---
+
+## Strategy for Spot Allocation
+
+Don't put allocation logic directly inside `ParkingLot`.
+
+```csharp
+public interface IParkingSpotStrategy
+{
+    ParkingSpot FindSpot(
+        IEnumerable<ParkingFloor> floors,
+        Vehicle vehicle);
+}
+```
+
+Example:
+
+```csharp
+public class NearestSpotStrategy : IParkingSpotStrategy
+{
+    public ParkingSpot FindSpot(
+        IEnumerable<ParkingFloor> floors,
+        Vehicle vehicle)
+    {
+        foreach (var floor in floors)
+        {
+            foreach (var spot in floor.Spots)
+            {
+                if (spot.IsFree && spot.CanFit(vehicle))
+                    return spot;
+            }
+        }
+
+        return null;
+    }
+}
+```
+
+Now tomorrow the requirement changes:
+
+> Allocate the spot closest to elevator.
+> 
+
+We can add:
+
+```
+NearestSpotStrategy
+ElevatorProximityStrategy
+HandicapPriorityStrategy
+EVChargingStrategy
+```
+
+without changing `ParkingLot`.
+
+That's a strong **Open/Closed Principle** example.
+
+---
+
+# Parking Ticket
+
+```csharp
+public class ParkingTicket
+{
+    public string TicketId { get; }
+    public Vehicle Vehicle { get; }
+    public ParkingSpot Spot { get; }
+
+    public DateTime EntryTime { get; }
+
+    public ParkingTicket(
+        string ticketId,
+        Vehicle vehicle,
+        ParkingSpot spot)
+    {
+        TicketId = ticketId;
+        Vehicle = vehicle;
+        Spot = spot;
+        EntryTime = DateTime.UtcNow;
+    }
+}
+```
+
+---
+
+# Pricing Strategy
+
+Another good Strategy Pattern opportunity.
+
+```csharp
+public interface IPricingStrategy
+{
+    decimal Calculate(ParkingTicket ticket, DateTime exitTime);
+}
+```
+
+```csharp
+public class HourlyPricingStrategy : IPricingStrategy
+{
+    private readonly decimal _ratePerHour;
+
+    public HourlyPricingStrategy(decimal ratePerHour)
+    {
+        _ratePerHour = ratePerHour;
+    }
+
+    public decimal Calculate(
+        ParkingTicket ticket,
+        DateTime exitTime)
+    {
+        var duration = exitTime - ticket.EntryTime;
+
+        var hours = Math.Ceiling(duration.TotalHours);
+
+        return (decimal)hours * _ratePerHour;
+    }
+}
+```
+
+---
+
+# 4. Elevator System — C#
+
+This is usually the most interesting of the four.
+
+### Requirements
+
+- Multiple elevators
+- Floors
+- External requests: UP/DOWN
+- Internal requests: destination floor
+- Elevator movement
+- Door opening/closing
+- Elevator assignment
+- Scheduling strategy
+
+---
+
+## Architecture
+
+```
+                ElevatorController
+                       |
+          +------------+------------+
+          |            |            |
+      Elevator 1   Elevator 2   Elevator 3
+          |
+       ElevatorState
+          |
+    IDLE / MOVING / DOOR_OPEN
+```
+
+---
+
+# Request
+
+```csharp
+public enum Direction
+{
+    Up,
+    Down,
+    None
+}
+
+public class ElevatorRequest
+{
+    public int Floor { get; }
+    public Direction Direction { get; }
+
+    public ElevatorRequest(int floor, Direction direction)
+    {
+        Floor = floor;
+        Direction = direction;
+    }
+}
+```
+
+---
+
+# Elevator
+
+```csharp
+public class Elevator
+{
+    public int Id { get; }
+
+    public int CurrentFloor { get; private set; }
+
+    public Direction Direction { get; private set; }
+
+    private readonly SortedSet<int> _upRequests = new();
+    private readonly SortedSet<int> _downRequests =
+        new(Comparer<int>.Create((a, b) => b.CompareTo(a)));
+
+    public Elevator(int id)
+    {
+        Id = id;
+        CurrentFloor = 0;
+        Direction = Direction.None;
+    }
+
+    public void AddRequest(int floor)
+    {
+        if (floor > CurrentFloor)
+            _upRequests.Add(floor);
+        else if (floor < CurrentFloor)
+            _downRequests.Add(floor);
+    }
+}
+```
+
+---
+
+# Why SortedSet?
+
+Suppose elevator is at floor 5 and requests are:
+
+```
+2
+8
+10
+6
+```
+
+When moving UP:
+
+```
+6 → 8 → 10
+```
+
+After finishing upward requests, it can process downward requests:
+
+```
+2
+```
+
+This resembles the **SCAN / elevator scheduling algorithm**.
+
+---
+
+# Elevator Selection Strategy
+
+```csharp
+public interface IElevatorSelectionStrategy
+{
+    Elevator Select(
+        IEnumerable<Elevator> elevators,
+        ElevatorRequest request);
+}
+```
+
+Simple implementation:
+
+```csharp
+public class NearestElevatorStrategy
+    : IElevatorSelectionStrategy
+{
+    public Elevator Select(
+        IEnumerable<Elevator> elevators,
+        ElevatorRequest request)
+    {
+        return elevators
+            .OrderBy(e =>
+                Math.Abs(e.CurrentFloor - request.Floor))
+            .First();
+    }
+}
+```
+
+Again, this allows replacing the algorithm:
+
+```
+NearestElevatorStrategy
+        ↓
+DirectionAwareStrategy
+        ↓
+LoadAwareStrategy
+        ↓
+ETA based strategy
+```
+
+without modifying `ElevatorController`.
+
+---
+
+# Elevator Controller
+
+```csharp
+public class ElevatorController
+{
+    private readonly List<Elevator> _elevators;
+
+    private readonly IElevatorSelectionStrategy _strategy;
+
+    public ElevatorController(
+        List<Elevator> elevators,
+        IElevatorSelectionStrategy strategy)
+    {
+        _elevators = elevators;
+        _strategy = strategy;
+    }
+
+    public void RequestElevator(
+        int floor,
+        Direction direction)
+    {
+        var request = new ElevatorRequest(floor, direction);
+
+        var elevator =
+            _strategy.Select(_elevators, request);
+
+        elevator.AddRequest(floor);
+    }
+}
+```
+
+---
+
+# Important LLD Interview Patterns
+
+These four problems cover most patterns interviewers expect.
+
+| Problem | Main Pattern / Concept |
+| --- | --- |
+| LRU Cache | Composition + HashMap + LinkedList |
+| Vending Machine | **State Pattern** |
+| Parking Lot | **Strategy + Factory** |
+| Elevator | **Strategy + State + Scheduling** |
+
+### Don't over-engineer
+
+A common mistake in LLD interviews is creating:
+
+```
+20 interfaces
+15 factories
+10 abstract classes
+```
+
+before establishing the requirements.
+
+Instead:
+
+### Step 1 — Clarify requirements
+
+Ask:
+
+> "Should I support multiple floors?"
+> 
+
+> "Can a vehicle occupy multiple spots?"
+> 
+
+> "Do we need concurrent entry gates?"
+> 
+
+> "Is pricing hourly or dynamic?"
+> 
+
+### Step 2 — Identify core entities
+
+```
+Nouns → Classes
+Verbs → Methods
+Changing behavior → Strategy/State
+Object creation → Factory
+```
+
+### Step 3 — Define relationships
+
+For example:
+
+```
+ParkingLot
+    HAS-A
+ParkingFloor
+    HAS-A
+ParkingSpot
+
+Car
+    IS-A
+Vehicle
+```
+
+### Step 4 — Write the happy path first
+
+Don't start with every edge case.
+
+### Step 5 — Add extensibility
+
+Explain:
+
+> "If pricing changes, I don't want to modify the parking lot. I'll inject `IPricingStrategy`."
+> 
+
+That demonstrates much more LLD maturity than simply producing a large amount of code.
+
+---
+
+## What I'd memorize for interviews
+
+For **C# LLD**, know these cold:
+
+```
+SOLID
+ ↓
+Composition over inheritance
+ ↓
+Interface segregation
+ ↓
+Dependency Injection
+ ↓
+Strategy Pattern
+ ↓
+State Pattern
+ ↓
+Factory Pattern
+ ↓
+Observer Pattern
+ ↓
+Thread safety / locking
+ ↓
+Collections and their complexity
+```
+
+And for the four problems:
+
+```
+LRU
+→ Dictionary + Doubly Linked List
+→ O(1) Get/Put
+
+Vending Machine
+→ State Pattern
+→ Idle → Money → Selection → Dispense
+
+Parking Lot
+→ Vehicle + Spot + Floor + Ticket
+→ Spot Allocation Strategy
+→ Pricing Strategy
+
+Elevator
+→ Elevator + Request + Controller
+→ Elevator Selection Strategy
+→ SCAN-like scheduling
+→ State management
+```
+
+For an **SDE-2 interview**, I'd also be prepared for the interviewer to take the basic design and ask: **"Now make it thread-safe", "support multiple entry gates", "support EV charging", "change pricing without code changes", or "what happens when two requests arrive simultaneously?"** Those follow-ups are often more important than the initial class diagram.
