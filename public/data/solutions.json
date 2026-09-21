@@ -3638,5 +3638,869 @@
         }
       }
     ]
+  },
+  "a2z-334": {
+    "approaches": [
+      {
+        "id": "flatten-preorder-list",
+        "title": "Brute force — preorder list then relink",
+        "level": "Brute",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Collects the preorder sequence of nodes, then rewires each node to its successor in that order with all left pointers nulled. The result is the required right-skewed list.",
+        "code": {
+          "java": "class Solution {\n    public void flattenBrute(TreeNode root) {\n        List<TreeNode> order = new ArrayList<>();\n        collect(root, order);\n\n        for (int i = 0; i < order.size() - 1; i++) {\n            order.get(i).left = null;\n            order.get(i).right = order.get(i + 1);\n        }\n\n        if (!order.isEmpty()) {\n            order.get(order.size() - 1).left = null;\n            order.get(order.size() - 1).right = null;\n        }\n    }\n\n    private void collect(TreeNode root, List<TreeNode> order) {\n        if (root == null) return;\n        order.add(root);\n        collect(root.left, order);\n        collect(root.right, order);\n    }\n}",
+          "csharp": "public class Solution {\n    public void FlattenBrute(TreeNode root) {\n        List<TreeNode> order = new List<TreeNode>();\n        Collect(root, order);\n\n        for (int i = 0; i < order.Count - 1; i++) {\n            order[i].Left = null;\n            order[i].Right = order[i + 1];\n        }\n\n        if (order.Count > 0) {\n            order[order.Count - 1].Left = null;\n            order[order.Count - 1].Right = null;\n        }\n    }\n\n    private void Collect(TreeNode root, List<TreeNode> order) {\n        if (root == null) return;\n        order.Add(root);\n        Collect(root.Left, order);\n        Collect(root.Right, order);\n    }\n}"
+        }
+      },
+      {
+        "id": "flatten-morris",
+        "title": "In-place flatten — Morris-style rewiring",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(1)",
+        "explanation": "For every node with a left child, the right subtree is attached below the rightmost node of the left subtree, then the left subtree moves to the right. No auxiliary structure is needed.",
+        "code": {
+          "java": "class Solution {\n    public void flatten(TreeNode root) {\n        TreeNode current = root;\n\n        while (current != null) {\n            if (current.left != null) {\n                // Find the rightmost node of the left subtree.\n                TreeNode predecessor = current.left;\n                while (predecessor.right != null) predecessor = predecessor.right;\n\n                // Attach the original right subtree after it.\n                predecessor.right = current.right;\n\n                // Move the left subtree to the right.\n                current.right = current.left;\n                current.left = null;\n            }\n            current = current.right;\n        }\n    }\n}",
+          "csharp": "public class Solution {\n    public void Flatten(TreeNode root) {\n        TreeNode current = root;\n\n        while (current != null) {\n            if (current.Left != null) {\n                // Find the rightmost node of the left subtree.\n                TreeNode predecessor = current.Left;\n                while (predecessor.Right != null) predecessor = predecessor.Right;\n\n                // Attach the original right subtree after it.\n                predecessor.Right = current.Right;\n\n                // Move the left subtree to the right.\n                current.Right = current.Left;\n                current.Left = null;\n            }\n            current = current.Right;\n        }\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-333": {
+    "approaches": [
+      {
+        "id": "morris-inorder-stack",
+        "title": "Better — explicit stack inorder",
+        "level": "Better",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Standard iterative inorder: push the entire left chain, pop to visit a node, then move to its right child. The explicit stack is what Morris traversal eliminates.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> inorderWithStack(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        Deque<TreeNode> stack = new ArrayDeque<>();\n        TreeNode current = root;\n\n        while (current != null || !stack.isEmpty()) {\n            while (current != null) {\n                stack.push(current);\n                current = current.left;\n            }\n            current = stack.pop();\n            result.add(current.val);\n            current = current.right;\n        }\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> InorderWithStack(TreeNode root) {\n        List<int> result = new List<int>();\n        Stack<TreeNode> stack = new Stack<TreeNode>();\n        TreeNode current = root;\n\n        while (current != null || stack.Count > 0) {\n            while (current != null) {\n                stack.Push(current);\n                current = current.Left;\n            }\n            current = stack.Pop();\n            result.Add(current.Val);\n            current = current.Right;\n        }\n        return result;\n    }\n}"
+        }
+      },
+      {
+        "id": "morris-inorder-threads",
+        "title": "Morris traversal — temporary threads",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(1)",
+        "explanation": "The right pointer of the inorder predecessor is threaded back to the current node so the walk can return without a stack, and the thread is removed on the second visit. Inorder order is produced in O(1) extra space.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> morrisInorder(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        TreeNode current = root;\n\n        while (current != null) {\n            if (current.left == null) {\n                // No left subtree: process current directly.\n                result.add(current.val);\n                current = current.right;\n            } else {\n                // Find the inorder predecessor.\n                TreeNode predecessor = current.left;\n                while (predecessor.right != null && predecessor.right != current) {\n                    predecessor = predecessor.right;\n                }\n\n                if (predecessor.right == null) {\n                    // Create a temporary thread back to current.\n                    predecessor.right = current;\n                    current = current.left;\n                } else {\n                    // Thread already exists: remove it and process current.\n                    predecessor.right = null;\n                    result.add(current.val);\n                    current = current.right;\n                }\n            }\n        }\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> MorrisInorder(TreeNode root) {\n        List<int> result = new List<int>();\n        TreeNode current = root;\n\n        while (current != null) {\n            if (current.Left == null) {\n                // No left subtree: process current directly.\n                result.Add(current.Val);\n                current = current.Right;\n            } else {\n                // Find the inorder predecessor.\n                TreeNode predecessor = current.Left;\n                while (predecessor.Right != null && predecessor.Right != current) {\n                    predecessor = predecessor.Right;\n                }\n\n                if (predecessor.Right == null) {\n                    // Create a temporary thread back to current.\n                    predecessor.Right = current;\n                    current = current.Left;\n                } else {\n                    // Thread already exists: remove it and process current.\n                    predecessor.Right = null;\n                    result.Add(current.Val);\n                    current = current.Right;\n                }\n            }\n        }\n        return result;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-332": {
+    "approaches": [
+      {
+        "id": "morris-preorder-stack",
+        "title": "Better — iterative stack preorder",
+        "level": "Better",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Classic stack preorder: pop the current node into the result, then push right before left so the left child is processed first. Uses O(H) stack space.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> preorderWithStack(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        if (root == null) return result;\n\n        Deque<TreeNode> stack = new ArrayDeque<>();\n        stack.push(root);\n\n        while (!stack.isEmpty()) {\n            TreeNode current = stack.pop();\n            result.add(current.val);\n\n            // Stack is LIFO: push right first so the left child is processed first.\n            if (current.right != null) stack.push(current.right);\n            if (current.left != null) stack.push(current.left);\n        }\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> PreorderWithStack(TreeNode root) {\n        List<int> result = new List<int>();\n        if (root == null) return result;\n\n        Stack<TreeNode> stack = new Stack<TreeNode>();\n        stack.Push(root);\n\n        while (stack.Count > 0) {\n            TreeNode current = stack.Pop();\n            result.Add(current.Val);\n\n            // Stack is LIFO: push right first so the left child is processed first.\n            if (current.Right != null) stack.Push(current.Right);\n            if (current.Left != null) stack.Push(current.Left);\n        }\n        return result;\n    }\n}"
+        }
+      },
+      {
+        "id": "morris-preorder-threads",
+        "title": "Morris traversal — visit on first arrival",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(1)",
+        "explanation": "Same threading scheme as Morris inorder, but the node is recorded when the thread is created — the first time it is reached. Threads are still removed on the second visit, so the tree is restored.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> morrisPreorder(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        TreeNode current = root;\n\n        while (current != null) {\n            if (current.left == null) {\n                // No left subtree: visit and move right.\n                result.add(current.val);\n                current = current.right;\n            } else {\n                TreeNode predecessor = current.left;\n                while (predecessor.right != null && predecessor.right != current) {\n                    predecessor = predecessor.right;\n                }\n\n                if (predecessor.right == null) {\n                    // First time reaching current: preorder visit and create the thread.\n                    result.add(current.val);\n                    predecessor.right = current;\n                    current = current.left;\n                } else {\n                    // Second visit: remove the temporary thread.\n                    predecessor.right = null;\n                    current = current.right;\n                }\n            }\n        }\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> MorrisPreorder(TreeNode root) {\n        List<int> result = new List<int>();\n        TreeNode current = root;\n\n        while (current != null) {\n            if (current.Left == null) {\n                // No left subtree: visit and move right.\n                result.Add(current.Val);\n                current = current.Right;\n            } else {\n                TreeNode predecessor = current.Left;\n                while (predecessor.Right != null && predecessor.Right != current) {\n                    predecessor = predecessor.Right;\n                }\n\n                if (predecessor.Right == null) {\n                    // First time reaching current: preorder visit and create the thread.\n                    result.Add(current.Val);\n                    predecessor.Right = current;\n                    current = current.Left;\n                } else {\n                    // Second visit: remove the temporary thread.\n                    predecessor.Right = null;\n                    current = current.Right;\n                }\n            }\n        }\n        return result;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-331": {
+    "approaches": [
+      {
+        "id": "codec-level-order",
+        "title": "Brute force — level-order codec",
+        "level": "Brute",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Serializes the tree breadth-first with '#' marking missing children and rebuilds it using a queue. Simple and robust, but trailing null markers make the payload larger than a preorder stream.",
+        "code": {
+          "java": "class Codec {\n    public String serialize(TreeNode root) {\n        if (root == null) return \"\";\n        StringBuilder sb = new StringBuilder();\n        Queue<TreeNode> queue = new LinkedList<>();\n        queue.offer(root);\n\n        while (!queue.isEmpty()) {\n            TreeNode current = queue.poll();\n\n            if (current == null) {\n                sb.append(\"#,\");\n                continue;\n            }\n\n            sb.append(current.val).append(\",\");\n            queue.offer(current.left);\n            queue.offer(current.right);\n        }\n        return sb.toString();\n    }\n\n    public TreeNode deserialize(String data) {\n        if (data.isEmpty()) return null;\n\n        String[] values = data.split(\",\");\n        TreeNode root = new TreeNode(Integer.parseInt(values[0]));\n        Queue<TreeNode> queue = new LinkedList<>();\n        queue.offer(root);\n\n        int i = 1;\n\n        while (!queue.isEmpty() && i < values.length) {\n            TreeNode current = queue.poll();\n\n            if (!values[i].equals(\"#\")) {\n                current.left = new TreeNode(Integer.parseInt(values[i]));\n                queue.offer(current.left);\n            }\n            i++;\n\n            if (i < values.length && !values[i].equals(\"#\")) {\n                current.right = new TreeNode(Integer.parseInt(values[i]));\n                queue.offer(current.right);\n            }\n            i++;\n        }\n        return root;\n    }\n}",
+          "csharp": "public class Codec {\n    public string Serialize(TreeNode root) {\n        if (root == null) return \"\";\n        StringBuilder sb = new StringBuilder();\n        Queue<TreeNode> queue = new Queue<TreeNode>();\n        queue.Enqueue(root);\n\n        while (queue.Count > 0) {\n            TreeNode current = queue.Dequeue();\n\n            if (current == null) {\n                sb.Append(\"#,\");\n                continue;\n            }\n\n            sb.Append(current.Val).Append(\",\");\n            queue.Enqueue(current.Left);\n            queue.Enqueue(current.Right);\n        }\n        return sb.ToString();\n    }\n\n    public TreeNode Deserialize(string data) {\n        if (data.Length == 0) return null;\n\n        string[] values = data.TrimEnd(',').Split(',');\n        TreeNode root = new TreeNode(int.Parse(values[0]));\n        Queue<TreeNode> queue = new Queue<TreeNode>();\n        queue.Enqueue(root);\n\n        int i = 1;\n\n        while (queue.Count > 0 && i < values.Length) {\n            TreeNode current = queue.Dequeue();\n\n            if (values[i] != \"#\") {\n                current.Left = new TreeNode(int.Parse(values[i]));\n                queue.Enqueue(current.Left);\n            }\n            i++;\n\n            if (i < values.Length && values[i] != \"#\") {\n                current.Right = new TreeNode(int.Parse(values[i]));\n                queue.Enqueue(current.Right);\n            }\n            i++;\n        }\n        return root;\n    }\n}"
+        }
+      },
+      {
+        "id": "codec-preorder-null",
+        "title": "Preorder codec with null markers",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Writes a preorder stream where '#' marks every null, which uniquely describes the shape; deserialization consumes the tokens front to back with a moving index.",
+        "code": {
+          "java": "class Codec {\n    public String serialize(TreeNode root) {\n        StringBuilder sb = new StringBuilder();\n        write(root, sb);\n        return sb.toString();\n    }\n\n    private void write(TreeNode root, StringBuilder sb) {\n        if (root == null) {\n            sb.append(\"#,\");\n            return;\n        }\n        sb.append(root.val).append(\",\");\n        write(root.left, sb);\n        write(root.right, sb);\n    }\n\n    public TreeNode deserialize(String data) {\n        String[] values = data.split(\",\");\n        int[] index = {0};\n        return build(values, index);\n    }\n\n    private TreeNode build(String[] values, int[] index) {\n        if (values[index[0]].equals(\"#\")) {\n            index[0]++;\n            return null;\n        }\n\n        TreeNode node = new TreeNode(Integer.parseInt(values[index[0]++]));\n        node.left = build(values, index);\n        node.right = build(values, index);\n        return node;\n    }\n}",
+          "csharp": "public class Codec {\n    public string Serialize(TreeNode root) {\n        StringBuilder sb = new StringBuilder();\n        Write(root, sb);\n        return sb.ToString();\n    }\n\n    private void Write(TreeNode root, StringBuilder sb) {\n        if (root == null) {\n            sb.Append(\"#,\");\n            return;\n        }\n        sb.Append(root.Val).Append(\",\");\n        Write(root.Left, sb);\n        Write(root.Right, sb);\n    }\n\n    public TreeNode Deserialize(string data) {\n        string[] values = data.TrimEnd(',').Split(',');\n        int index = 0;\n        return Build(values, ref index);\n    }\n\n    private TreeNode Build(string[] values, ref int index) {\n        if (values[index] == \"#\") {\n            index++;\n            return null;\n        }\n\n        TreeNode node = new TreeNode(int.Parse(values[index++]));\n        node.Left = Build(values, ref index);\n        node.Right = Build(values, ref index);\n        return node;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-330": {
+    "approaches": [
+      {
+        "id": "build-post-in-linear",
+        "title": "Brute force — linear search for the root",
+        "level": "Brute",
+        "time": "O(N²)",
+        "space": "O(N)",
+        "explanation": "Recursively picks the root from the end of the postorder window and finds its position with a linear scan of the inorder window. The scan makes the worst case quadratic.",
+        "code": {
+          "java": "class Solution {\n    public TreeNode buildTreeBrute(int[] inorder, int[] postorder) {\n        int[] postIndex = {postorder.length - 1};\n        return build(inorder, postorder, 0, inorder.length - 1, postIndex);\n    }\n\n    private TreeNode build(int[] inorder, int[] postorder, int left, int right, int[] postIndex) {\n        if (left > right) return null;\n\n        int value = postorder[postIndex[0]--];\n\n        // Linear search for the root inside the inorder window.\n        int mid = left;\n        while (inorder[mid] != value) mid++;\n\n        TreeNode root = new TreeNode(value);\n\n        // Postorder is processed backwards: build the right subtree first.\n        root.right = build(inorder, postorder, mid + 1, right, postIndex);\n        root.left = build(inorder, postorder, left, mid - 1, postIndex);\n        return root;\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode BuildTreeBrute(int[] inorder, int[] postorder) {\n        int postIndex = postorder.Length - 1;\n        return Build(inorder, postorder, 0, inorder.Length - 1, ref postIndex);\n    }\n\n    private TreeNode Build(int[] inorder, int[] postorder, int left, int right, ref int postIndex) {\n        if (left > right) return null;\n\n        int value = postorder[postIndex--];\n\n        // Linear search for the root inside the inorder window.\n        int mid = left;\n        while (inorder[mid] != value) mid++;\n\n        TreeNode root = new TreeNode(value);\n\n        // Postorder is processed backwards: build the right subtree first.\n        root.Right = Build(inorder, postorder, mid + 1, right, ref postIndex);\n        root.Left = Build(inorder, postorder, left, mid - 1, ref postIndex);\n        return root;\n    }\n}"
+        }
+      },
+      {
+        "id": "build-post-in-hashmap",
+        "title": "Hashmap of inorder positions",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Inorder positions are precomputed in a hashmap so every root split is O(1); postorder is consumed right to left, which forces right-subtree-first construction.",
+        "code": {
+          "java": "class Solution {\n    public TreeNode buildTree(int[] inorder, int[] postorder) {\n        Map<Integer, Integer> index = new HashMap<>();\n        for (int i = 0; i < inorder.length; i++) index.put(inorder[i], i);\n\n        int[] postIndex = {postorder.length - 1};\n        return build(inorder, postorder, 0, inorder.length - 1, postIndex, index);\n    }\n\n    private TreeNode build(int[] inorder, int[] postorder, int left, int right, int[] postIndex, Map<Integer, Integer> index) {\n        if (left > right) return null;\n\n        int value = postorder[postIndex[0]--];\n        int mid = index.get(value);\n\n        TreeNode root = new TreeNode(value);\n\n        // Postorder is processed backwards: build the right subtree first.\n        root.right = build(inorder, postorder, mid + 1, right, postIndex, index);\n        root.left = build(inorder, postorder, left, mid - 1, postIndex, index);\n        return root;\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode BuildTree(int[] inorder, int[] postorder) {\n        Dictionary<int, int> index = new Dictionary<int, int>();\n        for (int i = 0; i < inorder.Length; i++) index[inorder[i]] = i;\n\n        int postIndex = postorder.Length - 1;\n        return Build(inorder, postorder, 0, inorder.Length - 1, ref postIndex, index);\n    }\n\n    private TreeNode Build(int[] inorder, int[] postorder, int left, int right, ref int postIndex, Dictionary<int, int> index) {\n        if (left > right) return null;\n\n        int value = postorder[postIndex--];\n        int mid = index[value];\n\n        TreeNode root = new TreeNode(value);\n\n        // Postorder is processed backwards: build the right subtree first.\n        root.Right = Build(inorder, postorder, mid + 1, right, ref postIndex, index);\n        root.Left = Build(inorder, postorder, left, mid - 1, ref postIndex, index);\n        return root;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-329": {
+    "approaches": [
+      {
+        "id": "build-pre-in-linear",
+        "title": "Brute force — linear search for the root",
+        "level": "Brute",
+        "time": "O(N²)",
+        "space": "O(N)",
+        "explanation": "Consumes preorder front to back and locates each root in the inorder window with a linear scan. Without the hashmap lookup every level of recursion costs O(N).",
+        "code": {
+          "java": "class Solution {\n    public TreeNode buildTreeBrute(int[] preorder, int[] inorder) {\n        int[] preIndex = {0};\n        return build(preorder, inorder, 0, inorder.length - 1, preIndex);\n    }\n\n    private TreeNode build(int[] preorder, int[] inorder, int left, int right, int[] preIndex) {\n        if (left > right) return null;\n\n        int value = preorder[preIndex[0]++];\n\n        // Linear search for the root inside the inorder window.\n        int mid = left;\n        while (inorder[mid] != value) mid++;\n\n        TreeNode root = new TreeNode(value);\n        root.left = build(preorder, inorder, left, mid - 1, preIndex);\n        root.right = build(preorder, inorder, mid + 1, right, preIndex);\n        return root;\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode BuildTreeBrute(int[] preorder, int[] inorder) {\n        int preIndex = 0;\n        return Build(preorder, inorder, 0, inorder.Length - 1, ref preIndex);\n    }\n\n    private TreeNode Build(int[] preorder, int[] inorder, int left, int right, ref int preIndex) {\n        if (left > right) return null;\n\n        int value = preorder[preIndex++];\n\n        // Linear search for the root inside the inorder window.\n        int mid = left;\n        while (inorder[mid] != value) mid++;\n\n        TreeNode root = new TreeNode(value);\n        root.Left = Build(preorder, inorder, left, mid - 1, ref preIndex);\n        root.Right = Build(preorder, inorder, mid + 1, right, ref preIndex);\n        return root;\n    }\n}"
+        }
+      },
+      {
+        "id": "build-pre-in-hashmap",
+        "title": "Hashmap of inorder positions",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Inorder positions are stored in a hashmap, so the preorder root can be split into left and right ranges in O(1). Every node is created exactly once.",
+        "code": {
+          "java": "class Solution {\n    public TreeNode buildTree(int[] preorder, int[] inorder) {\n        Map<Integer, Integer> index = new HashMap<>();\n        for (int i = 0; i < inorder.length; i++) index.put(inorder[i], i);\n\n        int[] preIndex = {0};\n        return build(preorder, 0, inorder.length - 1, preIndex, index);\n    }\n\n    private TreeNode build(int[] preorder, int left, int right, int[] preIndex, Map<Integer, Integer> index) {\n        if (left > right) return null;\n\n        int value = preorder[preIndex[0]++];\n        int mid = index.get(value);\n\n        TreeNode root = new TreeNode(value);\n        root.left = build(preorder, left, mid - 1, preIndex, index);\n        root.right = build(preorder, mid + 1, right, preIndex, index);\n        return root;\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode BuildTree(int[] preorder, int[] inorder) {\n        Dictionary<int, int> index = new Dictionary<int, int>();\n        for (int i = 0; i < inorder.Length; i++) index[inorder[i]] = i;\n\n        int preIndex = 0;\n        return Build(preorder, 0, inorder.Length - 1, ref preIndex, index);\n    }\n\n    private TreeNode Build(int[] preorder, int left, int right, ref int preIndex, Dictionary<int, int> index) {\n        if (left > right) return null;\n\n        int value = preorder[preIndex++];\n        int mid = index[value];\n\n        TreeNode root = new TreeNode(value);\n        root.Left = Build(preorder, left, mid - 1, ref preIndex, index);\n        root.Right = Build(preorder, mid + 1, right, ref preIndex, index);\n        return root;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-328": {
+    "approaches": [
+      {
+        "id": "unique-bt-counterexample",
+        "title": "Why preorder + postorder is not enough",
+        "level": "Optimal",
+        "time": "O(1)",
+        "space": "O(1)",
+        "explanation": "Inorder combined with preorder or postorder rebuilds a tree uniquely because inorder splits the subtrees; preorder with postorder cannot. The code returns two different trees that share the same preorder [1, 2] and postorder [2, 1].",
+        "code": {
+          "java": "class Solution {\n    // Two different trees sharing preorder [1, 2] and postorder [2, 1].\n    public List<TreeNode> counterExample() {\n        TreeNode first = new TreeNode(1);\n        first.left = new TreeNode(2);\n\n        TreeNode second = new TreeNode(1);\n        second.right = new TreeNode(2);\n\n        return Arrays.asList(first, second);\n    }\n}",
+          "csharp": "public class Solution {\n    // Two different trees sharing preorder [1, 2] and postorder [2, 1].\n    public List<TreeNode> CounterExample() {\n        TreeNode first = new TreeNode(1);\n        first.Left = new TreeNode(2);\n\n        TreeNode second = new TreeNode(1);\n        second.Right = new TreeNode(2);\n\n        return new List<TreeNode> { first, second };\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-327": {
+    "approaches": [
+      {
+        "id": "count-nodes-traversal",
+        "title": "Brute force — full traversal count",
+        "level": "Brute",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Counts every node with a plain recursive traversal and ignores the completeness of the tree, so the O(log²N) guarantee of the optimal method is lost.",
+        "code": {
+          "java": "class Solution {\n    public int countNodesBrute(TreeNode root) {\n        if (root == null) return 0;\n        return 1 + countNodesBrute(root.left) + countNodesBrute(root.right);\n    }\n}",
+          "csharp": "public class Solution {\n    public int CountNodesBrute(TreeNode root) {\n        if (root == null) return 0;\n        return 1 + CountNodesBrute(root.Left) + CountNodesBrute(root.Right);\n    }\n}"
+        }
+      },
+      {
+        "id": "count-nodes-perfect-decomposition",
+        "title": "Perfect-subtree decomposition",
+        "level": "Optimal",
+        "time": "O(log²N)",
+        "space": "O(log N)",
+        "explanation": "Compares left and right heights: equal heights mean the subtree is perfect with 2^h - 1 nodes, otherwise recurse into both children. Only O(log N) levels are walked, each costing O(log N) height probes.",
+        "code": {
+          "java": "class Solution {\n    public int countNodes(TreeNode root) {\n        if (root == null) return 0;\n\n        int leftHeight = leftHeight(root);\n        int rightHeight = rightHeight(root);\n\n        // Equal heights mean this subtree is perfect.\n        if (leftHeight == rightHeight) {\n            return (1 << leftHeight) - 1;\n        }\n\n        return 1 + countNodes(root.left) + countNodes(root.right);\n    }\n\n    private int leftHeight(TreeNode root) {\n        int height = 0;\n        while (root != null) {\n            height++;\n            root = root.left;\n        }\n        return height;\n    }\n\n    private int rightHeight(TreeNode root) {\n        int height = 0;\n        while (root != null) {\n            height++;\n            root = root.right;\n        }\n        return height;\n    }\n}",
+          "csharp": "public class Solution {\n    public int CountNodes(TreeNode root) {\n        if (root == null) return 0;\n\n        int leftHeight = LeftHeight(root);\n        int rightHeight = RightHeight(root);\n\n        // Equal heights mean this subtree is perfect.\n        if (leftHeight == rightHeight) {\n            return (1 << leftHeight) - 1;\n        }\n\n        return 1 + CountNodes(root.Left) + CountNodes(root.Right);\n    }\n\n    private int LeftHeight(TreeNode root) {\n        int height = 0;\n        while (root != null) {\n            height++;\n            root = root.Left;\n        }\n        return height;\n    }\n\n    private int RightHeight(TreeNode root) {\n        int height = 0;\n        while (root != null) {\n            height++;\n            root = root.Right;\n        }\n        return height;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-326": {
+    "approaches": [
+      {
+        "id": "burn-tree-parent-bfs",
+        "title": "Better — parent map + BFS",
+        "level": "Better",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "First pass records the parent of every node; the second pass runs a multi-source BFS from the target over the left, right and parent edges, counting levels that actually reach new nodes.",
+        "code": {
+          "java": "class Solution {\n    public int burnTree(TreeNode root, int target) {\n        Map<TreeNode, TreeNode> parent = new HashMap<>();\n        TreeNode targetNode = buildParentMap(root, target, parent);\n\n        Queue<TreeNode> queue = new LinkedList<>();\n        Set<TreeNode> visited = new HashSet<>();\n        queue.offer(targetNode);\n        visited.add(targetNode);\n\n        int time = 0;\n\n        while (!queue.isEmpty()) {\n            int size = queue.size();\n            boolean burnedNewNode = false;\n\n            for (int i = 0; i < size; i++) {\n                TreeNode current = queue.poll();\n\n                if (current.left != null && visited.add(current.left)) {\n                    queue.offer(current.left);\n                    burnedNewNode = true;\n                }\n\n                if (current.right != null && visited.add(current.right)) {\n                    queue.offer(current.right);\n                    burnedNewNode = true;\n                }\n\n                TreeNode p = parent.get(current);\n                if (p != null && visited.add(p)) {\n                    queue.offer(p);\n                    burnedNewNode = true;\n                }\n            }\n\n            if (burnedNewNode) time++;\n        }\n\n        return time;\n    }\n\n    private TreeNode buildParentMap(TreeNode root, int target, Map<TreeNode, TreeNode> parent) {\n        Queue<TreeNode> queue = new LinkedList<>();\n        queue.offer(root);\n\n        TreeNode targetNode = null;\n\n        while (!queue.isEmpty()) {\n            TreeNode current = queue.poll();\n\n            if (current.val == target) targetNode = current;\n\n            if (current.left != null) {\n                parent.put(current.left, current);\n                queue.offer(current.left);\n            }\n\n            if (current.right != null) {\n                parent.put(current.right, current);\n                queue.offer(current.right);\n            }\n        }\n\n        return targetNode;\n    }\n}",
+          "csharp": "public class Solution {\n    public int BurnTree(TreeNode root, int target) {\n        Dictionary<TreeNode, TreeNode> parent = new Dictionary<TreeNode, TreeNode>();\n        TreeNode targetNode = BuildParentMap(root, target, parent);\n\n        Queue<TreeNode> queue = new Queue<TreeNode>();\n        HashSet<TreeNode> visited = new HashSet<TreeNode>();\n        queue.Enqueue(targetNode);\n        visited.Add(targetNode);\n\n        int time = 0;\n\n        while (queue.Count > 0) {\n            int size = queue.Count;\n            bool burnedNewNode = false;\n\n            for (int i = 0; i < size; i++) {\n                TreeNode current = queue.Dequeue();\n\n                if (current.Left != null && visited.Add(current.Left)) {\n                    queue.Enqueue(current.Left);\n                    burnedNewNode = true;\n                }\n\n                if (current.Right != null && visited.Add(current.Right)) {\n                    queue.Enqueue(current.Right);\n                    burnedNewNode = true;\n                }\n\n                if (parent.ContainsKey(current)) {\n                    TreeNode p = parent[current];\n                    if (visited.Add(p)) {\n                        queue.Enqueue(p);\n                        burnedNewNode = true;\n                    }\n                }\n            }\n\n            if (burnedNewNode) time++;\n        }\n\n        return time;\n    }\n\n    private TreeNode BuildParentMap(TreeNode root, int target, Dictionary<TreeNode, TreeNode> parent) {\n        Queue<TreeNode> queue = new Queue<TreeNode>();\n        queue.Enqueue(root);\n\n        TreeNode targetNode = null;\n\n        while (queue.Count > 0) {\n            TreeNode current = queue.Dequeue();\n\n            if (current.Val == target) targetNode = current;\n\n            if (current.Left != null) {\n                parent[current.Left] = current;\n                queue.Enqueue(current.Left);\n            }\n\n            if (current.Right != null) {\n                parent[current.Right] = current;\n                queue.Enqueue(current.Right);\n            }\n        }\n\n        return targetNode;\n    }\n}"
+        }
+      },
+      {
+        "id": "burn-tree-path-depth",
+        "title": "Optimal — path walk + off-path depth",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Extracts the only path from the target to the root; the fire reaches path node i after (depth - i) steps and then burns the deepest branch hanging off that node. The maximum of arrival + off-path depth is the burn time, with no parent map needed.",
+        "code": {
+          "java": "class Solution {\n    public int burnTreeNoParentMap(TreeNode root, int target) {\n        List<TreeNode> path = new ArrayList<>();\n        findPath(root, target, path);\n\n        int time = 0;\n\n        for (int i = 0; i < path.size(); i++) {\n            TreeNode node = path.get(i);\n            TreeNode pathChild = i + 1 < path.size() ? path.get(i + 1) : null;\n\n            // Time for the fire to travel from the target up to this path node.\n            int arrival = path.size() - 1 - i;\n\n            // Deepest off-path subtree hanging from this node.\n            int offPathDepth = offPathDepth(node, pathChild);\n\n            time = Math.max(time, arrival + offPathDepth);\n        }\n\n        return time;\n    }\n\n    private boolean findPath(TreeNode root, int target, List<TreeNode> path) {\n        if (root == null) return false;\n\n        path.add(root);\n        if (root.val == target) return true;\n\n        if (findPath(root.left, target, path) || findPath(root.right, target, path)) return true;\n\n        path.remove(path.size() - 1);\n        return false;\n    }\n\n    private int offPathDepth(TreeNode node, TreeNode blocked) {\n        if (node == null) return -1;\n\n        int best = -1;\n        if (node.left != blocked) best = Math.max(best, offPathDepth(node.left, blocked));\n        if (node.right != blocked) best = Math.max(best, offPathDepth(node.right, blocked));\n\n        // The node itself counts as depth 0.\n        return best + 1;\n    }\n}",
+          "csharp": "public class Solution {\n    public int BurnTreeNoParentMap(TreeNode root, int target) {\n        List<TreeNode> path = new List<TreeNode>();\n        FindPath(root, target, path);\n\n        int time = 0;\n\n        for (int i = 0; i < path.Count; i++) {\n            TreeNode node = path[i];\n            TreeNode pathChild = i + 1 < path.Count ? path[i + 1] : null;\n\n            // Time for the fire to travel from the target up to this path node.\n            int arrival = path.Count - 1 - i;\n\n            // Deepest off-path subtree hanging from this node.\n            int offPathDepth = OffPathDepth(node, pathChild);\n\n            time = Math.Max(time, arrival + offPathDepth);\n        }\n\n        return time;\n    }\n\n    private bool FindPath(TreeNode root, int target, List<TreeNode> path) {\n        if (root == null) return false;\n\n        path.Add(root);\n        if (root.Val == target) return true;\n\n        if (FindPath(root.Left, target, path) || FindPath(root.Right, target, path)) return true;\n\n        path.RemoveAt(path.Count - 1);\n        return false;\n    }\n\n    private int OffPathDepth(TreeNode node, TreeNode blocked) {\n        if (node == null) return -1;\n\n        int best = -1;\n        if (node.Left != blocked) best = Math.Max(best, OffPathDepth(node.Left, blocked));\n        if (node.Right != blocked) best = Math.Max(best, OffPathDepth(node.Right, blocked));\n\n        // The node itself counts as depth 0.\n        return best + 1;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-325": {
+    "approaches": [
+      {
+        "id": "distance-k-paths",
+        "title": "Brute force — distance from every node",
+        "level": "Brute",
+        "time": "O(N²)",
+        "space": "O(H)",
+        "explanation": "Finds the root path of every node and of the target, then computes their distance from the shared prefix length. Each path search is O(N), making the whole walk quadratic.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> distanceKBrute(TreeNode root, TreeNode target, int k) {\n        List<Integer> result = new ArrayList<>();\n\n        List<TreeNode> targetPath = new ArrayList<>();\n        findPath(root, target, targetPath);\n\n        collect(root, root, targetPath, k, result);\n        return result;\n    }\n\n    private void collect(TreeNode node, TreeNode root, List<TreeNode> targetPath, int k, List<Integer> result) {\n        if (node == null) return;\n\n        List<TreeNode> nodePath = new ArrayList<>();\n        findPath(root, node, nodePath);\n\n        if (distance(nodePath, targetPath) == k) result.add(node.val);\n\n        collect(node.left, root, targetPath, k, result);\n        collect(node.right, root, targetPath, k, result);\n    }\n\n    private int distance(List<TreeNode> a, List<TreeNode> b) {\n        int common = 0;\n        while (common < a.size() && common < b.size() && a.get(common) == b.get(common)) common++;\n        return a.size() + b.size() - 2 * common;\n    }\n\n    private boolean findPath(TreeNode root, TreeNode target, List<TreeNode> path) {\n        if (root == null) return false;\n\n        path.add(root);\n        if (root == target) return true;\n\n        if (findPath(root.left, target, path) || findPath(root.right, target, path)) return true;\n\n        path.remove(path.size() - 1);\n        return false;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> DistanceKBrute(TreeNode root, TreeNode target, int k) {\n        List<int> result = new List<int>();\n\n        List<TreeNode> targetPath = new List<TreeNode>();\n        FindPath(root, target, targetPath);\n\n        Collect(root, root, targetPath, k, result);\n        return result;\n    }\n\n    private void Collect(TreeNode node, TreeNode root, List<TreeNode> targetPath, int k, List<int> result) {\n        if (node == null) return;\n\n        List<TreeNode> nodePath = new List<TreeNode>();\n        FindPath(root, node, nodePath);\n\n        if (Distance(nodePath, targetPath) == k) result.Add(node.Val);\n\n        Collect(node.Left, root, targetPath, k, result);\n        Collect(node.Right, root, targetPath, k, result);\n    }\n\n    private int Distance(List<TreeNode> a, List<TreeNode> b) {\n        int common = 0;\n        while (common < a.Count && common < b.Count && a[common] == b[common]) common++;\n        return a.Count + b.Count - 2 * common;\n    }\n\n    private bool FindPath(TreeNode root, TreeNode target, List<TreeNode> path) {\n        if (root == null) return false;\n\n        path.Add(root);\n        if (root == target) return true;\n\n        if (FindPath(root.Left, target, path) || FindPath(root.Right, target, path)) return true;\n\n        path.RemoveAt(path.Count - 1);\n        return false;\n    }\n}"
+        }
+      },
+      {
+        "id": "distance-k-parent-bfs",
+        "title": "Parent map + BFS from target",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Parent pointers turn the tree into an undirected graph; a BFS from the target spreads one edge per level, and the queue snapshot at level k is the answer.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {\n        Map<TreeNode, TreeNode> parent = new HashMap<>();\n        buildParents(root, parent);\n\n        Queue<TreeNode> queue = new LinkedList<>();\n        Set<TreeNode> visited = new HashSet<>();\n        queue.offer(target);\n        visited.add(target);\n\n        int distance = 0;\n\n        while (!queue.isEmpty()) {\n            if (distance == k) {\n                List<Integer> result = new ArrayList<>();\n                for (TreeNode node : queue) result.add(node.val);\n                return result;\n            }\n\n            int size = queue.size();\n\n            for (int i = 0; i < size; i++) {\n                TreeNode current = queue.poll();\n\n                if (current.left != null && visited.add(current.left)) queue.offer(current.left);\n                if (current.right != null && visited.add(current.right)) queue.offer(current.right);\n\n                TreeNode p = parent.get(current);\n                if (p != null && visited.add(p)) queue.offer(p);\n            }\n\n            distance++;\n        }\n\n        return new ArrayList<>();\n    }\n\n    private void buildParents(TreeNode root, Map<TreeNode, TreeNode> parent) {\n        Queue<TreeNode> queue = new LinkedList<>();\n        queue.offer(root);\n\n        while (!queue.isEmpty()) {\n            TreeNode current = queue.poll();\n\n            if (current.left != null) {\n                parent.put(current.left, current);\n                queue.offer(current.left);\n            }\n\n            if (current.right != null) {\n                parent.put(current.right, current);\n                queue.offer(current.right);\n            }\n        }\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> DistanceK(TreeNode root, TreeNode target, int k) {\n        Dictionary<TreeNode, TreeNode> parent = new Dictionary<TreeNode, TreeNode>();\n        BuildParents(root, parent);\n\n        Queue<TreeNode> queue = new Queue<TreeNode>();\n        HashSet<TreeNode> visited = new HashSet<TreeNode>();\n        queue.Enqueue(target);\n        visited.Add(target);\n\n        int distance = 0;\n\n        while (queue.Count > 0) {\n            if (distance == k) {\n                List<int> result = new List<int>();\n                foreach (TreeNode node in queue) result.Add(node.Val);\n                return result;\n            }\n\n            int size = queue.Count;\n\n            for (int i = 0; i < size; i++) {\n                TreeNode current = queue.Dequeue();\n\n                if (current.Left != null && visited.Add(current.Left)) queue.Enqueue(current.Left);\n                if (current.Right != null && visited.Add(current.Right)) queue.Enqueue(current.Right);\n\n                if (parent.ContainsKey(current)) {\n                    TreeNode p = parent[current];\n                    if (visited.Add(p)) queue.Enqueue(p);\n                }\n            }\n\n            distance++;\n        }\n\n        return new List<int>();\n    }\n\n    private void BuildParents(TreeNode root, Dictionary<TreeNode, TreeNode> parent) {\n        Queue<TreeNode> queue = new Queue<TreeNode>();\n        queue.Enqueue(root);\n\n        while (queue.Count > 0) {\n            TreeNode current = queue.Dequeue();\n\n            if (current.Left != null) {\n                parent[current.Left] = current;\n                queue.Enqueue(current.Left);\n            }\n\n            if (current.Right != null) {\n                parent[current.Right] = current;\n                queue.Enqueue(current.Right);\n            }\n        }\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-324": {
+    "approaches": [
+      {
+        "id": "children-sum-iterative",
+        "title": "Better — level-order check",
+        "level": "Better",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Checks the property with a BFS queue instead of recursion: a node fails when its value differs from the sum of its existing children. Leaves are skipped.",
+        "code": {
+          "java": "class Solution {\n    public boolean checkChildrenSumIterative(TreeNode root) {\n        if (root == null) return true;\n\n        Queue<TreeNode> queue = new LinkedList<>();\n        queue.offer(root);\n\n        while (!queue.isEmpty()) {\n            TreeNode node = queue.poll();\n\n            // Leaf nodes trivially satisfy the property.\n            if (node.left == null && node.right == null) continue;\n\n            int sum = 0;\n            if (node.left != null) {\n                sum += node.left.val;\n                queue.offer(node.left);\n            }\n            if (node.right != null) {\n                sum += node.right.val;\n                queue.offer(node.right);\n            }\n\n            if (node.val != sum) return false;\n        }\n\n        return true;\n    }\n}",
+          "csharp": "public class Solution {\n    public bool CheckChildrenSumIterative(TreeNode root) {\n        if (root == null) return true;\n\n        Queue<TreeNode> queue = new Queue<TreeNode>();\n        queue.Enqueue(root);\n\n        while (queue.Count > 0) {\n            TreeNode node = queue.Dequeue();\n\n            // Leaf nodes trivially satisfy the property.\n            if (node.Left == null && node.Right == null) continue;\n\n            int sum = 0;\n            if (node.Left != null) {\n                sum += node.Left.Val;\n                queue.Enqueue(node.Left);\n            }\n            if (node.Right != null) {\n                sum += node.Right.Val;\n                queue.Enqueue(node.Right);\n            }\n\n            if (node.Val != sum) return false;\n        }\n\n        return true;\n    }\n}"
+        }
+      },
+      {
+        "id": "children-sum-recursive",
+        "title": "Recursive property check",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Each node compares its value against the sum of its existing children and then recurses; a leaf automatically satisfies the property. Uses only the recursion stack.",
+        "code": {
+          "java": "class Solution {\n    public boolean checkChildrenSum(TreeNode root) {\n        if (root == null) return true;\n\n        // A leaf automatically satisfies the property.\n        if (root.left == null && root.right == null) return true;\n\n        int sum = 0;\n        if (root.left != null) sum += root.left.val;\n        if (root.right != null) sum += root.right.val;\n\n        if (root.val != sum) return false;\n\n        return checkChildrenSum(root.left) && checkChildrenSum(root.right);\n    }\n}",
+          "csharp": "public class Solution {\n    public bool CheckChildrenSum(TreeNode root) {\n        if (root == null) return true;\n\n        // A leaf automatically satisfies the property.\n        if (root.Left == null && root.Right == null) return true;\n\n        int sum = 0;\n        if (root.Left != null) sum += root.Left.Val;\n        if (root.Right != null) sum += root.Right.Val;\n\n        if (root.Val != sum) return false;\n\n        return CheckChildrenSum(root.Left) && CheckChildrenSum(root.Right);\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-323": {
+    "approaches": [
+      {
+        "id": "max-width-dfs-levels",
+        "title": "Better — level min/max via DFS",
+        "level": "Better",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "A DFS assigns heap-style indices and records the first and last index seen on every level; the largest level span is the answer. Raw indices are never renormalized, so very deep trees can overflow.",
+        "code": {
+          "java": "class Solution {\n    public int widthOfBinaryTreeDfs(TreeNode root) {\n        Map<Integer, Long> first = new HashMap<>();\n        Map<Integer, Long> last = new HashMap<>();\n        dfs(root, 0, 0L, first, last);\n\n        long maxWidth = 0;\n        for (int level : first.keySet()) {\n            maxWidth = Math.max(maxWidth, last.get(level) - first.get(level) + 1);\n        }\n        return (int) maxWidth;\n    }\n\n    private void dfs(TreeNode node, int level, long index, Map<Integer, Long> first, Map<Integer, Long> last) {\n        if (node == null) return;\n\n        first.putIfAbsent(level, index);\n        last.put(level, index);\n\n        // Heap-style child indices.\n        dfs(node.left, level + 1, 2 * index + 1, first, last);\n        dfs(node.right, level + 1, 2 * index + 2, first, last);\n    }\n}",
+          "csharp": "public class Solution {\n    public int WidthOfBinaryTreeDfs(TreeNode root) {\n        Dictionary<int, long> first = new Dictionary<int, long>();\n        Dictionary<int, long> last = new Dictionary<int, long>();\n        Dfs(root, 0, 0, first, last);\n\n        long maxWidth = 0;\n        foreach (int level in first.Keys) {\n            maxWidth = Math.Max(maxWidth, last[level] - first[level] + 1);\n        }\n        return (int)maxWidth;\n    }\n\n    private void Dfs(TreeNode node, int level, long index, Dictionary<int, long> first, Dictionary<int, long> last) {\n        if (node == null) return;\n\n        if (!first.ContainsKey(level)) first[level] = index;\n        last[level] = index;\n\n        // Heap-style child indices.\n        Dfs(node.Left, level + 1, 2 * index + 1, first, last);\n        Dfs(node.Right, level + 1, 2 * index + 2, first, last);\n    }\n}"
+        }
+      },
+      {
+        "id": "max-width-bfs-normalized",
+        "title": "BFS with normalized heap indices",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Processes one level at a time, offsets every index by the leftmost index of that level to keep numbers small, and the level width is last index + 1. Long arithmetic prevents overflow.",
+        "code": {
+          "java": "class Solution {\n    public int widthOfBinaryTree(TreeNode root) {\n        if (root == null) return 0;\n\n        Queue<Pair> queue = new LinkedList<>();\n        queue.offer(new Pair(root, 0L));\n\n        long maxWidth = 0;\n\n        while (!queue.isEmpty()) {\n            int size = queue.size();\n\n            long first = queue.peek().index;\n            long last = first;\n\n            for (int i = 0; i < size; i++) {\n                Pair current = queue.poll();\n\n                // Normalize the index to prevent overflow.\n                long index = current.index - first;\n                last = index;\n\n                if (current.node.left != null) queue.offer(new Pair(current.node.left, 2 * index + 1));\n                if (current.node.right != null) queue.offer(new Pair(current.node.right, 2 * index + 2));\n            }\n\n            maxWidth = Math.max(maxWidth, last + 1);\n        }\n\n        return (int) maxWidth;\n    }\n\n    static class Pair {\n        TreeNode node;\n        long index;\n\n        Pair(TreeNode node, long index) {\n            this.node = node;\n            this.index = index;\n        }\n    }\n}",
+          "csharp": "public class Solution {\n    public int WidthOfBinaryTree(TreeNode root) {\n        if (root == null) return 0;\n\n        Queue<(TreeNode node, long index)> queue = new Queue<(TreeNode, long)>();\n        queue.Enqueue((root, 0));\n\n        long maxWidth = 0;\n\n        while (queue.Count > 0) {\n            int size = queue.Count;\n\n            long first = queue.Peek().index;\n            long last = first;\n\n            for (int i = 0; i < size; i++) {\n                var current = queue.Dequeue();\n\n                // Normalize the index to prevent overflow.\n                long index = current.index - first;\n                last = index;\n\n                if (current.node.Left != null) queue.Enqueue((current.node.Left, 2 * index + 1));\n                if (current.node.Right != null) queue.Enqueue((current.node.Right, 2 * index + 2));\n            }\n\n            maxWidth = Math.Max(maxWidth, last + 1);\n        }\n\n        return (int)maxWidth;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-322": {
+    "approaches": [
+      {
+        "id": "lca-paths",
+        "title": "Brute force — compare root paths",
+        "level": "Brute",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Extracts the root-to-node path for both targets and returns the last shared node. Simple to reason about, but it needs two extra path buffers.",
+        "code": {
+          "java": "class Solution {\n    public TreeNode lcaBrute(TreeNode root, TreeNode p, TreeNode q) {\n        List<TreeNode> pathP = new ArrayList<>();\n        List<TreeNode> pathQ = new ArrayList<>();\n        findPath(root, p, pathP);\n        findPath(root, q, pathQ);\n\n        TreeNode lca = null;\n        for (int i = 0; i < pathP.size() && i < pathQ.size(); i++) {\n            if (pathP.get(i) != pathQ.get(i)) break;\n            lca = pathP.get(i);\n        }\n        return lca;\n    }\n\n    private boolean findPath(TreeNode root, TreeNode target, List<TreeNode> path) {\n        if (root == null) return false;\n\n        path.add(root);\n        if (root == target) return true;\n\n        if (findPath(root.left, target, path) || findPath(root.right, target, path)) return true;\n\n        path.remove(path.size() - 1);\n        return false;\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode LcaBrute(TreeNode root, TreeNode p, TreeNode q) {\n        List<TreeNode> pathP = new List<TreeNode>();\n        List<TreeNode> pathQ = new List<TreeNode>();\n        FindPath(root, p, pathP);\n        FindPath(root, q, pathQ);\n\n        TreeNode lca = null;\n        for (int i = 0; i < pathP.Count && i < pathQ.Count; i++) {\n            if (pathP[i] != pathQ[i]) break;\n            lca = pathP[i];\n        }\n        return lca;\n    }\n\n    private bool FindPath(TreeNode root, TreeNode target, List<TreeNode> path) {\n        if (root == null) return false;\n\n        path.Add(root);\n        if (root == target) return true;\n\n        if (FindPath(root.Left, target, path) || FindPath(root.Right, target, path)) return true;\n\n        path.RemoveAt(path.Count - 1);\n        return false;\n    }\n}"
+        }
+      },
+      {
+        "id": "lca-recursive",
+        "title": "Recursive search from both sides",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "The recursion reports the first found target upward from each subtree; the node where both sides return a hit is the LCA. Value ordering is not used, so this works for any binary tree.",
+        "code": {
+          "java": "class Solution {\n    public TreeNode lca(TreeNode root, TreeNode p, TreeNode q) {\n        if (root == null || root == p || root == q) return root;\n\n        TreeNode left = lca(root.left, p, q);\n        TreeNode right = lca(root.right, p, q);\n\n        // One node found in each subtree: the current node is the LCA.\n        if (left != null && right != null) return root;\n\n        return left != null ? left : right;\n    }\n}",
+          "csharp": "public class Solution {\n    public TreeNode Lca(TreeNode root, TreeNode p, TreeNode q) {\n        if (root == null || root == p || root == q) return root;\n\n        TreeNode left = Lca(root.Left, p, q);\n        TreeNode right = Lca(root.Right, p, q);\n\n        // One node found in each subtree: the current node is the LCA.\n        if (left != null && right != null) return root;\n\n        return left ?? right;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-321": {
+    "approaches": [
+      {
+        "id": "root-leaf-paths-per-leaf",
+        "title": "Brute force — search each leaf path",
+        "level": "Brute",
+        "time": "O(N²) worst case",
+        "space": "O(H)",
+        "explanation": "Collects every leaf and then re-searches the tree for the path to each one. Correct but repetitive, since the root path is rebuilt from scratch for every leaf.",
+        "code": {
+          "java": "class Solution {\n    public List<List<Integer>> rootToLeafPathsBrute(TreeNode root) {\n        List<List<Integer>> result = new ArrayList<>();\n        List<TreeNode> leaves = new ArrayList<>();\n        collectLeaves(root, leaves);\n\n        for (TreeNode leaf : leaves) {\n            List<TreeNode> path = new ArrayList<>();\n            findPath(root, leaf, path);\n\n            List<Integer> values = new ArrayList<>();\n            for (TreeNode node : path) values.add(node.val);\n            result.add(values);\n        }\n        return result;\n    }\n\n    private void collectLeaves(TreeNode root, List<TreeNode> leaves) {\n        if (root == null) return;\n        if (root.left == null && root.right == null) {\n            leaves.add(root);\n            return;\n        }\n        collectLeaves(root.left, leaves);\n        collectLeaves(root.right, leaves);\n    }\n\n    private boolean findPath(TreeNode root, TreeNode target, List<TreeNode> path) {\n        if (root == null) return false;\n\n        path.add(root);\n        if (root == target) return true;\n\n        if (findPath(root.left, target, path) || findPath(root.right, target, path)) return true;\n\n        path.remove(path.size() - 1);\n        return false;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<List<int>> RootToLeafPathsBrute(TreeNode root) {\n        List<List<int>> result = new List<List<int>>();\n        List<TreeNode> leaves = new List<TreeNode>();\n        CollectLeaves(root, leaves);\n\n        foreach (TreeNode leaf in leaves) {\n            List<TreeNode> path = new List<TreeNode>();\n            FindPath(root, leaf, path);\n\n            List<int> values = new List<int>();\n            foreach (TreeNode node in path) values.Add(node.Val);\n            result.Add(values);\n        }\n        return result;\n    }\n\n    private void CollectLeaves(TreeNode root, List<TreeNode> leaves) {\n        if (root == null) return;\n        if (root.Left == null && root.Right == null) {\n            leaves.Add(root);\n            return;\n        }\n        CollectLeaves(root.Left, leaves);\n        CollectLeaves(root.Right, leaves);\n    }\n\n    private bool FindPath(TreeNode root, TreeNode target, List<TreeNode> path) {\n        if (root == null) return false;\n\n        path.Add(root);\n        if (root == target) return true;\n\n        if (FindPath(root.Left, target, path) || FindPath(root.Right, target, path)) return true;\n\n        path.RemoveAt(path.Count - 1);\n        return false;\n    }\n}"
+        }
+      },
+      {
+        "id": "root-leaf-paths-backtracking",
+        "title": "Backtracking with path snapshots",
+        "level": "Optimal",
+        "time": "O(N + output)",
+        "space": "O(H)",
+        "explanation": "A single depth-first walk keeps one mutable path; whenever a leaf is reached a copy of the path is stored and the last element is removed on the way back up.",
+        "code": {
+          "java": "class Solution {\n    public List<List<Integer>> rootToLeafPaths(TreeNode root) {\n        List<List<Integer>> result = new ArrayList<>();\n        dfs(root, new ArrayList<>(), result);\n        return result;\n    }\n\n    private void dfs(TreeNode root, List<Integer> path, List<List<Integer>> result) {\n        if (root == null) return;\n\n        path.add(root.val);\n\n        if (root.left == null && root.right == null) {\n            // Store a snapshot of the complete root-to-leaf path.\n            result.add(new ArrayList<>(path));\n        } else {\n            dfs(root.left, path, result);\n            dfs(root.right, path, result);\n        }\n\n        // Backtrack.\n        path.remove(path.size() - 1);\n    }\n}",
+          "csharp": "public class Solution {\n    public List<List<int>> RootToLeafPaths(TreeNode root) {\n        List<List<int>> result = new List<List<int>>();\n        Dfs(root, new List<int>(), result);\n        return result;\n    }\n\n    private void Dfs(TreeNode root, List<int> path, List<List<int>> result) {\n        if (root == null) return;\n\n        path.Add(root.Val);\n\n        if (root.Left == null && root.Right == null) {\n            // Store a snapshot of the complete root-to-leaf path.\n            result.Add(new List<int>(path));\n        } else {\n            Dfs(root.Left, path, result);\n            Dfs(root.Right, path, result);\n        }\n\n        // Backtrack.\n        path.RemoveAt(path.Count - 1);\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-320": {
+    "approaches": [
+      {
+        "id": "symmetric-iterative",
+        "title": "Better — iterative pair queue",
+        "level": "Better",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Pushes mirrored pairs (outer children together, inner children together) into a queue and compares them two at a time. A null-tolerant queue is required because missing children are compared explicitly.",
+        "code": {
+          "java": "class Solution {\n    public boolean isSymmetricIterative(TreeNode root) {\n        if (root == null) return true;\n\n        // LinkedList allows null elements; ArrayDeque does not.\n        Queue<TreeNode> queue = new LinkedList<>();\n        queue.offer(root.left);\n        queue.offer(root.right);\n\n        while (!queue.isEmpty()) {\n            TreeNode a = queue.poll();\n            TreeNode b = queue.poll();\n\n            if (a == null && b == null) continue;\n            if (a == null || b == null) return false;\n            if (a.val != b.val) return false;\n\n            // Cross-compare outer and inner pairs.\n            queue.offer(a.left);\n            queue.offer(b.right);\n            queue.offer(a.right);\n            queue.offer(b.left);\n        }\n\n        return true;\n    }\n}",
+          "csharp": "public class Solution {\n    public bool IsSymmetricIterative(TreeNode root) {\n        if (root == null) return true;\n\n        Queue<TreeNode> queue = new Queue<TreeNode>();\n        queue.Enqueue(root.Left);\n        queue.Enqueue(root.Right);\n\n        while (queue.Count > 0) {\n            TreeNode a = queue.Dequeue();\n            TreeNode b = queue.Dequeue();\n\n            if (a == null && b == null) continue;\n            if (a == null || b == null) return false;\n            if (a.Val != b.Val) return false;\n\n            // Cross-compare outer and inner pairs.\n            queue.Enqueue(a.Left);\n            queue.Enqueue(b.Right);\n            queue.Enqueue(a.Right);\n            queue.Enqueue(b.Left);\n        }\n\n        return true;\n    }\n}"
+        }
+      },
+      {
+        "id": "symmetric-mirror",
+        "title": "Mirror recursion",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "The left and right subtrees of the root are compared as mirror images: values must match and the outer/inner child pairs must mirror each other.",
+        "code": {
+          "java": "class Solution {\n    public boolean isSymmetric(TreeNode root) {\n        if (root == null) return true;\n        return mirror(root.left, root.right);\n    }\n\n    private boolean mirror(TreeNode a, TreeNode b) {\n        if (a == null && b == null) return true;\n        if (a == null || b == null) return false;\n        if (a.val != b.val) return false;\n\n        // The outer pair and the inner pair must mirror each other.\n        return mirror(a.left, b.right) && mirror(a.right, b.left);\n    }\n}",
+          "csharp": "public class Solution {\n    public bool IsSymmetric(TreeNode root) {\n        if (root == null) return true;\n        return Mirror(root.Left, root.Right);\n    }\n\n    private bool Mirror(TreeNode a, TreeNode b) {\n        if (a == null && b == null) return true;\n        if (a == null || b == null) return false;\n        if (a.Val != b.Val) return false;\n\n        // The outer pair and the inner pair must mirror each other.\n        return Mirror(a.Left, b.Right) && Mirror(a.Right, b.Left);\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-319": {
+    "approaches": [
+      {
+        "id": "views-dfs-deepest-first",
+        "title": "Better — DFS visiting the visible side first",
+        "level": "Better",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "A depth-first walk that always descends into the visible side first records the first node reached at each depth. The right view visits right children first; the left view visits left children first.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> rightViewDfs(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        visitRightFirst(root, 0, result);\n        return result;\n    }\n\n    public List<Integer> leftViewDfs(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        visitLeftFirst(root, 0, result);\n        return result;\n    }\n\n    private void visitRightFirst(TreeNode node, int depth, List<Integer> result) {\n        if (node == null) return;\n\n        // The first node reached at each depth is the visible one.\n        if (depth == result.size()) result.add(node.val);\n\n        visitRightFirst(node.right, depth + 1, result);\n        visitRightFirst(node.left, depth + 1, result);\n    }\n\n    private void visitLeftFirst(TreeNode node, int depth, List<Integer> result) {\n        if (node == null) return;\n\n        if (depth == result.size()) result.add(node.val);\n\n        visitLeftFirst(node.left, depth + 1, result);\n        visitLeftFirst(node.right, depth + 1, result);\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> RightViewDfs(TreeNode root) {\n        List<int> result = new List<int>();\n        VisitRightFirst(root, 0, result);\n        return result;\n    }\n\n    public List<int> LeftViewDfs(TreeNode root) {\n        List<int> result = new List<int>();\n        VisitLeftFirst(root, 0, result);\n        return result;\n    }\n\n    private void VisitRightFirst(TreeNode node, int depth, List<int> result) {\n        if (node == null) return;\n\n        // The first node reached at each depth is the visible one.\n        if (depth == result.Count) result.Add(node.Val);\n\n        VisitRightFirst(node.Right, depth + 1, result);\n        VisitRightFirst(node.Left, depth + 1, result);\n    }\n\n    private void VisitLeftFirst(TreeNode node, int depth, List<int> result) {\n        if (node == null) return;\n\n        if (depth == result.Count) result.Add(node.Val);\n\n        VisitLeftFirst(node.Left, depth + 1, result);\n        VisitLeftFirst(node.Right, depth + 1, result);\n    }\n}"
+        }
+      },
+      {
+        "id": "views-bfs-level-ends",
+        "title": "BFS — first / last node per level",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "A level-order walk exposes the visible node of every level: the last node for the right view and the first node for the left view.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> rightView(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        if (root == null) return result;\n\n        Queue<TreeNode> queue = new LinkedList<>();\n        queue.offer(root);\n\n        while (!queue.isEmpty()) {\n            int size = queue.size();\n\n            for (int i = 0; i < size; i++) {\n                TreeNode current = queue.poll();\n\n                // Last node at this level.\n                if (i == size - 1) result.add(current.val);\n\n                if (current.left != null) queue.offer(current.left);\n                if (current.right != null) queue.offer(current.right);\n            }\n        }\n        return result;\n    }\n\n    public List<Integer> leftView(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        if (root == null) return result;\n\n        Queue<TreeNode> queue = new LinkedList<>();\n        queue.offer(root);\n\n        while (!queue.isEmpty()) {\n            int size = queue.size();\n\n            for (int i = 0; i < size; i++) {\n                TreeNode current = queue.poll();\n\n                // First node at this level.\n                if (i == 0) result.add(current.val);\n\n                if (current.left != null) queue.offer(current.left);\n                if (current.right != null) queue.offer(current.right);\n            }\n        }\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> RightView(TreeNode root) {\n        List<int> result = new List<int>();\n        if (root == null) return result;\n\n        Queue<TreeNode> queue = new Queue<TreeNode>();\n        queue.Enqueue(root);\n\n        while (queue.Count > 0) {\n            int size = queue.Count;\n\n            for (int i = 0; i < size; i++) {\n                TreeNode current = queue.Dequeue();\n\n                // Last node at this level.\n                if (i == size - 1) result.Add(current.Val);\n\n                if (current.Left != null) queue.Enqueue(current.Left);\n                if (current.Right != null) queue.Enqueue(current.Right);\n            }\n        }\n        return result;\n    }\n\n    public List<int> LeftView(TreeNode root) {\n        List<int> result = new List<int>();\n        if (root == null) return result;\n\n        Queue<TreeNode> queue = new Queue<TreeNode>();\n        queue.Enqueue(root);\n\n        while (queue.Count > 0) {\n            int size = queue.Count;\n\n            for (int i = 0; i < size; i++) {\n                TreeNode current = queue.Dequeue();\n\n                // First node at this level.\n                if (i == 0) result.Add(current.Val);\n\n                if (current.Left != null) queue.Enqueue(current.Left);\n                if (current.Right != null) queue.Enqueue(current.Right);\n            }\n        }\n        return result;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-318": {
+    "approaches": [
+      {
+        "id": "bottom-view-bfs",
+        "title": "BFS overwrite at each horizontal distance",
+        "level": "Optimal",
+        "time": "O(N log N)",
+        "space": "O(N)",
+        "explanation": "Tracks the horizontal distance of every node in level order; later (deeper) nodes at the same distance overwrite earlier ones, and a sorted map yields the left-to-right bottom view.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> bottomView(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        if (root == null) return result;\n\n        TreeMap<Integer, Integer> map = new TreeMap<>();\n        Queue<Pair> queue = new LinkedList<>();\n        queue.offer(new Pair(root, 0));\n\n        while (!queue.isEmpty()) {\n            Pair current = queue.poll();\n\n            // Later nodes at the same horizontal distance overwrite earlier ones.\n            map.put(current.hd, current.node.val);\n\n            if (current.node.left != null) queue.offer(new Pair(current.node.left, current.hd - 1));\n            if (current.node.right != null) queue.offer(new Pair(current.node.right, current.hd + 1));\n        }\n\n        result.addAll(map.values());\n        return result;\n    }\n\n    static class Pair {\n        TreeNode node;\n        int hd;\n\n        Pair(TreeNode node, int hd) {\n            this.node = node;\n            this.hd = hd;\n        }\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> BottomView(TreeNode root) {\n        List<int> result = new List<int>();\n        if (root == null) return result;\n\n        SortedDictionary<int, int> map = new SortedDictionary<int, int>();\n        Queue<(TreeNode node, int hd)> queue = new Queue<(TreeNode, int)>();\n        queue.Enqueue((root, 0));\n\n        while (queue.Count > 0) {\n            var current = queue.Dequeue();\n\n            // Later nodes at the same horizontal distance overwrite earlier ones.\n            map[current.hd] = current.node.Val;\n\n            if (current.node.Left != null) queue.Enqueue((current.node.Left, current.hd - 1));\n            if (current.node.Right != null) queue.Enqueue((current.node.Right, current.hd + 1));\n        }\n\n        foreach (int value in map.Values) result.Add(value);\n        return result;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-317": {
+    "approaches": [
+      {
+        "id": "top-view-bfs",
+        "title": "BFS first write at each horizontal distance",
+        "level": "Optimal",
+        "time": "O(N log N)",
+        "space": "O(N)",
+        "explanation": "Level-order BFS visits nodes from the top down, so the first node written for a horizontal distance is exactly the topmost one; a sorted map keeps the columns ordered.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> topView(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        if (root == null) return result;\n\n        TreeMap<Integer, Integer> map = new TreeMap<>();\n        Queue<Pair> queue = new LinkedList<>();\n        queue.offer(new Pair(root, 0));\n\n        while (!queue.isEmpty()) {\n            Pair current = queue.poll();\n\n            // The first node at each horizontal distance stays visible.\n            map.putIfAbsent(current.hd, current.node.val);\n\n            if (current.node.left != null) queue.offer(new Pair(current.node.left, current.hd - 1));\n            if (current.node.right != null) queue.offer(new Pair(current.node.right, current.hd + 1));\n        }\n\n        result.addAll(map.values());\n        return result;\n    }\n\n    static class Pair {\n        TreeNode node;\n        int hd;\n\n        Pair(TreeNode node, int hd) {\n            this.node = node;\n            this.hd = hd;\n        }\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> TopView(TreeNode root) {\n        List<int> result = new List<int>();\n        if (root == null) return result;\n\n        SortedDictionary<int, int> map = new SortedDictionary<int, int>();\n        Queue<(TreeNode node, int hd)> queue = new Queue<(TreeNode, int)>();\n        queue.Enqueue((root, 0));\n\n        while (queue.Count > 0) {\n            var current = queue.Dequeue();\n\n            // The first node at each horizontal distance stays visible.\n            if (!map.ContainsKey(current.hd)) map[current.hd] = current.node.Val;\n\n            if (current.node.Left != null) queue.Enqueue((current.node.Left, current.hd - 1));\n            if (current.node.Right != null) queue.Enqueue((current.node.Right, current.hd + 1));\n        }\n\n        foreach (int value in map.Values) result.Add(value);\n        return result;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-316": {
+    "approaches": [
+      {
+        "id": "vertical-sort-tuples",
+        "title": "Better — sort (distance, level, value) tuples",
+        "level": "Better",
+        "time": "O(N log N)",
+        "space": "O(N)",
+        "explanation": "A DFS records one tuple per node and a single sort orders them by horizontal distance, then level, then value. Simple, but always pays the full sort instead of exploiting the BFS level order.",
+        "code": {
+          "java": "class Solution {\n    public List<List<Integer>> verticalTraversalSort(TreeNode root) {\n        List<int[]> entries = new ArrayList<>();\n        dfs(root, 0, 0, entries);\n\n        // Sort by horizontal distance, then level, then value.\n        entries.sort((a, b) -> a[0] != b[0] ? Integer.compare(a[0], b[0])\n                       : a[1] != b[1] ? Integer.compare(a[1], b[1])\n                       : Integer.compare(a[2], b[2]));\n\n        List<List<Integer>> result = new ArrayList<>();\n        List<Integer> column = null;\n        int currentHd = 0;\n\n        for (int[] entry : entries) {\n            if (column == null || entry[0] != currentHd) {\n                column = new ArrayList<>();\n                result.add(column);\n                currentHd = entry[0];\n            }\n            column.add(entry[2]);\n        }\n\n        return result;\n    }\n\n    private void dfs(TreeNode node, int hd, int level, List<int[]> entries) {\n        if (node == null) return;\n\n        entries.add(new int[] {hd, level, node.val});\n\n        dfs(node.left, hd - 1, level + 1, entries);\n        dfs(node.right, hd + 1, level + 1, entries);\n    }\n}",
+          "csharp": "public class Solution {\n    public List<List<int>> VerticalTraversalSort(TreeNode root) {\n        List<int[]> entries = new List<int[]>();\n        Dfs(root, 0, 0, entries);\n\n        // Sort by horizontal distance, then level, then value.\n        entries.Sort((a, b) => a[0] != b[0] ? a[0].CompareTo(b[0])\n                          : a[1] != b[1] ? a[1].CompareTo(b[1])\n                          : a[2].CompareTo(b[2]));\n\n        List<List<int>> result = new List<List<int>>();\n        List<int> column = null;\n        int currentHd = 0;\n\n        foreach (int[] entry in entries) {\n            if (column == null || entry[0] != currentHd) {\n                column = new List<int>();\n                result.Add(column);\n                currentHd = entry[0];\n            }\n            column.Add(entry[2]);\n        }\n\n        return result;\n    }\n\n    private void Dfs(TreeNode node, int hd, int level, List<int[]> entries) {\n        if (node == null) return;\n\n        entries.Add(new[] { hd, level, node.Val });\n\n        Dfs(node.Left, hd - 1, level + 1, entries);\n        Dfs(node.Right, hd + 1, level + 1, entries);\n    }\n}"
+        }
+      },
+      {
+        "id": "vertical-tree-of-heaps",
+        "title": "Nested maps with a heap per (distance, level)",
+        "level": "Optimal",
+        "time": "O(N log N)",
+        "space": "O(N)",
+        "explanation": "BFS fills a TreeMap of distances whose values are TreeMaps of levels holding min-heaps, so each column is drained in the exact (level, value) order the problem requires.",
+        "code": {
+          "java": "class Solution {\n    public List<List<Integer>> verticalTraversal(TreeNode root) {\n        List<List<Integer>> result = new ArrayList<>();\n        if (root == null) return result;\n\n        // Horizontal distance → level → sorted values.\n        TreeMap<Integer, TreeMap<Integer, PriorityQueue<Integer>>> map = new TreeMap<>();\n        Queue<NodeInfo> queue = new LinkedList<>();\n        queue.offer(new NodeInfo(root, 0, 0));\n\n        while (!queue.isEmpty()) {\n            NodeInfo current = queue.poll();\n\n            map.computeIfAbsent(current.hd, x -> new TreeMap<>())\n               .computeIfAbsent(current.level, x -> new PriorityQueue<>())\n               .offer(current.node.val);\n\n            if (current.node.left != null) queue.offer(new NodeInfo(current.node.left, current.hd - 1, current.level + 1));\n            if (current.node.right != null) queue.offer(new NodeInfo(current.node.right, current.hd + 1, current.level + 1));\n        }\n\n        for (TreeMap<Integer, PriorityQueue<Integer>> levels : map.values()) {\n            List<Integer> column = new ArrayList<>();\n            for (PriorityQueue<Integer> heap : levels.values()) {\n                while (!heap.isEmpty()) column.add(heap.poll());\n            }\n            result.add(column);\n        }\n\n        return result;\n    }\n\n    static class NodeInfo {\n        TreeNode node;\n        int hd;\n        int level;\n\n        NodeInfo(TreeNode node, int hd, int level) {\n            this.node = node;\n            this.hd = hd;\n            this.level = level;\n        }\n    }\n}",
+          "csharp": "public class Solution {\n    public List<List<int>> VerticalTraversal(TreeNode root) {\n        List<List<int>> result = new List<List<int>>();\n        if (root == null) return result;\n\n        // Horizontal distance → level → values.\n        SortedDictionary<int, SortedDictionary<int, List<int>>> map = new SortedDictionary<int, SortedDictionary<int, List<int>>>();\n        Queue<(TreeNode node, int hd, int level)> queue = new Queue<(TreeNode, int, int)>();\n        queue.Enqueue((root, 0, 0));\n\n        while (queue.Count > 0) {\n            var current = queue.Dequeue();\n\n            if (!map.ContainsKey(current.hd)) map[current.hd] = new SortedDictionary<int, List<int>>();\n            if (!map[current.hd].ContainsKey(current.level)) map[current.hd][current.level] = new List<int>();\n            map[current.hd][current.level].Add(current.node.Val);\n\n            if (current.node.Left != null) queue.Enqueue((current.node.Left, current.hd - 1, current.level + 1));\n            if (current.node.Right != null) queue.Enqueue((current.node.Right, current.hd + 1, current.level + 1));\n        }\n\n        foreach (var column in map.Values) {\n            List<int> values = new List<int>();\n            foreach (var level in column.Values) {\n                level.Sort();\n                values.AddRange(level);\n            }\n            result.Add(values);\n        }\n\n        return result;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-315": {
+    "approaches": [
+      {
+        "id": "boundary-root-left-leaves-right",
+        "title": "Root + left boundary + leaves + reversed right boundary",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "The boundary is assembled in four parts: the root (once, unless it is a leaf), the left boundary top-down preferring left children, all leaves left to right, then the right boundary bottom-up.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> boundary(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        if (root == null) return result;\n\n        // The root is added once, unless it is also a leaf.\n        if (!isLeaf(root)) result.add(root.val);\n\n        addLeftBoundary(root.left, result);\n        addLeaves(root, result);\n        addRightBoundary(root.right, result);\n\n        return result;\n    }\n\n    private void addLeftBoundary(TreeNode root, List<Integer> result) {\n        while (root != null) {\n            if (!isLeaf(root)) result.add(root.val);\n\n            // Prefer the left child, fall back to the right child.\n            root = root.left != null ? root.left : root.right;\n        }\n    }\n\n    private void addRightBoundary(TreeNode root, List<Integer> result) {\n        List<Integer> temp = new ArrayList<>();\n\n        while (root != null) {\n            if (!isLeaf(root)) temp.add(root.val);\n\n            root = root.right != null ? root.right : root.left;\n        }\n\n        // The right boundary is collected bottom-up, so reverse it.\n        for (int i = temp.size() - 1; i >= 0; i--) result.add(temp.get(i));\n    }\n\n    private void addLeaves(TreeNode root, List<Integer> result) {\n        if (root == null) return;\n\n        if (isLeaf(root)) {\n            result.add(root.val);\n            return;\n        }\n\n        addLeaves(root.left, result);\n        addLeaves(root.right, result);\n    }\n\n    private boolean isLeaf(TreeNode root) {\n        return root.left == null && root.right == null;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> Boundary(TreeNode root) {\n        List<int> result = new List<int>();\n        if (root == null) return result;\n\n        // The root is added once, unless it is also a leaf.\n        if (!IsLeaf(root)) result.Add(root.Val);\n\n        AddLeftBoundary(root.Left, result);\n        AddLeaves(root, result);\n        AddRightBoundary(root.Right, result);\n\n        return result;\n    }\n\n    private void AddLeftBoundary(TreeNode root, List<int> result) {\n        while (root != null) {\n            if (!IsLeaf(root)) result.Add(root.Val);\n\n            // Prefer the left child, fall back to the right child.\n            root = root.Left != null ? root.Left : root.Right;\n        }\n    }\n\n    private void AddRightBoundary(TreeNode root, List<int> result) {\n        List<int> temp = new List<int>();\n\n        while (root != null) {\n            if (!IsLeaf(root)) temp.Add(root.Val);\n\n            root = root.Right != null ? root.Right : root.Left;\n        }\n\n        // The right boundary is collected bottom-up, so reverse it.\n        for (int i = temp.Count - 1; i >= 0; i--) result.Add(temp[i]);\n    }\n\n    private void AddLeaves(TreeNode root, List<int> result) {\n        if (root == null) return;\n\n        if (IsLeaf(root)) {\n            result.Add(root.Val);\n            return;\n        }\n\n        AddLeaves(root.Left, result);\n        AddLeaves(root.Right, result);\n    }\n\n    private bool IsLeaf(TreeNode root) {\n        return root.Left == null && root.Right == null;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-314": {
+    "approaches": [
+      {
+        "id": "zigzag-reverse-odd-levels",
+        "title": "Brute force — level order then reverse odd levels",
+        "level": "Brute",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Runs a plain left-to-right BFS and reverses every other level afterwards. Extra pass per level, but the easiest to reason about.",
+        "code": {
+          "java": "class Solution {\n    public List<List<Integer>> zigzagReverse(TreeNode root) {\n        List<List<Integer>> result = new ArrayList<>();\n        if (root == null) return result;\n\n        Queue<TreeNode> queue = new LinkedList<>();\n        queue.offer(root);\n\n        boolean leftToRight = true;\n\n        while (!queue.isEmpty()) {\n            int size = queue.size();\n            List<Integer> level = new ArrayList<>();\n\n            for (int i = 0; i < size; i++) {\n                TreeNode current = queue.poll();\n                level.add(current.val);\n\n                if (current.left != null) queue.offer(current.left);\n                if (current.right != null) queue.offer(current.right);\n            }\n\n            // Reverse odd levels after a plain left-to-right pass.\n            if (!leftToRight) Collections.reverse(level);\n\n            result.add(level);\n            leftToRight = !leftToRight;\n        }\n\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<List<int>> ZigzagReverse(TreeNode root) {\n        List<List<int>> result = new List<List<int>>();\n        if (root == null) return result;\n\n        Queue<TreeNode> queue = new Queue<TreeNode>();\n        queue.Enqueue(root);\n\n        bool leftToRight = true;\n\n        while (queue.Count > 0) {\n            int size = queue.Count;\n            List<int> level = new List<int>();\n\n            for (int i = 0; i < size; i++) {\n                TreeNode current = queue.Dequeue();\n                level.Add(current.Val);\n\n                if (current.Left != null) queue.Enqueue(current.Left);\n                if (current.Right != null) queue.Enqueue(current.Right);\n            }\n\n            // Reverse odd levels after a plain left-to-right pass.\n            if (!leftToRight) level.Reverse();\n\n            result.Add(level);\n            leftToRight = !leftToRight;\n        }\n\n        return result;\n    }\n}"
+        }
+      },
+      {
+        "id": "zigzag-indexed-writes",
+        "title": "Indexed writes into a pre-sized level",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Each level is pre-sized and nodes are written at either index i or size - 1 - i depending on the direction, so no reversal pass is needed.",
+        "code": {
+          "java": "class Solution {\n    public List<List<Integer>> zigzag(TreeNode root) {\n        List<List<Integer>> result = new ArrayList<>();\n        if (root == null) return result;\n\n        Queue<TreeNode> queue = new LinkedList<>();\n        queue.offer(root);\n\n        boolean leftToRight = true;\n\n        while (!queue.isEmpty()) {\n            int size = queue.size();\n\n            // Pre-size the level so nodes land directly at their final index.\n            List<Integer> level = new ArrayList<>(Collections.nCopies(size, 0));\n\n            for (int i = 0; i < size; i++) {\n                TreeNode current = queue.poll();\n\n                int index = leftToRight ? i : size - 1 - i;\n                level.set(index, current.val);\n\n                if (current.left != null) queue.offer(current.left);\n                if (current.right != null) queue.offer(current.right);\n            }\n\n            result.add(level);\n            leftToRight = !leftToRight;\n        }\n\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<List<int>> Zigzag(TreeNode root) {\n        List<List<int>> result = new List<List<int>>();\n        if (root == null) return result;\n\n        Queue<TreeNode> queue = new Queue<TreeNode>();\n        queue.Enqueue(root);\n\n        bool leftToRight = true;\n\n        while (queue.Count > 0) {\n            int size = queue.Count;\n\n            // Pre-size the level so nodes land directly at their final index.\n            List<int> level = new List<int>();\n            for (int i = 0; i < size; i++) level.Add(0);\n\n            for (int i = 0; i < size; i++) {\n                TreeNode current = queue.Dequeue();\n\n                int index = leftToRight ? i : size - 1 - i;\n                level[index] = current.Val;\n\n                if (current.Left != null) queue.Enqueue(current.Left);\n                if (current.Right != null) queue.Enqueue(current.Right);\n            }\n\n            result.Add(level);\n            leftToRight = !leftToRight;\n        }\n\n        return result;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-313": {
+    "approaches": [
+      {
+        "id": "same-tree-signatures",
+        "title": "Brute force — serialize and compare",
+        "level": "Brute",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Both trees are serialized into preorder signatures with null markers and the strings are compared. Correct, but builds two full copies of the trees as text.",
+        "code": {
+          "java": "class Solution {\n    public boolean isSameTreeSerialized(TreeNode a, TreeNode b) {\n        return signature(a).equals(signature(b));\n    }\n\n    private String signature(TreeNode root) {\n        StringBuilder sb = new StringBuilder();\n        collect(root, sb);\n        return sb.toString();\n    }\n\n    private void collect(TreeNode root, StringBuilder sb) {\n        if (root == null) {\n            sb.append(\"#,\");\n            return;\n        }\n\n        sb.append(root.val).append(\",\");\n        collect(root.left, sb);\n        collect(root.right, sb);\n    }\n}",
+          "csharp": "public class Solution {\n    public bool IsSameTreeSerialized(TreeNode a, TreeNode b) {\n        return Signature(a) == Signature(b);\n    }\n\n    private string Signature(TreeNode root) {\n        StringBuilder sb = new StringBuilder();\n        Collect(root, sb);\n        return sb.ToString();\n    }\n\n    private void Collect(TreeNode root, StringBuilder sb) {\n        if (root == null) {\n            sb.Append(\"#,\");\n            return;\n        }\n\n        sb.Append(root.Val).Append(\",\");\n        Collect(root.Left, sb);\n        Collect(root.Right, sb);\n    }\n}"
+        }
+      },
+      {
+        "id": "same-tree-recursive",
+        "title": "Parallel recursive comparison",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Both trees are walked in lockstep: nodes must match in value and both children must match pairwise. Stops at the first difference.",
+        "code": {
+          "java": "class Solution {\n    public boolean isSameTree(TreeNode a, TreeNode b) {\n        if (a == null && b == null) return true;\n        if (a == null || b == null) return false;\n        if (a.val != b.val) return false;\n\n        return isSameTree(a.left, b.left) && isSameTree(a.right, b.right);\n    }\n}",
+          "csharp": "public class Solution {\n    public bool IsSameTree(TreeNode a, TreeNode b) {\n        if (a == null && b == null) return true;\n        if (a == null || b == null) return false;\n        if (a.Val != b.Val) return false;\n\n        return IsSameTree(a.Left, b.Left) && IsSameTree(a.Right, b.Right);\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-312": {
+    "approaches": [
+      {
+        "id": "max-path-sum-brute",
+        "title": "Brute force — recompute gains at every node",
+        "level": "Brute",
+        "time": "O(N²)",
+        "space": "O(H)",
+        "explanation": "For every node the best downward chains of both children are recomputed from scratch, so the same subtrees are walked again and again. Quadratic on skewed trees.",
+        "code": {
+          "java": "class Solution {\n    public int maxPathSumBrute(TreeNode root) {\n        if (root == null) return Integer.MIN_VALUE;\n\n        // Best path that turns at the root of this subtree.\n        int throughRoot = root.val + Math.max(0, maxDown(root.left)) + Math.max(0, maxDown(root.right));\n\n        // Or the best path lies fully inside one of the children.\n        return Math.max(throughRoot, Math.max(maxPathSumBrute(root.left), maxPathSumBrute(root.right)));\n    }\n\n    private int maxDown(TreeNode root) {\n        if (root == null) return 0;\n\n        // Best downward chain that starts at this node.\n        return root.val + Math.max(0, Math.max(maxDown(root.left), maxDown(root.right)));\n    }\n}",
+          "csharp": "public class Solution {\n    public int MaxPathSumBrute(TreeNode root) {\n        if (root == null) return int.MinValue;\n\n        // Best path that turns at the root of this subtree.\n        int throughRoot = root.Val + Math.Max(0, MaxDown(root.Left)) + Math.Max(0, MaxDown(root.Right));\n\n        // Or the best path lies fully inside one of the children.\n        return Math.Max(throughRoot, Math.Max(MaxPathSumBrute(root.Left), MaxPathSumBrute(root.Right)));\n    }\n\n    private int MaxDown(TreeNode root) {\n        if (root == null) return 0;\n\n        // Best downward chain that starts at this node.\n        return root.Val + Math.Max(0, Math.Max(MaxDown(root.Left), MaxDown(root.Right)));\n    }\n}"
+        }
+      },
+      {
+        "id": "max-path-sum-gain",
+        "title": "Single-pass gain recursion",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "One recursion returns the best downward gain of each subtree while updating the answer with paths that bend at the current node. Negative branches are floored at zero.",
+        "code": {
+          "java": "class Solution {\n    public int maxPathSum(TreeNode root) {\n        int[] answer = {Integer.MIN_VALUE};\n        maxGain(root, answer);\n        return answer[0];\n    }\n\n    private int maxGain(TreeNode root, int[] answer) {\n        if (root == null) return 0;\n\n        // A negative branch can only hurt the path.\n        int left = Math.max(0, maxGain(root.left, answer));\n        int right = Math.max(0, maxGain(root.right, answer));\n\n        // Best path that passes through the current node.\n        int pathThroughNode = root.val + left + right;\n        answer[0] = Math.max(answer[0], pathThroughNode);\n\n        // The parent can continue through only one side.\n        return root.val + Math.max(left, right);\n    }\n}",
+          "csharp": "public class Solution {\n    public int MaxPathSum(TreeNode root) {\n        int answer = int.MinValue;\n        MaxGain(root, ref answer);\n        return answer;\n    }\n\n    private int MaxGain(TreeNode root, ref int answer) {\n        if (root == null) return 0;\n\n        // A negative branch can only hurt the path.\n        int left = Math.Max(0, MaxGain(root.Left, ref answer));\n        int right = Math.Max(0, MaxGain(root.Right, ref answer));\n\n        // Best path that passes through the current node.\n        int pathThroughNode = root.Val + left + right;\n        answer = Math.Max(answer, pathThroughNode);\n\n        // The parent can continue through only one side.\n        return root.Val + Math.Max(left, right);\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-311": {
+    "approaches": [
+      {
+        "id": "diameter-brute",
+        "title": "Brute force — height at every node",
+        "level": "Brute",
+        "time": "O(N²)",
+        "space": "O(H)",
+        "explanation": "Computes left and right heights for every node to find the longest path through it, then recurses. Heights are recomputed repeatedly, which is quadratic.",
+        "code": {
+          "java": "class Solution {\n    public int diameterBrute(TreeNode root) {\n        if (root == null) return 0;\n\n        // Longest path that passes through the root of this subtree.\n        int throughRoot = heightBrute(root.left) + heightBrute(root.right);\n\n        // Or the diameter lies entirely inside one child.\n        return Math.max(throughRoot, Math.max(diameterBrute(root.left), diameterBrute(root.right)));\n    }\n\n    private int heightBrute(TreeNode root) {\n        if (root == null) return 0;\n        return 1 + Math.max(heightBrute(root.left), heightBrute(root.right));\n    }\n}",
+          "csharp": "public class Solution {\n    public int DiameterBrute(TreeNode root) {\n        if (root == null) return 0;\n\n        // Longest path that passes through the root of this subtree.\n        int throughRoot = HeightBrute(root.Left) + HeightBrute(root.Right);\n\n        // Or the diameter lies entirely inside one child.\n        return Math.Max(throughRoot, Math.Max(DiameterBrute(root.Left), DiameterBrute(root.Right)));\n    }\n\n    private int HeightBrute(TreeNode root) {\n        if (root == null) return 0;\n        return 1 + Math.Max(HeightBrute(root.Left), HeightBrute(root.Right));\n    }\n}"
+        }
+      },
+      {
+        "id": "diameter-height-onepass",
+        "title": "One-pass height with a running diameter",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "A single height recursion updates the best left-height + right-height seen at any node, so every node is visited exactly once.",
+        "code": {
+          "java": "class Solution {\n    public int diameterOfBinaryTree(TreeNode root) {\n        int[] diameter = {0};\n        height(root, diameter);\n        return diameter[0];\n    }\n\n    private int height(TreeNode root, int[] diameter) {\n        if (root == null) return 0;\n\n        int left = height(root.left, diameter);\n        int right = height(root.right, diameter);\n\n        // Number of edges through the current node.\n        diameter[0] = Math.max(diameter[0], left + right);\n\n        return 1 + Math.max(left, right);\n    }\n}",
+          "csharp": "public class Solution {\n    public int DiameterOfBinaryTree(TreeNode root) {\n        int diameter = 0;\n        Height(root, ref diameter);\n        return diameter;\n    }\n\n    private int Height(TreeNode root, ref int diameter) {\n        if (root == null) return 0;\n\n        int left = Height(root.Left, ref diameter);\n        int right = Height(root.Right, ref diameter);\n\n        // Number of edges through the current node.\n        diameter = Math.Max(diameter, left + right);\n\n        return 1 + Math.Max(left, right);\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-310": {
+    "approaches": [
+      {
+        "id": "balanced-brute",
+        "title": "Brute force — check imbalance then recurse",
+        "level": "Brute",
+        "time": "O(N²)",
+        "space": "O(H)",
+        "explanation": "Verifies the height condition at every node and then recurses into the children, recomputing heights along the way. Correct but quadratic.",
+        "code": {
+          "java": "class Solution {\n    public boolean isBalancedBrute(TreeNode root) {\n        if (root == null) return true;\n\n        int left = heightBrute(root.left);\n        int right = heightBrute(root.right);\n\n        if (Math.abs(left - right) > 1) return false;\n\n        return isBalancedBrute(root.left) && isBalancedBrute(root.right);\n    }\n\n    private int heightBrute(TreeNode root) {\n        if (root == null) return 0;\n        return 1 + Math.max(heightBrute(root.left), heightBrute(root.right));\n    }\n}",
+          "csharp": "public class Solution {\n    public bool IsBalancedBrute(TreeNode root) {\n        if (root == null) return true;\n\n        int left = HeightBrute(root.Left);\n        int right = HeightBrute(root.Right);\n\n        if (Math.Abs(left - right) > 1) return false;\n\n        return IsBalancedBrute(root.Left) && IsBalancedBrute(root.Right);\n    }\n\n    private int HeightBrute(TreeNode root) {\n        if (root == null) return 0;\n        return 1 + Math.Max(HeightBrute(root.Left), HeightBrute(root.Right));\n    }\n}"
+        }
+      },
+      {
+        "id": "balanced-sentinel-height",
+        "title": "Height with a -1 imbalance sentinel",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "One recursive height function returns -1 the moment any subtree is unbalanced, so the walk stops early and each node is visited at most once.",
+        "code": {
+          "java": "class Solution {\n    public boolean isBalanced(TreeNode root) {\n        return height(root) != -1;\n    }\n\n    private int height(TreeNode root) {\n        if (root == null) return 0;\n\n        int left = height(root.left);\n\n        // -1 means the subtree is already unbalanced.\n        if (left == -1) return -1;\n\n        int right = height(root.right);\n        if (right == -1) return -1;\n\n        if (Math.abs(left - right) > 1) return -1;\n\n        return 1 + Math.max(left, right);\n    }\n}",
+          "csharp": "public class Solution {\n    public bool IsBalanced(TreeNode root) {\n        return Height(root) != -1;\n    }\n\n    private int Height(TreeNode root) {\n        if (root == null) return 0;\n\n        int left = Height(root.Left);\n\n        // -1 means the subtree is already unbalanced.\n        if (left == -1) return -1;\n\n        int right = Height(root.Right);\n        if (right == -1) return -1;\n\n        if (Math.Abs(left - right) > 1) return -1;\n\n        return 1 + Math.Max(left, right);\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-309": {
+    "approaches": [
+      {
+        "id": "max-depth-bfs",
+        "title": "Better — level-order BFS",
+        "level": "Better",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Counts levels with a queue: every while iteration consumes exactly one level of the tree. Avoids recursion but needs O(N) queue space in the worst case.",
+        "code": {
+          "java": "class Solution {\n    public int maxDepthBfs(TreeNode root) {\n        if (root == null) return 0;\n\n        Queue<TreeNode> queue = new LinkedList<>();\n        queue.offer(root);\n\n        int depth = 0;\n\n        while (!queue.isEmpty()) {\n            int size = queue.size();\n            depth++;\n\n            for (int i = 0; i < size; i++) {\n                TreeNode current = queue.poll();\n\n                if (current.left != null) queue.offer(current.left);\n                if (current.right != null) queue.offer(current.right);\n            }\n        }\n\n        return depth;\n    }\n}",
+          "csharp": "public class Solution {\n    public int MaxDepthBfs(TreeNode root) {\n        if (root == null) return 0;\n\n        Queue<TreeNode> queue = new Queue<TreeNode>();\n        queue.Enqueue(root);\n\n        int depth = 0;\n\n        while (queue.Count > 0) {\n            int size = queue.Count;\n            depth++;\n\n            for (int i = 0; i < size; i++) {\n                TreeNode current = queue.Dequeue();\n\n                if (current.Left != null) queue.Enqueue(current.Left);\n                if (current.Right != null) queue.Enqueue(current.Right);\n            }\n        }\n\n        return depth;\n    }\n}"
+        }
+      },
+      {
+        "id": "max-depth-recursive",
+        "title": "Recursive depth",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "The depth of a node is one plus the deeper of its two subtrees. The recursion stack holds at most one root-to-leaf path.",
+        "code": {
+          "java": "class Solution {\n    public int maxDepth(TreeNode root) {\n        if (root == null) return 0;\n\n        // Depth is the current node plus the deeper subtree.\n        return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));\n    }\n}",
+          "csharp": "public class Solution {\n    public int MaxDepth(TreeNode root) {\n        if (root == null) return 0;\n\n        // Depth is the current node plus the deeper subtree.\n        return 1 + Math.Max(MaxDepth(root.Left), MaxDepth(root.Right));\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-308": {
+    "approaches": [
+      {
+        "id": "all-traversals-three-passes",
+        "title": "Brute force — three separate traversals",
+        "level": "Brute",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Runs three independent recursive walks and fills one list each. Straightforward, but the tree is crossed three times instead of once.",
+        "code": {
+          "java": "class Solution {\n    public void allTraversalsBrute(TreeNode root, List<Integer> pre, List<Integer> in, List<Integer> post) {\n        if (root == null) return;\n\n        // Three independent recursive walks instead of one combined traversal.\n        preorderDfs(root, pre);\n        inorderDfs(root, in);\n        postorderDfs(root, post);\n    }\n\n    private void preorderDfs(TreeNode root, List<Integer> out) {\n        if (root == null) return;\n        out.add(root.val);\n        preorderDfs(root.left, out);\n        preorderDfs(root.right, out);\n    }\n\n    private void inorderDfs(TreeNode root, List<Integer> out) {\n        if (root == null) return;\n        inorderDfs(root.left, out);\n        out.add(root.val);\n        inorderDfs(root.right, out);\n    }\n\n    private void postorderDfs(TreeNode root, List<Integer> out) {\n        if (root == null) return;\n        postorderDfs(root.left, out);\n        postorderDfs(root.right, out);\n        out.add(root.val);\n    }\n}",
+          "csharp": "public class Solution {\n    public void AllTraversalsBrute(TreeNode root, List<int> pre, List<int> inorder, List<int> post) {\n        if (root == null) return;\n\n        // Three independent recursive walks instead of one combined traversal.\n        PreorderDfs(root, pre);\n        InorderDfs(root, inorder);\n        PostorderDfs(root, post);\n    }\n\n    private void PreorderDfs(TreeNode root, List<int> output) {\n        if (root == null) return;\n        output.Add(root.Val);\n        PreorderDfs(root.Left, output);\n        PreorderDfs(root.Right, output);\n    }\n\n    private void InorderDfs(TreeNode root, List<int> output) {\n        if (root == null) return;\n        InorderDfs(root.Left, output);\n        output.Add(root.Val);\n        InorderDfs(root.Right, output);\n    }\n\n    private void PostorderDfs(TreeNode root, List<int> output) {\n        if (root == null) return;\n        PostorderDfs(root.Left, output);\n        PostorderDfs(root.Right, output);\n        output.Add(root.Val);\n    }\n}"
+        }
+      },
+      {
+        "id": "all-traversals-state-stack",
+        "title": "Stack state machine — one traversal, three orders",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "Each stack entry carries a state: 1 adds to preorder and pushes the left child, 2 adds to inorder and pushes the right child, 3 finishes the node and pops it. Every node is processed exactly once.",
+        "code": {
+          "java": "class Solution {\n    public void allTraversals(TreeNode root, List<Integer> pre, List<Integer> in, List<Integer> post) {\n        if (root == null) return;\n\n        Deque<Pair> stack = new ArrayDeque<>();\n        stack.push(new Pair(root, 1));\n\n        while (!stack.isEmpty()) {\n            Pair current = stack.peek();\n\n            if (current.state == 1) {\n                // First visit → preorder.\n                pre.add(current.node.val);\n                current.state++;\n\n                if (current.node.left != null) stack.push(new Pair(current.node.left, 1));\n            } else if (current.state == 2) {\n                // Returning from the left subtree → inorder.\n                in.add(current.node.val);\n                current.state++;\n\n                if (current.node.right != null) stack.push(new Pair(current.node.right, 1));\n            } else {\n                // Both subtrees finished → postorder.\n                post.add(current.node.val);\n                stack.pop();\n            }\n        }\n    }\n\n    static class Pair {\n        TreeNode node;\n        int state;\n\n        Pair(TreeNode node, int state) {\n            this.node = node;\n            this.state = state;\n        }\n    }\n}",
+          "csharp": "public class Solution {\n    public void AllTraversals(TreeNode root, List<int> pre, List<int> inorder, List<int> post) {\n        if (root == null) return;\n\n        Stack<Pair> stack = new Stack<Pair>();\n        stack.Push(new Pair(root, 1));\n\n        while (stack.Count > 0) {\n            Pair current = stack.Peek();\n\n            if (current.State == 1) {\n                // First visit → preorder.\n                pre.Add(current.Node.Val);\n                current.State++;\n\n                if (current.Node.Left != null) stack.Push(new Pair(current.Node.Left, 1));\n            } else if (current.State == 2) {\n                // Returning from the left subtree → inorder.\n                inorder.Add(current.Node.Val);\n                current.State++;\n\n                if (current.Node.Right != null) stack.Push(new Pair(current.Node.Right, 1));\n            } else {\n                // Both subtrees finished → postorder.\n                post.Add(current.Node.Val);\n                stack.Pop();\n            }\n        }\n    }\n\n    private class Pair {\n        public TreeNode Node;\n        public int State;\n\n        public Pair(TreeNode node, int state) {\n            Node = node;\n            State = state;\n        }\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-307": {
+    "approaches": [
+      {
+        "id": "postorder-reverse-trick",
+        "title": "Better — reverse of a right-first preorder",
+        "level": "Better",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Walks root-right-left with one stack (pushing left before right) and reverses the collected list; the reversed order is exactly postorder.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> postorderReverse(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        if (root == null) return result;\n\n        Deque<TreeNode> stack = new ArrayDeque<>();\n        stack.push(root);\n\n        while (!stack.isEmpty()) {\n            TreeNode current = stack.pop();\n            result.add(current.val);\n\n            // Root → right → left order; reversed this becomes postorder.\n            if (current.left != null) stack.push(current.left);\n            if (current.right != null) stack.push(current.right);\n        }\n\n        Collections.reverse(result);\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> PostorderReverse(TreeNode root) {\n        List<int> result = new List<int>();\n        if (root == null) return result;\n\n        Stack<TreeNode> stack = new Stack<TreeNode>();\n        stack.Push(root);\n\n        while (stack.Count > 0) {\n            TreeNode current = stack.Pop();\n            result.Add(current.Val);\n\n            // Root → right → left order; reversed this becomes postorder.\n            if (current.Left != null) stack.Push(current.Left);\n            if (current.Right != null) stack.Push(current.Right);\n        }\n\n        result.Reverse();\n        return result;\n    }\n}"
+        }
+      },
+      {
+        "id": "postorder-one-stack",
+        "title": "One stack with a last-visited pointer",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "A single stack holds the left spine; a node is only emitted when its right child is null or was just finished, tracked by a last-visited pointer.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> postorderOneStack(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n\n        Deque<TreeNode> stack = new ArrayDeque<>();\n        TreeNode current = root;\n        TreeNode lastVisited = null;\n\n        while (current != null || !stack.isEmpty()) {\n            if (current != null) {\n                // Go as far left as possible.\n                stack.push(current);\n                current = current.left;\n            } else {\n                TreeNode peek = stack.peek();\n\n                // The right subtree still needs processing.\n                if (peek.right != null && lastVisited != peek.right) {\n                    current = peek.right;\n                } else {\n                    // Both children are done.\n                    result.add(peek.val);\n                    lastVisited = stack.pop();\n                }\n            }\n        }\n\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> PostorderOneStack(TreeNode root) {\n        List<int> result = new List<int>();\n\n        Stack<TreeNode> stack = new Stack<TreeNode>();\n        TreeNode current = root;\n        TreeNode lastVisited = null;\n\n        while (current != null || stack.Count > 0) {\n            if (current != null) {\n                // Go as far left as possible.\n                stack.Push(current);\n                current = current.Left;\n            } else {\n                TreeNode peek = stack.Peek();\n\n                // The right subtree still needs processing.\n                if (peek.Right != null && lastVisited != peek.Right) {\n                    current = peek.Right;\n                } else {\n                    // Both children are done.\n                    result.Add(peek.Val);\n                    lastVisited = stack.Pop();\n                }\n            }\n        }\n\n        return result;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-306": {
+    "approaches": [
+      {
+        "id": "postorder-two-stacks",
+        "title": "Two stacks — collect then reverse",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "The first stack emits root-right-left into the second stack, which reverses it into postorder order on the way out.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> postorderTwoStacks(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        if (root == null) return result;\n\n        Deque<TreeNode> s1 = new ArrayDeque<>();\n        Deque<TreeNode> s2 = new ArrayDeque<>();\n        s1.push(root);\n\n        while (!s1.isEmpty()) {\n            TreeNode current = s1.pop();\n            s2.push(current);\n\n            if (current.left != null) s1.push(current.left);\n            if (current.right != null) s1.push(current.right);\n        }\n\n        while (!s2.isEmpty()) result.add(s2.pop().val);\n\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> PostorderTwoStacks(TreeNode root) {\n        List<int> result = new List<int>();\n        if (root == null) return result;\n\n        Stack<TreeNode> s1 = new Stack<TreeNode>();\n        Stack<TreeNode> s2 = new Stack<TreeNode>();\n        s1.Push(root);\n\n        while (s1.Count > 0) {\n            TreeNode current = s1.Pop();\n            s2.Push(current);\n\n            if (current.Left != null) s1.Push(current.Left);\n            if (current.Right != null) s1.Push(current.Right);\n        }\n\n        while (s2.Count > 0) result.Add(s2.Pop().Val);\n\n        return result;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-305": {
+    "approaches": [
+      {
+        "id": "inorder-iterative-stack",
+        "title": "Iterative inorder with a left-chain stack",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Push the full left chain, pop to visit a node, then move into its right subtree and repeat; the stack never holds more than one root-to-leaf path.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> inorderIterative(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n\n        Deque<TreeNode> stack = new ArrayDeque<>();\n        TreeNode current = root;\n\n        while (current != null || !stack.isEmpty()) {\n            // Push the complete left chain.\n            while (current != null) {\n                stack.push(current);\n                current = current.left;\n            }\n\n            current = stack.pop();\n            result.add(current.val);\n\n            // Now process the right subtree.\n            current = current.right;\n        }\n\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> InorderIterative(TreeNode root) {\n        List<int> result = new List<int>();\n\n        Stack<TreeNode> stack = new Stack<TreeNode>();\n        TreeNode current = root;\n\n        while (current != null || stack.Count > 0) {\n            // Push the complete left chain.\n            while (current != null) {\n                stack.Push(current);\n                current = current.Left;\n            }\n\n            current = stack.Pop();\n            result.Add(current.Val);\n\n            // Now process the right subtree.\n            current = current.Right;\n        }\n\n        return result;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-304": {
+    "approaches": [
+      {
+        "id": "preorder-iterative-stack",
+        "title": "Iterative preorder — push right first",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "A stack visit emits the node immediately; the right child is pushed before the left so the left subtree is processed first.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> preorderIterative(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        if (root == null) return result;\n\n        Deque<TreeNode> stack = new ArrayDeque<>();\n        stack.push(root);\n\n        while (!stack.isEmpty()) {\n            TreeNode current = stack.pop();\n            result.add(current.val);\n\n            // The stack is LIFO, so push right first.\n            if (current.right != null) stack.push(current.right);\n            if (current.left != null) stack.push(current.left);\n        }\n\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> PreorderIterative(TreeNode root) {\n        List<int> result = new List<int>();\n        if (root == null) return result;\n\n        Stack<TreeNode> stack = new Stack<TreeNode>();\n        stack.Push(root);\n\n        while (stack.Count > 0) {\n            TreeNode current = stack.Pop();\n            result.Add(current.Val);\n\n            // The stack is LIFO, so push right first.\n            if (current.Right != null) stack.Push(current.Right);\n            if (current.Left != null) stack.Push(current.Left);\n        }\n\n        return result;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-303": {
+    "approaches": [
+      {
+        "id": "level-order-bfs",
+        "title": "BFS level by level",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(N)",
+        "explanation": "The queue size at the start of each round is exactly the number of nodes on the current level, so the level can be drained into its own list.",
+        "code": {
+          "java": "class Solution {\n    public List<List<Integer>> levelOrder(TreeNode root) {\n        List<List<Integer>> result = new ArrayList<>();\n        if (root == null) return result;\n\n        Queue<TreeNode> queue = new LinkedList<>();\n        queue.offer(root);\n\n        while (!queue.isEmpty()) {\n            int size = queue.size();\n            List<Integer> level = new ArrayList<>();\n\n            for (int i = 0; i < size; i++) {\n                TreeNode current = queue.poll();\n                level.add(current.val);\n\n                if (current.left != null) queue.offer(current.left);\n                if (current.right != null) queue.offer(current.right);\n            }\n\n            result.add(level);\n        }\n\n        return result;\n    }\n}",
+          "csharp": "public class Solution {\n    public List<List<int>> LevelOrder(TreeNode root) {\n        List<List<int>> result = new List<List<int>>();\n        if (root == null) return result;\n\n        Queue<TreeNode> queue = new Queue<TreeNode>();\n        queue.Enqueue(root);\n\n        while (queue.Count > 0) {\n            int size = queue.Count;\n            List<int> level = new List<int>();\n\n            for (int i = 0; i < size; i++) {\n                TreeNode current = queue.Dequeue();\n                level.Add(current.Val);\n\n                if (current.Left != null) queue.Enqueue(current.Left);\n                if (current.Right != null) queue.Enqueue(current.Right);\n            }\n\n            result.Add(level);\n        }\n\n        return result;\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-302": {
+    "approaches": [
+      {
+        "id": "postorder-recursive",
+        "title": "Recursive postorder",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Recurse into the left and right subtrees first and append the node afterwards, producing left-right-root order.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> postorder(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        dfs(root, result);\n        return result;\n    }\n\n    private void dfs(TreeNode root, List<Integer> result) {\n        if (root == null) return;\n\n        dfs(root.left, result);\n        dfs(root.right, result);\n\n        // Visit after both children.\n        result.add(root.val);\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> Postorder(TreeNode root) {\n        List<int> result = new List<int>();\n        Dfs(root, result);\n        return result;\n    }\n\n    private void Dfs(TreeNode root, List<int> result) {\n        if (root == null) return;\n\n        Dfs(root.Left, result);\n        Dfs(root.Right, result);\n\n        // Visit after both children.\n        result.Add(root.Val);\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-301": {
+    "approaches": [
+      {
+        "id": "inorder-recursive",
+        "title": "Recursive inorder",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "Recurse into the left subtree, visit the node, then recurse into the right subtree — the classic left-root-right order.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> inorder(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        dfs(root, result);\n        return result;\n    }\n\n    private void dfs(TreeNode root, List<Integer> result) {\n        if (root == null) return;\n\n        dfs(root.left, result);\n\n        // Visit between the two subtrees.\n        result.add(root.val);\n\n        dfs(root.right, result);\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> Inorder(TreeNode root) {\n        List<int> result = new List<int>();\n        Dfs(root, result);\n        return result;\n    }\n\n    private void Dfs(TreeNode root, List<int> result) {\n        if (root == null) return;\n\n        Dfs(root.Left, result);\n\n        // Visit between the two subtrees.\n        result.Add(root.Val);\n\n        Dfs(root.Right, result);\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-300": {
+    "approaches": [
+      {
+        "id": "preorder-recursive",
+        "title": "Recursive preorder",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "The node is recorded before descending, then the left and right subtrees are visited in order — root-left-right.",
+        "code": {
+          "java": "class Solution {\n    public List<Integer> preorder(TreeNode root) {\n        List<Integer> result = new ArrayList<>();\n        dfs(root, result);\n        return result;\n    }\n\n    private void dfs(TreeNode root, List<Integer> result) {\n        if (root == null) return;\n\n        // Visit before the children.\n        result.add(root.val);\n\n        dfs(root.left, result);\n        dfs(root.right, result);\n    }\n}",
+          "csharp": "public class Solution {\n    public List<int> Preorder(TreeNode root) {\n        List<int> result = new List<int>();\n        Dfs(root, result);\n        return result;\n    }\n\n    private void Dfs(TreeNode root, List<int> result) {\n        if (root == null) return;\n\n        // Visit before the children.\n        result.Add(root.Val);\n\n        Dfs(root.Left, result);\n        Dfs(root.Right, result);\n    }\n}"
+        }
+      }
+    ]
+  },
+  "a2z-299": {
+    "approaches": [
+      {
+        "id": "all-orders-recursive",
+        "title": "One recursive walk collecting all three orders",
+        "level": "Optimal",
+        "time": "O(N)",
+        "space": "O(H)",
+        "explanation": "A single DFS records the node at three moments — before the children for preorder, between them for inorder and after them for postorder.",
+        "code": {
+          "java": "class Solution {\n    public Traversals allTraversals(TreeNode root) {\n        Traversals result = new Traversals();\n        dfs(root, result);\n        return result;\n    }\n\n    private void dfs(TreeNode root, Traversals result) {\n        if (root == null) return;\n\n        // First position → preorder.\n        result.preorder.add(root.val);\n\n        dfs(root.left, result);\n\n        // After the left subtree → inorder.\n        result.inorder.add(root.val);\n\n        dfs(root.right, result);\n\n        // After both subtrees → postorder.\n        result.postorder.add(root.val);\n    }\n\n    static class Traversals {\n        List<Integer> preorder = new ArrayList<>();\n        List<Integer> inorder = new ArrayList<>();\n        List<Integer> postorder = new ArrayList<>();\n    }\n}",
+          "csharp": "public class Solution {\n    public Traversals AllTraversals(TreeNode root) {\n        Traversals result = new Traversals();\n        Dfs(root, result);\n        return result;\n    }\n\n    private void Dfs(TreeNode root, Traversals result) {\n        if (root == null) return;\n\n        // First position → preorder.\n        result.Preorder.Add(root.Val);\n\n        Dfs(root.Left, result);\n\n        // After the left subtree → inorder.\n        result.Inorder.Add(root.Val);\n\n        Dfs(root.Right, result);\n\n        // After both subtrees → postorder.\n        result.Postorder.Add(root.Val);\n    }\n\n    private class Traversals {\n        public List<int> Preorder = new List<int>();\n        public List<int> Inorder = new List<int>();\n        public List<int> Postorder = new List<int>();\n    }\n}"
+        }
+      }
+    ]
   }
 }

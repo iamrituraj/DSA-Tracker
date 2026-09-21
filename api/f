@@ -1,1523 +1,3717 @@
-Absolutely. Continuing **backward from the end of your list**, the next section is **Tries**, starting from **a2z-465 → a2z-459**. 
+# Binary Trees — a2z-334 → a2z-299
 
-# TRIES
+Only **solutions + time/space complexity**, with the important logic commented directly in the code.
 
----
+Use this common node definition for all problems.
 
-# 1. Maximum XOR with an Element from an Array
+### Java
 
-**a2z-465 — Maximum Xor with an element from an array · Hard** 
+```java
+class TreeNode {
+    int val;
+    TreeNode left, right;
 
-Typical problem:
-
-Given:
-
-```text
-nums = [0, 1, 2, 3, 4]
-queries = [[3, 1], [1, 3], [5, 6]]
+    TreeNode(int val) {
+        this.val = val;
+    }
+}
 ```
 
-For each query:
+### C#
 
-```text
-[x, m]
-```
+```csharp
+public class TreeNode
+{
+    public int Val;
+    public TreeNode Left, Right;
 
-find:
-
-```text
-max(x XOR num)
-```
-
-where:
-
-```text
-num <= m
+    public TreeNode(int val)
+    {
+        Val = val;
+    }
+}
 ```
 
 ---
 
-## Approach 1 — Brute Force
+# 36. Flatten Binary Tree to Linked List
 
-For every query:
+**a2z-334**
 
-```text
-for every number:
-    if number <= m:
-        answer = max(answer, x ^ number)
-```
-
-### Complexity
-
-If:
+Flatten in preorder:
 
 ```text
-N = number of nums
-Q = number of queries
+1
+ \
+  2
+   \
+    3
+     \
+      4
 ```
-
-then:
-
-```text
-Time: O(N × Q)
-Space: O(Q)
-```
-
-This is usually too slow.
-
----
-
-# Approach 2 — Binary Trie + Offline Queries
-
-This is the important interview solution.
-
-The key observation:
-
-For maximizing:
-
-```text
-x XOR num
-```
-
-we want the opposite bit whenever possible.
-
-Suppose:
-
-```text
-x = 10110
-```
-
-At the highest bit:
-
-```text
-x = 1
-```
-
-we prefer:
-
-```text
-num bit = 0
-```
-
-because:
-
-```text
-1 XOR 0 = 1
-```
-
-instead of:
-
-```text
-1 XOR 1 = 0
-```
-
-So a binary Trie lets us greedily choose the opposite bit.
-
-### But there's a constraint:
-
-```text
-num <= m
-```
-
-We therefore process queries offline.
-
-### Steps
-
-1. Sort `nums`.
-2. Sort queries by `m`.
-3. As `m` increases, insert every `num <= m` into the Trie.
-4. Query the Trie for maximum XOR.
-
-This means each number is inserted only once.
-
----
 
 ## Java
 
 ```java
-import java.util.*;
+public static void flatten(TreeNode root) {
+    TreeNode current = root;
 
-public class Solution {
+    while (current != null) {
 
-    static class TrieNode {
-        TrieNode[] child = new TrieNode[2];
-    }
+        if (current.left != null) {
+            // Find the rightmost node of the left subtree.
+            TreeNode predecessor = current.left;
 
-    static class BinaryTrie {
+            while (predecessor.right != null)
+                predecessor = predecessor.right;
 
-        TrieNode root = new TrieNode();
+            // Attach original right subtree after it.
+            predecessor.right = current.right;
 
-        void insert(int num) {
-
-            TrieNode node = root;
-
-            for (int bit = 31; bit >= 0; bit--) {
-
-                int b = (num >>> bit) & 1;
-
-                if (node.child[b] == null) {
-                    node.child[b] = new TrieNode();
-                }
-
-                node = node.child[b];
-            }
+            // Move left subtree to the right.
+            current.right = current.left;
+            current.left = null;
         }
 
-        int maxXor(int num) {
-
-            TrieNode node = root;
-
-            int answer = 0;
-
-            for (int bit = 31; bit >= 0; bit--) {
-
-                int b = (num >>> bit) & 1;
-
-                int opposite = b ^ 1;
-
-                if (node.child[opposite] != null) {
-
-                    answer |= (1 << bit);
-
-                    node = node.child[opposite];
-
-                } else {
-
-                    node = node.child[b];
-                }
-            }
-
-            return answer;
-        }
-    }
-
-    public static int[] maximizeXor(
-            int[] nums,
-            int[][] queries) {
-
-        Arrays.sort(nums);
-
-        int q = queries.length;
-
-        // {x, m, originalIndex}
-        int[][] sortedQueries = new int[q][3];
-
-        for (int i = 0; i < q; i++) {
-
-            sortedQueries[i][0] = queries[i][0];
-            sortedQueries[i][1] = queries[i][1];
-            sortedQueries[i][2] = i;
-        }
-
-        Arrays.sort(
-                sortedQueries,
-                Comparator.comparingInt(a -> a[1])
-        );
-
-        int[] answer = new int[q];
-
-        BinaryTrie trie = new BinaryTrie();
-
-        int index = 0;
-
-        for (int[] query : sortedQueries) {
-
-            int x = query[0];
-            int m = query[1];
-
-            while (
-                    index < nums.length
-                    && nums[index] <= m
-            ) {
-                trie.insert(nums[index]);
-                index++;
-            }
-
-            if (index == 0) {
-                answer[query[2]] = -1;
-            } else {
-                answer[query[2]] = trie.maxXor(x);
-            }
-        }
-
-        return answer;
+        current = current.right;
     }
 }
 ```
-
----
 
 ## C#
 
 ```csharp
-using System;
-using System.Collections.Generic;
-
-public class Solution
+public static void Flatten(TreeNode root)
 {
-    class TrieNode
-    {
-        public TrieNode[] Child = new TrieNode[2];
-    }
+    TreeNode current = root;
 
-    class BinaryTrie
+    while (current != null)
     {
-        private TrieNode root = new TrieNode();
-
-        public void Insert(int num)
+        if (current.Left != null)
         {
-            TrieNode node = root;
+            // Find rightmost node of left subtree.
+            TreeNode predecessor = current.Left;
 
-            for (int bit = 31; bit >= 0; bit--)
-            {
-                int b = (num >> bit) & 1;
+            while (predecessor.Right != null)
+                predecessor = predecessor.Right;
 
-                if (node.Child[b] == null)
-                    node.Child[b] = new TrieNode();
+            // Preserve original right subtree.
+            predecessor.Right = current.Right;
 
-                node = node.Child[b];
+            current.Right = current.Left;
+            current.Left = null;
+        }
+
+        current = current.Right;
+    }
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(1)`
+
+---
+
+# 35. Morris Inorder Traversal
+
+**a2z-333**
+
+## Java
+
+```java
+public static List<Integer> morrisInorder(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+
+    TreeNode current = root;
+
+    while (current != null) {
+
+        if (current.left == null) {
+            // No left subtree: process current directly.
+            result.add(current.val);
+            current = current.right;
+        }
+        else {
+            // Find inorder predecessor.
+            TreeNode predecessor = current.left;
+
+            while (predecessor.right != null &&
+                   predecessor.right != current) {
+                predecessor = predecessor.right;
+            }
+
+            if (predecessor.right == null) {
+                // Create temporary thread back to current.
+                predecessor.right = current;
+                current = current.left;
+            }
+            else {
+                // Thread already exists: remove it and process current.
+                predecessor.right = null;
+                result.add(current.val);
+                current = current.right;
             }
         }
+    }
 
-        public int MaxXor(int num)
+    return result;
+}
+```
+
+## C#
+
+```csharp
+public static List<int> MorrisInorder(TreeNode root)
+{
+    List<int> result = new List<int>();
+    TreeNode current = root;
+
+    while (current != null)
+    {
+        if (current.Left == null)
         {
-            TrieNode node = root;
+            result.Add(current.Val);
+            current = current.Right;
+        }
+        else
+        {
+            // Find inorder predecessor.
+            TreeNode predecessor = current.Left;
 
-            int answer = 0;
-
-            for (int bit = 31; bit >= 0; bit--)
+            while (predecessor.Right != null &&
+                   predecessor.Right != current)
             {
-                int b = (num >> bit) & 1;
-                int opposite = b ^ 1;
-
-                if (node.Child[opposite] != null)
-                {
-                    answer |= (1 << bit);
-                    node = node.Child[opposite];
-                }
-                else
-                {
-                    node = node.Child[b];
-                }
+                predecessor = predecessor.Right;
             }
 
-            return answer;
+            if (predecessor.Right == null)
+            {
+                // Create temporary thread.
+                predecessor.Right = current;
+                current = current.Left;
+            }
+            else
+            {
+                // Remove thread and process current.
+                predecessor.Right = null;
+                result.Add(current.Val);
+                current = current.Right;
+            }
         }
     }
 
-    public static int[] MaximizeXor(
-        int[] nums,
-        int[][] queries)
+    return result;
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(1)`
+
+---
+
+# 34. Morris Preorder Traversal
+
+**a2z-332**
+
+## Java
+
+```java
+public static List<Integer> morrisPreorder(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+
+    TreeNode current = root;
+
+    while (current != null) {
+
+        if (current.left == null) {
+            // No left subtree, visit current.
+            result.add(current.val);
+            current = current.right;
+        }
+        else {
+            TreeNode predecessor = current.left;
+
+            while (predecessor.right != null &&
+                   predecessor.right != current) {
+                predecessor = predecessor.right;
+            }
+
+            if (predecessor.right == null) {
+                // First time reaching current -> preorder visit.
+                result.add(current.val);
+
+                predecessor.right = current;
+                current = current.left;
+            }
+            else {
+                // Remove temporary thread.
+                predecessor.right = null;
+                current = current.right;
+            }
+        }
+    }
+
+    return result;
+}
+```
+
+## C#
+
+```csharp
+public static List<int> MorrisPreorder(TreeNode root)
+{
+    List<int> result = new List<int>();
+    TreeNode current = root;
+
+    while (current != null)
     {
-        Array.Sort(nums);
-
-        int q = queries.Length;
-
-        // x, m, originalIndex
-        int[][] sortedQueries = new int[q][];
-
-        for (int i = 0; i < q; i++)
+        if (current.Left == null)
         {
-            sortedQueries[i] = new[]
+            result.Add(current.Val);
+            current = current.Right;
+        }
+        else
+        {
+            TreeNode predecessor = current.Left;
+
+            while (predecessor.Right != null &&
+                   predecessor.Right != current)
             {
-                queries[i][0],
-                queries[i][1],
-                i
-            };
+                predecessor = predecessor.Right;
+            }
+
+            if (predecessor.Right == null)
+            {
+                // First visit -> preorder.
+                result.Add(current.Val);
+
+                predecessor.Right = current;
+                current = current.Left;
+            }
+            else
+            {
+                predecessor.Right = null;
+                current = current.Right;
+            }
+        }
+    }
+
+    return result;
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(1)`
+
+---
+
+# 33. Serialize and Deserialize Binary Tree
+
+**a2z-331**
+
+Use preorder and `#` for null.
+
+## Java
+
+```java
+public class Codec {
+
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        serialize(root, sb);
+        return sb.toString();
+    }
+
+    private void serialize(TreeNode root, StringBuilder sb) {
+        if (root == null) {
+            sb.append("#,");
+            return;
         }
 
-        Array.Sort(
-            sortedQueries,
-            (a, b) => a[1].CompareTo(b[1])
-        );
+        sb.append(root.val).append(",");
 
-        int[] answer = new int[q];
+        serialize(root.left, sb);
+        serialize(root.right, sb);
+    }
 
-        BinaryTrie trie = new BinaryTrie();
+    public TreeNode deserialize(String data) {
+        String[] values = data.split(",");
+        int[] index = {0};
 
+        return build(values, index);
+    }
+
+    private TreeNode build(
+            String[] values,
+            int[] index) {
+
+        if (values[index[0]].equals("#")) {
+            index[0]++;
+            return null;
+        }
+
+        TreeNode node =
+            new TreeNode(Integer.parseInt(values[index[0]++]));
+
+        node.left = build(values, index);
+        node.right = build(values, index);
+
+        return node;
+    }
+}
+```
+
+## C#
+
+```csharp
+public class Codec
+{
+    public string Serialize(TreeNode root)
+    {
+        List<string> result = new List<string>();
+        Serialize(root, result);
+        return string.Join(",", result);
+    }
+
+    private void Serialize(
+        TreeNode root,
+        List<string> result)
+    {
+        if (root == null)
+        {
+            result.Add("#");
+            return;
+        }
+
+        result.Add(root.Val.ToString());
+
+        Serialize(root.Left, result);
+        Serialize(root.Right, result);
+    }
+
+    public TreeNode Deserialize(string data)
+    {
+        string[] values = data.Split(',');
         int index = 0;
 
-        foreach (int[] query in sortedQueries)
+        return Build(values, ref index);
+    }
+
+    private TreeNode Build(
+        string[] values,
+        ref int index)
+    {
+        if (values[index] == "#")
         {
-            int x = query[0];
-            int m = query[1];
-            int originalIndex = query[2];
-
-            while (
-                index < nums.Length &&
-                nums[index] <= m)
-            {
-                trie.Insert(nums[index]);
-                index++;
-            }
-
-            if (index == 0)
-                answer[originalIndex] = -1;
-            else
-                answer[originalIndex] = trie.MaxXor(x);
+            index++;
+            return null;
         }
 
-        return answer;
+        TreeNode node =
+            new TreeNode(int.Parse(values[index++]));
+
+        node.Left = Build(values, ref index);
+        node.Right = Build(values, ref index);
+
+        return node;
     }
 }
 ```
 
-### Complexity
-
-Trie height is 32 for integers.
-
-```text
-Sorting nums:       O(N log N)
-Sorting queries:    O(Q log Q)
-Trie insertion:     O(32N)
-Trie query:         O(32Q)
-```
-
-Therefore:
-
-```text
-Time:  O(N log N + Q log Q + 32(N + Q))
-     ≈ O(N log N + Q log Q)
-
-Space: O(32N)
-```
+**Time:** `O(N)`
+**Space:** `O(N)`
 
 ---
 
-# 2. Maximum XOR of Two Numbers in an Array
+# 32. Construct Binary Tree from Postorder and Inorder
 
-**a2z-464 — Maximum XOR of two numbers in an array · Hard** 
+**a2z-330**
 
-Given:
-
-```text
-nums = [3, 10, 5, 25, 2, 8]
-```
-
-Find:
+Postorder:
 
 ```text
-max(nums[i] XOR nums[j])
+left → right → root
 ```
 
-Answer:
+So process postorder **from right to left**.
 
-```text
-28
-```
-
-because:
-
-```text
-5 XOR 25 = 28
-```
-
----
-
-## Approach 1 — Brute Force
+## Java
 
 ```java
-int max = 0;
+public static TreeNode buildTree(
+        int[] inorder,
+        int[] postorder) {
 
-for (int i = 0; i < nums.length; i++) {
-    for (int j = i + 1; j < nums.length; j++) {
-        max = Math.max(max, nums[i] ^ nums[j]);
-    }
+    Map<Integer, Integer> index = new HashMap<>();
+
+    for (int i = 0; i < inorder.length; i++)
+        index.put(inorder[i], i);
+
+    int[] postIndex = {postorder.length - 1};
+
+    return build(
+        inorder,
+        postorder,
+        0,
+        inorder.length - 1,
+        postIndex,
+        index
+    );
+}
+
+private static TreeNode build(
+        int[] inorder,
+        int[] postorder,
+        int left,
+        int right,
+        int[] postIndex,
+        Map<Integer, Integer> index) {
+
+    if (left > right)
+        return null;
+
+    int value = postorder[postIndex[0]--];
+
+    TreeNode root = new TreeNode(value);
+
+    int mid = index.get(value);
+
+    // Because postorder is processed backwards:
+    // build right subtree before left subtree.
+    root.right = build(
+        inorder, postorder,
+        mid + 1, right,
+        postIndex, index
+    );
+
+    root.left = build(
+        inorder, postorder,
+        left, mid - 1,
+        postIndex, index
+    );
+
+    return root;
 }
 ```
 
-Complexity:
-
-```text
-Time: O(N²)
-Space: O(1)
-```
-
----
-
-# Approach 2 — Binary Trie
-
-Insert all numbers into a binary Trie.
-
-For every number `x`, find the number in the Trie that maximizes:
-
-```text
-x XOR y
-```
-
-At every bit, prefer:
-
-```text
-1 - currentBit
-```
-
-### Java
-
-```java
-class BinaryTrie {
-
-    static class Node {
-        Node[] child = new Node[2];
-    }
-
-    private final Node root = new Node();
-
-    void insert(int num) {
-
-        Node node = root;
-
-        for (int bit = 31; bit >= 0; bit--) {
-
-            int b = (num >>> bit) & 1;
-
-            if (node.child[b] == null)
-                node.child[b] = new Node();
-
-            node = node.child[b];
-        }
-    }
-
-    int maxXor(int num) {
-
-        Node node = root;
-
-        int result = 0;
-
-        for (int bit = 31; bit >= 0; bit--) {
-
-            int b = (num >>> bit) & 1;
-
-            int opposite = b ^ 1;
-
-            if (node.child[opposite] != null) {
-
-                result |= (1 << bit);
-
-                node = node.child[opposite];
-
-            } else {
-                node = node.child[b];
-            }
-        }
-
-        return result;
-    }
-}
-
-public static int findMaximumXOR(int[] nums) {
-
-    BinaryTrie trie = new BinaryTrie();
-
-    for (int num : nums)
-        trie.insert(num);
-
-    int answer = 0;
-
-    for (int num : nums)
-        answer = Math.max(answer, trie.maxXor(num));
-
-    return answer;
-}
-```
-
-### C#
+## C#
 
 ```csharp
-class BinaryTrie
+public static TreeNode BuildTree(
+    int[] inorder,
+    int[] postorder)
 {
-    class Node
-    {
-        public Node[] Child = new Node[2];
-    }
+    Dictionary<int, int> index =
+        new Dictionary<int, int>();
 
-    private readonly Node root = new Node();
+    for (int i = 0; i < inorder.Length; i++)
+        index[inorder[i]] = i;
 
-    public void Insert(int num)
-    {
-        Node node = root;
+    int postIndex = postorder.Length - 1;
 
-        for (int bit = 31; bit >= 0; bit--)
-        {
-            int b = (num >> bit) & 1;
-
-            if (node.Child[b] == null)
-                node.Child[b] = new Node();
-
-            node = node.Child[b];
-        }
-    }
-
-    public int MaxXor(int num)
-    {
-        Node node = root;
-
-        int result = 0;
-
-        for (int bit = 31; bit >= 0; bit--)
-        {
-            int b = (num >> bit) & 1;
-            int opposite = b ^ 1;
-
-            if (node.Child[opposite] != null)
-            {
-                result |= (1 << bit);
-                node = node.Child[opposite];
-            }
-            else
-            {
-                node = node.Child[b];
-            }
-        }
-
-        return result;
-    }
+    return Build(
+        inorder,
+        postorder,
+        0,
+        inorder.Length - 1,
+        ref postIndex,
+        index
+    );
 }
 
-public static int FindMaximumXOR(int[] nums)
+private static TreeNode Build(
+    int[] inorder,
+    int[] postorder,
+    int left,
+    int right,
+    ref int postIndex,
+    Dictionary<int, int> index)
 {
-    BinaryTrie trie = new BinaryTrie();
+    if (left > right)
+        return null;
 
-    foreach (int num in nums)
-        trie.Insert(num);
+    int value = postorder[postIndex--];
 
-    int answer = 0;
+    TreeNode root = new TreeNode(value);
 
-    foreach (int num in nums)
-        answer = Math.Max(
-            answer,
-            trie.MaxXor(num)
+    int mid = index[value];
+
+    // Process right before left.
+    root.Right = Build(
+        inorder, postorder,
+        mid + 1, right,
+        ref postIndex, index
+    );
+
+    root.Left = Build(
+        inorder, postorder,
+        left, mid - 1,
+        ref postIndex, index
+    );
+
+    return root;
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(N)`
+
+---
+
+# 31. Construct Binary Tree from Preorder and Inorder
+
+**a2z-329**
+
+Preorder:
+
+```text
+root → left → right
+```
+
+Inorder:
+
+```text
+left → root → right
+```
+
+## Java
+
+```java
+public static TreeNode buildTree(
+        int[] preorder,
+        int[] inorder) {
+
+    Map<Integer, Integer> index = new HashMap<>();
+
+    for (int i = 0; i < inorder.length; i++)
+        index.put(inorder[i], i);
+
+    int[] preIndex = {0};
+
+    return build(
+        preorder,
+        0,
+        inorder.length - 1,
+        preIndex,
+        index
+    );
+}
+
+private static TreeNode build(
+        int[] preorder,
+        int left,
+        int right,
+        int[] preIndex,
+        Map<Integer, Integer> index) {
+
+    if (left > right)
+        return null;
+
+    int value = preorder[preIndex[0]++];
+
+    TreeNode root = new TreeNode(value);
+
+    int mid = index.get(value);
+
+    root.left = build(
+        preorder,
+        left,
+        mid - 1,
+        preIndex,
+        index
+    );
+
+    root.right = build(
+        preorder,
+        mid + 1,
+        right,
+        preIndex,
+        index
+    );
+
+    return root;
+}
+```
+
+## C#
+
+```csharp
+public static TreeNode BuildTree(
+    int[] preorder,
+    int[] inorder)
+{
+    Dictionary<int, int> index =
+        new Dictionary<int, int>();
+
+    for (int i = 0; i < inorder.Length; i++)
+        index[inorder[i]] = i;
+
+    int preIndex = 0;
+
+    return Build(
+        preorder,
+        0,
+        inorder.Length - 1,
+        ref preIndex,
+        index
+    );
+}
+
+private static TreeNode Build(
+    int[] preorder,
+    int left,
+    int right,
+    ref int preIndex,
+    Dictionary<int, int> index)
+{
+    if (left > right)
+        return null;
+
+    int value = preorder[preIndex++];
+
+    TreeNode root = new TreeNode(value);
+
+    int mid = index[value];
+
+    root.Left = Build(
+        preorder,
+        left,
+        mid - 1,
+        ref preIndex,
+        index
+    );
+
+    root.Right = Build(
+        preorder,
+        mid + 1,
+        right,
+        ref preIndex,
+        index
+    );
+
+    return root;
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(N)`
+
+---
+
+# 30. Requirements Needed to Construct a Unique BT
+
+**a2z-328**
+
+A binary tree can be uniquely constructed from:
+
+```text
+Preorder + Inorder
+```
+
+or
+
+```text
+Postorder + Inorder
+```
+
+But:
+
+```text
+Preorder + Postorder
+```
+
+is **not sufficient in general**.
+
+## Key fact
+
+```text
+Inorder + Preorder  → unique
+Inorder + Postorder → unique
+Preorder + Postorder → not unique generally
+```
+
+No separate implementation is required; the construction is covered by **a2z-329 and a2z-330**.
+
+---
+
+# 29. Count Total Nodes in Complete Binary Tree
+
+**a2z-327**
+
+For a complete tree:
+
+```text
+left height == right height
+```
+
+Then it's a perfect tree:
+
+```text
+nodes = 2^height - 1
+```
+
+Otherwise recursively count.
+
+## Java
+
+```java
+public static int countNodes(TreeNode root) {
+    if (root == null)
+        return 0;
+
+    int leftHeight = leftHeight(root);
+    int rightHeight = rightHeight(root);
+
+    if (leftHeight == rightHeight) {
+        // Perfect subtree.
+        return (1 << leftHeight) - 1;
+    }
+
+    return 1
+        + countNodes(root.left)
+        + countNodes(root.right);
+}
+
+private static int leftHeight(TreeNode root) {
+    int height = 0;
+
+    while (root != null) {
+        height++;
+        root = root.left;
+    }
+
+    return height;
+}
+
+private static int rightHeight(TreeNode root) {
+    int height = 0;
+
+    while (root != null) {
+        height++;
+        root = root.right;
+    }
+
+    return height;
+}
+```
+
+## C#
+
+```csharp
+public static int CountNodes(TreeNode root)
+{
+    if (root == null)
+        return 0;
+
+    int leftHeight = LeftHeight(root);
+    int rightHeight = RightHeight(root);
+
+    if (leftHeight == rightHeight)
+    {
+        // Perfect subtree.
+        return (1 << leftHeight) - 1;
+    }
+
+    return 1
+        + CountNodes(root.Left)
+        + CountNodes(root.Right);
+}
+
+private static int LeftHeight(TreeNode root)
+{
+    int height = 0;
+
+    while (root != null)
+    {
+        height++;
+        root = root.Left;
+    }
+
+    return height;
+}
+
+private static int RightHeight(TreeNode root)
+{
+    int height = 0;
+
+    while (root != null)
+    {
+        height++;
+        root = root.Right;
+    }
+
+    return height;
+}
+```
+
+**Time:** `O(log²N)`
+**Space:** `O(log N)` recursion
+
+---
+
+# 28. Minimum Time to Burn Binary Tree
+
+**a2z-326**
+
+From a target node, fire spreads:
+
+```text
+left
+right
+parent
+```
+
+So:
+
+1. Build parent pointers.
+2. BFS starting from target.
+
+## Java
+
+```java
+public static int burnTree(
+        TreeNode root,
+        int target) {
+
+    Map<TreeNode, TreeNode> parent = new HashMap<>();
+
+    TreeNode targetNode =
+        buildParentMap(root, target, parent);
+
+    Queue<TreeNode> queue = new LinkedList<>();
+    Set<TreeNode> visited = new HashSet<>();
+
+    queue.offer(targetNode);
+    visited.add(targetNode);
+
+    int time = 0;
+
+    while (!queue.isEmpty()) {
+
+        int size = queue.size();
+        boolean burnedNewNode = false;
+
+        for (int i = 0; i < size; i++) {
+
+            TreeNode current = queue.poll();
+
+            if (current.left != null &&
+                visited.add(current.left)) {
+
+                queue.offer(current.left);
+                burnedNewNode = true;
+            }
+
+            if (current.right != null &&
+                visited.add(current.right)) {
+
+                queue.offer(current.right);
+                burnedNewNode = true;
+            }
+
+            TreeNode p = parent.get(current);
+
+            if (p != null && visited.add(p)) {
+                queue.offer(p);
+                burnedNewNode = true;
+            }
+        }
+
+        if (burnedNewNode)
+            time++;
+    }
+
+    return time;
+}
+
+private static TreeNode buildParentMap(
+        TreeNode root,
+        int target,
+        Map<TreeNode, TreeNode> parent) {
+
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+
+    TreeNode targetNode = null;
+
+    while (!queue.isEmpty()) {
+
+        TreeNode current = queue.poll();
+
+        if (current.val == target)
+            targetNode = current;
+
+        if (current.left != null) {
+            parent.put(current.left, current);
+            queue.offer(current.left);
+        }
+
+        if (current.right != null) {
+            parent.put(current.right, current);
+            queue.offer(current.right);
+        }
+    }
+
+    return targetNode;
+}
+```
+
+## C#
+
+```csharp
+public static int BurnTree(
+    TreeNode root,
+    int target)
+{
+    Dictionary<TreeNode, TreeNode> parent =
+        new Dictionary<TreeNode, TreeNode>();
+
+    TreeNode targetNode =
+        BuildParentMap(root, target, parent);
+
+    Queue<TreeNode> queue =
+        new Queue<TreeNode>();
+
+    HashSet<TreeNode> visited =
+        new HashSet<TreeNode>();
+
+    queue.Enqueue(targetNode);
+    visited.Add(targetNode);
+
+    int time = 0;
+
+    while (queue.Count > 0)
+    {
+        int size = queue.Count;
+        bool burnedNewNode = false;
+
+        for (int i = 0; i < size; i++)
+        {
+            TreeNode current = queue.Dequeue();
+
+            if (current.Left != null &&
+                visited.Add(current.Left))
+            {
+                queue.Enqueue(current.Left);
+                burnedNewNode = true;
+            }
+
+            if (current.Right != null &&
+                visited.Add(current.Right))
+            {
+                queue.Enqueue(current.Right);
+                burnedNewNode = true;
+            }
+
+            if (parent.ContainsKey(current))
+            {
+                TreeNode p = parent[current];
+
+                if (visited.Add(p))
+                {
+                    queue.Enqueue(p);
+                    burnedNewNode = true;
+                }
+            }
+        }
+
+        if (burnedNewNode)
+            time++;
+    }
+
+    return time;
+}
+
+private static TreeNode BuildParentMap(
+    TreeNode root,
+    int target,
+    Dictionary<TreeNode, TreeNode> parent)
+{
+    Queue<TreeNode> queue =
+        new Queue<TreeNode>();
+
+    queue.Enqueue(root);
+
+    TreeNode targetNode = null;
+
+    while (queue.Count > 0)
+    {
+        TreeNode current = queue.Dequeue();
+
+        if (current.Val == target)
+            targetNode = current;
+
+        if (current.Left != null)
+        {
+            parent[current.Left] = current;
+            queue.Enqueue(current.Left);
+        }
+
+        if (current.Right != null)
+        {
+            parent[current.Right] = current;
+            queue.Enqueue(current.Right);
+        }
+    }
+
+    return targetNode;
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(N)`
+
+---
+
+# 27. Nodes at Distance K
+
+**a2z-325**
+
+Same idea as burning tree:
+
+```text
+parent map + BFS
+```
+
+## Java
+
+```java
+public static List<Integer> distanceK(
+        TreeNode root,
+        TreeNode target,
+        int k) {
+
+    Map<TreeNode, TreeNode> parent = new HashMap<>();
+
+    buildParents(root, parent);
+
+    Queue<TreeNode> queue = new LinkedList<>();
+    Set<TreeNode> visited = new HashSet<>();
+
+    queue.offer(target);
+    visited.add(target);
+
+    int distance = 0;
+
+    while (!queue.isEmpty()) {
+
+        if (distance == k) {
+            List<Integer> result = new ArrayList<>();
+
+            for (TreeNode node : queue)
+                result.add(node.val);
+
+            return result;
+        }
+
+        int size = queue.size();
+
+        for (int i = 0; i < size; i++) {
+
+            TreeNode current = queue.poll();
+
+            if (current.left != null &&
+                visited.add(current.left))
+                queue.offer(current.left);
+
+            if (current.right != null &&
+                visited.add(current.right))
+                queue.offer(current.right);
+
+            TreeNode p = parent.get(current);
+
+            if (p != null && visited.add(p))
+                queue.offer(p);
+        }
+
+        distance++;
+    }
+
+    return new ArrayList<>();
+}
+
+private static void buildParents(
+        TreeNode root,
+        Map<TreeNode, TreeNode> parent) {
+
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+
+    while (!queue.isEmpty()) {
+
+        TreeNode current = queue.poll();
+
+        if (current.left != null) {
+            parent.put(current.left, current);
+            queue.offer(current.left);
+        }
+
+        if (current.right != null) {
+            parent.put(current.right, current);
+            queue.offer(current.right);
+        }
+    }
+}
+```
+
+## C#
+
+```csharp
+public static List<int> DistanceK(
+    TreeNode root,
+    TreeNode target,
+    int k)
+{
+    Dictionary<TreeNode, TreeNode> parent =
+        new Dictionary<TreeNode, TreeNode>();
+
+    BuildParents(root, parent);
+
+    Queue<TreeNode> queue =
+        new Queue<TreeNode>();
+
+    HashSet<TreeNode> visited =
+        new HashSet<TreeNode>();
+
+    queue.Enqueue(target);
+    visited.Add(target);
+
+    int distance = 0;
+
+    while (queue.Count > 0)
+    {
+        if (distance == k)
+        {
+            return queue.Select(x => x.Val).ToList();
+        }
+
+        int size = queue.Count;
+
+        for (int i = 0; i < size; i++)
+        {
+            TreeNode current = queue.Dequeue();
+
+            if (current.Left != null &&
+                visited.Add(current.Left))
+                queue.Enqueue(current.Left);
+
+            if (current.Right != null &&
+                visited.Add(current.Right))
+                queue.Enqueue(current.Right);
+
+            if (parent.ContainsKey(current))
+            {
+                TreeNode p = parent[current];
+
+                if (visited.Add(p))
+                    queue.Enqueue(p);
+            }
+        }
+
+        distance++;
+    }
+
+    return new List<int>();
+}
+
+private static void BuildParents(
+    TreeNode root,
+    Dictionary<TreeNode, TreeNode> parent)
+{
+    Queue<TreeNode> queue =
+        new Queue<TreeNode>();
+
+    queue.Enqueue(root);
+
+    while (queue.Count > 0)
+    {
+        TreeNode current = queue.Dequeue();
+
+        if (current.Left != null)
+        {
+            parent[current.Left] = current;
+            queue.Enqueue(current.Left);
+        }
+
+        if (current.Right != null)
+        {
+            parent[current.Right] = current;
+            queue.Enqueue(current.Right);
+        }
+    }
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(N)`
+
+---
+
+# 26. Children Sum Property
+
+**a2z-324**
+
+Check:
+
+```text
+node.val == left.val + right.val
+```
+
+For a leaf, property is automatically satisfied.
+
+## Java
+
+```java
+public static boolean checkChildrenSum(TreeNode root) {
+
+    if (root == null)
+        return true;
+
+    // Leaf node.
+    if (root.left == null &&
+        root.right == null)
+        return true;
+
+    int sum = 0;
+
+    if (root.left != null)
+        sum += root.left.val;
+
+    if (root.right != null)
+        sum += root.right.val;
+
+    if (root.val != sum)
+        return false;
+
+    return checkChildrenSum(root.left)
+        && checkChildrenSum(root.right);
+}
+```
+
+## C#
+
+```csharp
+public static bool CheckChildrenSum(TreeNode root)
+{
+    if (root == null)
+        return true;
+
+    // Leaf automatically satisfies property.
+    if (root.Left == null &&
+        root.Right == null)
+        return true;
+
+    int sum = 0;
+
+    if (root.Left != null)
+        sum += root.Left.Val;
+
+    if (root.Right != null)
+        sum += root.Right.Val;
+
+    if (root.Val != sum)
+        return false;
+
+    return CheckChildrenSum(root.Left)
+        && CheckChildrenSum(root.Right);
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(H)`
+
+---
+
+# 25. Maximum Width of Binary Tree
+
+**a2z-323**
+
+Assign conceptual indices like a heap:
+
+```text
+left  = 2*i
+right = 2*i + 1
+```
+
+Use `long` to prevent overflow.
+
+## Java
+
+```java
+public static int widthOfBinaryTree(TreeNode root) {
+
+    if (root == null)
+        return 0;
+
+    Queue<Pair> queue = new LinkedList<>();
+    queue.offer(new Pair(root, 0L));
+
+    long maxWidth = 0;
+
+    while (!queue.isEmpty()) {
+
+        int size = queue.size();
+
+        long first = queue.peek().index;
+        long last = first;
+
+        for (int i = 0; i < size; i++) {
+
+            Pair current = queue.poll();
+
+            // Normalize index to prevent overflow.
+            long index = current.index - first;
+            last = index;
+
+            if (current.node.left != null)
+                queue.offer(new Pair(
+                    current.node.left,
+                    2 * index + 1
+                ));
+
+            if (current.node.right != null)
+                queue.offer(new Pair(
+                    current.node.right,
+                    2 * index + 2
+                ));
+        }
+
+        maxWidth = Math.max(
+            maxWidth,
+            last + 1
+        );
+    }
+
+    return (int) maxWidth;
+}
+
+static class Pair {
+    TreeNode node;
+    long index;
+
+    Pair(TreeNode node, long index) {
+        this.node = node;
+        this.index = index;
+    }
+}
+```
+
+## C#
+
+```csharp
+public static int WidthOfBinaryTree(TreeNode root)
+{
+    if (root == null)
+        return 0;
+
+    Queue<(TreeNode node, long index)> queue =
+        new Queue<(TreeNode, long)>();
+
+    queue.Enqueue((root, 0));
+
+    long maxWidth = 0;
+
+    while (queue.Count > 0)
+    {
+        int size = queue.Count;
+
+        long first = queue.Peek().index;
+        long last = first;
+
+        for (int i = 0; i < size; i++)
+        {
+            var current = queue.Dequeue();
+
+            // Normalize indices to avoid overflow.
+            long index = current.index - first;
+            last = index;
+
+            if (current.node.Left != null)
+            {
+                queue.Enqueue((
+                    current.node.Left,
+                    2 * index + 1
+                ));
+            }
+
+            if (current.node.Right != null)
+            {
+                queue.Enqueue((
+                    current.node.Right,
+                    2 * index + 2
+                ));
+            }
+        }
+
+        maxWidth = Math.Max(maxWidth, last + 1);
+    }
+
+    return (int)maxWidth;
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(N)`
+
+---
+
+# 24. LCA in Binary Tree
+
+**a2z-322**
+
+Unlike BST, we cannot use value ordering.
+
+## Java
+
+```java
+public static TreeNode lca(
+        TreeNode root,
+        TreeNode p,
+        TreeNode q) {
+
+    if (root == null ||
+        root == p ||
+        root == q)
+        return root;
+
+    TreeNode left = lca(root.left, p, q);
+    TreeNode right = lca(root.right, p, q);
+
+    // One node found in each subtree.
+    if (left != null && right != null)
+        return root;
+
+    return left != null ? left : right;
+}
+```
+
+## C#
+
+```csharp
+public static TreeNode Lca(
+    TreeNode root,
+    TreeNode p,
+    TreeNode q)
+{
+    if (root == null ||
+        root == p ||
+        root == q)
+        return root;
+
+    TreeNode left = Lca(root.Left, p, q);
+    TreeNode right = Lca(root.Right, p, q);
+
+    // Nodes are in different subtrees.
+    if (left != null && right != null)
+        return root;
+
+    return left ?? right;
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(H)`
+
+---
+
+# 23. Print Root-to-Leaf Paths
+
+**a2z-321**
+
+## Java
+
+```java
+public static List<List<Integer>> rootToLeafPaths(
+        TreeNode root) {
+
+    List<List<Integer>> result = new ArrayList<>();
+
+    dfs(root, new ArrayList<>(), result);
+
+    return result;
+}
+
+private static void dfs(
+        TreeNode root,
+        List<Integer> path,
+        List<List<Integer>> result) {
+
+    if (root == null)
+        return;
+
+    path.add(root.val);
+
+    // Store only complete root-to-leaf paths.
+    if (root.left == null &&
+        root.right == null) {
+
+        result.add(new ArrayList<>(path));
+    }
+    else {
+        dfs(root.left, path, result);
+        dfs(root.right, path, result);
+    }
+
+    // Backtrack.
+    path.remove(path.size() - 1);
+}
+```
+
+## C#
+
+```csharp
+public static List<List<int>> RootToLeafPaths(
+    TreeNode root)
+{
+    List<List<int>> result =
+        new List<List<int>>();
+
+    Dfs(root, new List<int>(), result);
+
+    return result;
+}
+
+private static void Dfs(
+    TreeNode root,
+    List<int> path,
+    List<List<int>> result)
+{
+    if (root == null)
+        return;
+
+    path.Add(root.Val);
+
+    if (root.Left == null &&
+        root.Right == null)
+    {
+        result.Add(new List<int>(path));
+    }
+    else
+    {
+        Dfs(root.Left, path, result);
+        Dfs(root.Right, path, result);
+    }
+
+    // Backtrack.
+    path.RemoveAt(path.Count - 1);
+}
+```
+
+**Time:** `O(N + output)`
+**Space:** `O(H)` excluding returned paths
+
+---
+
+# 22. Symmetric Binary Tree
+
+**a2z-320**
+
+Two subtrees must be mirror images.
+
+## Java
+
+```java
+public static boolean isSymmetric(TreeNode root) {
+    if (root == null)
+        return true;
+
+    return mirror(root.left, root.right);
+}
+
+private static boolean mirror(
+        TreeNode a,
+        TreeNode b) {
+
+    if (a == null && b == null)
+        return true;
+
+    if (a == null || b == null)
+        return false;
+
+    if (a.val != b.val)
+        return false;
+
+    // Outer + inner children must mirror.
+    return mirror(a.left, b.right)
+        && mirror(a.right, b.left);
+}
+```
+
+## C#
+
+```csharp
+public static bool IsSymmetric(TreeNode root)
+{
+    if (root == null)
+        return true;
+
+    return Mirror(root.Left, root.Right);
+}
+
+private static bool Mirror(
+    TreeNode a,
+    TreeNode b)
+{
+    if (a == null && b == null)
+        return true;
+
+    if (a == null || b == null)
+        return false;
+
+    if (a.Val != b.Val)
+        return false;
+
+    return Mirror(a.Left, b.Right)
+        && Mirror(a.Right, b.Left);
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(H)`
+
+---
+
+# 21. Left / Right View
+
+**a2z-319**
+
+At every level:
+
+```text
+Left view  → first node
+Right view → last node
+```
+
+## Java
+
+```java
+public static List<Integer> rightView(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+
+    if (root == null)
+        return result;
+
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+
+    while (!queue.isEmpty()) {
+
+        int size = queue.size();
+
+        for (int i = 0; i < size; i++) {
+
+            TreeNode current = queue.poll();
+
+            // Last node at this level.
+            if (i == size - 1)
+                result.add(current.val);
+
+            if (current.left != null)
+                queue.offer(current.left);
+
+            if (current.right != null)
+                queue.offer(current.right);
+        }
+    }
+
+    return result;
+}
+
+public static List<Integer> leftView(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+
+    if (root == null)
+        return result;
+
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+
+    while (!queue.isEmpty()) {
+
+        int size = queue.size();
+
+        for (int i = 0; i < size; i++) {
+
+            TreeNode current = queue.poll();
+
+            // First node at this level.
+            if (i == 0)
+                result.add(current.val);
+
+            if (current.left != null)
+                queue.offer(current.left);
+
+            if (current.right != null)
+                queue.offer(current.right);
+        }
+    }
+
+    return result;
+}
+```
+
+## C#
+
+```csharp
+public static List<int> RightView(TreeNode root)
+{
+    List<int> result = new List<int>();
+
+    if (root == null)
+        return result;
+
+    Queue<TreeNode> queue =
+        new Queue<TreeNode>();
+
+    queue.Enqueue(root);
+
+    while (queue.Count > 0)
+    {
+        int size = queue.Count;
+
+        for (int i = 0; i < size; i++)
+        {
+            TreeNode current = queue.Dequeue();
+
+            if (i == size - 1)
+                result.Add(current.Val);
+
+            if (current.Left != null)
+                queue.Enqueue(current.Left);
+
+            if (current.Right != null)
+                queue.Enqueue(current.Right);
+        }
+    }
+
+    return result;
+}
+
+public static List<int> LeftView(TreeNode root)
+{
+    List<int> result = new List<int>();
+
+    if (root == null)
+        return result;
+
+    Queue<TreeNode> queue =
+        new Queue<TreeNode>();
+
+    queue.Enqueue(root);
+
+    while (queue.Count > 0)
+    {
+        int size = queue.Count;
+
+        for (int i = 0; i < size; i++)
+        {
+            TreeNode current = queue.Dequeue();
+
+            if (i == 0)
+                result.Add(current.Val);
+
+            if (current.Left != null)
+                queue.Enqueue(current.Left);
+
+            if (current.Right != null)
+                queue.Enqueue(current.Right);
+        }
+    }
+
+    return result;
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(N)`
+
+---
+
+# 20. Bottom View of Binary Tree
+
+**a2z-318**
+
+Assign horizontal distance:
+
+```text
+root = 0
+left = hd - 1
+right = hd + 1
+```
+
+For each horizontal distance, keep the **last node encountered** in level-order BFS.
+
+## Java
+
+```java
+public static List<Integer> bottomView(TreeNode root) {
+
+    List<Integer> result = new ArrayList<>();
+
+    if (root == null)
+        return result;
+
+    TreeMap<Integer, Integer> map = new TreeMap<>();
+
+    Queue<Pair> queue = new LinkedList<>();
+    queue.offer(new Pair(root, 0));
+
+    while (!queue.isEmpty()) {
+
+        Pair current = queue.poll();
+
+        // Later nodes overwrite earlier nodes.
+        map.put(current.hd, current.node.val);
+
+        if (current.node.left != null)
+            queue.offer(
+                new Pair(current.node.left, current.hd - 1)
+            );
+
+        if (current.node.right != null)
+            queue.offer(
+                new Pair(current.node.right, current.hd + 1)
+            );
+    }
+
+    result.addAll(map.values());
+
+    return result;
+}
+
+static class Pair {
+    TreeNode node;
+    int hd;
+
+    Pair(TreeNode node, int hd) {
+        this.node = node;
+        this.hd = hd;
+    }
+}
+```
+
+## C#
+
+```csharp
+public static List<int> BottomView(TreeNode root)
+{
+    if (root == null)
+        return new List<int>();
+
+    SortedDictionary<int, int> map =
+        new SortedDictionary<int, int>();
+
+    Queue<(TreeNode node, int hd)> queue =
+        new Queue<(TreeNode, int)>();
+
+    queue.Enqueue((root, 0));
+
+    while (queue.Count > 0)
+    {
+        var current = queue.Dequeue();
+
+        // Later node at same HD replaces previous one.
+        map[current.hd] = current.node.Val;
+
+        if (current.node.Left != null)
+            queue.Enqueue(
+                (current.node.Left, current.hd - 1)
+            );
+
+        if (current.node.Right != null)
+            queue.Enqueue(
+                (current.node.Right, current.hd + 1)
+            );
+    }
+
+    return map.Values.ToList();
+}
+```
+
+**Time:** `O(N log N)`
+**Space:** `O(N)`
+
+---
+
+# 19. Top View of Binary Tree
+
+**a2z-317**
+
+For each horizontal distance, keep the **first** node encountered in BFS.
+
+## Java
+
+```java
+public static List<Integer> topView(TreeNode root) {
+
+    List<Integer> result = new ArrayList<>();
+
+    if (root == null)
+        return result;
+
+    TreeMap<Integer, Integer> map = new TreeMap<>();
+
+    Queue<Pair> queue = new LinkedList<>();
+    queue.offer(new Pair(root, 0));
+
+    while (!queue.isEmpty()) {
+
+        Pair current = queue.poll();
+
+        // First node at this horizontal distance is visible.
+        map.putIfAbsent(
+            current.hd,
+            current.node.val
         );
 
+        if (current.node.left != null)
+            queue.offer(
+                new Pair(current.node.left, current.hd - 1)
+            );
+
+        if (current.node.right != null)
+            queue.offer(
+                new Pair(current.node.right, current.hd + 1)
+            );
+    }
+
+    result.addAll(map.values());
+
+    return result;
+}
+
+static class Pair {
+    TreeNode node;
+    int hd;
+
+    Pair(TreeNode node, int hd) {
+        this.node = node;
+        this.hd = hd;
+    }
+}
+```
+
+## C#
+
+```csharp
+public static List<int> TopView(TreeNode root)
+{
+    if (root == null)
+        return new List<int>();
+
+    SortedDictionary<int, int> map =
+        new SortedDictionary<int, int>();
+
+    Queue<(TreeNode node, int hd)> queue =
+        new Queue<(TreeNode, int)>();
+
+    queue.Enqueue((root, 0));
+
+    while (queue.Count > 0)
+    {
+        var current = queue.Dequeue();
+
+        // Keep only the first node at this HD.
+        if (!map.ContainsKey(current.hd))
+            map[current.hd] = current.node.Val;
+
+        if (current.node.Left != null)
+            queue.Enqueue(
+                (current.node.Left, current.hd - 1)
+            );
+
+        if (current.node.Right != null)
+            queue.Enqueue(
+                (current.node.Right, current.hd + 1)
+            );
+    }
+
+    return map.Values.ToList();
+}
+```
+
+**Time:** `O(N log N)`
+**Space:** `O(N)`
+
+---
+
+# 18. Vertical Order Traversal
+
+**a2z-316**
+
+Ordering:
+
+```text
+horizontal distance
+→ level
+→ value
+```
+
+## Java
+
+```java
+public static List<List<Integer>> verticalTraversal(
+        TreeNode root) {
+
+    List<List<Integer>> result = new ArrayList<>();
+
+    if (root == null)
+        return result;
+
+    // HD -> Level -> sorted values
+    TreeMap<Integer,
+        TreeMap<Integer, PriorityQueue<Integer>>> map =
+        new TreeMap<>();
+
+    Queue<NodeInfo> queue = new LinkedList<>();
+    queue.offer(new NodeInfo(root, 0, 0));
+
+    while (!queue.isEmpty()) {
+
+        NodeInfo current = queue.poll();
+
+        map
+            .computeIfAbsent(
+                current.hd,
+                x -> new TreeMap<>()
+            )
+            .computeIfAbsent(
+                current.level,
+                x -> new PriorityQueue<>()
+            )
+            .offer(current.node.val);
+
+        if (current.node.left != null)
+            queue.offer(
+                new NodeInfo(
+                    current.node.left,
+                    current.hd - 1,
+                    current.level + 1
+                )
+            );
+
+        if (current.node.right != null)
+            queue.offer(
+                new NodeInfo(
+                    current.node.right,
+                    current.hd + 1,
+                    current.level + 1
+                )
+            );
+    }
+
+    for (TreeMap<Integer, PriorityQueue<Integer>> levels
+            : map.values()) {
+
+        List<Integer> column = new ArrayList<>();
+
+        for (PriorityQueue<Integer> pq : levels.values()) {
+            while (!pq.isEmpty())
+                column.add(pq.poll());
+        }
+
+        result.add(column);
+    }
+
+    return result;
+}
+
+static class NodeInfo {
+    TreeNode node;
+    int hd;
+    int level;
+
+    NodeInfo(TreeNode node, int hd, int level) {
+        this.node = node;
+        this.hd = hd;
+        this.level = level;
+    }
+}
+```
+
+## C#
+
+```csharp
+public static List<List<int>> VerticalTraversal(
+    TreeNode root)
+{
+    List<List<int>> result =
+        new List<List<int>>();
+
+    if (root == null)
+        return result;
+
+    // HD -> Level -> sorted values
+    SortedDictionary<
+        int,
+        SortedDictionary<int, List<int>>> map =
+        new SortedDictionary<
+            int,
+            SortedDictionary<int, List<int>>>();
+
+    Queue<(TreeNode node, int hd, int level)> queue =
+        new Queue<(TreeNode, int, int)>();
+
+    queue.Enqueue((root, 0, 0));
+
+    while (queue.Count > 0)
+    {
+        var current = queue.Dequeue();
+
+        if (!map.ContainsKey(current.hd))
+            map[current.hd] =
+                new SortedDictionary<int, List<int>>();
+
+        if (!map[current.hd].ContainsKey(current.level))
+            map[current.hd][current.level] =
+                new List<int>();
+
+        map[current.hd][current.level]
+            .Add(current.node.Val);
+
+        if (current.node.Left != null)
+            queue.Enqueue(
+                (current.node.Left,
+                 current.hd - 1,
+                 current.level + 1)
+            );
+
+        if (current.node.Right != null)
+            queue.Enqueue(
+                (current.node.Right,
+                 current.hd + 1,
+                 current.level + 1)
+            );
+    }
+
+    foreach (var column in map.Values)
+    {
+        List<int> values = new List<int>();
+
+        foreach (var level in column.Values)
+        {
+            level.Sort();
+            values.AddRange(level);
+        }
+
+        result.Add(values);
+    }
+
+    return result;
+}
+```
+
+**Time:** `O(N log N)`
+**Space:** `O(N)`
+
+---
+
+# 17. Boundary Traversal
+
+**a2z-315**
+
+Order:
+
+```text
+Root
+→ Left Boundary
+→ Leaf Nodes
+→ Right Boundary reversed
+```
+
+## Java
+
+```java
+public static List<Integer> boundary(TreeNode root) {
+
+    List<Integer> result = new ArrayList<>();
+
+    if (root == null)
+        return result;
+
+    // Root is added once.
+    if (!isLeaf(root))
+        result.add(root.val);
+
+    addLeftBoundary(root.left, result);
+    addLeaves(root, result);
+    addRightBoundary(root.right, result);
+
+    return result;
+}
+
+private static void addLeftBoundary(
+        TreeNode root,
+        List<Integer> result) {
+
+    while (root != null) {
+
+        if (!isLeaf(root))
+            result.add(root.val);
+
+        // Prefer left child.
+        root = root.left != null
+             ? root.left
+             : root.right;
+    }
+}
+
+private static void addRightBoundary(
+        TreeNode root,
+        List<Integer> result) {
+
+    List<Integer> temp = new ArrayList<>();
+
+    while (root != null) {
+
+        if (!isLeaf(root))
+            temp.add(root.val);
+
+        root = root.right != null
+             ? root.right
+             : root.left;
+    }
+
+    // Reverse because right boundary is bottom-up.
+    for (int i = temp.size() - 1; i >= 0; i--)
+        result.add(temp.get(i));
+}
+
+private static void addLeaves(
+        TreeNode root,
+        List<Integer> result) {
+
+    if (root == null)
+        return;
+
+    if (isLeaf(root)) {
+        result.add(root.val);
+        return;
+    }
+
+    addLeaves(root.left, result);
+    addLeaves(root.right, result);
+}
+
+private static boolean isLeaf(TreeNode root) {
+    return root.left == null &&
+           root.right == null;
+}
+```
+
+## C#
+
+```csharp
+public static List<int> Boundary(TreeNode root)
+{
+    List<int> result = new List<int>();
+
+    if (root == null)
+        return result;
+
+    if (!IsLeaf(root))
+        result.Add(root.Val);
+
+    AddLeftBoundary(root.Left, result);
+    AddLeaves(root, result);
+    AddRightBoundary(root.Right, result);
+
+    return result;
+}
+
+private static void AddLeftBoundary(
+    TreeNode root,
+    List<int> result)
+{
+    while (root != null)
+    {
+        if (!IsLeaf(root))
+            result.Add(root.Val);
+
+        root = root.Left != null
+             ? root.Left
+             : root.Right;
+    }
+}
+
+private static void AddRightBoundary(
+    TreeNode root,
+    List<int> result)
+{
+    List<int> temp = new List<int>();
+
+    while (root != null)
+    {
+        if (!IsLeaf(root))
+            temp.Add(root.Val);
+
+        root = root.Right != null
+             ? root.Right
+             : root.Left;
+    }
+
+    for (int i = temp.Count - 1; i >= 0; i--)
+        result.Add(temp[i]);
+}
+
+private static void AddLeaves(
+    TreeNode root,
+    List<int> result)
+{
+    if (root == null)
+        return;
+
+    if (IsLeaf(root))
+    {
+        result.Add(root.Val);
+        return;
+    }
+
+    AddLeaves(root.Left, result);
+    AddLeaves(root.Right, result);
+}
+
+private static bool IsLeaf(TreeNode root)
+{
+    return root.Left == null &&
+           root.Right == null;
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(H)` excluding output
+
+---
+
+# 16. Zigzag / Spiral Traversal
+
+**a2z-314**
+
+Alternate:
+
+```text
+left → right
+right → left
+```
+
+## Java
+
+```java
+public static List<List<Integer>> zigzag(
+        TreeNode root) {
+
+    List<List<Integer>> result = new ArrayList<>();
+
+    if (root == null)
+        return result;
+
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+
+    boolean leftToRight = true;
+
+    while (!queue.isEmpty()) {
+
+        int size = queue.size();
+
+        List<Integer> level =
+            new ArrayList<>(Collections.nCopies(size, 0));
+
+        for (int i = 0; i < size; i++) {
+
+            TreeNode current = queue.poll();
+
+            int index = leftToRight
+                      ? i
+                      : size - 1 - i;
+
+            level.set(index, current.val);
+
+            if (current.left != null)
+                queue.offer(current.left);
+
+            if (current.right != null)
+                queue.offer(current.right);
+        }
+
+        result.add(level);
+
+        leftToRight = !leftToRight;
+    }
+
+    return result;
+}
+```
+
+## C#
+
+```csharp
+public static List<List<int>> Zigzag(TreeNode root)
+{
+    List<List<int>> result =
+        new List<List<int>>();
+
+    if (root == null)
+        return result;
+
+    Queue<TreeNode> queue =
+        new Queue<TreeNode>();
+
+    queue.Enqueue(root);
+
+    bool leftToRight = true;
+
+    while (queue.Count > 0)
+    {
+        int size = queue.Count;
+
+        List<int> level =
+            Enumerable.Repeat(0, size).ToList();
+
+        for (int i = 0; i < size; i++)
+        {
+            TreeNode current = queue.Dequeue();
+
+            int index = leftToRight
+                      ? i
+                      : size - 1 - i;
+
+            level[index] = current.Val;
+
+            if (current.Left != null)
+                queue.Enqueue(current.Left);
+
+            if (current.Right != null)
+                queue.Enqueue(current.Right);
+        }
+
+        result.Add(level);
+        leftToRight = !leftToRight;
+    }
+
+    return result;
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(N)`
+
+---
+
+# 15. Check if Two Trees Are Identical
+
+**a2z-313**
+
+## Java
+
+```java
+public static boolean isSameTree(
+        TreeNode a,
+        TreeNode b) {
+
+    if (a == null && b == null)
+        return true;
+
+    if (a == null || b == null)
+        return false;
+
+    if (a.val != b.val)
+        return false;
+
+    return isSameTree(a.left, b.left)
+        && isSameTree(a.right, b.right);
+}
+```
+
+## C#
+
+```csharp
+public static bool IsSameTree(
+    TreeNode a,
+    TreeNode b)
+{
+    if (a == null && b == null)
+        return true;
+
+    if (a == null || b == null)
+        return false;
+
+    if (a.Val != b.Val)
+        return false;
+
+    return IsSameTree(a.Left, b.Left)
+        && IsSameTree(a.Right, b.Right);
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(H)`
+
+---
+
+# 14. Maximum Path Sum
+
+**a2z-312**
+
+A path can start/end at any nodes.
+
+At each node:
+
+```text
+left contribution
+right contribution
+```
+
+But when returning to parent, we can only take **one side**.
+
+## Java
+
+```java
+public static int maxPathSum(TreeNode root) {
+    int[] answer = {Integer.MIN_VALUE};
+
+    maxGain(root, answer);
+
+    return answer[0];
+}
+
+private static int maxGain(
+        TreeNode root,
+        int[] answer) {
+
+    if (root == null)
+        return 0;
+
+    // Negative contribution can only hurt the path.
+    int left = Math.max(
+        0,
+        maxGain(root.left, answer)
+    );
+
+    int right = Math.max(
+        0,
+        maxGain(root.right, answer)
+    );
+
+    // Path passing through current node.
+    int pathThroughNode =
+        root.val + left + right;
+
+    answer[0] = Math.max(
+        answer[0],
+        pathThroughNode
+    );
+
+    // Parent can continue through only one branch.
+    return root.val + Math.max(left, right);
+}
+```
+
+## C#
+
+```csharp
+public static int MaxPathSum(TreeNode root)
+{
+    int answer = int.MinValue;
+
+    MaxGain(root, ref answer);
+
     return answer;
 }
-```
 
-### Complexity
-
-```text
-Time:  O(32N) = O(N)
-Space: O(32N) = O(N)
-```
-
----
-
-# 3. Bit Prerequisites for Trie Problems
-
-**a2z-463 — Bit Prerequisites for TRIE Problems · Easy** 
-
-Before the next Trie problems, these operations are essential.
-
-## Get bit
-
-```java
-int bit = (num >>> i) & 1;
-```
-
-C#:
-
-```csharp
-int bit = (num >> i) & 1;
-```
-
----
-
-## Set bit
-
-```java
-num = num | (1 << i);
-```
-
-C#:
-
-```csharp
-num = num | (1 << i);
-```
-
----
-
-## Check bit
-
-```java
-if ((num & (1 << i)) != 0)
-```
-
----
-
-## Toggle bit
-
-```java
-num = num ^ (1 << i);
-```
-
----
-
-## Why XOR is useful for Trie?
-
-Remember:
-
-```text
-0 XOR 0 = 0
-0 XOR 1 = 1
-1 XOR 0 = 1
-1 XOR 1 = 0
-```
-
-Therefore, to maximize XOR:
-
-```text
-current bit = 0
-→ prefer 1
-
-current bit = 1
-→ prefer 0
-```
-
-That's the fundamental idea behind maximum-XOR Trie problems.
-
----
-
-# 4. Number of Distinct Substrings
-
-**a2z-462 — Number of distinct substrings in a string · Medium** 
-
-Example:
-
-```text
-s = "aaa"
-```
-
-Distinct substrings:
-
-```text
-"a"
-"aa"
-"aaa"
-```
-
-Answer:
-
-```text
-3
-```
-
----
-
-# Approach 1 — HashSet
-
-Generate every substring and put it into a set.
-
-### Java
-
-```java
-import java.util.*;
-
-public static int countDistinctSubstrings(String s) {
-
-    Set<String> set = new HashSet<>();
-
-    for (int i = 0; i < s.length(); i++) {
-
-        for (int j = i + 1; j <= s.length(); j++) {
-
-            set.add(s.substring(i, j));
-        }
-    }
-
-    return set.size();
-}
-```
-
-### C#
-
-```csharp
-using System.Collections.Generic;
-
-public static int CountDistinctSubstrings(string s)
+private static int MaxGain(
+    TreeNode root,
+    ref int answer)
 {
-    HashSet<string> set = new HashSet<string>();
+    if (root == null)
+        return 0;
 
-    for (int i = 0; i < s.Length; i++)
-    {
-        for (int j = i + 1; j <= s.Length; j++)
-        {
-            set.Add(s.Substring(i, j - i));
-        }
-    }
+    // Ignore negative branches.
+    int left = Math.Max(
+        0,
+        MaxGain(root.Left, ref answer)
+    );
 
-    return set.Count;
+    int right = Math.Max(
+        0,
+        MaxGain(root.Right, ref answer)
+    );
+
+    // Path can use both branches at this node.
+    int path =
+        root.Val + left + right;
+
+    answer = Math.Max(answer, path);
+
+    // Parent can use only one branch.
+    return root.Val + Math.Max(left, right);
 }
 ```
 
-Conceptually:
-
-```text
-O(N²)
-```
-
-substrings exist, but actually storing/copying strings can make runtime approach:
-
-```text
-O(N³)
-```
-
-depending on language/string implementation.
+**Time:** `O(N)`
+**Space:** `O(H)`
 
 ---
 
-# Approach 2 — Trie
+# 13. Diameter of Binary Tree
 
-Insert every suffix into a Trie.
+**a2z-311**
 
-For:
-
-```text
-abc
-```
-
-suffixes:
-
-```text
-abc
-bc
-c
-```
-
-While inserting each suffix, every **new Trie node** corresponds to a previously unseen substring.
-
-Therefore:
-
-```text
-number of distinct substrings
-=
-number of Trie nodes
-```
-
----
-
-### Java
-
-```java
-class TrieNode {
-    TrieNode[] child = new TrieNode[26];
-}
-
-public static int countDistinctSubstrings(String s) {
-
-    TrieNode root = new TrieNode();
-
-    int count = 0;
-
-    for (int i = 0; i < s.length(); i++) {
-
-        TrieNode node = root;
-
-        for (int j = i; j < s.length(); j++) {
-
-            int index = s.charAt(j) - 'a';
-
-            if (node.child[index] == null) {
-
-                node.child[index] = new TrieNode();
-
-                count++;
-            }
-
-            node = node.child[index];
-        }
-    }
-
-    return count;
-}
-```
-
-### C#
-
-```csharp
-class TrieNode
-{
-    public TrieNode[] Child = new TrieNode[26];
-}
-
-public static int CountDistinctSubstrings(string s)
-{
-    TrieNode root = new TrieNode();
-
-    int count = 0;
-
-    for (int i = 0; i < s.Length; i++)
-    {
-        TrieNode node = root;
-
-        for (int j = i; j < s.Length; j++)
-        {
-            int index = s[j] - 'a';
-
-            if (node.Child[index] == null)
-            {
-                node.Child[index] = new TrieNode();
-                count++;
-            }
-
-            node = node.Child[index];
-        }
-    }
-
-    return count;
-}
-```
-
-### Complexity
-
-There are `O(N²)` character insertions:
-
-```text
-Time:  O(N²)
-Space: O(N²)
-```
-
-This is significantly better than constructing all substring objects.
-
----
-
-# 5. Longest Word With All Prefixes
-
-**a2z-461 — Longest Word with All Prefixes · Medium** 
-
-Given:
-
-```text
-words = [
-    "n",
-    "ni",
-    "nin",
-    "ninj",
-    "ninja"
-]
-```
-
-`ninja` qualifies because:
-
-```text
-n
-ni
-nin
-ninj
-ninja
-```
-
-all exist.
-
----
-
-## Approach — Trie
-
-Each Trie node stores:
-
-```text
-isEnd
-```
-
-meaning a complete word ends there.
-
-For a candidate word:
-
-```text
-ninja
-```
-
-walk through:
-
-```text
-n
-ni
-nin
-ninj
-ninja
-```
+Diameter = maximum number of edges between two nodes.
 
 At every node:
 
 ```text
-isEnd == true
+leftHeight + rightHeight
 ```
-
-must hold.
-
----
-
-### Java
-
-```java
-class TrieNode {
-
-    TrieNode[] child = new TrieNode[26];
-
-    boolean isEnd;
-}
-
-public static String longestWord(String[] words) {
-
-    TrieNode root = new TrieNode();
-
-    for (String word : words) {
-
-        TrieNode node = root;
-
-        for (char c : word.toCharArray()) {
-
-            int index = c - 'a';
-
-            if (node.child[index] == null)
-                node.child[index] = new TrieNode();
-
-            node = node.child[index];
-        }
-
-        node.isEnd = true;
-    }
-
-    String answer = "";
-
-    for (String word : words) {
-
-        TrieNode node = root;
-
-        boolean valid = true;
-
-        for (char c : word.toCharArray()) {
-
-            node = node.child[c - 'a'];
-
-            if (!node.isEnd) {
-                valid = false;
-                break;
-            }
-        }
-
-        if (valid) {
-
-            if (word.length() > answer.length()
-                    || (word.length() == answer.length()
-                    && word.compareTo(answer) < 0)) {
-
-                answer = word;
-            }
-        }
-    }
-
-    return answer;
-}
-```
-
-### C#
-
-```csharp
-class TrieNode
-{
-    public TrieNode[] Child = new TrieNode[26];
-    public bool IsEnd;
-}
-
-public static string LongestWord(string[] words)
-{
-    TrieNode root = new TrieNode();
-
-    foreach (string word in words)
-    {
-        TrieNode node = root;
-
-        foreach (char c in word)
-        {
-            int index = c - 'a';
-
-            if (node.Child[index] == null)
-                node.Child[index] = new TrieNode();
-
-            node = node.Child[index];
-        }
-
-        node.IsEnd = true;
-    }
-
-    string answer = "";
-
-    foreach (string word in words)
-    {
-        TrieNode node = root;
-
-        bool valid = true;
-
-        foreach (char c in word)
-        {
-            node = node.Child[c - 'a'];
-
-            if (!node.IsEnd)
-            {
-                valid = false;
-                break;
-            }
-        }
-
-        if (valid &&
-            (word.Length > answer.Length ||
-             (word.Length == answer.Length &&
-              string.CompareOrdinal(word, answer) < 0)))
-        {
-            answer = word;
-        }
-    }
-
-    return answer;
-}
-```
-
-Complexity:
-
-```text
-Build Trie: O(total characters)
-Check:      O(total characters)
-
-Overall: O(total characters)
-Space:     O(total characters)
-```
-
----
-
-# 6. Trie Implementation — Advanced Operations
-
-**a2z-460 — Trie Implementation and Advanced Operations · Hard** 
-
-Typical operations:
-
-```text
-insert(word)
-search(word)
-startsWith(prefix)
-erase(word)
-countWordsEqualTo(word)
-countWordsStartingWith(prefix)
-```
-
-For interview preparation, this is the implementation worth memorizing.
-
----
 
 ## Java
 
 ```java
-class Trie {
+public static int diameterOfBinaryTree(TreeNode root) {
 
-    static class Node {
+    int[] diameter = {0};
 
-        Node[] child = new Node[26];
+    height(root, diameter);
 
-        int prefixCount;
+    return diameter[0];
+}
 
-        int wordCount;
-    }
+private static int height(
+        TreeNode root,
+        int[] diameter) {
 
-    private final Node root = new Node();
+    if (root == null)
+        return 0;
 
-    public void insert(String word) {
+    int left = height(root.left, diameter);
+    int right = height(root.right, diameter);
 
-        Node node = root;
+    // Number of edges through current node.
+    diameter[0] =
+        Math.max(diameter[0], left + right);
 
-        for (char c : word.toCharArray()) {
-
-            int index = c - 'a';
-
-            if (node.child[index] == null)
-                node.child[index] = new Node();
-
-            node = node.child[index];
-
-            node.prefixCount++;
-        }
-
-        node.wordCount++;
-    }
-
-    public int countWordsEqualTo(String word) {
-
-        Node node = findNode(word);
-
-        return node == null ? 0 : node.wordCount;
-    }
-
-    public int countWordsStartingWith(String prefix) {
-
-        Node node = findNode(prefix);
-
-        return node == null ? 0 : node.prefixCount;
-    }
-
-    public void erase(String word) {
-
-        Node node = root;
-
-        for (char c : word.toCharArray()) {
-
-            int index = c - 'a';
-
-            node = node.child[index];
-
-            node.prefixCount--;
-        }
-
-        node.wordCount--;
-    }
-
-    public boolean search(String word) {
-        return countWordsEqualTo(word) > 0;
-    }
-
-    public boolean startsWith(String prefix) {
-        return countWordsStartingWith(prefix) > 0;
-    }
-
-    private Node findNode(String s) {
-
-        Node node = root;
-
-        for (char c : s.toCharArray()) {
-
-            int index = c - 'a';
-
-            if (node.child[index] == null)
-                return null;
-
-            node = node.child[index];
-        }
-
-        return node;
-    }
+    return 1 + Math.max(left, right);
 }
 ```
-
----
 
 ## C#
 
 ```csharp
-public class Trie
+public static int DiameterOfBinaryTree(
+    TreeNode root)
 {
-    class Node
-    {
-        public Node[] Child = new Node[26];
+    int diameter = 0;
 
-        public int PrefixCount;
+    Height(root, ref diameter);
 
-        public int WordCount;
-    }
+    return diameter;
+}
 
-    private readonly Node root = new Node();
+private static int Height(
+    TreeNode root,
+    ref int diameter)
+{
+    if (root == null)
+        return 0;
 
-    public void Insert(string word)
-    {
-        Node node = root;
+    int left = Height(root.Left, ref diameter);
+    int right = Height(root.Right, ref diameter);
 
-        foreach (char c in word)
-        {
-            int index = c - 'a';
+    diameter =
+        Math.Max(diameter, left + right);
 
-            if (node.Child[index] == null)
-                node.Child[index] = new Node();
-
-            node = node.Child[index];
-
-            node.PrefixCount++;
-        }
-
-        node.WordCount++;
-    }
-
-    public int CountWordsEqualTo(string word)
-    {
-        Node node = FindNode(word);
-
-        return node == null ? 0 : node.WordCount;
-    }
-
-    public int CountWordsStartingWith(string prefix)
-    {
-        Node node = FindNode(prefix);
-
-        return node == null ? 0 : node.PrefixCount;
-    }
-
-    public bool Search(string word)
-    {
-        return CountWordsEqualTo(word) > 0;
-    }
-
-    public bool StartsWith(string prefix)
-    {
-        return CountWordsStartingWith(prefix) > 0;
-    }
-
-    public void Erase(string word)
-    {
-        Node node = root;
-
-        foreach (char c in word)
-        {
-            int index = c - 'a';
-
-            node = node.Child[index];
-
-            node.PrefixCount--;
-        }
-
-        node.WordCount--;
-    }
-
-    private Node FindNode(string s)
-    {
-        Node node = root;
-
-        foreach (char c in s)
-        {
-            int index = c - 'a';
-
-            if (node.Child[index] == null)
-                return null;
-
-            node = node.Child[index];
-        }
-
-        return node;
-    }
+    return 1 + Math.Max(left, right);
 }
 ```
 
-### Complexity
-
-For word length `L`:
-
-```text
-Insert:       O(L)
-Search:       O(L)
-Prefix search:O(L)
-Erase:        O(L)
-```
-
-Space:
-
-```text
-O(total characters inserted)
-```
+**Time:** `O(N)`
+**Space:** `O(H)`
 
 ---
 
-# 7. Basic Trie Implementation
+# 12. Check for Balanced Binary Tree
 
-**a2z-459 — Trie Implementation and Operations · Hard** 
+**a2z-310**
 
-The basic version only needs:
+For every node:
 
 ```text
-insert()
-search()
-startsWith()
+abs(leftHeight - rightHeight) <= 1
 ```
 
-### Java
+Return `-1` immediately when unbalanced.
+
+## Java
 
 ```java
-class Trie {
+public static boolean isBalanced(TreeNode root) {
+    return height(root) != -1;
+}
 
-    static class Node {
-        Node[] child = new Node[26];
-        boolean isEnd;
-    }
+private static int height(TreeNode root) {
 
-    private final Node root = new Node();
+    if (root == null)
+        return 0;
 
-    public void insert(String word) {
+    int left = height(root.left);
 
-        Node node = root;
+    // -1 means subtree is already unbalanced.
+    if (left == -1)
+        return -1;
 
-        for (char c : word.toCharArray()) {
+    int right = height(root.right);
 
-            int index = c - 'a';
+    if (right == -1)
+        return -1;
 
-            if (node.child[index] == null)
-                node.child[index] = new Node();
+    if (Math.abs(left - right) > 1)
+        return -1;
 
-            node = node.child[index];
-        }
-
-        node.isEnd = true;
-    }
-
-    public boolean search(String word) {
-
-        Node node = root;
-
-        for (char c : word.toCharArray()) {
-
-            int index = c - 'a';
-
-            if (node.child[index] == null)
-                return false;
-
-            node = node.child[index];
-        }
-
-        return node.isEnd;
-    }
-
-    public boolean startsWith(String prefix) {
-
-        Node node = root;
-
-        for (char c : prefix.toCharArray()) {
-
-            int index = c - 'a';
-
-            if (node.child[index] == null)
-                return false;
-
-            node = node.child[index];
-        }
-
-        return true;
-    }
+    return 1 + Math.max(left, right);
 }
 ```
 
-### C#
+## C#
 
 ```csharp
-public class Trie
+public static bool IsBalanced(TreeNode root)
 {
-    class Node
-    {
-        public Node[] Child = new Node[26];
-        public bool IsEnd;
+    return Height(root) != -1;
+}
+
+private static int Height(TreeNode root)
+{
+    if (root == null)
+        return 0;
+
+    int left = Height(root.Left);
+
+    if (left == -1)
+        return -1;
+
+    int right = Height(root.Right);
+
+    if (right == -1)
+        return -1;
+
+    if (Math.Abs(left - right) > 1)
+        return -1;
+
+    return 1 + Math.Max(left, right);
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(H)`
+
+---
+
+# 11. Maximum Depth
+
+**a2z-309**
+
+## Java
+
+```java
+public static int maxDepth(TreeNode root) {
+
+    if (root == null)
+        return 0;
+
+    // Depth = current node + deeper subtree.
+    return 1 + Math.max(
+        maxDepth(root.left),
+        maxDepth(root.right)
+    );
+}
+```
+
+## C#
+
+```csharp
+public static int MaxDepth(TreeNode root)
+{
+    if (root == null)
+        return 0;
+
+    return 1 + Math.Max(
+        MaxDepth(root.Left),
+        MaxDepth(root.Right)
+    );
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(H)`
+
+---
+
+# 10. Preorder + Inorder + Postorder in One Traversal
+
+**a2z-308**
+
+Use a stack containing:
+
+```text
+(node, state)
+```
+
+State:
+
+```text
+1 → preorder
+2 → inorder
+3 → postorder
+```
+
+## Java
+
+```java
+static class Pair {
+    TreeNode node;
+    int state;
+
+    Pair(TreeNode node, int state) {
+        this.node = node;
+        this.state = state;
     }
+}
 
-    private readonly Node root = new Node();
+public static void allTraversals(
+        TreeNode root,
+        List<Integer> pre,
+        List<Integer> in,
+        List<Integer> post) {
 
-    public void Insert(string word)
-    {
-        Node node = root;
+    if (root == null)
+        return;
 
-        foreach (char c in word)
-        {
-            int index = c - 'a';
+    Stack<Pair> stack = new Stack<>();
+    stack.push(new Pair(root, 1));
 
-            if (node.Child[index] == null)
-                node.Child[index] = new Node();
+    while (!stack.isEmpty()) {
 
-            node = node.Child[index];
+        Pair current = stack.peek();
+
+        if (current.state == 1) {
+
+            // First time -> preorder.
+            pre.add(current.node.val);
+
+            current.state++;
+
+            if (current.node.left != null)
+                stack.push(
+                    new Pair(current.node.left, 1)
+                );
+
         }
+        else if (current.state == 2) {
 
-        node.IsEnd = true;
-    }
+            // Returning from left -> inorder.
+            in.add(current.node.val);
 
-    public bool Search(string word)
-    {
-        Node node = root;
+            current.state++;
 
-        foreach (char c in word)
-        {
-            int index = c - 'a';
+            if (current.node.right != null)
+                stack.push(
+                    new Pair(current.node.right, 1)
+                );
 
-            if (node.Child[index] == null)
-                return false;
-
-            node = node.Child[index];
         }
+        else {
 
-        return node.IsEnd;
-    }
+            // Returning from both subtrees -> postorder.
+            post.add(current.node.val);
 
-    public bool StartsWith(string prefix)
-    {
-        Node node = root;
-
-        foreach (char c in prefix)
-        {
-            int index = c - 'a';
-
-            if (node.Child[index] == null)
-                return false;
-
-            node = node.Child[index];
+            stack.pop();
         }
-
-        return true;
     }
 }
 ```
 
+## C#
+
+```csharp
+public class Pair
+{
+    public TreeNode Node;
+    public int State;
+
+    public Pair(TreeNode node, int state)
+    {
+        Node = node;
+        State = state;
+    }
+}
+
+public static void AllTraversals(
+    TreeNode root,
+    List<int> pre,
+    List<int> inorder,
+    List<int> post)
+{
+    if (root == null)
+        return;
+
+    Stack<Pair> stack = new Stack<Pair>();
+    stack.Push(new Pair(root, 1));
+
+    while (stack.Count > 0)
+    {
+        Pair current = stack.Peek();
+
+        if (current.State == 1)
+        {
+            // First visit -> preorder.
+            pre.Add(current.Node.Val);
+
+            current.State++;
+
+            if (current.Node.Left != null)
+                stack.Push(
+                    new Pair(current.Node.Left, 1)
+                );
+        }
+        else if (current.State == 2)
+        {
+            // Left subtree completed -> inorder.
+            inorder.Add(current.Node.Val);
+
+            current.State++;
+
+            if (current.Node.Right != null)
+                stack.Push(
+                    new Pair(current.Node.Right, 1)
+                );
+        }
+        else
+        {
+            // Both subtrees completed -> postorder.
+            post.Add(current.Node.Val);
+
+            stack.Pop();
+        }
+    }
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(N)`
+
 ---
 
-# Trie — What you should remember for interviews
+# 9. Postorder Traversal Using 1 Stack
 
-The important progression is:
+**a2z-307**
 
-```text
-Basic Trie
-    ↓
-count prefix / word
-    ↓
-Longest word with all prefixes
-    ↓
-Distinct substrings
-    ↓
-Binary Trie
-    ↓
-Maximum XOR
-    ↓
-Maximum XOR with constraint
+## Java
+
+```java
+public static List<Integer> postorderOneStack(
+        TreeNode root) {
+
+    List<Integer> result = new ArrayList<>();
+
+    Stack<TreeNode> stack = new Stack<>();
+    TreeNode current = root;
+    TreeNode lastVisited = null;
+
+    while (current != null || !stack.isEmpty()) {
+
+        if (current != null) {
+            // Go as far left as possible.
+            stack.push(current);
+            current = current.left;
+        }
+        else {
+            TreeNode peek = stack.peek();
+
+            // Right subtree still needs processing.
+            if (peek.right != null &&
+                lastVisited != peek.right) {
+
+                current = peek.right;
+            }
+            else {
+                // Both children processed.
+                result.add(peek.val);
+                lastVisited = stack.pop();
+            }
+        }
+    }
+
+    return result;
+}
 ```
 
-And the two most important patterns are:
+## C#
 
-### Normal Trie
+```csharp
+public static List<int> PostorderOneStack(
+    TreeNode root)
+{
+    List<int> result = new List<int>();
 
-```text
-character
-   ↓
-children[character]
-   ↓
-next node
+    Stack<TreeNode> stack =
+        new Stack<TreeNode>();
+
+    TreeNode current = root;
+    TreeNode lastVisited = null;
+
+    while (current != null || stack.Count > 0)
+    {
+        if (current != null)
+        {
+            stack.Push(current);
+            current = current.Left;
+        }
+        else
+        {
+            TreeNode peek = stack.Peek();
+
+            if (peek.Right != null &&
+                lastVisited != peek.Right)
+            {
+                current = peek.Right;
+            }
+            else
+            {
+                result.Add(peek.Val);
+                lastVisited = stack.Pop();
+            }
+        }
+    }
+
+    return result;
+}
 ```
 
-### Binary Trie
-
-```text
-bit 31
-  ↓
-bit 30
-  ↓
-...
-  ↓
-bit 0
-```
-
-For maximum XOR:
-
-```text
-want opposite bit
-```
+**Time:** `O(N)`
+**Space:** `O(H)`
 
 ---
 
-## Progress
+# 8. Postorder Traversal Using 2 Stacks
 
-We've now completed all **7 Trie problems**, moving backward as requested:
+**a2z-306**
 
-```text
-465 Maximum XOR with element
-464 Maximum XOR of two numbers
-463 Bit prerequisites
-462 Number of distinct substrings
-461 Longest word with all prefixes
-460 Advanced Trie
-459 Basic Trie
+## Java
+
+```java
+public static List<Integer> postorderTwoStacks(
+        TreeNode root) {
+
+    List<Integer> result = new ArrayList<>();
+
+    if (root == null)
+        return result;
+
+    Stack<TreeNode> s1 = new Stack<>();
+    Stack<TreeNode> s2 = new Stack<>();
+
+    s1.push(root);
+
+    while (!s1.isEmpty()) {
+
+        TreeNode current = s1.pop();
+
+        s2.push(current);
+
+        if (current.left != null)
+            s1.push(current.left);
+
+        if (current.right != null)
+            s1.push(current.right);
+    }
+
+    while (!s2.isEmpty())
+        result.add(s2.pop().val);
+
+    return result;
+}
 ```
 
-The next section backward is **BST — 15 problems**, starting with **a2z-350: Largest BST in Binary Tree**, then 349 → 336. 
+## C#
+
+```csharp
+public static List<int> PostorderTwoStacks(
+    TreeNode root)
+{
+    List<int> result = new List<int>();
+
+    if (root == null)
+        return result;
+
+    Stack<TreeNode> s1 =
+        new Stack<TreeNode>();
+
+    Stack<TreeNode> s2 =
+        new Stack<TreeNode>();
+
+    s1.Push(root);
+
+    while (s1.Count > 0)
+    {
+        TreeNode current = s1.Pop();
+
+        s2.Push(current);
+
+        if (current.Left != null)
+            s1.Push(current.Left);
+
+        if (current.Right != null)
+            s1.Push(current.Right);
+    }
+
+    while (s2.Count > 0)
+        result.Add(s2.Pop().Val);
+
+    return result;
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(N)`
+
+---
+
+# 7. Iterative Inorder Traversal
+
+**a2z-305**
+
+## Java
+
+```java
+public static List<Integer> inorderIterative(
+        TreeNode root) {
+
+    List<Integer> result = new ArrayList<>();
+
+    Stack<TreeNode> stack = new Stack<>();
+    TreeNode current = root;
+
+    while (current != null || !stack.isEmpty()) {
+
+        // Push complete left chain.
+        while (current != null) {
+            stack.push(current);
+            current = current.left;
+        }
+
+        current = stack.pop();
+
+        result.add(current.val);
+
+        // Now process right subtree.
+        current = current.right;
+    }
+
+    return result;
+}
+```
+
+## C#
+
+```csharp
+public static List<int> InorderIterative(
+    TreeNode root)
+{
+    List<int> result = new List<int>();
+
+    Stack<TreeNode> stack =
+        new Stack<TreeNode>();
+
+    TreeNode current = root;
+
+    while (current != null || stack.Count > 0)
+    {
+        while (current != null)
+        {
+            stack.Push(current);
+            current = current.Left;
+        }
+
+        current = stack.Pop();
+
+        result.Add(current.Val);
+
+        current = current.Right;
+    }
+
+    return result;
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(H)`
+
+---
+
+# 6. Iterative Preorder Traversal
+
+**a2z-304**
+
+Preorder:
+
+```text
+root → left → right
+```
+
+Push right first so left is processed first.
+
+## Java
+
+```java
+public static List<Integer> preorderIterative(
+        TreeNode root) {
+
+    List<Integer> result = new ArrayList<>();
+
+    if (root == null)
+        return result;
+
+    Stack<TreeNode> stack = new Stack<>();
+    stack.push(root);
+
+    while (!stack.isEmpty()) {
+
+        TreeNode current = stack.pop();
+
+        result.add(current.val);
+
+        // Stack is LIFO, so push right first.
+        if (current.right != null)
+            stack.push(current.right);
+
+        if (current.left != null)
+            stack.push(current.left);
+    }
+
+    return result;
+}
+```
+
+## C#
+
+```csharp
+public static List<int> PreorderIterative(
+    TreeNode root)
+{
+    List<int> result = new List<int>();
+
+    if (root == null)
+        return result;
+
+    Stack<TreeNode> stack =
+        new Stack<TreeNode>();
+
+    stack.Push(root);
+
+    while (stack.Count > 0)
+    {
+        TreeNode current = stack.Pop();
+
+        result.Add(current.Val);
+
+        // Push right first because stack is LIFO.
+        if (current.Right != null)
+            stack.Push(current.Right);
+
+        if (current.Left != null)
+            stack.Push(current.Left);
+    }
+
+    return result;
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(H)` average / `O(N)` worst case
+
+---
+
+# 5. Level Order Traversal
+
+**a2z-303**
+
+## Java
+
+```java
+public static List<List<Integer>> levelOrder(
+        TreeNode root) {
+
+    List<List<Integer>> result = new ArrayList<>();
+
+    if (root == null)
+        return result;
+
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+
+    while (!queue.isEmpty()) {
+
+        int size = queue.size();
+
+        List<Integer> level = new ArrayList<>();
+
+        for (int i = 0; i < size; i++) {
+
+            TreeNode current = queue.poll();
+
+            level.add(current.val);
+
+            if (current.left != null)
+                queue.offer(current.left);
+
+            if (current.right != null)
+                queue.offer(current.right);
+        }
+
+        result.add(level);
+    }
+
+    return result;
+}
+```
+
+## C#
+
+```csharp
+public static List<List<int>> LevelOrder(
+    TreeNode root)
+{
+    List<List<int>> result =
+        new List<List<int>>();
+
+    if (root == null)
+        return result;
+
+    Queue<TreeNode> queue =
+        new Queue<TreeNode>();
+
+    queue.Enqueue(root);
+
+    while (queue.Count > 0)
+    {
+        int size = queue.Count;
+
+        List<int> level = new List<int>();
+
+        for (int i = 0; i < size; i++)
+        {
+            TreeNode current = queue.Dequeue();
+
+            level.Add(current.Val);
+
+            if (current.Left != null)
+                queue.Enqueue(current.Left);
+
+            if (current.Right != null)
+                queue.Enqueue(current.Right);
+        }
+
+        result.Add(level);
+    }
+
+    return result;
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(N)`
+
+---
+
+# 4. Postorder Traversal
+
+**a2z-302**
+
+Recursive:
+
+```text
+left → right → root
+```
+
+## Java
+
+```java
+public static List<Integer> postorder(
+        TreeNode root) {
+
+    List<Integer> result = new ArrayList<>();
+
+    dfs(root, result);
+
+    return result;
+}
+
+private static void dfs(
+        TreeNode root,
+        List<Integer> result) {
+
+    if (root == null)
+        return;
+
+    dfs(root.left, result);
+    dfs(root.right, result);
+
+    // Visit after both children.
+    result.add(root.val);
+}
+```
+
+## C#
+
+```csharp
+public static List<int> Postorder(
+    TreeNode root)
+{
+    List<int> result = new List<int>();
+
+    Dfs(root, result);
+
+    return result;
+}
+
+private static void Dfs(
+    TreeNode root,
+    List<int> result)
+{
+    if (root == null)
+        return;
+
+    Dfs(root.Left, result);
+    Dfs(root.Right, result);
+
+    result.Add(root.Val);
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(H)`
+
+---
+
+# 3. Inorder Traversal
+
+**a2z-301**
+
+## Java
+
+```java
+public static List<Integer> inorder(
+        TreeNode root) {
+
+    List<Integer> result = new ArrayList<>();
+
+    dfs(root, result);
+
+    return result;
+}
+
+private static void dfs(
+        TreeNode root,
+        List<Integer> result) {
+
+    if (root == null)
+        return;
+
+    dfs(root.left, result);
+
+    // Visit between left and right.
+    result.add(root.val);
+
+    dfs(root.right, result);
+}
+```
+
+## C#
+
+```csharp
+public static List<int> Inorder(
+    TreeNode root)
+{
+    List<int> result = new List<int>();
+
+    Dfs(root, result);
+
+    return result;
+}
+
+private static void Dfs(
+    TreeNode root,
+    List<int> result)
+{
+    if (root == null)
+        return;
+
+    Dfs(root.Left, result);
+
+    result.Add(root.Val);
+
+    Dfs(root.Right, result);
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(H)`
+
+---
+
+# 2. Preorder Traversal
+
+**a2z-300**
+
+## Java
+
+```java
+public static List<Integer> preorder(
+        TreeNode root) {
+
+    List<Integer> result = new ArrayList<>();
+
+    dfs(root, result);
+
+    return result;
+}
+
+private static void dfs(
+        TreeNode root,
+        List<Integer> result) {
+
+    if (root == null)
+        return;
+
+    // Visit root before children.
+    result.add(root.val);
+
+    dfs(root.left, result);
+    dfs(root.right, result);
+}
+```
+
+## C#
+
+```csharp
+public static List<int> Preorder(
+    TreeNode root)
+{
+    List<int> result = new List<int>();
+
+    Dfs(root, result);
+
+    return result;
+}
+
+private static void Dfs(
+    TreeNode root,
+    List<int> result)
+{
+    if (root == null)
+        return;
+
+    result.Add(root.Val);
+
+    Dfs(root.Left, result);
+    Dfs(root.Right, result);
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(H)`
+
+---
+
+# 1. Pre, Inorder and Postorder in One Traversal
+
+**a2z-299**
+
+This is essentially the recursive version of the state-machine problem.
+
+## Java
+
+```java
+static class Traversals {
+    List<Integer> preorder = new ArrayList<>();
+    List<Integer> inorder = new ArrayList<>();
+    List<Integer> postorder = new ArrayList<>();
+}
+
+public static Traversals allTraversals(
+        TreeNode root) {
+
+    Traversals result = new Traversals();
+
+    dfs(root, result);
+
+    return result;
+}
+
+private static void dfs(
+        TreeNode root,
+        Traversals result) {
+
+    if (root == null)
+        return;
+
+    // First position -> preorder.
+    result.preorder.add(root.val);
+
+    dfs(root.left, result);
+
+    // After left subtree -> inorder.
+    result.inorder.add(root.val);
+
+    dfs(root.right, result);
+
+    // After both subtrees -> postorder.
+    result.postorder.add(root.val);
+}
+```
+
+## C#
+
+```csharp
+public class Traversals
+{
+    public List<int> Preorder = new List<int>();
+    public List<int> Inorder = new List<int>();
+    public List<int> Postorder = new List<int>();
+}
+
+public static Traversals AllTraversals(
+    TreeNode root)
+{
+    Traversals result = new Traversals();
+
+    Dfs(root, result);
+
+    return result;
+}
+
+private static void Dfs(
+    TreeNode root,
+    Traversals result)
+{
+    if (root == null)
+        return;
+
+    // First position -> preorder.
+    result.Preorder.Add(root.Val);
+
+    Dfs(root.Left, result);
+
+    // After left subtree -> inorder.
+    result.Inorder.Add(root.Val);
+
+    Dfs(root.Right, result);
+
+    // After both subtrees -> postorder.
+    result.Postorder.Add(root.Val);
+}
+```
+
+**Time:** `O(N)`
+**Space:** `O(H)` excluding output.

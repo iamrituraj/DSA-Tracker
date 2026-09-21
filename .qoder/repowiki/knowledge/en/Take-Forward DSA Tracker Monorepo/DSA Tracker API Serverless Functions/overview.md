@@ -1,0 +1,1 @@
+Node.js serverless functions exposing authenticated JSONB-backed endpoints for user state and solution library persistence on Neon PostgreSQL, with HMAC-signed cookie sessions.

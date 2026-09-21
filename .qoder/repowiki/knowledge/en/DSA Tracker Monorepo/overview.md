@@ -1,1 +1,0 @@
-Root monorepo that composes a Vite/React SPA, Neon-backed serverless API, and static problem/solution datasets into a single Take-Forward DSA tracker project via shared npm scripts and the Neon client.

@@ -3,11 +3,11 @@ schema_version: 1
 locale: en-US
 branch: main
 nodes_managed: true
-exported_at: "2026-09-21T09:39:23Z"
+exported_at: "2026-09-21T10:29:14Z"
 modules:
     "":
-        dir_name: DSA Tracker Monorepo
-        title: DSA Tracker Monorepo
+        dir_name: Take-Forward DSA Tracker Monorepo
+        title: Take-Forward DSA Tracker Monorepo
         scope:
             - README.md
             - .gitignore
@@ -22,8 +22,8 @@ modules:
         depends_on: []
         related_to: []
     api_server:
-        dir_name: DSA Tracker Serverless API Endpoints
-        title: DSA Tracker Serverless API Endpoints
+        dir_name: DSA Tracker API Serverless Functions
+        title: DSA Tracker API Serverless Functions
         scope:
             - api/
         source_files: []
@@ -32,8 +32,8 @@ modules:
         related_to:
             - path: data_assets
     data_assets:
-        dir_name: DSA Problem Catalog & Solution Assets
-        title: DSA Problem Catalog & Solution Assets
+        dir_name: Take-Forward DSA Problem Catalog Data
+        title: Take-Forward DSA Problem Catalog Data
         scope:
             - data/
             - public/data/

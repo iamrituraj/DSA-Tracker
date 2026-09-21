@@ -1,6 +1,6 @@
 schema_version: 1
 module_path: ""
-title: DSA Tracker Monorepo
+title: Take-Forward DSA Tracker Monorepo
 scope:
     - README.md
     - .gitignore
