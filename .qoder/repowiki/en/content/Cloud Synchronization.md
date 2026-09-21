@@ -10,6 +10,14 @@
 - [src/main.jsx](file://src/main.jsx)
 </cite>
 
+## Update Summary
+**Changes Made**
+- Updated state synchronization section to document new filters and collapse properties
+- Enhanced cloudState() function documentation to include roadmapFilters and collapse state
+- Updated loadCloudState() documentation to show proper sanitization of new state properties
+- Added detailed explanation of filter and collapse state management
+- Updated troubleshooting guide with sync-related issues for new properties
+
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
@@ -30,7 +38,7 @@ This document explains the cloud synchronization feature for the DSA Tracker app
 - Security considerations for passwords, sessions, and data storage
 - Troubleshooting common sync issues and backup/recovery procedures
 
-The system is intentionally simple: a single shared app password authenticates one user across devices, and all state is persisted to a Neon Postgres database via serverless functions.
+The system is intentionally simple: a single shared app password authenticates one user across devices, and all state is persisted to a Neon Postgres database via serverless functions. **Updated**: State synchronization now includes filters and collapse properties alongside progress, notes, solutions, activity, and settings data.
 
 ## Project Structure
 The cloud sync feature spans server-side API routes and client-side orchestration:
@@ -80,6 +88,7 @@ Key responsibilities:
 - Protect sessions with signed cookies and short-lived expiry
 - Persist only whitelisted fields to prevent schema drift or injection
 - Provide offline-first UX with local storage and background sync
+- **Updated**: Handle filters and collapse state synchronization with proper validation and sanitization
 
 **Section sources**
 - [api/auth.js:1-24](file://api/auth.js#L1-L24)
@@ -90,7 +99,7 @@ Key responsibilities:
 ## Architecture Overview
 The sync architecture follows an offline-first model:
 - Local state is always authoritative on the device
-- On connect, the server’s latest state is loaded into the browser
+- On connect, the server's latest state is loaded into the browser
 - After edits, changes are saved with a debounce to reduce network calls
 - Conflicts are resolved server-side using last-write-wins on a single-row record
 
@@ -180,11 +189,14 @@ ExpValid --> |No| Allow["Return true"]
 - Data is stored as JSONB in a single-row table identified by a fixed primary key
 - Writes use upsert semantics: insert if missing, otherwise update the existing row
 - Conflict resolution is last-write-wins because there is only one row per account
+- **Updated**: Sanitization now includes filters and collapse properties with proper validation
 
 ```mermaid
 flowchart TD
 Req(["POST /api/state"]) --> Sanitize["Sanitize input to allowed fields"]
-Sanitize --> Upsert["INSERT ... ON CONFLICT DO UPDATE SET state = EXCLUDED.state"]
+Sanitize --> ValidateFilters["Validate filters structure"]
+ValidateFilters --> ValidateCollapse["Validate collapse structure"]
+ValidateCollapse --> Upsert["INSERT ... ON CONFLICT DO UPDATE SET state = EXCLUDED.state"]
 Upsert --> Done(["{saved: true}"])
 ```
 
@@ -199,6 +211,7 @@ Upsert --> Done(["{saved: true}"])
 - User can connect by entering the app password; successful login triggers a cloud state load
 - Edits trigger a debounced save to minimize network overhead
 - Sync status reflects checking, syncing, synced, error, or signed-out states
+- **Updated**: cloudState() function now includes filters and collapse properties in the synchronized state
 
 ```mermaid
 sequenceDiagram
@@ -209,7 +222,7 @@ FE->>AUTH : GET (check session)
 alt authenticated
 FE->>STATE : GET
 STATE-->>FE : {state}
-FE-->>FE : hydrate local state
+FE-->>FE : hydrate local state (including filters & collapse)
 else not authenticated
 FE-->>FE : show sign-in form
 end
@@ -224,20 +237,51 @@ STATE-->>FE : {saved : true}
 **Section sources**
 - [src/main.jsx:64-113](file://src/main.jsx#L64-L113)
 
+### Filter and Collapse State Management
+- **Filters**: Store user preferences for topic, status, difficulty, pattern, confidence, favorites, and sort order
+- **Collapse**: Track UI state for collapsed topics and patterns to maintain user interface preferences
+- Both properties are sanitized before saving to ensure data integrity and prevent schema drift
+- LoadCloudState properly restores these properties with validation to handle malformed data gracefully
+
+```mermaid
+flowchart TD
+LoadState["Load Cloud State"] --> RestoreFilters["Restore Filters with Validation"]
+LoadState --> RestoreCollapse["Restore Collapse with Validation"]
+RestoreFilters --> ValidFilters{"Valid filters?"}
+RestoreCollapse --> ValidCollapse{"Valid collapse?"}
+ValidFilters --> |Yes| ApplyFilters["Apply to roadmapFilters"]
+ValidFilters --> |No| UseDefaults["Use default filters"]
+ValidCollapse --> |Yes| ApplyCollapse["Apply to collapse state"]
+ValidCollapse --> |No| UseDefaultsCollapse["Use default collapse"]
+ApplyFilters --> HydrateUI["Hydrate UI"]
+UseDefaults --> HydrateUI
+ApplyCollapse --> HydrateUI
+UseDefaultsCollapse --> HydrateUI
+```
+
+**Diagram sources**
+- [src/main.jsx:156-170](file://src/main.jsx#L156-L170)
+
+**Section sources**
+- [src/main.jsx:80-101](file://src/main.jsx#L80-L101)
+- [src/main.jsx:156-170](file://src/main.jsx#L156-L170)
+
 ### Offline-First Behavior
 - All user data is kept in localStorage on the device
 - Cloud sync augments local data but does not replace it unless explicitly connected
 - Export/import provides portable backups independent of cloud connectivity
+- **Updated**: Backup and restore functionality now includes filters and collapse state
 
 **Section sources**
 - [src/main.jsx:29-33](file://src/main.jsx#L29-L33)
 - [src/main.jsx:144-146](file://src/main.jsx#L144-L146)
+- [src/main.jsx:257-258](file://src/main.jsx#L257-L258)
 
 ## Dependency Analysis
 - Frontend depends on Vercel Functions endpoints for auth and state
 - Serverless functions depend on Neon serverless driver for database operations
 - Session security depends on a strong SESSION_SECRET and proper environment configuration
-- Deployment relies on Vercel’s automatic function discovery from the api/ directory
+- Deployment relies on Vercel's automatic function discovery from the api/ directory
 
 ```mermaid
 graph LR
@@ -262,8 +306,7 @@ STATE --> NEON["@neondatabase/serverless"]
 - Single-row JSONB storage simplifies locking and avoids complex conflict resolution logic
 - Sanitization minimizes payload size and reduces risk of storing extraneous data
 - Stateless session verification keeps server CPU usage low
-
-[No sources needed since this section provides general guidance]
+- **Updated**: Filter and collapse state are lightweight boolean/string values that add minimal overhead
 
 ## Troubleshooting Guide
 
@@ -285,19 +328,23 @@ Common issues and resolutions:
   - Inspect network tab for failed fetches to /api/state
   - Validate that the request includes the session cookie
 
+- **Updated**: Filter or collapse state not syncing
+  - Check browser console for validation errors in sanitizeFilters or sanitizeCollapse functions
+  - Verify that filter values match expected enum values (topic, status, difficulty, etc.)
+  - Ensure collapse state structure contains valid topic and pattern keys
+
 Backup and recovery:
 - Export your data regularly from Settings to maintain a local backup
-- Import a previously exported file to restore progress, notes, solutions, activity, and settings
+- Import a previously exported file to restore progress, notes, solutions, activity, settings, filters, and collapse state
 - If you reset local data while connected, re-connect to reload the latest cloud state
 
 **Section sources**
 - [README.md:35-54](file://README.md#L35-L54)
 - [src/main.jsx:586-605](file://src/main.jsx#L586-L605)
+- [src/main.jsx:80-101](file://src/main.jsx#L80-L101)
 
 ## Conclusion
-The cloud synchronization feature provides a simple, secure, and reliable way to keep your DSA Tracker data consistent across devices. It uses a one-user-per-account model with password-based authentication, signed HTTP-only sessions, and last-write-wins conflict resolution backed by Neon Postgres. The offline-first design ensures usability without internet access, while periodic sync keeps everything in harmony. Follow the setup steps, configure secrets securely, and use export/import for robust backup and recovery.
-
-[No sources needed since this section summarizes without analyzing specific files]
+The cloud synchronization feature provides a simple, secure, and reliable way to keep your DSA Tracker data consistent across devices. It uses a one-user-per-account model with password-based authentication, signed HTTP-only sessions, and last-write-wins conflict resolution backed by Neon Postgres. The offline-first design ensures usability without internet access, while periodic sync keeps everything in harmony. **Enhanced**: The system now synchronizes filters and collapse state along with core tracker data, ensuring complete user experience consistency across devices. Follow the setup steps, configure secrets securely, and use export/import for robust backup and recovery.
 
 ## Appendices
 
@@ -319,8 +366,23 @@ The cloud synchronization feature provides a simple, secure, and reliable way to
 - Sessions are signed with HMAC and stored in HttpOnly cookies
 - Only whitelisted fields are persisted to prevent schema drift or injection
 - Keep secrets out of client code; they belong in server environment variables
+- **Updated**: Filter and collapse state validation prevents malicious data injection through UI preferences
 
 **Section sources**
 - [api/auth.js:16-22](file://api/auth.js#L16-L22)
 - [api/_session.js:6-14](file://api/_session.js#L6-L14)
 - [api/state.js:12-21](file://api/state.js#L12-L21)
+
+### State Schema Reference
+The synchronized state object includes:
+- `progress`: Problem completion status and revision tracking
+- `notes`: Learning notes for each problem
+- `solutions`: Personal solution approaches and implementations
+- `activity`: Daily activity counts for streak tracking
+- `settings`: User preferences like daily goals and theme
+- **Updated**: `filters`: Roadmap filtering preferences (topic, status, difficulty, pattern, confidence, favorites, sort)
+- **Updated**: `collapse`: UI state for collapsed topics and patterns
+
+**Section sources**
+- [api/state.js:4-22](file://api/state.js#L4-L22)
+- [src/main.jsx:155](file://src/main.jsx#L155)

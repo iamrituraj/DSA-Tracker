@@ -121,3 +121,8 @@
 .theme-dark .revision-row,.theme-dark .upcoming button{border-color:#26354b}
 .theme-dark .bar{background:#1c2a45}
 .theme-dark .goal-input{background:#111c2e;color:#e2e8f0;border-color:#26354b}
+/* Analytics dark mode fixes */
+.theme-dark .stats-large>div{background:#111c2e;border-color:#26354b}
+.theme-dark .bar i,.theme-dark .activity-bar-wrap i{background:#7aa2ff}
+.theme-dark .analytics-note{background:#251f45;color:#c5bdf0}
+.theme-dark .activity-col span{color:#9fb0c8}

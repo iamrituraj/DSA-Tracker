@@ -3,11 +3,11 @@ schema_version: 1
 locale: en-US
 branch: main
 nodes_managed: true
-exported_at: "2026-09-21T08:34:05Z"
+exported_at: "2026-09-21T09:10:42Z"
 modules:
     "":
-        dir_name: DSA Tracker Monorepo (Vite SPA + Serverless API + Data Scripts)
-        title: DSA Tracker Monorepo (Vite SPA + Serverless API + Data Scripts)
+        dir_name: DSA Tracker Monorepo
+        title: DSA Tracker Monorepo
         scope:
             - README.md
             - .gitignore
@@ -22,8 +22,8 @@ modules:
         depends_on: []
         related_to: []
     api_server:
-        dir_name: Serverless API for Session Auth & Cloud State Persistence
-        title: Serverless API for Session Auth & Cloud State Persistence
+        dir_name: Serverless API Authentication & User State Persistence
+        title: 'Serverless API: Authentication & User State Persistence'
         scope:
             - api/
         source_files: []

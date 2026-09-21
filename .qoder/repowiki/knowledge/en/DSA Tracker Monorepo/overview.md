@@ -1,0 +1,1 @@
+Root of the DSA tracker monorepo that composes a Vite/React SPA, Neon-backed serverless auth API, and static problem/solution datasets through shared npm scripts and the Neon client.

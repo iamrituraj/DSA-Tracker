@@ -8,6 +8,14 @@
 - [patterns.json](file://data/patterns.json)
 </cite>
 
+## Update Summary
+**Changes Made**
+- Enhanced filtering system with confidence-based filtering (Weak, Learning, Strong, Interview Ready, Not set)
+- Added new 'Strongest' sort option alongside existing sorting capabilities
+- Implemented robust filter validation with sanitizeFilters() function
+- Added confidence ranking system for proper sorting logic
+- Updated filtering logic to handle confidence-based queries and special "Not set" cases
+
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
@@ -20,7 +28,7 @@
 9. [Conclusion](#conclusion)
 
 ## Introduction
-This document explains the Roadmap component that organizes practice problems by topic and pattern, supports filtering and sorting, and provides collapsible groups with progress indicators and search. It also documents the groupByTopicPattern utility, filter logic, user interactions for expanding/collapsing sections, visual legend, problem row components, and navigation integration.
+This document explains the Roadmap component that organizes practice problems by topic and pattern, supports advanced filtering and sorting, and provides collapsible groups with progress indicators and search. It also documents the groupByTopicPattern utility, enhanced filter logic with confidence-based filtering, user interactions for expanding/collapsing sections, visual legend, problem row components, and navigation integration.
 
 ## Project Structure
 The application is a single-page React app built with Vite. The core UI and logic live in one file, while problem data and metadata are bundled as JSON files.
@@ -50,14 +58,14 @@ G["patterns.json"] --> A
 
 ## Core Components
 - App shell: loads problem data, manages global state (progress, notes, solutions, activity, settings), search query, and page routing between Dashboard, Roadmap, Revision, Patterns, Analytics, Settings, and Problem detail.
-- Roadmap: renders grouped topics and patterns, filters/sorts, shows counts and legend, and handles collapse/expand toggles.
+- Roadmap: renders grouped topics and patterns, filters/sorts with confidence support, shows counts and legend, and handles collapse/expand toggles.
 - ProblemRow: displays a single problem entry with status dot, title, topic/pattern, difficulty badge, and optional tags; clicking opens the problem detail.
 - groupByTopicPattern: utility to organize a list into nested topic → pattern → problems structure.
 
 Key responsibilities:
 - Hierarchical grouping by topic and pattern
-- Filtering by topic, status, difficulty, pattern, favorites
-- Sorting by order, title, difficulty, weakest confidence
+- Advanced filtering by topic, status, difficulty, pattern, confidence, favorites
+- Sorting by order, title, difficulty, weakest confidence, strongest confidence
 - Collapsible topic and pattern groups
 - Progress indicators per group
 - Search across title, topic, and pattern
@@ -80,7 +88,7 @@ participant PR as "ProblemRow (main.jsx)"
 participant Det as "Problem Detail (main.jsx)"
 U->>App : Open Roadmap page
 App-->>RM : Pass enriched problems, topics, patterns, filters
-RM->>RM : Compute filtered list (search + filters)
+RM->>RM : Compute filtered list (search + filters + confidence)
 RM->>RM : Group by topic → pattern
 RM-->>U : Render groups with counts and legend
 U->>PR : Click a problem row
@@ -121,20 +129,22 @@ Return --> End(["End"])
 **Section sources**
 - [main.jsx:190-197](file://src/main.jsx#L190-L197)
 
-### Filtering and Sorting Logic
-Filtering combines:
+### Enhanced Filtering and Sorting Logic
+Filtering combines multiple criteria including the new confidence-based filtering:
 - Text search across title, topic, and pattern
 - Topic selector
 - Status selector
 - Difficulty selector
 - Pattern selector (derived from selected topic)
+- Confidence selector (Weak, Learning, Strong, Interview Ready, Not set)
 - Favorites toggle
 
-Sorting options:
+Sorting options now include:
 - Order (default)
 - Title (alphabetical)
 - Difficulty (Easy → Medium → Hard)
 - Weakest (problems marked Weak first)
+- **Strongest** (problems with highest confidence first - NEW)
 
 ```mermaid
 flowchart TD
@@ -144,18 +154,23 @@ F1 --> F2["Apply topic filter"]
 F2 --> F3["Apply status filter"]
 F3 --> F4["Apply difficulty filter"]
 F4 --> F5["Apply pattern filter"]
-F5 --> F6["Apply favorites filter"]
-F6 --> Sort{"Sort option?"}
+F5 --> F6["Apply confidence filter"]
+F6 --> F7["Apply favorites filter"]
+F7 --> Sort{"Sort option?"}
 Sort --> |Order| Ret1["Return as-is"]
 Sort --> |Title| SortTitle["Sort by title"]
 Sort --> |Difficulty| SortDiff["Sort by Easy/Medium/Hard"]
 Sort --> |Weakest| SortWeak["Sort by confidence Weak first"]
+Sort --> |Strongest| SortStrong["Sort by confidence Strongest first"]
 SortTitle --> Ret2["Return sorted"]
 SortDiff --> Ret2
 SortWeak --> Ret2
+SortStrong --> Ret2
 Ret1 --> End(["End"])
 Ret2 --> End
 ```
+
+**Updated** Enhanced filtering now includes confidence-based filtering with support for "Not set" cases and a new 'Strongest' sort option using confidence ranking.
 
 **Diagram sources**
 - [main.jsx:127-139](file://src/main.jsx#L127-L139)
@@ -163,8 +178,32 @@ Ret2 --> End
 **Section sources**
 - [main.jsx:127-139](file://src/main.jsx#L127-L139)
 
+### Filter Validation and Sanitization
+The system now includes robust filter validation through the `sanitizeFilters()` function:
+- Validates filter structure and types
+- Ensures only valid filter values are accepted
+- Supports all confidence levels: "🔴 Weak", "🟡 Learning", "🟢 Strong", "🔵 Interview Ready", "Not set"
+- Validates sort options including the new "Strongest" option
+- Provides default values for missing or invalid filters
+
+```mermaid
+flowchart TD
+Start(["Input Filters"]) --> Validate["Validate filter structure"]
+Validate --> CheckKeys["Check required keys exist"]
+CheckKeys --> ExtractValid["Extract valid string values"]
+ExtractValid --> CheckFavorites["Check boolean favorites"]
+CheckFavorites --> CheckSort["Validate sort option"]
+CheckSort --> Return["Return sanitized filters"]
+```
+
+**Diagram sources**
+- [main.jsx:80-89](file://src/main.jsx#L80-L89)
+
+**Section sources**
+- [main.jsx:80-89](file://src/main.jsx#L80-L89)
+
 ### Roadmap Rendering and Grouping
-- Computes filtered list once using memoization
+- Computes filtered list once using memoization with confidence support
 - Groups filtered problems by topic and pattern
 - Renders collapsible topic blocks with solved/total counts
 - Within each topic, renders collapsible pattern blocks with their own counts
@@ -199,6 +238,8 @@ Roadmap --> ProblemRow : "renders multiple"
 ### User Interaction Patterns
 - Search input updates a global query used by filtering
 - Filter dropdowns update roadmapFilters state; pattern options are constrained by selected topic
+- **New**: Confidence filter dropdown allows filtering by confidence level or "Not set"
+- **New**: Sort dropdown includes "Strongest" option for ordering by confidence
 - Favorites toggle filters to only favorite problems
 - Sorting changes ordering without altering visibility
 - Topic header toggles expand/collapse all patterns within that topic
@@ -211,7 +252,7 @@ participant U as "User"
 participant RM as "Roadmap"
 participant PR as "ProblemRow"
 participant App as "App"
-U->>RM : Change filter or sort
+U->>RM : Change filter or sort (including confidence)
 RM->>RM : Update roadmapFilters
 RM->>RM : Recompute filtered and grouped
 U->>PR : Click problem row
@@ -228,7 +269,8 @@ App-->>App : Set selected problem and page
 - Legend shows status semantics for dots: done (Solved/Mastered), todo (Not Started), weak (confidence Weak)
 - Topic block shows solved/total count
 - Pattern block shows solved/count for its problems
-- ProblemRow shows a small status dot aligned with the problem’s current status
+- ProblemRow shows a small status dot aligned with the problem's current status
+- **Enhanced**: Confidence levels are now visible in analytics and can be filtered
 
 **Section sources**
 - [main.jsx:209-218](file://src/main.jsx#L209-L218)
@@ -238,6 +280,7 @@ App-->>App : Set selected problem and page
 ### Data Model and Enrichment
 - Problems are loaded from bundled JSON and enriched with local progress (status, confidence, nextRevision, etc.)
 - Topics and patterns are derived from the dataset; pattern options are scoped to the selected topic
+- **Enhanced**: Confidence system includes four levels: Weak, Learning, Strong, Interview Ready
 - Enriched problems feed filtering, grouping, and rendering
 
 ```mermaid
@@ -250,6 +293,7 @@ string pattern
 string difficulty
 string url
 string videoUrl
+string confidence
 }
 TOPIC {
 string name PK
@@ -282,8 +326,9 @@ PROBLEM ||--|| PATTERN_MAP : "matches"
   - App-provided enriched problems, topics, patterns, filters
   - groupByTopicPattern utility
   - ProblemRow component
+  - **Enhanced**: Confidence filtering and sorting logic
 - ProblemRow depends on:
-  - Problem object shape (id, title, topic, pattern, difficulty, status, favorite)
+  - Problem object shape (id, title, topic, pattern, difficulty, status, favorite, confidence)
 
 ```mermaid
 graph LR
@@ -311,12 +356,13 @@ App --> Meta["topics.json / patterns.json"]
 - Memoization:
   - Enriched problems computed once per change in problems or progress
   - Stats computed once per change in enriched set
-  - Filtered list computed once per change in enriched, query, or filters
+  - Filtered list computed once per change in enriched, query, or filters (including confidence)
   - Grouped results computed once per change in filtered list
 - Filtering complexity:
-  - Linear scan over enriched problems per filter change
+  - Linear scan over enriched problems per filter change (now includes confidence checks)
 - Grouping complexity:
   - Linear pass over filtered list to build nested structure
+- **Enhanced**: Confidence-based filtering adds minimal overhead due to simple string comparisons
 - Recommendations:
   - Keep filter set minimal to reduce recomputation
   - Avoid deep nesting beyond topic → pattern unless necessary
@@ -328,6 +374,7 @@ App --> Meta["topics.json / patterns.json"]
 - No problems match filters:
   - Verify that at least one filter is set to All or matches existing data
   - Check that the selected topic has associated patterns
+  - **New**: Check confidence filter settings - "Not set" only shows problems without confidence values
 - Pattern options reset:
   - If a selected pattern becomes invalid after changing topic, it resets to All automatically
 - Cloud sync errors:
@@ -335,13 +382,17 @@ App --> Meta["topics.json / patterns.json"]
   - Sync status reflects checking, syncing, synced, error, or signed-out states
 - Data loading issues:
   - If problem data fails to load, a toast message indicates failure
+- **New**: Filter validation issues:
+  - Invalid filter values are automatically sanitized to defaults
+  - Confidence values must match exact strings: "🔴 Weak", "🟡 Learning", "🟢 Strong", "🔵 Interview Ready"
 
 **Section sources**
 - [main.jsx:151-155](file://src/main.jsx#L151-L155)
 - [main.jsx:90-99](file://src/main.jsx#L90-L99)
 - [main.jsx:586-605](file://src/main.jsx#L586-L605)
+- [main.jsx:80-89](file://src/main.jsx#L80-L89)
 
 ## Conclusion
-The Roadmap component provides a clear, hierarchical view of problems organized by topic and pattern, with powerful filtering, sorting, and collapsible sections. It integrates seamlessly with the rest of the app through shared state and navigation, offering progress indicators and a consistent user experience for tracking learning and mastery.
+The Roadmap component provides a clear, hierarchical view of problems organized by topic and pattern, with powerful enhanced filtering including confidence-based filtering and sorting capabilities. The new 'Strongest' sort option and confidence filtering system allow users to focus on problems based on their mastery level. It integrates seamlessly with the rest of the app through shared state and navigation, offering progress indicators and a consistent user experience for tracking learning and mastery.
 
 [No sources needed since this section summarizes without analyzing specific files]

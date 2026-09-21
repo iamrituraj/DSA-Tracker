@@ -1,6 +1,6 @@
 schema_version: 1
 module_path: api_server
-title: Serverless API for Session Auth & Cloud State Persistence
+title: 'Serverless API: Authentication & User State Persistence'
 scope:
     - api/
 source_files: []
