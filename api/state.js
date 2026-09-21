@@ -17,6 +17,8 @@ function sanitize(value) {
     solutions: object(state.solutions),
     activity: object(state.activity),
     settings: { ...emptyState.settings, ...object(state.settings) },
+    filters: object(state.filters),
+    collapse: object(state.collapse),
   };
 }
 

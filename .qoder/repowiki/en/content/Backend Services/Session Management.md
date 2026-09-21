@@ -9,6 +9,12 @@
 - [package.json](file://package.json)
 </cite>
 
+## Update Summary
+**Changes Made**
+- Enhanced HTTPS detection through x-forwarded-proto header support for reverse proxy deployments
+- Updated isSecureRequest function to intelligently determine Secure cookie flag based on actual request protocol
+- Improved cross-domain security considerations for deployments behind Vercel and other reverse proxies
+
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
@@ -22,7 +28,7 @@
 10. [Appendices](#appendices)
 
 ## Introduction
-This document explains the session management utilities that provide secure, cookie-based authentication for the application’s serverless API routes. The implementation uses HMAC-SHA256 signing to prevent tampering, enforces expiration times, and sets strict cookie attributes to mitigate common web attacks. It also documents how sessions are validated and used to protect state persistence endpoints.
+This document explains the session management utilities that provide secure, cookie-based authentication for the application's serverless API routes. The implementation uses HMAC-SHA256 signing to prevent tampering, enforces expiration times, and sets strict cookie attributes to mitigate common web attacks. It also documents how sessions are validated and used to protect state persistence endpoints.
 
 ## Project Structure
 The session logic is implemented as a small set of Node.js modules under the api directory:
@@ -40,36 +46,39 @@ StateRoute --> DB["Neon Postgres<br/>@neondatabase/serverless"]
 ```
 
 **Diagram sources**
-- [auth.js:1-24](file://api/auth.js#L1-L24)
-- [state.js:1-51](file://api/state.js#L1-L51)
-- [_session.js:1-54](file://api/_session.js#L1-L54)
+- [auth.js:1-30](file://api/auth.js#L1-L30)
+- [state.js:1-66](file://api/state.js#L1-L66)
+- [_session.js:1-60](file://api/_session.js#L1-L60)
 
 **Section sources**
-- [_session.js:1-54](file://api/_session.js#L1-L54)
-- [auth.js:1-24](file://api/auth.js#L1-L24)
-- [state.js:1-51](file://api/state.js#L1-L51)
+- [_session.js:1-60](file://api/_session.js#L1-L60)
+- [auth.js:1-30](file://api/auth.js#L1-L30)
+- [state.js:1-66](file://api/state.js#L1-L66)
 
 ## Core Components
 - hasSession(req): Validates the presence and integrity of the session cookie and checks expiration. Returns a boolean indicating whether the request is authenticated.
-- issueSession(res): Creates a new session by generating an expiring payload, signing it with HMAC-SHA256, and setting a secure, HttpOnly cookie.
-- clearSession(res): Terminates the session by clearing the cookie.
+- issueSession(res, req): Creates a new session by generating an expiring payload, signing it with HMAC-SHA256, and setting a secure, HttpOnly cookie with intelligent HTTPS detection.
+- clearSession(res, req): Terminates the session by clearing the cookie with appropriate security flags.
 - safeEqual(left, right): Performs constant-time string comparison to avoid timing side-channel attacks.
+- isSecureRequest(req): **Enhanced** Determines if the request should use Secure cookie flag by checking x-forwarded-proto header for reverse proxy deployments or falling back to VERCEL environment variable.
 
 Key security properties:
 - Tamper prevention: Each cookie value includes a base64url-encoded payload followed by a dot and an HMAC signature. Any modification invalidates the signature.
 - Expiration handling: The payload contains an expiration timestamp; expired cookies are rejected.
-- Cookie attributes: HttpOnly prevents client-side script access; SameSite=Lax mitigates CSRF; Secure flag is enabled on Vercel deployments to enforce HTTPS-only transmission.
+- Cookie attributes: HttpOnly prevents client-side script access; SameSite=Lax mitigates CSRF; Secure flag is intelligently enabled based on actual request protocol.
+
+**Updated** The isSecureRequest function now supports reverse proxy deployments by checking the x-forwarded-proto header before falling back to environment-based detection.
 
 **Section sources**
 - [_session.js:12-14](file://api/_session.js#L12-L14)
 - [_session.js:23-27](file://api/_session.js#L23-L27)
-- [_session.js:29-34](file://api/_session.js#L29-L34)
-- [_session.js:36-39](file://api/_session.js#L36-L39)
-- [_session.js:41-51](file://api/_session.js#L41-L51)
+- [_session.js:29-33](file://api/_session.js#L29-L33)
+- [_session.js:35-45](file://api/_session.js#L35-L45)
+- [_session.js:47-57](file://api/_session.js#L47-L57)
 
 ## Architecture Overview
-The session flow integrates across three files:
-- Authentication: POST /api/auth validates a password and issues a signed session cookie. GET /api/auth returns whether a valid session exists. DELETE /api/auth clears the session.
+The session flow integrates across three files with enhanced HTTPS detection:
+- Authentication: POST /api/auth validates a password and issues a signed session cookie with appropriate security flags. GET /api/auth returns whether a valid session exists. DELETE /api/auth clears the session.
 - Protected state: GET/POST /api/state require a valid session via hasSession before reading or writing data to the database.
 
 ```mermaid
@@ -81,8 +90,9 @@ participant ST as "state.js"
 participant DB as "Neon DB"
 C->>A : POST /api/auth {password}
 A->>S : safeEqual(password, APP_ACCESS_PASSWORD)
-A->>S : issueSession(res)
-S-->>C : Set-Cookie (HttpOnly, SameSite=Lax, Secure on Vercel)
+A->>S : issueSession(res, req)
+S->>S : isSecureRequest(req) - Check x-forwarded-proto
+S-->>C : Set-Cookie (HttpOnly, SameSite=Lax, Secure if HTTPS)
 A-->>C : 200 {authenticated : true}
 C->>ST : GET /api/state
 ST->>S : hasSession(req)
@@ -97,9 +107,9 @@ end
 ```
 
 **Diagram sources**
-- [auth.js:8-23](file://api/auth.js#L8-L23)
-- [_session.js:29-51](file://api/_session.js#L29-L51)
-- [state.js:23-45](file://api/state.js#L23-L45)
+- [auth.js:8-29](file://api/auth.js#L8-L29)
+- [_session.js:29-45](file://api/_session.js#L29-L45)
+- [state.js:42-65](file://api/state.js#L42-L65)
 
 ## Detailed Component Analysis
 
@@ -116,8 +126,8 @@ Security notes:
 
 **Section sources**
 - [_session.js:12-14](file://api/_session.js#L12-L14)
-- [_session.js:23-27](file://api/_session.js#L23-L27)
-- [_session.js:41-51](file://api/_session.js#L41-L51)
+- [_session.js:35-39](file://api/_session.js#L35-L39)
+- [_session.js:47-57](file://api/_session.js#L47-L57)
 
 ### hasSession: Validation Flow
 - Reads the cookie named dsa_tracker_session.
@@ -144,35 +154,36 @@ CheckExp --> |Yes| ReturnTrue["Return true"]
 ```
 
 **Diagram sources**
-- [_session.js:41-51](file://api/_session.js#L41-L51)
+- [_session.js:47-57](file://api/_session.js#L47-L57)
 
 **Section sources**
-- [_session.js:41-51](file://api/_session.js#L41-L51)
+- [_session.js:47-57](file://api/_session.js#L47-L57)
 
 ### issueSession: Creation Flow
 - Builds a JSON payload with exp set to current time plus MAX_AGE_SECONDS.
 - Encodes payload to base64url.
 - Signs payload with HMAC-SHA256 using SESSION_SECRET.
-- Sets cookie with name dsa_tracker_session, Path=/, HttpOnly, SameSite=Lax, Max-Age=MAX_AGE_SECONDS, and Secure when running on Vercel.
+- Sets cookie with name dsa_tracker_session, Path=/, HttpOnly, SameSite=Lax, Max-Age=MAX_AGE_SECONDS, and Secure when HTTPS is detected.
 
 ```mermaid
 sequenceDiagram
 participant A as "auth.js"
 participant S as "_session.js"
 participant R as "Response"
-A->>S : issueSession(res)
+A->>S : issueSession(res, req)
 S->>S : Build payload { exp }
+S->>S : isSecureRequest(req) - Check x-forwarded-proto
 S->>S : sign(payload)
-S->>R : Set-Cookie : dsa_tracker_session=payload.sig; Path=/; HttpOnly; SameSite=Lax; Max-Age=...; Secure(on Vercel)
+S->>R : Set-Cookie : dsa_tracker_session=payload.sig; Path=/; HttpOnly; SameSite=Lax; Max-Age=...; Secure(if HTTPS)
 ```
 
 **Diagram sources**
-- [auth.js:16-22](file://api/auth.js#L16-L22)
-- [_session.js:29-34](file://api/_session.js#L29-L34)
+- [auth.js:22-28](file://api/auth.js#L22-L28)
+- [_session.js:35-40](file://api/_session.js#L35-L40)
 
 **Section sources**
-- [_session.js:29-34](file://api/_session.js#L29-L34)
-- [auth.js:16-22](file://api/auth.js#L16-L22)
+- [_session.js:35-40](file://api/_session.js#L35-L40)
+- [auth.js:22-28](file://api/auth.js#L22-L28)
 
 ### clearSession: Termination Flow
 - Clears the session cookie by setting its value to empty and Max-Age=0 with the same path and attributes.
@@ -182,17 +193,18 @@ sequenceDiagram
 participant A as "auth.js"
 participant S as "_session.js"
 participant R as "Response"
-A->>S : clearSession(res)
-S->>R : Set-Cookie : dsa_tracker_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0; Secure(on Vercel)
+A->>S : clearSession(res, req)
+S->>S : isSecureRequest(req) - Check x-forwarded-proto
+S->>R : Set-Cookie : dsa_tracker_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0; Secure(if HTTPS)
 ```
 
 **Diagram sources**
-- [auth.js:10-13](file://api/auth.js#L10-L13)
-- [_session.js:36-39](file://api/_session.js#L36-L39)
+- [auth.js:10-12](file://api/auth.js#L10-L12)
+- [_session.js:42-45](file://api/_session.js#L42-L45)
 
 **Section sources**
-- [_session.js:36-39](file://api/_session.js#L36-L39)
-- [auth.js:10-13](file://api/auth.js#L10-L13)
+- [_session.js:42-45](file://api/_session.js#L42-L45)
+- [auth.js:10-12](file://api/auth.js#L10-L12)
 
 ### safeEqual: Constant-Time Comparison
 - Converts both inputs to buffers and compares lengths first.
@@ -205,15 +217,46 @@ Security note:
 **Section sources**
 - [_session.js:23-27](file://api/_session.js#L23-L27)
 
+### Enhanced HTTPS Detection: isSecureRequest Function
+**New** The isSecureRequest function provides intelligent HTTPS detection for modern deployment scenarios:
+
+- **Primary Detection**: Checks the `x-forwarded-proto` header from reverse proxies (like Vercel) to determine if the original client request was HTTPS.
+- **Fallback Detection**: Falls back to checking the `VERCEL` environment variable for traditional Vercel deployments.
+- **Reverse Proxy Support**: Handles comma-separated values in x-forwarded-proto headers by taking the first value.
+- **Case Insensitive**: Normalizes protocol strings to lowercase for reliable comparison.
+
+```mermaid
+flowchart TD
+Start(["isSecureRequest Entry"]) --> GetProto["Get x-forwarded-proto header"]
+GetProto --> HasProto{"Header present?"}
+HasProto --> |Yes| ParseProto["Parse first proto value"]
+HasProto --> |No| CheckVercel["Check VERCEL env var"]
+ParseProto --> IsHTTPS{"proto === 'https'?"}
+IsHTTPS --> |Yes| ReturnTrue["Return true"]
+IsHTTPS --> |No| CheckVercel
+CheckVercel --> IsVercel{"VERCEL === true?"}
+IsVercel --> |Yes| ReturnTrue
+IsVercel --> |No| ReturnFalse["Return false"]
+```
+
+**Diagram sources**
+- [_session.js:29-33](file://api/_session.js#L29-L33)
+
+**Section sources**
+- [_session.js:29-33](file://api/_session.js#L29-L33)
+
 ### Cross-Domain and CSRF/XSS Considerations
 - SameSite=Lax: Reduces risk of cross-site request forgery by allowing top-level navigations while blocking most cross-site submitters.
 - HttpOnly: Prevents JavaScript access to the cookie, mitigating XSS-based theft.
-- Secure (on Vercel): Ensures cookies are only sent over HTTPS, protecting against interception.
+- **Enhanced Secure Flag**: Now intelligently enables Secure cookie attribute based on actual request protocol detection, ensuring HTTPS-only transmission in reverse proxy environments.
 - Note: For stricter CSRF protection in APIs, consider adding additional CSRF tokens for state-changing requests beyond the default SameSite behavior.
 
+**Updated** The Secure cookie flag is now automatically determined based on the actual request protocol rather than just deployment environment, providing better security for reverse proxy deployments.
+
 **Section sources**
-- [_session.js:32-34](file://api/_session.js#L32-L34)
-- [_session.js:37-38](file://api/_session.js#L37-L38)
+- [_session.js:35-40](file://api/_session.js#L35-L40)
+- [_session.js:42-45](file://api/_session.js#L42-L45)
+- [_session.js:29-33](file://api/_session.js#L29-L33)
 
 ### Session Storage Format
 - Cookie value structure: base64url({ "exp": <unix ms> }).base64url(HMAC-SHA256(secret, payload))
@@ -221,8 +264,8 @@ Security note:
 - This design minimizes exposure and reduces attack surface.
 
 **Section sources**
-- [_session.js:30-31](file://api/_session.js#L30-L31)
-- [_session.js:45-47](file://api/_session.js#L45-L47)
+- [_session.js:36-37](file://api/_session.js#L36-L37)
+- [_session.js:47-57](file://api/_session.js#L47-L57)
 
 ## Dependency Analysis
 - auth.js depends on _session.js for session lifecycle functions and safe comparison.
@@ -242,40 +285,38 @@ state_js --> neon["@neondatabase/serverless"]
 - [package.json:12-18](file://package.json#L12-L18)
 
 **Section sources**
-- [auth.js:1-24](file://api/auth.js#L1-L24)
-- [state.js:1-51](file://api/state.js#L1-L51)
-- [package.json:1-21](file://package.json#L1-L21)
+- [auth.js:1-30](file://api/auth.js#L1-L30)
+- [state.js:1-66](file://api/state.js#L1-L66)
+- [package.json:1-20](file://package.json#L1-L20)
 
 ## Performance Considerations
 - HMAC computation and base64url encoding are lightweight and suitable for serverless environments.
 - safeEqual ensures constant-time comparisons without branching on input length mismatches after initial check.
 - Cookie size remains small due to minimal payload (only expiration), reducing bandwidth overhead.
-
-[No sources needed since this section provides general guidance]
+- **Enhanced** HTTPS detection adds minimal overhead by checking request headers and environment variables.
 
 ## Troubleshooting Guide
 Common issues and resolutions:
 - Missing SESSION_SECRET: The signing function throws an error if SESSION_SECRET is not configured. Ensure it is set in environment variables.
 - Incorrect password: Authentication will fail if the provided password does not match APP_ACCESS_PASSWORD. Use safeEqual to avoid timing leaks.
-- Expired session: If the cookie’s exp is in the past, hasSession returns false. Re-authenticate to obtain a fresh session.
+- Expired session: If the cookie's exp is in the past, hasSession returns false. Re-authenticate to obtain a fresh session.
 - Database not configured: The state endpoint returns an error if DATABASE_URL is missing. Configure Neon connection string in environment variables.
-- Local vs production cookie flags: On Vercel, the Secure flag is added automatically; locally, cookies may be sent over HTTP unless explicitly configured.
+- **Enhanced** Local vs production cookie flags: The Secure flag is now automatically determined based on actual request protocol. In reverse proxy environments, ensure proper x-forwarded-proto header configuration.
 
 Operational tips:
 - Use vercel dev to test API routes locally with Vercel Functions.
 - Keep SESSION_SECRET strong and unique per deployment.
 - Avoid sharing APP_ACCESS_PASSWORD; it grants full access to sync capabilities.
+- **New** For reverse proxy deployments, ensure x-forwarded-proto header is properly set to indicate HTTPS when clients connect via HTTPS.
 
 **Section sources**
 - [_session.js:6-10](file://api/_session.js#L6-L10)
-- [auth.js:16-22](file://api/auth.js#L16-L22)
-- [state.js:23-26](file://api/state.js#L23-L26)
-- [README.md:35-52](file://README.md#L35-L52)
+- [auth.js:16-28](file://api/auth.js#L16-L28)
+- [state.js:42-45](file://api/state.js#L42-L45)
+- [README.md:35-59](file://README.md#L35-L59)
 
 ## Conclusion
-The session management utilities implement a compact, secure, and efficient approach to authentication for serverless API routes. By combining HMAC-signed cookies, strict cookie attributes, and constant-time comparisons, the system protects against common threats like tampering, XSS, and CSRF. The design keeps session payloads minimal and defers sensitive state to a protected backend store, ensuring scalability and safety in production.
-
-[No sources needed since this section summarizes without analyzing specific files]
+The session management utilities implement a compact, secure, and efficient approach to authentication for serverless API routes. By combining HMAC-signed cookies, strict cookie attributes, and constant-time comparisons, the system protects against common threats like tampering, XSS, and CSRF. The enhanced HTTPS detection through x-forwarded-proto header support ensures proper security flag configuration in modern reverse proxy deployments like Vercel. The design keeps session payloads minimal and defers sensitive state to a protected backend store, ensuring scalability and safety in production.
 
 ## Appendices
 
@@ -283,17 +324,18 @@ The session management utilities implement a compact, secure, and efficient appr
 - SESSION_SECRET: Required for HMAC signing. Must be a strong, random value.
 - APP_ACCESS_PASSWORD: Used to authenticate users before issuing a session.
 - DATABASE_URL: Required for cloud state persistence via Neon.
-- VERCEL: Environment flag used to enable Secure cookie attribute on Vercel deployments.
+- VERCEL: Environment flag used as fallback for Secure cookie attribute detection when x-forwarded-proto header is not available.
 
 Best practices:
 - Generate SESSION_SECRET with a cryptographically secure method.
 - Store secrets in environment variables or platform secret managers.
 - Restrict API access to authenticated sessions using hasSession at the start of protected handlers.
 - Deploy over HTTPS to ensure Secure cookies are enforced.
+- **New** For reverse proxy deployments, ensure proper x-forwarded-proto header configuration to enable automatic HTTPS detection.
 
 **Section sources**
 - [_session.js:6-10](file://api/_session.js#L6-L10)
-- [_session.js:32-34](file://api/_session.js#L32-L34)
-- [auth.js:16-22](file://api/auth.js#L16-L22)
-- [state.js:23-26](file://api/state.js#L23-L26)
-- [README.md:35-52](file://README.md#L35-L52)
+- [_session.js:29-33](file://api/_session.js#L29-L33)
+- [auth.js:16-28](file://api/auth.js#L16-L28)
+- [state.js:42-45](file://api/state.js#L42-L45)
+- [README.md:35-59](file://README.md#L35-L59)

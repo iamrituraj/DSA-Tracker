@@ -1,6 +1,6 @@
 schema_version: 1
 module_path: ""
-title: DSA Tracker MVP
+title: DSA Tracker Monorepo (Vite SPA + Serverless API + Data Scripts)
 scope:
     - README.md
     - .gitignore

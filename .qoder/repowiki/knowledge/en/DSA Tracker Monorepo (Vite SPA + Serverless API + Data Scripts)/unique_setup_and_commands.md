@@ -1,0 +1,1 @@
+`npm run dev` starts the Vite dev server; `npm run build` / `npm run preview` produce and serve the static SPA; `npm run prepare-data` and `npm run extract-tuf-links` regenerate the JSON datasets under `data_assets/` using the scripts in `scripts/`.

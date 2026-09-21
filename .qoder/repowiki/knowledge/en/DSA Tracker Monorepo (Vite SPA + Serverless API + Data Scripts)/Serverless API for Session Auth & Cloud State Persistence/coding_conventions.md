@@ -1,0 +1,5 @@
+- Route handlers return early on guard conditions (missing session, missing env vars, unsupported HTTP methods) with explicit `{ error }` JSON responses and appropriate status codes.
+- Request bodies are normalized by a local `readBody` helper that parses string bodies as JSON and falls back to an empty object when absent.
+- Secrets and credentials are read exclusively from `process.env` and validated before use, returning or throwing errors when required variables are missing.
+- Sensitive comparisons use `crypto.timingSafeEqual` via the shared `safeEqual` helper rather than direct `===` checks.
+- Database schema initialization is deferred to a module-scoped promise (`ensureTablePromise`) so the `CREATE TABLE IF NOT EXISTS` runs once per cold start instead of per request.

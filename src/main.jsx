@@ -69,6 +69,68 @@ const pageLabels = { dashboard: "Dashboard", roadmap: "A2Z Roadmap", revision: "
 function parseHash() {
   try { return decodeURIComponent(window.location.hash.replace(/^#\/?/, "")); } catch { return ""; }
 }
+const defaultFilters = { topic: "All", status: "All", difficulty: "All", pattern: "All", confidence: "All", favorites: false, sort: "Order" };
+const CONF_RANK = { "🔴 Weak": 0, "🟡 Learning": 1, "🟢 Strong": 2, "🔵 Interview Ready": 3 };
+const codeFilled = (a) => {
+  const c = a?.code;
+  if (typeof c === "string") return Boolean(c.trim());
+  if (c && typeof c === "object") return Object.values(c).some(v => String(v || "").trim());
+  return false;
+};
+function sanitizeFilters(v) {
+  if (!v || typeof v !== "object" || Array.isArray(v)) return null;
+  const keys = ["topic", "status", "difficulty", "pattern", "confidence", "favorites", "sort"];
+  if (!keys.some(k => k in v)) return null;
+  const out = { ...defaultFilters };
+  ["topic", "status", "difficulty", "pattern", "confidence"].forEach(k => { if (typeof v[k] === "string") out[k] = v[k]; });
+  if (typeof v.favorites === "boolean") out.favorites = v.favorites;
+  if (["Order", "Title", "Difficulty", "Weakest", "Strongest"].includes(v.sort)) out.sort = v.sort;
+  return out;
+}
+function asBoolMap(v) {
+  const out = {};
+  if (v && typeof v === "object" && !Array.isArray(v)) Object.entries(v).forEach(([k, x]) => { if (typeof x === "boolean") out[k] = x; });
+  return out;
+}
+function sanitizeCollapse(v) {
+  if (!v || typeof v !== "object" || Array.isArray(v)) return null;
+  const topics = asBoolMap(v.topics);
+  const patterns = asBoolMap(v.patterns);
+  if (!Object.keys(topics).length && !Object.keys(patterns).length) return null;
+  return { topics, patterns };
+}
+// Lightweight dependency-free Java/C# syntax highlighter for the solutions viewer.
+const escHtml = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const KEYWORDS_SHARED = "abstract as assert async await base break case catch checked class const continue default delegate do else enum event explicit extends final finally fixed for foreach goto if implements import in instanceof interface internal is lock namespace native new out override package params partial private protected public readonly record ref return sealed sizeof stackalloc static strictfp struct super switch synchronized this throw throws transient try typeof unchecked unsafe using value virtual void volatile when where while with yield true false null";
+const KEYWORDS_JAVA = `${KEYWORDS_SHARED} boolean byte char double float int long var short permits non-sealed`;
+const KEYWORDS_CSHARP = `${KEYWORDS_SHARED} bool decimal dynamic float get init int long object sbyte set short string uint ulong ushort var nint nuint required file scoped global`;
+function highlightCode(code, lang) {
+  const kw = new Set((lang === "csharp" ? KEYWORDS_CSHARP : KEYWORDS_JAVA).split(" "));
+  const lines = [[]];
+  const push = (cls, text) => {
+    const parts = String(text).split("\n");
+    parts.forEach((part, i) => {
+      if (i > 0) lines.push([]);
+      if (part) lines[lines.length - 1].push(cls ? `<span class="${cls}">${escHtml(part)}</span>` : escHtml(part));
+    });
+  };
+  const re = /\/\/[^\n]*|\/\*[\s\S]*?\*\/|"(?:\\.|[^"\\\n])*"?|'(?:\\.|[^'\\\n])*'?|@[A-Za-z_]\w*|\d[\w.]*|[A-Za-z_$][\w$]*|\s+|[\s\S]/g;
+  let m;
+  while ((m = re.exec(code || "")) !== null) {
+    const t = m[0];
+    let cls = null;
+    if (t.startsWith("//") || t.startsWith("/*")) cls = "tok-com";
+    else if (t[0] === '"' || t[0] === "'") cls = "tok-str";
+    else if (t[0] === "@") cls = "tok-ann";
+    else if (/^\d/.test(t)) cls = "tok-num";
+    else if (kw.has(t)) cls = "tok-key";
+    else if (/^[A-Z]/.test(t)) cls = "tok-type";
+    push(cls, t);
+  }
+  const out = lines.map(l => l.join(""));
+  while (out.length > 1 && out[out.length - 1] === "") out.pop();
+  return out;
+}
 
 function App() {
   const [problems, setProblems] = useState([]);
@@ -83,13 +145,14 @@ function App() {
   const [selected, setSelected] = useState(() => { const hash = parseHash(); return hash.startsWith("problem/") ? hash.slice("problem/".length) : null; });
   const [originPage, setOriginPage] = useState("roadmap");
   const [query, setQuery] = useState("");
-  const [roadmapFilters, setRoadmapFilters] = useState({ topic: "All", status: "All", difficulty: "All", pattern: "All", favorites: false, sort: "Order" });
+  const [roadmapFilters, setRoadmapFilters] = useLocalState("dsa-filters", defaultFilters);
+  const [collapse, setCollapse] = useLocalState("dsa-collapse", { topics: {}, patterns: {} });
   const [toast, setToastValue] = useState(null);
   const toastId = useRef(0);
   const setToast = (text) => setToastValue({ id: ++toastId.current, text });
   const [syncStatus, setSyncStatus] = useState("checking");
   const [cloudReady, setCloudReady] = useState(false);
-  const cloudState = () => ({ progress, notes, solutions, activity, settings });
+  const cloudState = () => ({ progress, notes, solutions, activity, settings, filters: roadmapFilters, collapse });
   const loadCloudState = async () => {
     const response = await fetch("/api/state");
     if (!response.ok) throw new Error("Could not load cloud data");
@@ -100,6 +163,8 @@ function App() {
       setSolutions(state.solutions || {});
       setActivity(state.activity || {});
       setSettings(s => ({ ...s, ...(state.settings || {}) }));
+      const restoredFilters = sanitizeFilters(state.filters); if (restoredFilters) setRoadmapFilters(restoredFilters);
+      const restoredCollapse = sanitizeCollapse(state.collapse); if (restoredCollapse) setCollapse(restoredCollapse);
     }
     setCloudReady(true);
   };
@@ -143,7 +208,7 @@ function App() {
       }
     }, 500);
     return () => clearTimeout(timer);
-  }, [cloudReady, progress, notes, solutions, activity, settings]);
+  }, [cloudReady, progress, notes, solutions, activity, settings, roadmapFilters, collapse]);
   useEffect(() => { if (!toast) return; const t = setTimeout(() => setToastValue(null), 2500); return () => clearTimeout(t) }, [toast]);
   useEffect(() => {
     const onStorageError = () => setToast("Could not save to browser storage — export a backup from Settings.");
@@ -169,11 +234,13 @@ function App() {
       (!query || `${p.title} ${p.topic} ${p.pattern}`.toLowerCase().includes(query.toLowerCase())) &&
       (f.topic === "All" || p.topic === f.topic) && (f.status === "All" || p.status === f.status) &&
       (f.difficulty === "All" || p.difficulty === f.difficulty) && (f.pattern === "All" || p.pattern === f.pattern) &&
+      (f.confidence === "All" || (f.confidence === "Not set" ? !p.confidence : p.confidence === f.confidence)) &&
       (!f.favorites || p.favorite)
     );
     if (f.sort === "Title") arr.sort((a, b) => a.title.localeCompare(b.title));
     if (f.sort === "Difficulty") arr.sort((a, b) => ["Easy", "Medium", "Hard"].indexOf(a.difficulty) - ["Easy", "Medium", "Hard"].indexOf(b.difficulty));
     if (f.sort === "Weakest") arr.sort((a, b) => Number(a.confidence?.includes("Weak") || false) - Number(b.confidence?.includes("Weak") || false));
+    if (f.sort === "Strongest") arr.sort((a, b) => (CONF_RANK[b.confidence] ?? -1) - (CONF_RANK[a.confidence] ?? -1));
     return arr;
   }, [enriched, query, roadmapFilters]);
   const update = (id, patch) => setProgress(x => ({ ...x, [id]: { ...(x[id] || {}), ...patch } }));
@@ -187,19 +254,24 @@ function App() {
   useEffect(() => {
     if (page === "problem" && problems.length && !selectedProblem) setPage(originPage);
   }, [page, problems.length, selectedProblem, originPage]);
-  const exportData = () => { const blob = new Blob([JSON.stringify({ version: 3, progress, notes, solutions, activity, settings, exportedAt: new Date().toISOString() }, null, 2)], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "dsa-tracker-backup.json"; a.click(); URL.revokeObjectURL(a.href) };
-  const importData = e => { const f = e.target.files?.[0]; if (!f) return; const r = new FileReader(); r.onload = () => { try { const d = JSON.parse(r.result); const isObj = v => v && typeof v === "object" && !Array.isArray(v) ? v : null; const next = { progress: isObj(d.progress), notes: isObj(d.notes), solutions: isObj(d.solutions), activity: isObj(d.activity) }; if (!next.progress && !next.notes && !next.solutions && !next.activity) throw new Error("no tracker data"); if (next.progress) setProgress(next.progress); if (next.notes) setNotes(next.notes); if (next.solutions) setSolutions(next.solutions); if (next.activity) setActivity(next.activity); if (d.settings) setSettings(s => ({ ...s, dailyGoal: Math.min(50, Math.max(1, Number(d.settings.dailyGoal) || s.dailyGoal)), theme: d.settings.theme === "dark" ? "dark" : d.settings.theme === "light" ? "light" : s.theme })); setToast("Backup restored.") } catch { setToast("Invalid backup file.") } }; r.readAsText(f); e.target.value = "" };
+  const exportData = () => { const blob = new Blob([JSON.stringify({ version: 4, progress, notes, solutions, activity, settings, filters: roadmapFilters, collapse, exportedAt: new Date().toISOString() }, null, 2)], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "dsa-tracker-backup.json"; a.click(); URL.revokeObjectURL(a.href) };
+  const importData = e => { const f = e.target.files?.[0]; if (!f) return; const r = new FileReader(); r.onload = () => { try { const d = JSON.parse(r.result); const isObj = v => v && typeof v === "object" && !Array.isArray(v) ? v : null; const next = { progress: isObj(d.progress), notes: isObj(d.notes), solutions: isObj(d.solutions), activity: isObj(d.activity), filters: sanitizeFilters(d.filters), collapse: sanitizeCollapse(d.collapse) }; if (!next.progress && !next.notes && !next.solutions && !next.activity) throw new Error("no tracker data"); if (next.progress) setProgress(next.progress); if (next.notes) setNotes(next.notes); if (next.solutions) setSolutions(next.solutions); if (next.activity) setActivity(next.activity); if (next.filters) setRoadmapFilters(next.filters); if (next.collapse) setCollapse(next.collapse); if (d.settings) setSettings(s => ({ ...s, dailyGoal: Math.min(50, Math.max(1, Number(d.settings.dailyGoal) || s.dailyGoal)), theme: d.settings.theme === "dark" ? "dark" : d.settings.theme === "light" ? "light" : s.theme })); setToast("Backup restored.") } catch { setToast("Invalid backup file.") } }; r.readAsText(f); e.target.value = "" };
   const resetAll = () => { if (confirm("Reset all progress, notes, solutions and activity? This cannot be undone unless you have a backup.")) { setProgress({}); setNotes({}); setSolutions({}); setActivity({}); setToast("All local progress reset.") } };
+  const viewWeak = () => { setRoadmapFilters(f => ({ ...f, topic: "All", pattern: "All", difficulty: "All", favorites: false, confidence: "🔴 Weak" })); setPage("roadmap"); };
   const hasLocalData = [progress, notes, solutions, activity].some(x => Object.keys(x).length > 0);
   const topics = ["All", ...new Set(problems.map(p => p.topic))];
   const patterns = ["All", ...new Set(
     (roadmapFilters.topic === "All" ? problems : problems.filter(p => p.topic === roadmapFilters.topic)).map(p => p.pattern)
   )];
   useEffect(() => {
+    if (roadmapFilters.topic !== "All" && !topics.includes(roadmapFilters.topic)) {
+      setRoadmapFilters(f => ({ ...f, topic: "All", pattern: "All" }));
+      return;
+    }
     if (roadmapFilters.pattern !== "All" && !patterns.includes(roadmapFilters.pattern)) {
       setRoadmapFilters(f => ({ ...f, pattern: "All" }));
     }
-  }, [roadmapFilters.topic, roadmapFilters.pattern, patterns]);
+  }, [roadmapFilters.topic, roadmapFilters.pattern, patterns, topics]);
   return <div className={`app theme-${settings.theme || "light"}`}>
     <aside><div className="brand"><div className="logo">DS</div><div><b>DSA Tracker</b><small>A2Z Learning System</small></div></div>
       <nav>{[["dashboard", "Dashboard", LayoutDashboard], ["roadmap", "A2Z Roadmap", BookOpen], ["revision", "Revision", RefreshCw], ["patterns", "Patterns", Brain], ["analytics", "Analytics", BarChart3], ["settings", "Settings", Settings]].map(([id, label, I]) => <button className={page === id ? "active" : ""} onClick={() => setPage(id)} key={id}><I size={18} /><span>{label}</span></button>)}</nav>
@@ -207,11 +279,11 @@ function App() {
       <button className="theme-toggle" type="button" onClick={() => setSettings(s => ({ ...s, theme: s.theme === "dark" ? "light" : "dark" }))} aria-label="Toggle dark mode">{settings.theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}<span>{settings.theme === "dark" ? "Light mode" : "Dark mode"}</span></button>
     </aside>
     <main><header><div><h1>{page === "problem" ? "Problem" : pageLabels[page]}</h1><p>Practice, track, revise, master.</p></div><div className="search"><Search size={17} /><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search problems, topics, patterns…" /></div></header>
-      {page === "dashboard" && <Dashboard stats={stats} problems={enriched} open={open} setPage={setPage} settings={settings} />}
-      {page === "roadmap" && <Roadmap problems={enriched} topics={topics} patterns={patterns} open={open} filters={roadmapFilters} setFilters={setRoadmapFilters} filtered={filtered} />}
+      {page === "dashboard" && <Dashboard stats={stats} problems={enriched} open={open} setPage={setPage} settings={settings} viewWeak={viewWeak} />}
+      {page === "roadmap" && <Roadmap problems={enriched} topics={topics} patterns={patterns} open={open} filters={roadmapFilters} setFilters={setRoadmapFilters} filtered={filtered} collapse={collapse} setCollapse={setCollapse} />}
       {page === "revision" && <Revision problems={enriched} open={open} update={update} recordActivity={recordActivity} />}
       {page === "patterns" && <Patterns problems={enriched} tufLinks={tufLinks} open={open} />}
-      {page === "analytics" && <Analytics stats={stats} problems={enriched} activity={activity} notes={notes} solutions={solutions} />}
+      {page === "analytics" && <Analytics stats={stats} problems={enriched} activity={activity} notes={notes} solutions={solutions} settings={settings} />}
       {page === "settings" && <SettingsPage exportData={exportData} importData={importData} resetAll={resetAll} settings={settings} setSettings={setSettings} syncStatus={syncStatus} signIn={signIn} signOut={signOut} hasLocalData={hasLocalData} />}
       {page === "problem" && selectedProblem && <Problem p={selectedProblem} update={update} notes={notes[selectedProblem.id] || {}} setNotes={setNotes} solutions={solutions[selectedProblem.id]} builtInSolutions={builtInSolutions[selectedProblem.id]} tufUrl={tufLinks[selectedProblem.id]} setSolutions={setSolutions} back={() => setPage(originPage)} backLabel={pageLabels[originPage] || "roadmap"} recordActivity={recordActivity} setToast={setToast} />}
     </main>
@@ -219,16 +291,16 @@ function App() {
   </div>
 }
 
-function Dashboard({ stats, problems, open, setPage, settings }) {
+function Dashboard({ stats, problems, open, setPage, settings, viewWeak }) {
   const pct = stats.total ? Math.round(stats.solved / stats.total * 100) : 0;
   const due = problems.filter(p => p.nextRevision && new Date(p.nextRevision) <= new Date()).sort((a, b) => new Date(a.nextRevision) - new Date(b.nextRevision)).slice(0, 5);
   const next = problems.filter(p => p.status === "Not Started").slice(0, 5);
-  const weak = problems.filter(p => p.confidence === "🔴 Weak").slice(0, 4);
+  const weak = problems.filter(p => p.confidence === "🔴 Weak");
   return <section>
     <div className="hero"><div><span className="eyebrow">YOUR DSA JOURNEY</span><h2>{stats.solved} / {stats.total} problems completed</h2><p>Build consistency, revisit weak patterns, and turn solved problems into interview-ready knowledge.</p><div className="goal"><Target size={15} /> Today: <b>{Math.min(stats.today, settings.dailyGoal)}/{settings.dailyGoal}</b> activit{settings.dailyGoal !== 1 ? "ies" : "y"}</div></div><div className="ring" style={{ "--pct": `${pct * 3.6}deg` }}><span>{pct}%</span></div></div>
     <div className="cards">{[["🔥", "Streak", `${stats.streak} day${stats.streak !== 1 ? "s" : ""}`, "Consecutive active days"], ["🔁", "Due today", stats.due, "Revision queue"], ["🔴", "Weak", stats.weak, "Needs practice"], ["⭐", "Mastered", stats.mastered, "Interview ready"]].map((x, i) => <div className="card" key={i}><span className="card-icon">{x[0]}</span><div><small>{x[1]}</small><strong>{x[2]}</strong><em>{x[3]}</em></div></div>)}</div>
     <div className="grid2"><DashboardPanel title="Revision due" subtitle="Try from memory before opening notes." action="View all" onClick={() => setPage("revision")}>{due.length ? due.map(p => <ProblemRow key={p.id} p={p} open={open} tag="Due" />) : <Empty text="No revisions due. Nice work!" />}</DashboardPanel><DashboardPanel title="Continue A2Z" subtitle="Pick up where you left off." action="Open roadmap" onClick={() => setPage("roadmap")}>{next.map(p => <ProblemRow key={p.id} p={p} open={open} />)}</DashboardPanel></div>
-    <div className="grid2"><DashboardPanel title="Weak problems" subtitle="Prioritize these before learning more." action="Open roadmap" onClick={() => setPage("roadmap")}>{weak.length ? weak.map(p => <ProblemRow key={p.id} p={p} open={open} tag="Weak" />) : <Empty text="No weak problems marked." />}</DashboardPanel><div className="panel quick"><h3>Study loop</h3><div><span>1</span><p><b>Attempt</b><small>Think before checking anything.</small></p></div><div><span>2</span><p><b>Record</b><small>Save insight, mistake and complexity.</small></p></div><div><span>3</span><p><b>Revise</b><small>Follow the spaced schedule.</small></p></div></div></div>
+    <div className="grid2"><DashboardPanel title="Weak problems" subtitle={weak.length ? `${weak.length} marked weak — clear these before learning more.` : "Prioritize weak problems before learning more."} action="View all" onClick={viewWeak}>{weak.length ? <div className="weak-scroll">{weak.map(p => <ProblemRow key={p.id} p={p} open={open} tag="Weak" />)}</div> : <Empty text="No weak problems marked." />}</DashboardPanel><div className="panel quick"><h3>Study loop</h3><div><span>1</span><p><b>Attempt</b><small>Think before checking anything.</small></p></div><div><span>2</span><p><b>Record</b><small>Save insight, mistake and complexity.</small></p></div><div><span>3</span><p><b>Revise</b><small>Follow the spaced schedule.</small></p></div></div></div>
   </section>
 }
 function DashboardPanel({ title, subtitle, action, onClick, children }) { return <div className="panel"><div className="panel-head"><div><h3>{title}</h3><p>{subtitle}</p></div><button className="text-btn" onClick={onClick}>{action}<ChevronRight size={15} /></button></div>{children}</div> }
@@ -243,12 +315,11 @@ function groupByTopicPattern(list) {
   return topics;
 }
 
-function Roadmap({ problems, topics, patterns, open, filters, setFilters, filtered }) {
+function Roadmap({ problems, topics, patterns, open, filters, setFilters, filtered, collapse, setCollapse }) {
   const set = (k, v) => setFilters(x => ({ ...x, [k]: v }));
   const grouped = useMemo(() => groupByTopicPattern(filtered), [filtered]);
-  // Collapse state is remembered in localStorage: topic sections stay open by default,
-  // pattern sub-sections start collapsed, and every toggle survives navigation and reloads.
-  const [collapse, setCollapse] = useLocalState("dsa-collapse", { topics: {}, patterns: {} });
+  // Collapse state lives in App and persists to localStorage + the cloud DB: topic sections stay
+  // open by default, pattern sub-sections start collapsed, and every toggle survives reloads.
   const collapsedTopics = collapse.topics || {};
   const collapsedPatterns = collapse.patterns || {};
   const toggleTopic = (topic) => setCollapse(x => ({ ...x, topics: { ...(x.topics || {}), [topic]: !(x.topics || {})[topic] } }));
@@ -268,7 +339,7 @@ function Roadmap({ problems, topics, patterns, open, filters, setFilters, filter
         <span><i className="dot weak" /><em>Weak</em></span>
       </div>
     </div>
-    <div className="filters panel"><div className="filter-title"><Filter size={15} /> Filters <button onClick={() => setFilters({ topic: "All", status: "All", difficulty: "All", pattern: "All", favorites: false, sort: "Order" })}><RotateCcw size={13} />Reset</button></div><div className="filter-grid"><select value={filters.topic} onChange={e => set("topic", e.target.value)}>{topics.map(x => <option key={x}>{x}</option>)}</select><select value={filters.status} onChange={e => set("status", e.target.value)}><option>All</option>{statuses.map(x => <option key={x}>{x}</option>)}</select><select value={filters.difficulty} onChange={e => set("difficulty", e.target.value)}><option>All</option>{["Easy", "Medium", "Hard"].map(x => <option key={x}>{x}</option>)}</select><select value={filters.pattern} onChange={e => set("pattern", e.target.value)}>{patterns.map(x => <option key={x}>{x}</option>)}</select><select value={filters.sort} onChange={e => set("sort", e.target.value)}><option>Order</option><option>Title</option><option>Difficulty</option><option>Weakest</option></select><button className={filters.favorites ? "toggle on" : "toggle"} onClick={() => set("favorites", !filters.favorites)}><Star size={14} fill={filters.favorites ? "currentColor" : "none"} /> Favorites</button></div></div>
+    <div className="filters panel"><div className="filter-title"><Filter size={15} /> Filters <button onClick={() => setFilters({ ...defaultFilters })}><RotateCcw size={13} />Reset</button></div><div className="filter-grid"><select value={filters.topic} onChange={e => set("topic", e.target.value)}>{topics.map(x => <option key={x}>{x}</option>)}</select><select value={filters.status} onChange={e => set("status", e.target.value)}><option>All</option>{statuses.map(x => <option key={x}>{x}</option>)}</select><select value={filters.difficulty} onChange={e => set("difficulty", e.target.value)}><option>All</option>{["Easy", "Medium", "Hard"].map(x => <option key={x}>{x}</option>)}</select><select value={filters.pattern} onChange={e => set("pattern", e.target.value)}>{patterns.map(x => <option key={x}>{x}</option>)}</select><select value={filters.confidence || "All"} onChange={e => set("confidence", e.target.value)}><option>All</option>{confidence.map(x => <option key={x}>{x}</option>)}<option>Not set</option></select><select value={filters.sort} onChange={e => set("sort", e.target.value)}><option>Order</option><option>Title</option><option>Difficulty</option><option>Weakest</option><option>Strongest</option></select><button className={filters.favorites ? "toggle on" : "toggle"} onClick={() => set("favorites", !filters.favorites)}><Star size={14} fill={filters.favorites ? "currentColor" : "none"} /> Favorites</button></div></div>
     {filtered.length ? Object.entries(grouped).map(([topic, pats]) => {
       const topicCount = Object.values(pats).reduce((n, arr) => n + arr.length, 0);
       const topicSolved = Object.values(pats).flat().filter(p => p.status === "Solved" || p.status === "Mastered").length;
@@ -286,8 +357,9 @@ function Roadmap({ problems, topics, patterns, open, filters, setFilters, filter
           return <div className={`pattern-block${closed ? " collapsed" : ""}`} key={pattern}>
             <button type="button" className="pattern-head" onClick={() => togglePattern(topic, pattern)}>
               <span className="collapse-icon">{closed ? <ChevronRight size={15} /> : <ChevronDown size={15} />}</span>
+              <span className="pattern-icon" aria-hidden="true">◆</span>
               <h4>{pattern}</h4>
-              <span>{solved}/{ps.length}</span>
+              <span className="pattern-count">{solved}/{ps.length}</span>
             </button>
             {!closed && <div className="problem-list">{ps.map(p => <ProblemRow key={p.id} p={p} open={open} />)}</div>}
           </div>;
@@ -323,7 +395,7 @@ function Patterns({ problems, tufLinks, open }) {
   </section>;
 }
 
-function Analytics({ stats, problems, activity, notes, solutions }) {
+function Analytics({ stats, problems, activity, notes, solutions, settings }) {
   const statusCounts = { "Not Started": 0, Attempted: 0, Solved: 0, Mastered: 0 };
   const confCounts = { "🔴 Weak": 0, "🟡 Learning": 0, "🟢 Strong": 0, "🔵 Interview Ready": 0, Unset: 0 };
   const topics = {};
@@ -345,9 +417,9 @@ function Analytics({ stats, problems, activity, notes, solutions }) {
     const n = notes[p.id];
     if (n && Object.values(n).some(v => String(v || "").trim())) notesCount++;
     const sol = solutions[p.id]?.approaches || [];
-    if (sol.some(a => a.explanation?.trim() || a.code?.trim())) {
+    if (sol.some(a => a.explanation?.trim() || codeFilled(a))) {
       solutionsCount++;
-      approachesFilled += sol.filter(a => a.explanation?.trim() || a.code?.trim()).length;
+      approachesFilled += sol.filter(a => a.explanation?.trim() || codeFilled(a)).length;
     }
   });
   const topicRows = Object.entries(topics).map(([k, v]) => ({ name: k, ...v, pct: v.t ? Math.round(v.s / v.t * 100) : 0 })).sort((a, b) => a.pct - b.pct);
@@ -363,6 +435,27 @@ function Analytics({ stats, problems, activity, notes, solutions }) {
   const dueSoon = problems.filter(p => p.nextRevision).length;
   const dueNow = problems.filter(p => p.nextRevision && new Date(p.nextRevision) <= new Date()).length;
   const totalAttempts = problems.reduce((s, p) => s + (p.attempts || 0), 0);
+  const activeKeys = Object.keys(activity).filter(k => (activity[k] || 0) > 0).sort();
+  const activeDays = activeKeys.length;
+  let bestStreak = 0, run = 0, prevDay = null;
+  activeKeys.forEach(k => {
+    const day = new Date(`${k}T00:00:00`);
+    run = prevDay && Math.round((day - prevDay) / 86400000) === 1 ? run + 1 : 1;
+    if (run > bestStreak) bestStreak = run;
+    prevDay = day;
+  });
+  const totalActivity = activeKeys.reduce((s, k) => s + activity[k], 0);
+  const avgPerActiveDay = activeDays ? (totalActivity / activeDays).toFixed(1) : "0";
+  let last7 = 0, prev7 = 0;
+  for (let i = 0; i < 14; i++) { const d = new Date(); d.setDate(d.getDate() - i); const c = activity[localDayKey(d)] || 0; if (i < 7) last7 += c; else prev7 += c; }
+  const startOfToday = new Date(); startOfToday.setHours(0, 0, 0, 0);
+  const endOfToday = new Date(startOfToday.getTime() + 86400000);
+  const in7 = Date.now() + 7 * 86400000;
+  let overdue = 0, dueToday = 0, next7 = 0, later = 0;
+  problems.forEach(p => { if (!p.nextRevision) return; const t = new Date(p.nextRevision).getTime(); if (t < startOfToday.getTime()) overdue++; else if (t < endOfToday.getTime()) dueToday++; else if (t <= in7) next7++; else later++; });
+  const pipelineMax = Math.max(1, overdue, dueToday, next7, later);
+  let goalDays = 0;
+  for (let i = 0; i < 30; i++) { const d = new Date(); d.setDate(d.getDate() - i); if ((activity[localDayKey(d)] || 0) >= (settings?.dailyGoal || 3)) goalDays++; }
   return <section className="analytics-page">
     <div className="stats-large">
       <div><small>Completion</small><strong>{stats.total ? Math.round(stats.solved / stats.total * 100) : 0}%</strong><em>{stats.solved}/{stats.total}</em></div>
@@ -375,6 +468,25 @@ function Analytics({ stats, problems, activity, notes, solutions }) {
       <div><small>Solutions written</small><strong>{solutionsCount}</strong><em>{approachesFilled} approaches filled</em></div>
       <div><small>Revisions due</small><strong>{dueNow}</strong><em>{dueSoon} scheduled total</em></div>
       <div><small>Total attempts</small><strong>{totalAttempts}</strong><em>Across all problems</em></div>
+    </div>
+    <div className="stats-large secondary">
+      <div><small>Best streak</small><strong>{bestStreak}</strong><em>Longest active run</em></div>
+      <div><small>Active days</small><strong>{activeDays}</strong><em>With at least one activity</em></div>
+      <div><small>Last 7 days</small><strong>{last7}</strong><em>{prev7} in previous 7</em></div>
+      <div><small>Avg / active day</small><strong>{avgPerActiveDay}</strong><em>{totalActivity} activities total</em></div>
+    </div>
+    <div className="grid2">
+      <div className="panel">
+        <h3>Revision pipeline</h3>
+        {[["Overdue", overdue], ["Due today", dueToday], ["Next 7 days", next7], ["Later", later]].map(([label, v]) => (
+          <div className="bar-row" key={label}><div><span>{label}</span><b>{v}</b></div><div className="bar"><i style={{ width: `${v / pipelineMax * 100}%` }} /></div></div>
+        ))}
+      </div>
+      <div className="panel">
+        <h3>Daily goal consistency</h3>
+        <div className="bar-row"><div><span>Days hit goal in last 30</span><b>{goalDays}/30</b></div><div className="bar"><i style={{ width: `${goalDays / 30 * 100}%` }} /></div></div>
+        <p style={{ marginTop: 12 }}>{settings?.dailyGoal || 3} activities per day is your goal — consistency beats volume.</p>
+      </div>
     </div>
     <div className="panel">
       <h3>Last 14 days activity</h3>
@@ -453,6 +565,17 @@ function ActivityHeatmap({ activity }) {
     <div className="heat-legend"><span>Less</span><i className="h0" /><i className="h1" /><i className="h2" /><i className="h3" /><span>More</span></div>
   </div>;
 }
+function CodeBlock({ code, language }) {
+  const lines = useMemo(() => highlightCode(code || "", language), [code, language]);
+  if (!code || !code.trim()) return <div className="code-view empty">No code yet.</div>;
+  return <div className="code-frame">
+    <div className="code-frame-head"><i className="dot r" /><i className="dot y" /><i className="dot g" /><span>{language === "csharp" ? "Solution.cs" : "Solution.java"}</span></div>
+    <div className="code-body">
+      <div className="code-gutter" aria-hidden="true">{lines.map((_, i) => <span key={i}>{i + 1}</span>)}</div>
+      <pre className="code-view rich" dangerouslySetInnerHTML={{ __html: lines.join("\n") }} />
+    </div>
+  </div>;
+}
 function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufUrl, setSolutions, back, backLabel, recordActivity, setToast }) {
   const supplied = solutions?.approaches?.length ? solutions : builtInSolutions;
   const [tab, setTab] = useState("notes");
@@ -463,10 +586,18 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
   const [openApproach, setOpenApproach] = useState(0);
   const [language, setLanguage] = useState("java");
   const [copied, setCopied] = useState("");
+  const [drafts, setDrafts] = useLocalState("dsa-note-drafts", {});
+  const [draftRestored, setDraftRestored] = useState(false);
+  const draftsRef = useRef(drafts);
+  draftsRef.current = drafts;
 
   useEffect(() => {
-    setLocalNotes({ ...emptyNotes(), ...notes });
-    setEditingNotes(!Object.values(notes || {}).some(v => String(v || "").trim()));
+    const saved = { ...emptyNotes(), ...notes };
+    const draft = draftsRef.current?.[p.id];
+    const draftFilled = Boolean(draft && NOTE_FIELDS.some(([k]) => String(draft[k] || "").trim()));
+    setLocalNotes(draftFilled ? { ...emptyNotes(), ...draft } : saved);
+    setEditingNotes(draftFilled ? true : !Object.values(notes || {}).some(v => String(v || "").trim()));
+    setDraftRestored(draftFilled);
     setLocalSol(supplied?.approaches?.length ? supplied.approaches : defaultApproaches());
     setEditingSol(false);
     setOpenApproach(0);
@@ -479,11 +610,15 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
   const leetCode = leetCodeLink(p);
   const video = isHttp(p.videoUrl) ? p.videoUrl : null;
   const filledNotes = NOTE_FIELDS.filter(([k]) => localNotes[k]?.trim()).length;
-  const filledApproaches = localSol.filter(a => a.explanation?.trim() || a.code?.trim()).length;
+  const filledApproaches = localSol.filter(a => a.explanation?.trim() || codeFilled(a)).length;
+  const codeFor = (a, lang) => { const c = a?.code; if (typeof c === "string") return lang === "java" ? c : ""; if (c && typeof c === "object") return c[lang] || ""; return ""; };
 
+  const dropDraft = () => setDrafts(x => { if (!x[p.id]) return x; const next = { ...x }; delete next[p.id]; return next; });
   const saveNotes = () => {
     setNotes(x => ({ ...x, [p.id]: localNotes }));
     setEditingNotes(false);
+    setDraftRestored(false);
+    dropDraft();
     setToast("Notes saved.");
   };
   const clearNotes = () => {
@@ -491,9 +626,38 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
     const blank = emptyNotes();
     setLocalNotes(blank);
     setNotes(x => { const next = { ...x }; delete next[p.id]; return next; });
+    dropDraft();
+    setDraftRestored(false);
     setEditingNotes(true);
     setToast("Notes cleared.");
   };
+  const cancelNotes = () => {
+    setLocalNotes({ ...emptyNotes(), ...notes });
+    setEditingNotes(false);
+    setDraftRestored(false);
+    dropDraft();
+  };
+  // While editing, drafts autosave to localStorage so navigation never loses work; Save clears the draft.
+  useEffect(() => {
+    if (!editingNotes) return;
+    const saved = { ...emptyNotes(), ...notes };
+    const changed = NOTE_FIELDS.some(([k]) => String(localNotes[k] || "") !== String(saved[k] || ""));
+    const hasText = NOTE_FIELDS.some(([k]) => String(localNotes[k] || "").trim());
+    setDrafts(x => {
+      if (!changed || !hasText) { if (!x[p.id]) return x; const next = { ...x }; delete next[p.id]; return next; }
+      return { ...x, [p.id]: localNotes };
+    });
+  }, [localNotes, editingNotes, p.id, notes]);
+  useEffect(() => {
+    const onKey = (e) => {
+      if (!((e.metaKey || e.ctrlKey) && String(e.key).toLowerCase() === "s")) return;
+      if (tab !== "notes" || !editingNotes) return;
+      e.preventDefault();
+      saveNotes();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [tab, editingNotes, localNotes, p.id, notes]);
   const saveSolutions = () => {
     setSolutions(x => ({ ...x, [p.id]: { approaches: localSol, updatedAt: new Date().toISOString() } }));
     setEditingSol(false);
@@ -568,7 +732,8 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
       <div className="notes-head">
         <div>
           <h3>Learning notes</h3>
-          <p>{editingNotes ? "Edit mode — write freely, then save." : "View mode — unlock edit to change notes."}</p>
+          <p>{editingNotes ? "Edit mode — write freely, then save (⌘S / Ctrl+S)." : "View mode — unlock edit to change notes."}</p>
+          {editingNotes && drafts[p.id] && <em className="draft-chip">Draft auto-saved — press Save to store</em>}
         </div>
         <div className="notes-actions">
           {!editingNotes ? (
@@ -579,7 +744,7 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
           ) : (
             <>
               <button type="button" className="primary" onClick={saveNotes}>Save notes</button>
-              <button type="button" className="status-btn ghost" onClick={() => { setLocalNotes({ ...emptyNotes(), ...notes }); setEditingNotes(false); }}>Cancel</button>
+              <button type="button" className="status-btn ghost" onClick={cancelNotes}>Cancel</button>
             </>
           )}
         </div>
@@ -625,12 +790,12 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
       <div className="approach-list">
         {localSol.map((a, idx) => {
           const open = openApproach === idx;
-          return <div className={`approach-card${open ? " open" : ""}`} key={a.id}>
+          return <div className={`approach-card${open ? " open" : ""}`} key={a.id || `approach-${idx}`}>
             <button type="button" className="approach-head" onClick={() => setOpenApproach(open ? -1 : idx)}>
               <span className="collapse-icon">{open ? <ChevronDown size={15} /> : <ChevronRight size={15} />}</span>
               <div className="approach-title">
                 {editingSol ? <input value={a.title} onClick={e => e.stopPropagation()} onChange={e => updateApproach(idx, { title: e.target.value })} /> : <strong>{a.title}</strong>}
-                <small>{a.level} · Time {a.time || "—"} · Space {a.space || "—"}</small>
+                <small><b className={`level-chip ${a.level === "Optimal" || a.level === "Optimal+" ? "optimal" : a.level === "Better" ? "better" : a.level === "Brute" ? "brute" : "custom"}`}>{a.level}</b> · Time {a.time || "—"} · Space {a.space || "—"}</small>
               </div>
               {editingSol && <button type="button" className="icon-danger" onClick={e => { e.stopPropagation(); removeApproach(idx); }}><Trash2 size={14} /></button>}
             </button>
@@ -645,8 +810,8 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
                 {editingSol ? <textarea rows={4} value={a.explanation} onChange={e => updateApproach(idx, { explanation: e.target.value })} placeholder={a.level === "Brute" ? "Most straightforward idea — often nested loops / all possibilities…" : a.level === "Better" ? "Improve with hashing, sorting, two pointers, prefix…" : "Best interview solution for this pattern…"} /> : <div className={`note-view${a.explanation?.trim() ? "" : " empty"}`}>{a.explanation?.trim() || "No explanation yet."}</div>}
               </div>
               <div className="note-field">
-                <div className="code-label"><span className="with-icon"><Code2 size={13} /> {editingSol ? "Code / pseudocode" : "Implementation"}</span>{!editingSol && <><div className="language-switch" role="group" aria-label="Select solution language"><button type="button" className={language === "java" ? "active" : ""} onClick={() => setLanguage("java")}>Java</button><button type="button" className={language === "csharp" ? "active" : ""} onClick={() => setLanguage("csharp")}>C#</button></div><button type="button" className="copy-code" onClick={() => { const code = a.code?.[language] || a[language] || a.code || ""; navigator.clipboard?.writeText(code); setCopied(a.id); setTimeout(() => setCopied(""), 1400); }}>{copied === a.id ? <Check size={13} /> : <Copy size={13} />}{copied === a.id ? "Copied" : "Copy"}</button></>}</div>
-                {editingSol ? <textarea className="code" rows={8} value={typeof a.code === "string" ? a.code : a.code?.[language] || ""} onChange={e => updateApproach(idx, { code: e.target.value })} placeholder="// Write code or pseudocode here" /> : <pre className={`code-view${(a.code?.[language] || a[language] || a.code)?.trim?.() ? "" : " empty"}`}>{a.code?.[language] || a[language] || a.code || "No code yet."}</pre>}
+                <div className="code-label"><span className="with-icon"><Code2 size={13} /> {editingSol ? "Code / pseudocode" : "Implementation"}</span><div className="language-switch" role="group" aria-label="Select solution language"><button type="button" className={[language === "java" && "active", codeFor(a, "java").trim() && "has-code"].filter(Boolean).join(" ")} onClick={() => setLanguage("java")}><i className="code-dot" />Java</button><button type="button" className={[language === "csharp" && "active", codeFor(a, "csharp").trim() && "has-code"].filter(Boolean).join(" ")} onClick={() => setLanguage("csharp")}><i className="code-dot" />C#</button></div>{!editingSol && <button type="button" className="copy-code" onClick={() => { const code = codeFor(a, language) || (typeof a.code === "string" ? a.code : ""); navigator.clipboard?.writeText(code); setCopied(a.id); setTimeout(() => setCopied(""), 1400); }}>{copied === a.id ? <Check size={13} /> : <Copy size={13} />}{copied === a.id ? "Copied" : "Copy"}</button>}</div>
+                {editingSol ? <textarea className="code" rows={8} value={codeFor(a, language)} onChange={e => updateApproach(idx, { code: { ...(a.code && typeof a.code === "object" && !Array.isArray(a.code) ? a.code : { java: typeof a.code === "string" ? a.code : "" }), [language]: e.target.value } })} placeholder={`// Write ${language === "csharp" ? "C#" : "Java"} code or pseudocode here`} /> : <CodeBlock code={codeFor(a, language) || (typeof a.code === "string" ? a.code : "")} language={language} />}
               </div>
             </div>}
           </div>;

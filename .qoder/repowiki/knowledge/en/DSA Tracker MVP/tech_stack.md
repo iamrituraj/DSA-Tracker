@@ -1,1 +1,0 @@
-Vite + React frontend with Node.js tooling; Neon Serverless PostgreSQL as the shared persistence backend used by both the API server and the client-side state sync.

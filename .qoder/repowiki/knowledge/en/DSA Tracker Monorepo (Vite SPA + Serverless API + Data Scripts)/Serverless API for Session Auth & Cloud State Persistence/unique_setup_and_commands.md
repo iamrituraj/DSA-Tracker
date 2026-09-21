@@ -1,0 +1,1 @@
+Requires `SESSION_SECRET`, `APP_ACCESS_PASSWORD`, and `DATABASE_URL` environment variables at runtime; on Vercel deployments the session cookie is automatically marked Secure when `process.env.VERCEL` is set.
