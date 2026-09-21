@@ -5,6 +5,7 @@ import "./styles.css";
 import "./cloud-sync.css";
 import { highlightCode } from "./highlight.js";
 import { LLDPage } from "./lld.jsx";
+import { LLD_CHAPTERS } from "./lld-data.js";
 
 const SEED = "/data/problems.json";
 const SOLUTION_SEED = "/data/solutions.json";
@@ -126,6 +127,9 @@ function App() {
   const [selected, setSelected] = useState(() => { const hash = parseHash(); return hash.startsWith("problem/") ? hash.slice("problem/".length) : null; });
   const [originPage, setOriginPage] = useState("roadmap");
   const [query, setQuery] = useState("");
+  const [lldFocus, setLldFocus] = useState(null);
+  // Drop the deep-link once the lab is left, so returning to it later starts from the top.
+  useEffect(() => { if (page !== "lld") setLldFocus(null); }, [page]);
   const [roadmapFilters, setRoadmapFilters] = useLocalState("dsa-filters", defaultFilters);
   const [collapse, setCollapse] = useLocalState("dsa-collapse", { topics: {}, patterns: {}, cards: {} });
   const [toast, setToastValue] = useState(null);
@@ -279,6 +283,20 @@ function App() {
   const importData = e => { const f = e.target.files?.[0]; if (!f) return; const r = new FileReader(); r.onload = () => { try { const d = JSON.parse(r.result); const isObj = v => v && typeof v === "object" && !Array.isArray(v) ? v : null; const next = { progress: isObj(d.progress), notes: isObj(d.notes), solutions: isObj(d.solutions), activity: isObj(d.activity), filters: sanitizeFilters(d.filters), collapse: sanitizeCollapse(d.collapse) }; if (!next.progress && !next.notes && !next.solutions && !next.activity) throw new Error("no tracker data"); if (next.progress) setProgress(next.progress); if (next.notes) setNotes(next.notes); if (next.solutions) setSolutions(next.solutions); if (next.activity) setActivity(next.activity); if (next.filters) setRoadmapFilters(next.filters); if (next.collapse) setCollapse(next.collapse); if (d.settings) setSettings(s => ({ ...s, dailyGoal: Math.min(50, Math.max(1, Number(d.settings.dailyGoal) || s.dailyGoal)), theme: d.settings.theme === "dark" ? "dark" : d.settings.theme === "light" ? "light" : s.theme })); setToast("Backup restored.") } catch { setToast("Invalid backup file.") } }; r.readAsText(f); e.target.value = "" };
   const resetAll = () => { if (confirm("Reset all progress, notes, solutions and activity? This cannot be undone unless you have a backup.")) { setProgress({}); setNotes({}); setSolutions({}); setActivity({}); setToast("All local progress reset.") } };
   const viewWeak = () => { setRoadmapFilters(f => ({ ...f, topic: "All", pattern: "All", difficulty: "All", favorites: false, confidence: "🔴 Weak" })); setPage("roadmap"); };
+  // Search destinations: a pattern result jumps to that section of the roadmap, an LLD result opens
+  // the lab on that chapter.
+  const patternGroups = useMemo(() => {
+    const out = [], seen = new Set();
+    enriched.forEach(p => {
+      const key = `${p.topic}::${p.pattern}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+      out.push({ topic: p.topic, pattern: p.pattern });
+    });
+    return out;
+  }, [enriched]);
+  const goPattern = (g) => { setRoadmapFilters({ ...defaultFilters, topic: g.topic, pattern: g.pattern }); setPage("roadmap") };
+  const goChapter = (id) => { setLldFocus(id); setPage("lld") };
   const hasLocalData = [progress, notes, solutions, activity].some(x => Object.keys(x).length > 0);
   const topics = ["All", ...new Set(problems.map(p => p.topic))];
   const patterns = ["All", ...new Set(
@@ -299,11 +317,11 @@ function App() {
       <div className="sidebar-foot"><Flame size={16} /> {syncStatus === "synced" ? "Cloud sync on" : syncStatus === "syncing" ? "Saving changes…" : "Local data"}</div>
       <button className="theme-toggle" type="button" onClick={() => setSettings(s => ({ ...s, theme: s.theme === "dark" ? "light" : "dark" }))} aria-label="Toggle dark mode">{settings.theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}<span>{settings.theme === "dark" ? "Light mode" : "Dark mode"}</span></button>
     </aside>
-    <main><header><div><h1>{page === "problem" ? "Problem" : pageLabels[page]}</h1><p>Practice, track, revise, master.</p></div><div className="search"><Search size={17} /><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search problems, topics, patterns…" /></div></header>
+    <main><header><div><h1>{page === "problem" ? "Problem" : pageLabels[page]}</h1><p>Practice, track, revise, master.</p></div><GlobalSearch query={query} setQuery={setQuery} problems={enriched} patternGroups={patternGroups} chapters={LLD_CHAPTERS} open={open} onPattern={goPattern} onChapter={goChapter} /></header>
       {page === "dashboard" && <Dashboard stats={stats} problems={enriched} open={open} setPage={setPage} settings={settings} viewWeak={viewWeak} />}
-      {page === "roadmap" && <Roadmap problems={enriched} topics={topics} patterns={patterns} open={open} filters={roadmapFilters} setFilters={setRoadmapFilters} filtered={filtered} collapse={collapse} setCollapse={setCollapse} />}
-      {page === "revision" && <Revision problems={enriched} open={open} update={update} recordActivity={recordActivity} />}
-      {page === "lld" && <LLDPage />}
+      {page === "roadmap" && <Roadmap problems={enriched} topics={topics} patterns={patterns} open={open} filters={roadmapFilters} setFilters={setRoadmapFilters} filtered={filtered} collapse={collapse} setCollapse={setCollapse} query={query} clearQuery={() => setQuery("")} />}
+      {page === "revision" && <Revision problems={enriched} open={open} update={update} recordActivity={recordActivity} query={query} />}
+      {page === "lld" && <LLDPage focus={lldFocus} />}
       {page === "patterns" && <Patterns problems={enriched} tufLinks={tufLinks} open={open} collapse={collapse} setCollapse={setCollapse} />}
       {page === "analytics" && <Analytics stats={stats} problems={enriched} activity={activity} notes={notes} solutions={solutions} builtInSolutions={builtInSolutions} settings={settings} />}
       {page === "settings" && <SettingsPage exportData={exportData} importData={importData} resetAll={resetAll} settings={settings} setSettings={setSettings} syncStatus={syncStatus} signIn={signIn} signOut={signOut} hasLocalData={hasLocalData} />}
@@ -326,6 +344,89 @@ function Dashboard({ stats, problems, open, setPage, settings, viewWeak }) {
   </section>
 }
 function DashboardPanel({ title, subtitle, action, onClick, children }) { return <div className="panel"><div className="panel-head"><div><h3>{title}</h3><p>{subtitle}</p></div><button className="text-btn" onClick={onClick}>{action}<ChevronRight size={15} /></button></div>{children}</div> }
+// The header search is global: it works on every page by offering results rather than only
+// re-filtering the roadmap, which is why typing elsewhere used to look like a dead input.
+function GlobalSearch({ query, setQuery, problems, patternGroups, chapters, open, onPattern, onChapter }) {
+  const [ui, setUi] = useState({ focused: false, active: 0 });
+  const box = useRef(null);
+  const input = useRef(null);
+  const q = query.trim().toLowerCase();
+  useEffect(() => {
+    const onDown = (e) => { if (box.current && !box.current.contains(e.target)) setUi(x => ({ ...x, focused: false })) };
+    // "/" focuses the search from anywhere, unless the user is already typing in a field.
+    const onKey = (e) => {
+      if (e.key !== "/" || e.metaKey || e.ctrlKey || e.altKey) return;
+      const el = document.activeElement;
+      if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT" || el.isContentEditable)) return;
+      e.preventDefault();
+      input.current?.focus();
+      setUi(x => ({ ...x, focused: true }));
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("mousedown", onDown); document.removeEventListener("keydown", onKey) };
+  }, []);
+  const results = useMemo(() => {
+    if (!q) return [];
+    const out = [];
+    const hit = (s) => String(s).toLowerCase().includes(q);
+    const probs = problems
+      .map(p => ({ p, rank: (hit(p.title) ? 0 : 1) + (p.status === "Mastered" ? 1 : 0) }))
+      .filter(x => hit(x.p.title) || hit(x.p.topic) || hit(x.p.pattern))
+      .sort((a, b) => a.rank - b.rank)
+      .slice(0, 7);
+    probs.forEach(({ p }) => out.push({ kind: "Problem", group: "Problems", icon: Code2, title: p.title, meta: `${p.topic} · ${p.pattern}`, diff: p.difficulty, p }));
+    const seen = new Set();
+    patternGroups.filter(g => (hit(g.pattern) || hit(g.topic)) && !seen.has(`${g.topic}::${g.pattern}`) && seen.add(`${g.topic}::${g.pattern}`))
+      .slice(0, 4)
+      .forEach(g => out.push({ kind: "Pattern", group: "Patterns", icon: Brain, title: g.pattern, meta: g.topic, g }));
+    chapters.filter(c => hit(`${c.title} ${c.tagline} ${c.pattern}`)).slice(0, 3)
+      .forEach(c => out.push({ kind: "LLD", group: "LLD Lab", icon: Layers, title: c.title, meta: c.pattern, c }));
+    // Flag the first row of each group so the section label renders without mutating during map().
+    return out.map((r, i) => ({ ...r, firstOfGroup: i === 0 || out[i - 1].group !== r.group }));
+  }, [q, problems, patternGroups, chapters]);
+  const show = ui.focused && query.trim() !== "";
+  const hint = ui.focused && query.trim() === "";
+  // Results carry data, not callbacks, so the memo above stays stable across App re-renders.
+  const activate = (r) => {
+    if (r.kind === "Problem") open(r.p);
+    else if (r.kind === "Pattern") onPattern(r.g);
+    else onChapter(r.c.id);
+    setUi({ focused: false, active: 0 });
+  };
+  const onKeyDown = (e) => {
+    if (e.key === "Escape") { setQuery(""); setUi({ focused: false, active: 0 }); return }
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      if (!results.length) return;
+      e.preventDefault();
+      setUi(x => ({ ...x, focused: true, active: (x.active + (e.key === "ArrowDown" ? 1 : -1) + results.length) % results.length }));
+      return;
+    }
+    if (e.key === "Enter" && show && results[ui.active]) { e.preventDefault(); activate(results[ui.active]); }
+  };
+  return <div className="search global-search" ref={box}>
+    <Search size={17} />
+    <input ref={input} value={query} onChange={e => { setQuery(e.target.value); setUi(x => ({ focused: true, active: 0 })) }} onKeyDown={onKeyDown}
+      onFocus={() => setUi(x => ({ ...x, focused: true }))} placeholder="Search problems, patterns, LLD…   /"
+      role="combobox" aria-expanded={show} aria-label="Search problems, patterns and LLD chapters" aria-controls="global-search-results" />
+    {hint && <div className="gs-results" role="listbox" aria-label="Search help">
+      <div className="gs-hint">Search across problems, pattern groups and LLD chapters. ↑↓ to move, Enter to open, Esc to clear.</div>
+    </div>}
+    {show && <div className="gs-results" id="global-search-results" role="listbox" aria-label="Search results">
+      {results.length ? results.map((r, i) => { const Icon = r.icon; return <React.Fragment key={`${r.kind}-${r.title}-${i}`}>
+        {r.firstOfGroup && <div className="gs-group" aria-hidden="true">{r.group}</div>}
+        <button type="button" id={`gs-opt-${i}`} role="option" aria-selected={ui.active === i} className={`gs-item${ui.active === i ? " active" : ""}`}
+          onMouseEnter={() => setUi(x => ({ ...x, active: i }))} onClick={() => activate(r)}>
+          <Icon size={14} />
+          <span className="gs-item-main"><b>{r.title}</b><span>{r.meta}</span></span>
+          {r.diff && <span className={`diff ${r.diff.toLowerCase()}`}>{r.diff}</span>}
+          <ChevronRight size={14} className="gs-go" />
+        </button>
+      </React.Fragment>; }) : <div className="gs-none">No problem, pattern or LLD chapter matches “{query.trim()}”.</div>}
+    </div>}
+  </div>;
+}
+
 function ProblemRow({ p, open, tag }) { return <button className="problem-row" onClick={() => open(p)}><div className={`status-dot ${String(p.status || "Not Started").toLowerCase().replace(/\s+/g, "-")}`}></div><div className="row-main"><b>{p.title}{p.favorite && <Star size={12} fill="currentColor" />}</b><span>{p.topic} · {p.pattern}</span></div><span className={`diff ${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>{tag && <span className="due">{tag}</span>}<ChevronRight size={17} /></button> }
 
 function groupByTopicPattern(list) {
@@ -337,9 +438,10 @@ function groupByTopicPattern(list) {
   return topics;
 }
 
-function Roadmap({ problems, topics, patterns, open, filters, setFilters, filtered, collapse, setCollapse }) {
+function Roadmap({ problems, topics, patterns, open, filters, setFilters, filtered, collapse, setCollapse, query, clearQuery }) {
   const set = (k, v) => setFilters(x => ({ ...x, [k]: v }));
   const grouped = useMemo(() => groupByTopicPattern(filtered), [filtered]);
+  const searching = query.trim() !== "";
   // Collapse state lives in App and persists to localStorage + the cloud DB: topic sections stay
   // open by default, pattern sub-sections start collapsed, and every toggle survives reloads.
   const collapsedTopics = collapse.topics || {};
@@ -349,19 +451,20 @@ function Roadmap({ problems, topics, patterns, open, filters, setFilters, filter
     const key = `${topic}::${pattern}`;
     setCollapse(x => {
       const stored = x.patterns || {};
-      return { ...x, patterns: { ...stored, [key]: !(stored[key] ?? true) } };
+      // The search-time default (open) is what a first click has to flip against.
+      return { ...x, patterns: { ...stored, [key]: !(stored[key] ?? !searching) } };
     });
   };
   return <section>
     <div className="roadmap-summary">
-      <div className="roadmap-count"><b>{filtered.length}</b><span> visible problems</span></div>
+      <div className="roadmap-count"><b>{filtered.length}</b><span>{searching ? ` match${filtered.length === 1 ? "" : "es"} for “${query.trim()}”` : " visible problems"}</span></div>
       <div className="legend">
         <span><i className="dot done" /><em>Solved</em></span>
         <span><i className="dot todo" /><em>Not started</em></span>
         <span><i className="dot weak" /><em>Weak</em></span>
       </div>
     </div>
-    <div className="filters panel"><div className="filter-title"><Filter size={15} /> Filters <button onClick={() => setFilters({ ...defaultFilters })}><RotateCcw size={13} />Reset</button></div><div className="filter-grid"><select value={filters.topic} onChange={e => set("topic", e.target.value)}>{topics.map(x => <option key={x}>{x}</option>)}</select><select value={filters.status} onChange={e => set("status", e.target.value)}><option>All</option>{statuses.map(x => <option key={x}>{x}</option>)}</select><select value={filters.difficulty} onChange={e => set("difficulty", e.target.value)}><option>All</option>{["Easy", "Medium", "Hard"].map(x => <option key={x}>{x}</option>)}</select><select value={filters.pattern} onChange={e => set("pattern", e.target.value)}>{patterns.map(x => <option key={x}>{x}</option>)}</select><select value={filters.confidence || "All"} onChange={e => set("confidence", e.target.value)}><option>All</option>{confidence.map(x => <option key={x}>{x}</option>)}<option>Not set</option></select><select value={filters.sort} onChange={e => set("sort", e.target.value)}><option>Order</option><option>Title</option><option>Difficulty</option><option>Weakest</option><option>Strongest</option></select><button className={filters.favorites ? "toggle on" : "toggle"} onClick={() => set("favorites", !filters.favorites)}><Star size={14} fill={filters.favorites ? "currentColor" : "none"} /> Favorites</button></div></div>
+    <div className="filters panel"><div className="filter-title"><Filter size={15} /> Filters <button onClick={() => { setFilters({ ...defaultFilters }); clearQuery(); }}><RotateCcw size={13} />Reset</button></div><div className="filter-grid"><select value={filters.topic} onChange={e => set("topic", e.target.value)}>{topics.map(x => <option key={x}>{x}</option>)}</select><select value={filters.status} onChange={e => set("status", e.target.value)}><option>All</option>{statuses.map(x => <option key={x}>{x}</option>)}</select><select value={filters.difficulty} onChange={e => set("difficulty", e.target.value)}><option>All</option>{["Easy", "Medium", "Hard"].map(x => <option key={x}>{x}</option>)}</select><select value={filters.pattern} onChange={e => set("pattern", e.target.value)}>{patterns.map(x => <option key={x}>{x}</option>)}</select><select value={filters.confidence || "All"} onChange={e => set("confidence", e.target.value)}><option>All</option>{confidence.map(x => <option key={x}>{x}</option>)}<option>Not set</option></select><select value={filters.sort} onChange={e => set("sort", e.target.value)}><option>Order</option><option>Title</option><option>Difficulty</option><option>Weakest</option><option>Strongest</option></select><button className={filters.favorites ? "toggle on" : "toggle"} onClick={() => set("favorites", !filters.favorites)}><Star size={14} fill={filters.favorites ? "currentColor" : "none"} /> Favorites</button></div></div>
     {filtered.length ? Object.entries(grouped).map(([topic, pats]) => {
       const topicCount = Object.values(pats).reduce((n, arr) => n + arr.length, 0);
       const topicSolved = Object.values(pats).flat().filter(p => p.status === "Solved" || p.status === "Mastered").length;
@@ -375,7 +478,9 @@ function Roadmap({ problems, topics, patterns, open, filters, setFilters, filter
         {!topicClosed && Object.entries(pats).map(([pattern, ps]) => {
           const solved = ps.filter(p => p.status === "Solved" || p.status === "Mastered").length;
           const key = `${topic}::${pattern}`;
-          const closed = collapsedPatterns[key] ?? true;
+          // Pattern sections start collapsed, which used to make a search look dead — every block
+          // still listed while searching is a hit, so it opens unless the user toggled it.
+          const closed = key in collapsedPatterns ? !!collapsedPatterns[key] : !searching;
           return <div className={`pattern-block${closed ? " collapsed" : ""}`} key={pattern}>
             <button type="button" className="pattern-head" onClick={() => togglePattern(topic, pattern)}>
               <span className="collapse-icon">{closed ? <ChevronRight size={15} /> : <ChevronDown size={15} />}</span>
@@ -387,11 +492,11 @@ function Roadmap({ problems, topics, patterns, open, filters, setFilters, filter
           </div>;
         })}
       </div>;
-    }) : <Empty text="No problems match these filters." />}
+    }) : <Empty text={searching ? `No problems match “${query.trim()}”.` : "No problems match these filters."} />}
   </section>
 }
 
-function Revision({ problems, open, update, recordActivity }) { const now = Date.now(); const due = problems.filter(p => p.nextRevision && new Date(p.nextRevision).getTime() <= now).sort((a, b) => new Date(a.nextRevision) - new Date(b.nextRevision)); const upcoming = problems.filter(p => p.nextRevision && new Date(p.nextRevision) > now).sort((a, b) => new Date(a.nextRevision) - new Date(b.nextRevision)).slice(0, 10); const complete = (p) => { const count = p.revisionCount || 0; const step = revisionSteps[Math.min(count, revisionSteps.length - 1)]; update(p.id, { revisionCount: count + 1, lastRevised: new Date().toISOString(), nextRevision: addDays(step), status: p.status === "Attempted" ? "Solved" : p.status }); recordActivity() }; return <section><div className="callout"><RefreshCw size={22} /><div><b>{due.length} revisions due</b><span>Attempt first. Mark reviewed after you can explain the approach without notes.</span></div></div><div className="revision-columns"><div><h3 className="section-title">Due now</h3><div className="problem-list">{due.length ? due.map(p => <RevisionRow key={p.id} p={p} open={open} complete={complete} />) : <Empty text="Nothing is due right now." />}</div></div><div><h3 className="section-title">Upcoming</h3><div className="panel upcoming">{upcoming.length ? upcoming.map(p => <button key={p.id} onClick={() => open(p)}><div><b>{p.title}</b><span>{new Date(p.nextRevision).toLocaleDateString()} · {daysBetween(new Date(), p.nextRevision)} day{daysBetween(new Date(), p.nextRevision) !== 1 ? "s" : ""}</span></div><ChevronRight size={15} /></button>) : <Empty text="No scheduled revisions yet." />}</div></div></div></section> }
+function Revision({ problems, open, update, recordActivity, query }) { const now = Date.now(); const q = String(query || "").trim().toLowerCase(); const matches = (p) => !q || `${p.title} ${p.topic} ${p.pattern}`.toLowerCase().includes(q); const due = problems.filter(p => p.nextRevision && new Date(p.nextRevision).getTime() <= now).filter(matches).sort((a, b) => new Date(a.nextRevision) - new Date(b.nextRevision)); const upcoming = problems.filter(p => p.nextRevision && new Date(p.nextRevision) > now).filter(matches).sort((a, b) => new Date(a.nextRevision) - new Date(b.nextRevision)).slice(0, 10); const complete = (p) => { const count = p.revisionCount || 0; const step = revisionSteps[Math.min(count, revisionSteps.length - 1)]; update(p.id, { revisionCount: count + 1, lastRevised: new Date().toISOString(), nextRevision: addDays(step), status: p.status === "Attempted" ? "Solved" : p.status }); recordActivity() }; return <section><div className="callout"><RefreshCw size={22} /><div><b>{due.length} revisions due{q ? ` matching “${q}”` : ""}</b><span>Attempt first. Mark reviewed after you can explain the approach without notes.</span></div></div><div className="revision-columns"><div><h3 className="section-title">Due now</h3><div className="problem-list">{due.length ? due.map(p => <RevisionRow key={p.id} p={p} open={open} complete={complete} />) : <Empty text={q ? "Nothing due matches the search." : "Nothing is due right now."} />}</div></div><div><h3 className="section-title">Upcoming</h3><div className="panel upcoming">{upcoming.length ? upcoming.map(p => <button key={p.id} onClick={() => open(p)}><div><b>{p.title}</b><span>{new Date(p.nextRevision).toLocaleDateString()} · {daysBetween(new Date(), p.nextRevision)} day{daysBetween(new Date(), p.nextRevision) !== 1 ? "s" : ""}</span></div><ChevronRight size={15} /></button>) : <Empty text={q ? "No upcoming revision matches the search." : "No scheduled revisions yet."} />}</div></div></div></section> }
 function RevisionRow({ p, open, complete }) { return <div className="revision-row"><button className="revision-main" onClick={() => open(p)}><div className="status-dot" /><div><b>{p.title}</b><span>{p.topic} · Revision #{(p.revisionCount || 0) + 1}</span></div></button><button className="review-btn" onClick={() => complete(p)}><CheckCircle2 size={15} />Reviewed</button></div> }
 
 const defaultPatternFilters = { q: "", topic: "All", progress: "All", sort: "Order" };
@@ -478,7 +583,7 @@ function Patterns({ problems, tufLinks, open, collapse, setCollapse }) {
     <div className="filters panel patterns-filters">
       <div className="filter-title"><Filter size={15} /> Patterns <button onClick={() => setFilters({ ...defaultPatternFilters })}><RotateCcw size={13} />Reset</button></div>
       <div className="filter-grid pattern-filter-grid">
-        <label className="pattern-search"><Search size={14} /><input value={filters.q || ""} onChange={e => set("q", e.target.value)} placeholder="Search patterns or problems…" /></label>
+        <label className="pattern-search"><Search size={14} /><input value={filters.q || ""} onChange={e => set("q", e.target.value)} placeholder="Filter patterns on this page…" title="Narrow the pattern cards below (the header search is app-wide)" /></label>
         <select value={filters.topic} onChange={e => set("topic", e.target.value)}>{topicNames.map(x => <option key={x}>{x}</option>)}</select>
         <select value={filters.progress} onChange={e => set("progress", e.target.value)}>{patternProgressLabels.map(x => <option key={x}>{x}</option>)}</select>
         <select value={filters.sort} onChange={e => set("sort", e.target.value)}><option>Order</option><option>Weakest</option><option>Strongest</option><option>Most problems</option><option>Pattern A-Z</option></select>

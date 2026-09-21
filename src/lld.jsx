@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { BookMarked, Check, CheckCircle2, ChevronDown, ChevronRight, Code2, Copy, Grid2x2, Layers, Lightbulb, ListChecks, MessagesSquare, Network, Play, Route, ScanLine, ShieldCheck, Sparkles, Workflow } from "lucide-react";
 import { highlightCode } from "./highlight.js";
 import { LLD_CHAPTERS, LLD_PATTERN_TABLE, LLD_STEPS, LLD_LADDER, LLD_RECAP_CARDS, LLD_FOLLOWUP_PROMPTS } from "./lld-data.js";
@@ -324,10 +324,16 @@ function LldChapter({ chapter, lang, onLang, open, onToggle }) {
 
 /* ---------------------------------- page ---------------------------------- */
 
-export function LLDPage() {
+export function LLDPage({ focus }) {
   const [openId, setOpenId] = useState(() => new Set([LLD_CHAPTERS[0].id]));
   const [lang, setLang] = useState("java");
   const toggle = (id) => setOpenId(x => { const next = new Set(x); next.has(id) ? next.delete(id) : next.add(id); return next; });
+  // The global search deep-links a chapter: open it and scroll it into view.
+  useEffect(() => {
+    if (!focus) return;
+    setOpenId(x => new Set([...x, focus]));
+    document.getElementById(focus)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [focus]);
   return <section className="lld-page">
     <div className="lld-hero">
       <div className="lld-hero-copy">

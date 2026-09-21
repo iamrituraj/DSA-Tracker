@@ -678,3 +678,27 @@
 .theme-dark .patterns-page .mini-status.attempted{background:#2b2415;color:#f0c674}
 @media(max-width:900px){.po-stats{grid-template-columns:1fr 1fr}.pattern-filter-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:700px){.po-stats{grid-template-columns:1fr}.pattern-filter-grid{grid-template-columns:1fr}}
+
+/* ── Global header search: grouped results dropdown (works on every page) ── */
+.global-search{position:relative}
+.gs-results{position:absolute;top:calc(100% + 9px);right:0;left:auto;min-width:100%;width:max-content;max-width:min(560px,88vw);max-height:min(64vh,440px);overflow:auto;background:#fff;border:1px solid #e1e5ec;border-radius:13px;box-shadow:0 18px 44px #0f1a2b26;padding:6px;z-index:30}
+.gs-hint{padding:9px 10px;font-size:11.5px;color:#516078}
+.gs-group{font-size:9.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#657187;padding:10px 10px 4px}
+.gs-item{display:flex;align-items:center;gap:9px;width:100%;border:0;background:transparent;border-radius:9px;padding:8px 10px;text-align:left;font-size:12.5px;color:#172033}
+.gs-item:hover,.gs-item.active{background:#f1f5fb}
+.gs-item>svg{flex:none;color:#6d57a8}
+.gs-go{color:#8994a5}
+.gs-item-main{flex:1;min-width:0}
+.gs-item-main b{display:block;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gs-item-main span{display:block;font-size:10.5px;color:#5f6d82;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gs-none{padding:12px 10px;font-size:12px;color:#516078}
+.gs-item .diff{flex:none}
+.theme-dark .gs-results{background:#111c2e;border-color:#26354b;box-shadow:0 18px 44px #00000099}
+.theme-dark .gs-hint,.theme-dark .gs-none{color:#a8b7cc}
+.theme-dark .gs-group{color:#9fb0c8}
+.theme-dark .gs-item{color:#e2e8f0}
+.theme-dark .gs-item:hover,.theme-dark .gs-item.active{background:#1b2c4d}
+.theme-dark .gs-item>svg{color:#a5b4ff}
+.theme-dark .gs-item-main span{color:#a8b7cc}
+.theme-dark .gs-go{color:#8ba0be}
+@media(max-width:900px){.gs-results{max-width:min(520px,92vw)}}
