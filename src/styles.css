@@ -702,3 +702,27 @@
 .theme-dark .gs-item-main span{color:#a8b7cc}
 .theme-dark .gs-go{color:#8ba0be}
 @media(max-width:900px){.gs-results{max-width:min(520px,92vw)}}
+
+/* Icon-only link buttons: problem header meta, roadmap/dashboard rows, patterns list (replaces the old text links) */
+.meta-ext{width:32px;height:32px;border-radius:9px;background:#f0f2f5;color:#536174;display:grid;place-items:center;text-decoration:none}
+.meta-ext:hover{background:#e4e9f0;color:#172033}
+.theme-dark .meta-ext{background:#1f2f49;color:#b7c5da}
+.theme-dark .meta-ext:hover{background:#27395a;color:#e2e8f0}
+.row-ext{display:inline-flex;gap:4px;align-items:center;flex:none}
+.row-ext-btn{width:26px;height:26px;border-radius:7px;background:#f0f2f5;color:#536174;display:grid;place-items:center;text-decoration:none}
+.row-ext-btn:hover{background:#e4e9f0;color:#172033}
+.theme-dark .row-ext-btn{background:#1f2f49;color:#b7c5da}
+.theme-dark .row-ext-btn:hover{background:#27395a;color:#e2e8f0}
+.theme-dark .pattern-ext:hover{background:#27395a;color:#e2e8f0}
+.problem-tabs button{display:inline-flex;align-items:center;gap:5px}
+.problem-tabs .tab-icon{opacity:.8}
+/* Problem header: title + difficulty + right-aligned icon group on one baseline row */
+.problem-header .meta h2{margin:0;font-size:30px}
+.meta-icons{display:inline-flex;align-items:center;gap:8px;margin-left:auto;flex:none}
+.meta .no-link{margin-left:auto;margin-right:10px}
+@media(max-width:700px){.problem-header .meta{align-items:center}.problem-header .meta h2{font-size:24px}.meta .no-link{margin-left:0}}
+/* Personal (self-saved) solution icon — amber accent to tell it apart from reference links */
+.meta-ext.mine,.row-ext-btn.mine{background:#fff9e5;color:#a57900}
+.meta-ext.mine:hover,.row-ext-btn.mine:hover{background:#ffefb8;color:#7c5a00}
+.theme-dark .meta-ext.mine,.theme-dark .row-ext-btn.mine{background:#3a2d12;color:#f0c674}
+.theme-dark .meta-ext.mine:hover,.theme-dark .row-ext-btn.mine:hover{background:#4a3a18;color:#ffd97a}

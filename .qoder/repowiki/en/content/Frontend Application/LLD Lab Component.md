@@ -20,11 +20,11 @@
 
 ## Update Summary
 **Changes Made**
-- Restructured monolithic `src/lld-data.js` into modular chapter files under `src/lld-data/` (lru-cache.js, vending-machine.js, parking-lot.js, elevator-system.js)
-- Enhanced seven-tab layout system with interactive animated simulators for all four algorithms
-- Added comprehensive verification infrastructure with batch testing scripts
-- Integrated SDE-2 level interview preparation content with advanced design patterns and concurrency considerations
-- Updated component architecture to support modular data imports and enhanced UI interactions
+- Enhanced LLDPage component with focus management capabilities for deep-linked chapter navigation
+- Integrated seamless transitions between global search results and specific LLD content
+- Added smooth scrolling and automatic chapter expansion when navigating from search
+- Updated main application state management to handle LLD focus prop passing
+- Maintained backward compatibility with existing seven-tab layout system
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -44,7 +44,7 @@
 ## Introduction
 This document explains the Low-Level Design (LLD) Lab component embedded in a local-first React/Vite application that tracks DSA practice progress. The LLD Lab presents four canonical system designs with diagrams, requirements, complexity contracts, interview questions, follow-ups, and complete C# implementations: LRU Cache, Vending Machine, Parking Lot, and Elevator System. 
 
-The component has undergone a major architectural transformation from a monolithic structure to a modular architecture with separate chapter files, enhanced seven-tab layout system, interactive animated simulators, and comprehensive verification infrastructure. It is integrated into the main app as a page and shares code highlighting utilities with the rest of the app.
+The component has undergone a major architectural transformation from a monolithic structure to a modular architecture with separate chapter files, enhanced seven-tab layout system, interactive animated simulators, comprehensive verification infrastructure, and **advanced focus management capabilities for deep-linked navigation**. It is integrated into the main app as a page and shares code highlighting utilities with the rest of the app.
 
 The project runs fully offline for development and builds; cloud sync is optional and configured via environment variables when deployed to Vercel with a Neon Postgres database.
 
@@ -65,6 +65,7 @@ B --> F["UML Diagrams<br/>src/lld-uml.jsx"]
 A --> G["Problem Data (offline)<br/>data/problems.json"]
 H["Build Scripts<br/>scripts/prepare-data.mjs"] --> G
 I["Verification Scripts<br/>scripts/verify-lld*.mjs"] --> C
+J["Global Search<br/>Deep-link Navigation"] --> B
 ```
 
 **Diagram sources**
@@ -88,8 +89,8 @@ I["Verification Scripts<br/>scripts/verify-lld*.mjs"] --> C
 - [src/lld-uml.jsx:1-10](file://src/lld-uml.jsx#L1-L10)
 
 ## Core Components
-- **LLDPage**: Top-level page that renders hero text, pattern map, run order steps, chapters, maturity ladder, and recap cards with enhanced seven-tab navigation.
-- **LldChapter**: Collapsible chapter card per design with requirements, complexity contract, idea, diagram, implementation tabs, Q&A, and follow-ups. Now supports interactive simulators and UML diagrams.
+- **LLDPage**: Top-level page that renders hero text, pattern map, run order steps, chapters, maturity ladder, and recap cards with enhanced seven-tab navigation and **focus management for deep-linked navigation**.
+- **LldChapter**: Collapsible chapter card per design with requirements, complexity contract, idea, diagram, implementation tabs, Q&A, and follow-ups. Now supports interactive simulators, UML diagrams, and **smooth scroll-to-target functionality**.
 - **Interactive Simulators**: Animated step-through simulations for each algorithm that demonstrate real-time behavior and state transitions.
 - **UML Diagrams**: Data-driven class diagrams with theme-aware styling and animation on reveal.
 - **Code frames**: Syntax-highlighted Java/C# code blocks with copy-to-clipboard functionality.
@@ -100,6 +101,7 @@ Key responsibilities:
 - Render interactive diagrams, animations, and code samples.
 - Provide SDE-2 level interview-focused guidance and extension prompts.
 - Support both Java and C# implementations with language switching.
+- **Handle deep-linked navigation from global search with automatic chapter expansion and smooth scrolling**.
 
 **Section sources**
 - [src/lld.jsx:204-376](file://src/lld.jsx#L204-L376)
@@ -113,13 +115,19 @@ The LLD Lab integrates into the main app through a dedicated route/page with a c
 sequenceDiagram
 participant User as "User"
 participant App as "App Shell<br/>src/main.jsx"
+participant Search as "Global Search<br/>src/main.jsx"
 participant LLD as "LLD Page<br/>src/lld.jsx"
 participant Chapter as "Chapter Module<br/>src/lld-data/*.js"
 participant Sim as "Simulator<br/>src/lld-sim.jsx"
 participant UML as "UML Renderer<br/>src/lld-uml.jsx"
 participant HL as "Highlighter<br/>src/highlight.js"
-User->>App : Navigate to "LLD Lab"
-App->>LLD : Render <LLDPage />
+User->>Search : Type query in Global Search
+Search->>App : onChapter(chapterId)
+App->>App : setLldFocus(chapterId)
+App->>LLD : <LLDPage focus={chapterId} />
+LLD->>LLD : useEffect(focus) triggers
+LLD->>LLD : setOpenId(add chapterId)
+LLD->>LLD : scrollIntoView(smooth)
 LLD->>Chapter : Import chapter data (LRU/Vending/Parking/Elevator)
 LLD->>LLD : Render hero, pattern map, steps
 loop For each chapter
@@ -134,6 +142,8 @@ end
 
 **Diagram sources**
 - [src/main.jsx:294-308](file://src/main.jsx#L294-L308)
+- [src/main.jsx:324](file://src/main.jsx#L324)
+- [src/lld.jsx:327-336](file://src/lld.jsx#L327-L336)
 - [src/lld.jsx:257-376](file://src/lld.jsx#L257-L376)
 - [src/lld-data/lru-cache.js:4-553](file://src/lld-data/lru-cache.js#L4-L553)
 - [src/lld-sim.jsx:1-945](file://src/lld-sim.jsx#L1-L945)
@@ -148,27 +158,50 @@ end
 - Shows a recommended workflow for running an LLD round.
 - Iterates over chapters to render collapsible sections with seven-tab navigation.
 - Includes a maturity ladder and one-line recap cards.
+- **Handles deep-linked navigation via focus prop for seamless search-to-content transitions**.
 
 Implementation highlights:
 - Uses state to track open chapters and active tab selection.
 - Delegates chapter rendering to LldChapter with enhanced capabilities.
 - Integrates shared icons and styling classes.
 - Supports language switching between Java and C#.
+- **Implements focus management with useEffect hook to automatically expand and scroll to target chapters**.
+
+**Updated** Added focus management capabilities for deep-linked chapter navigation from global search, enabling seamless transitions between search results and specific LLD content.
 
 **Section sources**
 - [src/lld.jsx:327-376](file://src/lld.jsx#L327-L376)
+
+### Focus Management Implementation
+The LLDPage component now includes sophisticated focus management to handle deep-linked navigation:
+
+- **Focus Prop Handling**: Accepts `focus` prop from parent component containing chapter ID
+- **Automatic Chapter Expansion**: When focus is provided, automatically adds the target chapter to the open set
+- **Smooth Scrolling**: Uses `scrollIntoView()` with smooth behavior and block positioning
+- **Cleanup Logic**: Focus state is cleared when leaving the LLD page to prevent stale navigation
+
+Behavioral notes:
+- Focus effect runs only when focus prop changes
+- Smooth scrolling ensures user experience consistency
+- Chapter expansion happens before scrolling to ensure target element exists
+- Focus state is managed at the page level for proper lifecycle handling
+
+**Section sources**
+- [src/lld.jsx:327-336](file://src/lld.jsx#L327-L336)
 
 ### LldChapter
 - Presents requirements, complexity contract, design idea, diagram, completed implementations in both languages, interview Q&A, and follow-up prompts.
 - Manages active tab selection for multi-file implementations with seven-tab layout.
 - Renders a custom code frame with syntax highlighting and copy button.
 - Integrates interactive simulators and UML diagrams.
+- **Supports smooth scroll-to-target functionality for deep-linked navigation**.
 
 Behavioral notes:
 - Each chapter defines its own accent color and associated diagram type.
 - Complexity contract is displayed as a small grid.
 - Follow-ups encourage deeper exploration beyond the happy path.
 - Seven-tab system: brief, design, diagrams, play, code, hard, interview.
+- **Chapter elements have unique IDs for precise targeting during deep-link navigation**.
 
 **Section sources**
 - [src/lld.jsx:225-323](file://src/lld.jsx#L225-L323)
@@ -360,19 +393,25 @@ The modular architecture introduces new dependency relationships while maintaini
 ```mermaid
 graph LR
 Main["main.jsx"] --> LLD["lld.jsx"]
+Main --> Search["Global Search<br/>Deep-link Handler"]
 LLD --> Data["lld-data.js (legacy)"]
 LLD --> ChapterData["Chapter Modules<br/>src/lld-data/*.js"]
 LLD --> Sim["lld-sim.jsx"]
 LLD --> UML["lld-uml.jsx"]
 LLD --> HL["highlight.js"]
 LLD --> Icons["lucide-react"]
+Search --> Main["setLldFocus()"]
+Main --> LLD["focus prop"]
 ChapterData --> Sim["simulator exports"]
 ChapterData --> UML["uml exports"]
 ```
 
 **Diagram sources**
 - [src/main.jsx:1-10](file://src/main.jsx#L1-L10)
+- [src/main.jsx:130-132](file://src/main.jsx#L130-L132)
+- [src/main.jsx:299-324](file://src/main.jsx#L299-L324)
 - [src/lld.jsx:1-10](file://src/lld.jsx#L1-L10)
+- [src/lld.jsx:327-336](file://src/lld.jsx#L327-L336)
 - [src/lld-data/lru-cache.js:1-10](file://src/lld-data/lru-cache.js#L1-L10)
 - [src/lld-data/vending-machine.js:1-10](file://src/lld-data/vending-machine.js#L1-L10)
 - [src/lld-data/parking-lot.js:1-10](file://src/lld-data/parking-lot.js#L1-L10)
@@ -382,7 +421,10 @@ ChapterData --> UML["uml exports"]
 
 **Section sources**
 - [src/main.jsx:1-10](file://src/main.jsx#L1-L10)
+- [src/main.jsx:130-132](file://src/main.jsx#L130-L132)
+- [src/main.jsx:299-324](file://src/main.jsx#L299-L324)
 - [src/lld.jsx:1-10](file://src/lld.jsx#L1-L10)
+- [src/lld.jsx:327-336](file://src/lld.jsx#L327-L336)
 - [src/lld-data/lru-cache.js:1-10](file://src/lld-data/lru-cache.js#L1-L10)
 - [src/lld-data/vending-machine.js:1-10](file://src/lld-data/vending-machine.js#L1-L10)
 - [src/lld-data/parking-lot.js:1-10](file://src/lld-data/parking-lot.js#L1-L10)
@@ -399,6 +441,7 @@ The modular architecture and enhanced features introduce new performance conside
 - **Interactive Simulators**: Simulators use efficient state management with useReducer and selective re-rendering.
 - **Animation Performance**: SVG animations are optimized with CSS transforms and hardware acceleration.
 - **Clipboard Operations**: Copy-to-clipboard functionality is lightweight but guarded against unsupported environments.
+- **Focus Management**: Deep-linked navigation uses efficient DOM manipulation with smooth scrolling and minimal re-renders.
 
 ## Troubleshooting Guide
 Common issues and resolutions for the enhanced system:
@@ -410,23 +453,26 @@ Common issues and resolutions for the enhanced system:
 - **Simulators not loading**: Check that chapter.sim references match available simulator exports in lld-sim.jsx.
 - **UML diagrams not displaying**: Verify chapter.uml references match available UML components in lld-uml.jsx.
 - **Chapter data import errors**: Ensure modular chapter files export correct constants (LRU_CHAPTER, VENDING_CHAPTER, etc.).
+- **Deep-link navigation not working**: Verify chapter IDs match exactly between search results and chapter data; check browser console for DOM element existence.
 
 If you need to extend the LLD content:
 - Add new chapters by creating files in src/lld-data/ with required fields and exporting chapter constants.
 - Register new simulators in lld-sim.jsx and add corresponding chapter references.
 - Add new UML diagrams in lld-uml.jsx and register them in the LLD_UML mapping.
 - Update the seven-tab system if additional tab types are needed.
+- **Ensure new chapters have unique IDs for deep-link navigation support**.
 
 **Section sources**
 - [src/lld.jsx:10-24](file://src/lld.jsx#L10-L24)
 - [src/lld.jsx:28-194](file://src/lld.jsx#L28-L194)
 - [src/lld.jsx:225-323](file://src/lld.jsx#L225-L323)
+- [src/lld.jsx:327-336](file://src/lld.jsx#L327-L336)
 - [src/lld-sim.jsx:1-945](file://src/lld-sim.jsx#L1-L945)
 - [src/lld-uml.jsx:1-271](file://src/lld-uml.jsx#L1-L271)
 
 ## Conclusion
-The LLD Lab component has undergone a major architectural transformation from a monolithic structure to a comprehensive modular system that delivers a structured, data-driven learning experience for four classic low-level design problems. The separation of content and presentation, combined with rich interactive simulators, UML diagrams, complete implementations in both Java and C#, and SDE-2 level interview preparation content, supports both interview preparation and practical design skills.
+The LLD Lab component has undergone a major architectural transformation from a monolithic structure to a comprehensive modular system that delivers a structured, data-driven learning experience for four classic low-level design problems. The separation of content and presentation, combined with rich interactive simulators, UML diagrams, complete implementations in both Java and C#, SDE-2 level interview preparation content, and **advanced focus management capabilities for deep-linked navigation**, supports both interview preparation and practical design skills.
 
-The enhanced seven-tab layout system provides progressive disclosure of complexity, from basic requirements through advanced concurrency considerations. The interactive simulators offer hands-on understanding of complex system behaviors, while the comprehensive verification infrastructure ensures reliability and correctness.
+The enhanced seven-tab layout system provides progressive disclosure of complexity, from basic requirements through advanced concurrency considerations. The interactive simulators offer hands-on understanding of complex system behaviors, while the comprehensive verification infrastructure ensures reliability and correctness. **The new focus management system enables seamless transitions between global search results and specific LLD content, significantly improving the user experience for learners navigating between different parts of the learning material.**
 
-Future enhancements can include additional chapters following the same modular pattern, richer interactivity within simulators, exportable study materials, and integration with external testing frameworks. The modular architecture makes these extensions straightforward while maintaining consistency with the existing system design.
+Future enhancements can include additional chapters following the same modular pattern, richer interactivity within simulators, exportable study materials, integration with external testing frameworks, and **enhanced deep-link navigation with URL-based routing support**. The modular architecture makes these extensions straightforward while maintaining consistency with the existing system design.

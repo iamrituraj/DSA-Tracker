@@ -10,10 +10,13 @@
 
 ## Update Summary
 **Changes Made**
+- Enhanced search integration with global search functionality across all pages
+- Implemented dynamic filtering based on query text with real-time updates
+- Improved collapse/expand behavior during searches with automatic pattern expansion
+- Added better visual feedback when search terms are active with match counts and highlighting
 - Enhanced filtering system with confidence-based filtering (Weak, Learning, Strong, Interview Ready, Not set)
 - Added new 'Strongest' sort option alongside existing sorting capabilities
 - Implemented robust filter validation with sanitizeFilters() function
-- Added confidence ranking system for proper sorting logic
 - Updated filtering logic to handle confidence-based queries and special "Not set" cases
 
 ## Table of Contents
@@ -28,7 +31,7 @@
 9. [Conclusion](#conclusion)
 
 ## Introduction
-This document explains the Roadmap component that organizes practice problems by topic and pattern, supports advanced filtering and sorting, and provides collapsible groups with progress indicators and search. It also documents the groupByTopicPattern utility, enhanced filter logic with confidence-based filtering, user interactions for expanding/collapsing sections, visual legend, problem row components, and navigation integration.
+This document explains the Roadmap component that organizes practice problems by topic and pattern, supports advanced filtering and sorting, and provides collapsible groups with progress indicators and search. It also documents the groupByTopicPattern utility, enhanced filter logic with confidence-based filtering, user interactions for expanding/collapsing sections, visual legend, problem row components, and navigation integration. The component now features enhanced search integration with dynamic filtering, improved collapse/expand behavior during searches, and better visual feedback when search terms are active.
 
 ## Project Structure
 The application is a single-page React app built with Vite. The core UI and logic live in one file, while problem data and metadata are bundled as JSON files.
@@ -38,14 +41,18 @@ graph TB
 A["App (main.jsx)"] --> B["Roadmap (main.jsx)"]
 A --> C["Problem Row (main.jsx)"]
 A --> D["groupedByTopicPattern (main.jsx)"]
-E["problems.json"] --> A
-F["topics.json"] --> A
-G["patterns.json"] --> A
+A --> E["GlobalSearch (main.jsx)"]
+F["problems.json"] --> A
+G["topics.json"] --> A
+H["patterns.json"] --> A
+E --> B
+B --> C
 ```
 
 **Diagram sources**
 - [main.jsx:47-173](file://src/main.jsx#L47-L173)
 - [main.jsx:190-245](file://src/main.jsx#L190-L245)
+- [main.jsx:349-428](file://src/main.jsx#L349-L428)
 - [problems.json:1-200](file://data/problems.json#L1-L200)
 - [topics.json:1-20](file://data/topics.json#L1-L20)
 - [patterns.json:1-91](file://data/patterns.json#L1-L91)
@@ -58,7 +65,8 @@ G["patterns.json"] --> A
 
 ## Core Components
 - App shell: loads problem data, manages global state (progress, notes, solutions, activity, settings), search query, and page routing between Dashboard, Roadmap, Revision, Patterns, Analytics, Settings, and Problem detail.
-- Roadmap: renders grouped topics and patterns, filters/sorts with confidence support, shows counts and legend, and handles collapse/expand toggles.
+- **Enhanced GlobalSearch**: Provides cross-page search functionality with keyboard shortcuts (/ key), result grouping, and navigation to problems, patterns, and LLD chapters.
+- Roadmap: renders grouped topics and patterns, filters/sorts with confidence support, shows counts and legend, and handles collapse/expand toggles with search-aware behavior.
 - ProblemRow: displays a single problem entry with status dot, title, topic/pattern, difficulty badge, and optional tags; clicking opens the problem detail.
 - groupByTopicPattern: utility to organize a list into nested topic → pattern → problems structure.
 
@@ -66,31 +74,34 @@ Key responsibilities:
 - Hierarchical grouping by topic and pattern
 - Advanced filtering by topic, status, difficulty, pattern, confidence, favorites
 - Sorting by order, title, difficulty, weakest confidence, strongest confidence
-- Collapsible topic and pattern groups
+- Collapsible topic and pattern groups with search-aware defaults
 - Progress indicators per group
-- Search across title, topic, and pattern
-- Navigation to problem detail
+- Search across title, topic, and pattern with real-time filtering
+- Navigation to problem detail and pattern groups
 
 **Section sources**
 - [main.jsx:47-173](file://src/main.jsx#L47-L173)
 - [main.jsx:190-245](file://src/main.jsx#L190-L245)
+- [main.jsx:349-428](file://src/main.jsx#L349-L428)
 - [main.jsx:188-189](file://src/main.jsx#L188-L189)
 
 ## Architecture Overview
-The Roadmap view is rendered conditionally based on the current page. It receives precomputed enriched problems, available topics, patterns, and filter state from the parent App. Filtering and grouping are computed via memoized values to avoid unnecessary re-renders.
+The Roadmap view is rendered conditionally based on the current page. It receives precomputed enriched problems, available topics, patterns, and filter state from the parent App. Filtering and grouping are computed via memoized values to avoid unnecessary re-renders. The enhanced search system integrates globally across all pages while providing specific filtering for the roadmap view.
 
 ```mermaid
 sequenceDiagram
 participant U as "User"
+participant GS as "GlobalSearch (main.jsx)"
 participant App as "App (main.jsx)"
 participant RM as "Roadmap (main.jsx)"
 participant PR as "ProblemRow (main.jsx)"
 participant Det as "Problem Detail (main.jsx)"
-U->>App : Open Roadmap page
-App-->>RM : Pass enriched problems, topics, patterns, filters
-RM->>RM : Compute filtered list (search + filters + confidence)
-RM->>RM : Group by topic → pattern
-RM-->>U : Render groups with counts and legend
+U->>GS : Type search query
+GS-->>App : Update global query state
+App->>RM : Pass filtered results based on query
+RM->>RM : Apply search + filters + confidence
+RM->>RM : Group by topic → pattern with search-aware collapse
+RM-->>U : Render groups with match counts
 U->>PR : Click a problem row
 PR-->>App : open(p)
 App-->>Det : Show Problem detail for p
@@ -98,11 +109,41 @@ App-->>Det : Show Problem detail for p
 
 **Diagram sources**
 - [main.jsx:47-173](file://src/main.jsx#L47-L173)
+- [main.jsx:349-428](file://src/main.jsx#L349-L428)
 - [main.jsx:127-139](file://src/main.jsx#L127-L139)
 - [main.jsx:190-245](file://src/main.jsx#L190-L245)
 - [main.jsx:188-189](file://src/main.jsx#L188-L189)
 
 ## Detailed Component Analysis
+
+### Enhanced GlobalSearch Component
+The global search component provides cross-page search functionality with intelligent result grouping and navigation:
+
+- **Keyboard Shortcuts**: Press "/" to focus search from anywhere (unless already typing in input fields)
+- **Real-time Results**: Shows up to 7 problem matches, 4 pattern matches, and 3 LLD chapter matches
+- **Result Ranking**: Prioritizes exact title matches and mastered problems
+- **Grouped Display**: Organizes results by type (Problems, Patterns, LLD Lab) with section headers
+- **Navigation Integration**: Clicking results navigates to appropriate destinations (problem details, pattern groups, or LLD chapters)
+- **Accessibility**: Full keyboard navigation with arrow keys and Enter selection
+
+```mermaid
+flowchart TD
+Start(["User types in GlobalSearch"]) --> CheckQuery{"Query has content?"}
+CheckQuery --> |No| ShowHint["Show search help hint"]
+CheckQuery --> |Yes| ComputeResults["Compute ranked results"]
+ComputeResults --> FilterProblems["Filter problems by title/topic/pattern"]
+FilterProblems --> RankProblems["Rank by relevance (exact match > partial)"]
+RankProblems --> FilterPatterns["Filter unique patterns"]
+FilterPatterns --> FilterChapters["Filter LLD chapters"]
+FilterChapters --> GroupResults["Group by type with section headers"]
+GroupResults --> Display["Display dropdown with navigation"]
+```
+
+**Diagram sources**
+- [main.jsx:349-428](file://src/main.jsx#L349-L428)
+
+**Section sources**
+- [main.jsx:349-428](file://src/main.jsx#L349-L428)
 
 ### groupByTopicPattern Utility
 Organizes an array of problems into a nested object keyed by topic, then by pattern, containing arrays of problems.
@@ -124,16 +165,17 @@ Return --> End(["End"])
 ```
 
 **Diagram sources**
-- [main.jsx:190-197](file://src/main.jsx#L190-L197)
+- [main.jsx:432-439](file://src/main.jsx#L432-L439)
 
 **Section sources**
-- [main.jsx:190-197](file://src/main.jsx#L190-L197)
+- [main.jsx:432-439](file://src/main.jsx#L432-L439)
 
 ### Enhanced Filtering and Sorting Logic
-Filtering combines multiple criteria including the new confidence-based filtering:
-- Text search across title, topic, and pattern
+Filtering combines multiple criteria including the new confidence-based filtering and search integration:
+
+- **Text search**: Real-time filtering across title, topic, and pattern fields
 - Topic selector
-- Status selector
+- Status selector  
 - Difficulty selector
 - Pattern selector (derived from selected topic)
 - Confidence selector (Weak, Learning, Strong, Interview Ready, Not set)
@@ -173,10 +215,10 @@ Ret2 --> End
 **Updated** Enhanced filtering now includes confidence-based filtering with support for "Not set" cases and a new 'Strongest' sort option using confidence ranking.
 
 **Diagram sources**
-- [main.jsx:127-139](file://src/main.jsx#L127-L139)
+- [main.jsx:256-270](file://src/main.jsx#L256-L270)
 
 **Section sources**
-- [main.jsx:127-139](file://src/main.jsx#L127-L139)
+- [main.jsx:256-270](file://src/main.jsx#L256-L270)
 
 ### Filter Validation and Sanitization
 The system now includes robust filter validation through the `sanitizeFilters()` function:
@@ -197,16 +239,20 @@ CheckSort --> Return["Return sanitized filters"]
 ```
 
 **Diagram sources**
-- [main.jsx:80-89](file://src/main.jsx#L80-L89)
+- [main.jsx:84-93](file://src/main.jsx#L84-L93)
 
 **Section sources**
-- [main.jsx:80-89](file://src/main.jsx#L80-L89)
+- [main.jsx:84-93](file://src/main.jsx#L84-L93)
 
-### Roadmap Rendering and Grouping
+### Enhanced Roadmap Rendering and Grouping
+The Roadmap component now features enhanced search integration with improved collapse/expand behavior:
+
 - Computes filtered list once using memoization with confidence support
 - Groups filtered problems by topic and pattern
+- **Enhanced Collapse Behavior**: During searches, pattern sections automatically expand to show matching results unless manually collapsed
 - Renders collapsible topic blocks with solved/total counts
 - Within each topic, renders collapsible pattern blocks with their own counts
+- Displays search match counts and active search indicators
 - Renders problem rows inside expanded patterns
 - Displays a legend indicating status dots for solved, not started, and weak
 
@@ -218,6 +264,7 @@ class Roadmap {
 +filtered
 +collapsedTopics
 +collapsedPatterns
++searching
 +toggleTopic(topic)
 +togglePattern(topic, pattern)
 }
@@ -229,29 +276,35 @@ Roadmap --> ProblemRow : "renders multiple"
 ```
 
 **Diagram sources**
-- [main.jsx:199-245](file://src/main.jsx#L199-L245)
+- [main.jsx:441-497](file://src/main.jsx#L441-L497)
 - [main.jsx:188-189](file://src/main.jsx#L188-L189)
 
 **Section sources**
-- [main.jsx:199-245](file://src/main.jsx#L199-L245)
+- [main.jsx:441-497](file://src/main.jsx#L441-L497)
 
-### User Interaction Patterns
-- Search input updates a global query used by filtering
+### Enhanced User Interaction Patterns
+- **Global Search**: Search input updates a global query used by filtering across all pages
 - Filter dropdowns update roadmapFilters state; pattern options are constrained by selected topic
 - **New**: Confidence filter dropdown allows filtering by confidence level or "Not set"
 - **New**: Sort dropdown includes "Strongest" option for ordering by confidence
 - Favorites toggle filters to only favorite problems
 - Sorting changes ordering without altering visibility
-- Topic header toggles expand/collapse all patterns within that topic
-- Pattern header toggles expand/collapse its problem list
+- **Enhanced**: Topic header toggles expand/collapse all patterns within that topic
+- **Enhanced**: Pattern header toggles expand/collapse its problem list with search-aware defaults
 - Clicking a problem row navigates to the Problem detail page
+- **New**: Keyboard shortcuts (/ to focus search, arrow keys for navigation, Enter to select)
 
 ```mermaid
 sequenceDiagram
 participant U as "User"
+participant GS as "GlobalSearch"
 participant RM as "Roadmap"
 participant PR as "ProblemRow"
 participant App as "App"
+U->>GS : Type search query
+GS-->>App : Update global query
+App->>RM : Pass query to roadmap
+RM->>RM : Auto-expand matching patterns
 U->>RM : Change filter or sort (including confidence)
 RM->>RM : Update roadmapFilters
 RM->>RM : Recompute filtered and grouped
@@ -261,8 +314,9 @@ App-->>App : Set selected problem and page
 ```
 
 **Diagram sources**
-- [main.jsx:127-139](file://src/main.jsx#L127-L139)
-- [main.jsx:199-245](file://src/main.jsx#L199-L245)
+- [main.jsx:349-428](file://src/main.jsx#L349-L428)
+- [main.jsx:256-270](file://src/main.jsx#L256-L270)
+- [main.jsx:441-497](file://src/main.jsx#L441-L497)
 - [main.jsx:188-189](file://src/main.jsx#L188-L189)
 
 ### Visual Legend and Progress Indicators
@@ -271,10 +325,12 @@ App-->>App : Set selected problem and page
 - Pattern block shows solved/count for its problems
 - ProblemRow shows a small status dot aligned with the problem's current status
 - **Enhanced**: Confidence levels are now visible in analytics and can be filtered
+- **Enhanced**: Active search indicators showing match counts and search terms
+- **Enhanced**: Visual feedback when search terms are active with highlighted match counts
 
 **Section sources**
-- [main.jsx:209-218](file://src/main.jsx#L209-L218)
-- [main.jsx:219-243](file://src/main.jsx#L219-L243)
+- [main.jsx:458-466](file://src/main.jsx#L458-L466)
+- [main.jsx:478-493](file://src/main.jsx#L478-L493)
 - [main.jsx:188-189](file://src/main.jsx#L188-L189)
 
 ### Data Model and Enrichment
@@ -282,6 +338,7 @@ App-->>App : Set selected problem and page
 - Topics and patterns are derived from the dataset; pattern options are scoped to the selected topic
 - **Enhanced**: Confidence system includes four levels: Weak, Learning, Strong, Interview Ready
 - Enriched problems feed filtering, grouping, and rendering
+- **Enhanced**: Global search works across enriched problem data for comprehensive results
 
 ```mermaid
 erDiagram
@@ -322,18 +379,24 @@ PROBLEM ||--|| PATTERN_MAP : "matches"
   - Local storage hooks for progress, notes, solutions, activity, settings
   - Bundled JSON for problems, solutions, tuf-links
   - API routes for cloud sync (auth, state)
+- **Enhanced GlobalSearch** depends on:
+  - App-provided enriched problems, pattern groups, and LLD chapters
+  - Navigation functions for opening problems and navigating to patterns/chapters
 - Roadmap depends on:
   - App-provided enriched problems, topics, patterns, filters
   - groupByTopicPattern utility
   - ProblemRow component
   - **Enhanced**: Confidence filtering and sorting logic
+  - **Enhanced**: Query state for search-aware collapse behavior
 - ProblemRow depends on:
   - Problem object shape (id, title, topic, pattern, difficulty, status, favorite, confidence)
 
 ```mermaid
 graph LR
-App["App (main.jsx)"] --> RM["Roadmap (main.jsx)"]
+App["App (main.jsx)"] --> GS["GlobalSearch (main.jsx)"]
+App --> RM["Roadmap (main.jsx)"]
 App --> PR["ProblemRow (main.jsx)"]
+GS --> RM
 RM --> GRP["groupByTopicPattern (main.jsx)"]
 RM --> PR
 PR --> Det["Problem Detail (main.jsx)"]
@@ -343,6 +406,7 @@ App --> Meta["topics.json / patterns.json"]
 
 **Diagram sources**
 - [main.jsx:47-173](file://src/main.jsx#L47-L173)
+- [main.jsx:349-428](file://src/main.jsx#L349-L428)
 - [main.jsx:190-245](file://src/main.jsx#L190-L245)
 - [problems.json:1-200](file://data/problems.json#L1-L200)
 - [topics.json:1-20](file://data/topics.json#L1-L20)
@@ -350,6 +414,7 @@ App --> Meta["topics.json / patterns.json"]
 
 **Section sources**
 - [main.jsx:47-173](file://src/main.jsx#L47-L173)
+- [main.jsx:349-428](file://src/main.jsx#L349-L428)
 - [main.jsx:190-245](file://src/main.jsx#L190-L245)
 
 ## Performance Considerations
@@ -358,15 +423,19 @@ App --> Meta["topics.json / patterns.json"]
   - Stats computed once per change in enriched set
   - Filtered list computed once per change in enriched, query, or filters (including confidence)
   - Grouped results computed once per change in filtered list
+  - **Enhanced**: Global search results computed once per change in query, problems, pattern groups, and chapters
 - Filtering complexity:
   - Linear scan over enriched problems per filter change (now includes confidence checks)
+  - **Enhanced**: Global search performs efficient filtering with ranking algorithm
 - Grouping complexity:
   - Linear pass over filtered list to build nested structure
 - **Enhanced**: Confidence-based filtering adds minimal overhead due to simple string comparisons
+- **Enhanced**: Search-aware collapse behavior reduces unnecessary re-renders by maintaining collapse state
 - Recommendations:
   - Keep filter set minimal to reduce recomputation
   - Avoid deep nesting beyond topic → pattern unless necessary
   - Consider virtualization if problem lists grow very large
+  - **Enhanced**: Global search limits results to prevent performance issues with large datasets
 
 [No sources needed since this section provides general guidance]
 
@@ -375,6 +444,7 @@ App --> Meta["topics.json / patterns.json"]
   - Verify that at least one filter is set to All or matches existing data
   - Check that the selected topic has associated patterns
   - **New**: Check confidence filter settings - "Not set" only shows problems without confidence values
+  - **New**: Clear search query if no results appear during search
 - Pattern options reset:
   - If a selected pattern becomes invalid after changing topic, it resets to All automatically
 - Cloud sync errors:
@@ -385,14 +455,19 @@ App --> Meta["topics.json / patterns.json"]
 - **New**: Filter validation issues:
   - Invalid filter values are automatically sanitized to defaults
   - Confidence values must match exact strings: "🔴 Weak", "🟡 Learning", "🟢 Strong", "🔵 Interview Ready"
+- **New**: Search functionality issues:
+  - Press "/" key to focus search if keyboard shortcut doesn't work
+  - Search results may be limited to top matches (7 problems, 4 patterns, 3 chapters)
+  - Clear search with Escape key to return to normal filtering
 
 **Section sources**
 - [main.jsx:151-155](file://src/main.jsx#L151-L155)
 - [main.jsx:90-99](file://src/main.jsx#L90-L99)
 - [main.jsx:586-605](file://src/main.jsx#L586-L605)
-- [main.jsx:80-89](file://src/main.jsx#L80-L89)
+- [main.jsx:84-93](file://src/main.jsx#L84-L93)
+- [main.jsx:349-428](file://src/main.jsx#L349-L428)
 
 ## Conclusion
-The Roadmap component provides a clear, hierarchical view of problems organized by topic and pattern, with powerful enhanced filtering including confidence-based filtering and sorting capabilities. The new 'Strongest' sort option and confidence filtering system allow users to focus on problems based on their mastery level. It integrates seamlessly with the rest of the app through shared state and navigation, offering progress indicators and a consistent user experience for tracking learning and mastery.
+The Roadmap component provides a clear, hierarchical view of problems organized by topic and pattern, with powerful enhanced filtering including confidence-based filtering and sorting capabilities. The new global search functionality seamlessly integrates across all pages while providing specific filtering for the roadmap view. Enhanced collapse/expand behavior during searches automatically reveals matching content, while the new 'Strongest' sort option and confidence filtering system allow users to focus on problems based on their mastery level. The component integrates seamlessly with the rest of the app through shared state and navigation, offering progress indicators and a consistent user experience for tracking learning and mastery.
 
 [No sources needed since this section summarizes without analyzing specific files]

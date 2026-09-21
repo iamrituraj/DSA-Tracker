@@ -7,6 +7,13 @@
 - [README.md](file://README.md)
 </cite>
 
+## Update Summary
+**Changes Made**
+- Updated Global Search Integration section to document the new search functionality across revision categories
+- Enhanced Due Calculation Logic section to include search filtering capabilities
+- Updated Visual Design section to reflect search-aware UI elements
+- Added new section on Search Integration for comprehensive coverage of the feature
+
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
@@ -19,7 +26,7 @@
 9. [Conclusion](#conclusion)
 
 ## Introduction
-This document explains the spaced repetition revision system used by the DSA Tracker. It covers the scheduling algorithm with fixed intervals, how due problems are calculated, the revision completion workflow, queue management for upcoming and due items, activity tracking integration, and the update function that advances revision counts, next revision dates, and status progression. It also describes the visual design of due vs upcoming sections, the review button behavior, and how revisions fit into the overall learning workflow.
+This document explains the spaced repetition revision system used by the DSA Tracker. It covers the scheduling algorithm with fixed intervals, how due problems are calculated, the revision completion workflow, queue management for upcoming and due items, activity tracking integration, and the update function that advances revision counts, next revision dates, and status progression. It also describes the visual design of due vs upcoming sections, the review button behavior, and how revisions fit into the overall learning workflow. **Updated**: The system now integrates with global search, allowing users to find and manage revision tasks more efficiently across due and upcoming categories.
 
 ## Project Structure
 The revision system is implemented as part of a single-page React application. The core logic lives in the main application file, while cloud persistence is handled by a serverless API route. Problem data is bundled locally and loaded at runtime.
@@ -47,16 +54,18 @@ CloudAPI --> DB["Neon Postgres JSONB store"]
 - Upcoming list: Problems with future next revision dates are shown as upcoming, sorted by soonest first and limited to a small number for quick scanning.
 - Completion workflow: Marking a problem as reviewed increments the revision count, updates last revised timestamp, schedules the next revision using the appropriate interval, and promotes status from Attempted to Solved when applicable. Activity is recorded for the current day.
 - Update function: Centralized patching of progress fields including status, attempts, confidence, revision count, last revised, and next revision date.
+- **Global search integration**: The revision system now supports filtering by search queries across both due and upcoming categories, enabling users to quickly locate specific revision tasks.
 
 **Section sources**
 - [main.jsx:12-12](file://src/main.jsx#L12-L12)
 - [main.jsx:247-248](file://src/main.jsx#L247-L248)
 - [main.jsx:442-455](file://src/main.jsx#L442-L455)
 - [main.jsx:476-480](file://src/main.jsx#L476-L480)
+- [main.jsx:499-500](file://src/main.jsx#L499-L500)
 
 ## Architecture Overview
 The revision system integrates three layers:
-- UI layer: Renders due and upcoming lists, provides “Reviewed” actions, and exposes per-problem scheduling controls.
+- UI layer: Renders due and upcoming lists, provides "Reviewed" actions, and exposes per-problem scheduling controls.
 - State layer: Maintains local state for progress, notes, solutions, activity, and settings; computes derived values like stats and filtered lists.
 - Persistence layer: Optionally syncs state to a cloud database via an authenticated API endpoint.
 
@@ -115,14 +124,19 @@ RecordActivity --> End(["Done"])
 ### Due Calculation Logic
 - A problem is considered due if it has a next revision date and that date is less than or equal to the current time.
 - Due list sorting: Problems are sorted by next revision date ascending so the most overdue appear first.
+- **Search filtering**: Both due and upcoming lists now support filtering by search queries, matching against problem titles, topics, and patterns.
 
 ```mermaid
 flowchart TD
 A["For each problem"] --> B{"Has nextRevision?"}
 B --> |No| Skip["Skip"]
 B --> |Yes| C{"nextRevision <= now?"}
-C --> |Yes| Due["Add to due list"]
-C --> |No| Future["Add to upcoming list"]
+C --> |Yes| D{"Matches search query?"}
+C --> |No| E{"Matches search query?"}
+D --> |Yes| Due["Add to due list"]
+D --> |No| Skip
+E --> |Yes| Future["Add to upcoming list"]
+E --> |No| Skip
 Due --> Sort["Sort due by nextRevision asc"]
 Future --> Slice["Limit upcoming to top N"]
 Sort --> End(["Render queues"])
@@ -131,13 +145,16 @@ Slice --> End
 
 **Diagram sources**
 - [main.jsx:247-248](file://src/main.jsx#L247-L248)
+- [main.jsx:499-500](file://src/main.jsx#L499-L500)
 
 **Section sources**
 - [main.jsx:247-248](file://src/main.jsx#L247-L248)
+- [main.jsx:499-500](file://src/main.jsx#L499-L500)
 
 ### Revision Queue Management
 - Due now: Displays all problems whose next revision is due or overdue, sorted by earliest due date. Each row shows title, topic, and the upcoming revision number.
 - Upcoming: Displays the next ten scheduled revisions, sorted by soonest first, showing the scheduled date and days until due.
+- **Search integration**: Both queues respond to global search queries, filtering results in real-time across title, topic, and pattern fields.
 
 ```mermaid
 classDiagram
@@ -148,6 +165,8 @@ class RevisionComponent {
 +recordActivity() void
 -due : Problem[]
 -upcoming : Problem[]
++query : string
++matches(p) boolean
 }
 class Problem {
 +id : string
@@ -163,12 +182,14 @@ RevisionComponent --> Problem : "filters & sorts"
 
 **Diagram sources**
 - [main.jsx:247-248](file://src/main.jsx#L247-L248)
+- [main.jsx:499-500](file://src/main.jsx#L499-L500)
 
 **Section sources**
 - [main.jsx:247-248](file://src/main.jsx#L247-L248)
+- [main.jsx:499-500](file://src/main.jsx#L499-L500)
 
 ### Update Function and Status Progression
-- The central update function patches a problem’s progress entry with provided fields.
+- The central update function patches a problem's progress entry with provided fields.
 - When marking a problem as reviewed:
   - Increments revisionCount.
   - Sets lastRevised to the current timestamp.
@@ -200,14 +221,40 @@ Activity-->>UI : Today's count incremented
 - [main.jsx:442-455](file://src/main.jsx#L442-L455)
 - [main.jsx:476-480](file://src/main.jsx#L476-L480)
 
+### Global Search Integration
+- **Unified search experience**: The global search bar works consistently across all pages, including the revision page.
+- **Real-time filtering**: As users type in the search bar, both due and upcoming revision lists are filtered instantly.
+- **Multi-field matching**: Search queries match against problem titles, topics, and patterns simultaneously.
+- **Contextual feedback**: The due count displays the number of matching results when a search query is active.
+- **Empty state handling**: Clear messages indicate when no revisions match the current search criteria.
+
+```mermaid
+flowchart LR
+Query["Global Search Query"] --> Filter["Filter Logic"]
+Filter --> DueList["Due List Filter"]
+Filter --> UpcomingList["Upcoming List Filter"]
+DueList --> Display["Display Matching Results"]
+UpcomingList --> Display
+Display --> Feedback["Contextual Count Updates"]
+```
+
+**Diagram sources**
+- [main.jsx:349-428](file://src/main.jsx#L349-L428)
+- [main.jsx:499-500](file://src/main.jsx#L499-L500)
+
+**Section sources**
+- [main.jsx:349-428](file://src/main.jsx#L349-L428)
+- [main.jsx:499-500](file://src/main.jsx#L499-L500)
+
 ### Visual Design: Due vs Upcoming Sections
 - Due section:
-  - Header indicates the number of revisions due.
+  - Header indicates the number of revisions due, with contextual updates when search is active.
   - Each item includes a status indicator, title, topic, and the next revision number.
-  - A “Reviewed” action button advances the revision and records activity.
+  - A "Reviewed" action button advances the revision and records activity.
 - Upcoming section:
   - Shows the next scheduled revisions with their dates and days remaining.
   - Clicking an item opens the problem detail view.
+- **Search-aware UI**: Both sections provide clear feedback about search context and result counts.
 
 ```mermaid
 flowchart LR
@@ -216,18 +263,23 @@ Row --> Action["Action: Reviewed"]
 Action --> Update["Update state & schedule"]
 Upcoming["Upcoming panel"] --> Item["Item: Title, Date, Days left"]
 Item --> Open["Open problem detail"]
+Search["Search Context"] --> Due
+Search --> Upcoming
 ```
 
 **Diagram sources**
 - [main.jsx:247-248](file://src/main.jsx#L247-L248)
+- [main.jsx:499-500](file://src/main.jsx#L499-L500)
 
 **Section sources**
 - [main.jsx:247-248](file://src/main.jsx#L247-L248)
+- [main.jsx:499-500](file://src/main.jsx#L499-L500)
 
 ### Integration with Overall Learning Workflow
 - Dashboard highlights due revisions and suggests continuing the roadmap.
 - Analytics surfaces due counts and activity trends to guide focus.
-- Problem detail view supports scheduling revisions manually and displays the “Revision ladder” to visualize progress through intervals.
+- Problem detail view supports scheduling revisions manually and displays the "Revision ladder" to visualize progress through intervals.
+- **Global navigation**: Users can access revision tasks from anywhere in the app using the global search, improving discoverability and efficiency.
 
 ```mermaid
 graph TB
@@ -238,6 +290,9 @@ RevisionPage["Revision page"] --> DueList["Due list"]
 DueList --> Review["Mark Reviewed"]
 Review --> Analytics["Analytics"]
 Analytics --> Dashboard
+GlobalSearch["Global Search"] --> RevisionPage
+GlobalSearch --> Dashboard
+GlobalSearch --> Roadmap
 ```
 
 **Diagram sources**
@@ -245,12 +300,14 @@ Analytics --> Dashboard
 - [main.jsx:247-248](file://src/main.jsx#L247-L248)
 - [main.jsx:476-480](file://src/main.jsx#L476-L480)
 - [main.jsx:578-582](file://src/main.jsx#L578-L582)
+- [main.jsx:349-428](file://src/main.jsx#L349-L428)
 
 **Section sources**
 - [main.jsx:175-185](file://src/main.jsx#L175-L185)
 - [main.jsx:247-248](file://src/main.jsx#L247-L248)
 - [main.jsx:476-480](file://src/main.jsx#L476-L480)
 - [main.jsx:578-582](file://src/main.jsx#L578-L582)
+- [main.jsx:349-428](file://src/main.jsx#L349-L428)
 
 ## Dependency Analysis
 - UI depends on:
@@ -285,18 +342,19 @@ Cloud --> DB["Neon Postgres"]
 - Debounced cloud saves reduce network overhead during frequent edits.
 - Upcoming list is capped to a small number to keep rendering lightweight.
 - Local-first storage avoids unnecessary remote calls when offline.
-
-[No sources needed since this section provides general guidance]
+- **Search performance**: Real-time search filtering uses efficient string matching algorithms and is optimized for responsive user experience.
 
 ## Troubleshooting Guide
 - No revisions due: Ensure problems have been marked Attempted or higher and that a next revision date has been scheduled.
-- Revisions not advancing: Confirm that the “Reviewed” action is triggered and that the update function applies changes to progress and activity.
+- Revisions not advancing: Confirm that the "Reviewed" action is triggered and that the update function applies changes to progress and activity.
 - Cloud sync issues: Verify authentication and environment configuration; check sync status indicators and error messages.
+- **Search not working**: Ensure the global search input is focused and that the query matches problem titles, topics, or patterns. Try clearing the search to see all results.
 
 **Section sources**
 - [main.jsx:247-248](file://src/main.jsx#L247-L248)
 - [main.jsx:100-113](file://src/main.jsx#L100-L113)
 - [state.js:23-50](file://api/state.js#L23-L50)
+- [main.jsx:349-428](file://src/main.jsx#L349-L428)
 
 ## Conclusion
-The revision system implements a simple yet effective spaced repetition schedule using fixed intervals. It clearly separates due and upcoming items, streamlines the review workflow, and integrates tightly with activity tracking and analytics. The centralized update function ensures consistent state transitions, while optional cloud sync preserves progress across devices. Together, these features support a focused, sustainable learning loop aligned with mastery goals.
+The revision system implements a simple yet effective spaced repetition schedule using fixed intervals. It clearly separates due and upcoming items, streamlines the review workflow, and integrates tightly with activity tracking and analytics. The centralized update function ensures consistent state transitions, while optional cloud sync preserves progress across devices. **Updated**: The integration with global search significantly enhances usability by allowing users to quickly locate and manage revision tasks across both due and upcoming categories from anywhere in the application. Together, these features support a focused, sustainable learning loop aligned with mastery goals.

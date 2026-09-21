@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Search, LayoutDashboard, BookOpen, RefreshCw, Brain, BarChart3, Settings, CheckCircle2, Clock3, Download, Upload, ExternalLink, ChevronRight, ChevronDown, Flame, Star, Filter, CalendarDays, Target, RotateCcw, Trash2, Timer, Lightbulb, BookmarkCheck, Lock, Unlock, Pencil, Plus, Code2, Moon, Sun, Copy, Check, Play, Layers, List, LayoutGrid, AlertCircle } from "lucide-react";
+import { Search, LayoutDashboard, BookOpen, RefreshCw, Brain, BarChart3, Settings, CheckCircle2, Clock3, Download, Upload, ChevronRight, ChevronDown, Flame, Star, Filter, CalendarDays, Target, RotateCcw, Trash2, Timer, Lightbulb, BookmarkCheck, Lock, Unlock, Pencil, Plus, Code2, Moon, Sun, Copy, Check, Play, Layers, List, LayoutGrid, AlertCircle, FileText, PenLine } from "lucide-react";
 import "./styles.css";
 import "./cloud-sync.css";
 import { highlightCode } from "./highlight.js";
@@ -60,6 +60,8 @@ const addDays = (days) => new Date(Date.now() + days * 86400000).toISOString();
 const daysBetween = (a, b) => Math.max(0, Math.ceil((new Date(b) - new Date(a)) / 86400000));
 const isHttp = (u) => typeof u === "string" && /^https?:\/\//i.test(u);
 const isSolved = (p) => p.status === "Solved" || p.status === "Mastered";
+// A problem has a personal solution once the user saves their own copy (non-empty approaches).
+const hasPersonalSolution = (solutions, id) => Boolean(solutions?.[id]?.approaches?.length);
 function solutionLink(extractedUrl) {
   if (isHttp(extractedUrl)) return { href: extractedUrl, label: "View TakeUForward solution" };
   return null;
@@ -318,8 +320,8 @@ function App() {
       <button className="theme-toggle" type="button" onClick={() => setSettings(s => ({ ...s, theme: s.theme === "dark" ? "light" : "dark" }))} aria-label="Toggle dark mode">{settings.theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}<span>{settings.theme === "dark" ? "Light mode" : "Dark mode"}</span></button>
     </aside>
     <main><header><div><h1>{page === "problem" ? "Problem" : pageLabels[page]}</h1><p>Practice, track, revise, master.</p></div><GlobalSearch query={query} setQuery={setQuery} problems={enriched} patternGroups={patternGroups} chapters={LLD_CHAPTERS} open={open} onPattern={goPattern} onChapter={goChapter} /></header>
-      {page === "dashboard" && <Dashboard stats={stats} problems={enriched} open={open} setPage={setPage} settings={settings} viewWeak={viewWeak} />}
-      {page === "roadmap" && <Roadmap problems={enriched} topics={topics} patterns={patterns} open={open} filters={roadmapFilters} setFilters={setRoadmapFilters} filtered={filtered} collapse={collapse} setCollapse={setCollapse} query={query} clearQuery={() => setQuery("")} />}
+      {page === "dashboard" && <Dashboard stats={stats} problems={enriched} open={open} setPage={setPage} settings={settings} viewWeak={viewWeak} tufLinks={tufLinks} solutions={solutions} />}
+      {page === "roadmap" && <Roadmap problems={enriched} topics={topics} patterns={patterns} open={open} filters={roadmapFilters} setFilters={setRoadmapFilters} filtered={filtered} collapse={collapse} setCollapse={setCollapse} query={query} clearQuery={() => setQuery("")} tufLinks={tufLinks} solutions={solutions} />}
       {page === "revision" && <Revision problems={enriched} open={open} update={update} recordActivity={recordActivity} query={query} />}
       {page === "lld" && <LLDPage focus={lldFocus} />}
       {page === "patterns" && <Patterns problems={enriched} tufLinks={tufLinks} open={open} collapse={collapse} setCollapse={setCollapse} />}
@@ -331,7 +333,7 @@ function App() {
   </div>
 }
 
-function Dashboard({ stats, problems, open, setPage, settings, viewWeak }) {
+function Dashboard({ stats, problems, open, setPage, settings, viewWeak, tufLinks, solutions }) {
   const pct = stats.total ? Math.round(stats.solved / stats.total * 100) : 0;
   const due = problems.filter(p => p.nextRevision && new Date(p.nextRevision) <= new Date()).sort((a, b) => new Date(a.nextRevision) - new Date(b.nextRevision)).slice(0, 5);
   const next = problems.filter(p => p.status === "Not Started").slice(0, 5);
@@ -339,8 +341,8 @@ function Dashboard({ stats, problems, open, setPage, settings, viewWeak }) {
   return <section>
     <div className="hero"><div><span className="eyebrow">YOUR DSA JOURNEY</span><h2>{stats.solved} / {stats.total} problems completed</h2><p>Build consistency, revisit weak patterns, and turn solved problems into interview-ready knowledge.</p><div className="goal"><Target size={15} /> Today: <b>{Math.min(stats.today, settings.dailyGoal)}/{settings.dailyGoal}</b> activit{settings.dailyGoal !== 1 ? "ies" : "y"}</div></div><div className="ring" style={{ "--pct": `${pct * 3.6}deg` }}><span>{pct}%</span></div></div>
     <div className="cards">{[["🔥", "Streak", `${stats.streak} day${stats.streak !== 1 ? "s" : ""}`, "Consecutive active days"], ["🔁", "Due today", stats.due, "Revision queue"], ["🔴", "Weak", stats.weak, "Needs practice"], ["⭐", "Mastered", stats.mastered, "Interview ready"]].map((x, i) => <div className="card" key={i}><span className="card-icon">{x[0]}</span><div><small>{x[1]}</small><strong>{x[2]}</strong><em>{x[3]}</em></div></div>)}</div>
-    <div className="grid2"><DashboardPanel title="Revision due" subtitle="Try from memory before opening notes." action="View all" onClick={() => setPage("revision")}>{due.length ? due.map(p => <ProblemRow key={p.id} p={p} open={open} tag="Due" />) : <Empty text="No revisions due. Nice work!" />}</DashboardPanel><DashboardPanel title="Continue A2Z" subtitle="Pick up where you left off." action="Open roadmap" onClick={() => setPage("roadmap")}>{next.map(p => <ProblemRow key={p.id} p={p} open={open} />)}</DashboardPanel></div>
-    <div className="grid2"><DashboardPanel title="Weak problems" subtitle={weak.length ? `${weak.length} marked weak — clear these before learning more.` : "Prioritize weak problems before learning more."} action="View all" onClick={viewWeak}>{weak.length ? <div className="weak-scroll">{weak.map(p => <ProblemRow key={p.id} p={p} open={open} tag="Weak" />)}</div> : <Empty text="No weak problems marked." />}</DashboardPanel><div className="panel quick"><h3>Study loop</h3><div><span>1</span><p><b>Attempt</b><small>Think before checking anything.</small></p></div><div><span>2</span><p><b>Record</b><small>Save insight, mistake and complexity.</small></p></div><div><span>3</span><p><b>Revise</b><small>Follow the spaced schedule.</small></p></div></div></div>
+    <div className="grid2"><DashboardPanel title="Revision due" subtitle="Try from memory before opening notes." action="View all" onClick={() => setPage("revision")}>{due.length ? due.map(p => <ProblemRow key={p.id} p={p} open={open} tag="Due" tufLinks={tufLinks} solutions={solutions} />) : <Empty text="No revisions due. Nice work!" />}</DashboardPanel><DashboardPanel title="Continue A2Z" subtitle="Pick up where you left off." action="Open roadmap" onClick={() => setPage("roadmap")}>{next.map(p => <ProblemRow key={p.id} p={p} open={open} tufLinks={tufLinks} solutions={solutions} />)}</DashboardPanel></div>
+    <div className="grid2"><DashboardPanel title="Weak problems" subtitle={weak.length ? `${weak.length} marked weak — clear these before learning more.` : "Prioritize weak problems before learning more."} action="View all" onClick={viewWeak}>{weak.length ? <div className="weak-scroll">{weak.map(p => <ProblemRow key={p.id} p={p} open={open} tag="Weak" tufLinks={tufLinks} solutions={solutions} />)}</div> : <Empty text="No weak problems marked." />}</DashboardPanel><div className="panel quick"><h3>Study loop</h3><div><span>1</span><p><b>Attempt</b><small>Think before checking anything.</small></p></div><div><span>2</span><p><b>Record</b><small>Save insight, mistake and complexity.</small></p></div><div><span>3</span><p><b>Revise</b><small>Follow the spaced schedule.</small></p></div></div></div>
   </section>
 }
 function DashboardPanel({ title, subtitle, action, onClick, children }) { return <div className="panel"><div className="panel-head"><div><h3>{title}</h3><p>{subtitle}</p></div><button className="text-btn" onClick={onClick}>{action}<ChevronRight size={15} /></button></div>{children}</div> }
@@ -427,7 +429,21 @@ function GlobalSearch({ query, setQuery, problems, patternGroups, chapters, open
   </div>;
 }
 
-function ProblemRow({ p, open, tag }) { return <button className="problem-row" onClick={() => open(p)}><div className={`status-dot ${String(p.status || "Not Started").toLowerCase().replace(/\s+/g, "-")}`}></div><div className="row-main"><b>{p.title}{p.favorite && <Star size={12} fill="currentColor" />}</b><span>{p.topic} · {p.pattern}</span></div><span className={`diff ${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>{tag && <span className="due">{tag}</span>}<ChevronRight size={17} /></button> }
+// Quick action icons shown on problem rows (roadmap/dashboard): personal solution, editorial solution, LeetCode, video.
+function RowExtLinks({ p, tufLinks, solutions }) {
+  const link = solutionLink(tufLinks?.[p.id]);
+  const leetCode = leetCodeLink(p);
+  const video = isHttp(p.videoUrl) ? p.videoUrl : null;
+  const mine = hasPersonalSolution(solutions, p.id);
+  if (!link && !leetCode && !video && !mine) return null;
+  return <span className="row-ext" onClick={e => { e.preventDefault(); e.stopPropagation(); }}>
+    {mine && <a className="row-ext-btn mine" href={`#problem/${encodeURIComponent(p.id)}`} title="Your saved solutions"><PenLine size={14} /></a>}
+    {link && <a className="row-ext-btn" href={link.href} target="_blank" rel="noreferrer" title="View TakeUForward solution"><FileText size={14} /></a>}
+    {leetCode && <a className="row-ext-btn" href={leetCode.href} target="_blank" rel="noreferrer" title="Open on LeetCode"><Code2 size={14} /></a>}
+    {video && <a className="row-ext-btn" href={video} target="_blank" rel="noreferrer" title="Watch explanation video"><Play size={14} /></a>}
+  </span>;
+}
+function ProblemRow({ p, open, tag, tufLinks, solutions }) { return <button className="problem-row" onClick={() => open(p)}><div className={`status-dot ${String(p.status || "Not Started").toLowerCase().replace(/\s+/g, "-")}`}></div><div className="row-main"><b>{p.title}{p.favorite && <Star size={12} fill="currentColor" />}</b><span>{p.topic} · {p.pattern}</span></div><RowExtLinks p={p} tufLinks={tufLinks} solutions={solutions} /><span className={`diff ${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>{tag && <span className="due">{tag}</span>}<ChevronRight size={17} /></button> }
 
 function groupByTopicPattern(list) {
   const topics = {};
@@ -438,7 +454,7 @@ function groupByTopicPattern(list) {
   return topics;
 }
 
-function Roadmap({ problems, topics, patterns, open, filters, setFilters, filtered, collapse, setCollapse, query, clearQuery }) {
+function Roadmap({ problems, topics, patterns, open, filters, setFilters, filtered, collapse, setCollapse, query, clearQuery, tufLinks, solutions }) {
   const set = (k, v) => setFilters(x => ({ ...x, [k]: v }));
   const grouped = useMemo(() => groupByTopicPattern(filtered), [filtered]);
   const searching = query.trim() !== "";
@@ -488,7 +504,7 @@ function Roadmap({ problems, topics, patterns, open, filters, setFilters, filter
               <h4>{pattern}</h4>
               <span className="pattern-count">{solved}/{ps.length}</span>
             </button>
-            {!closed && <div className="problem-list">{ps.map(p => <ProblemRow key={p.id} p={p} open={open} />)}</div>}
+            {!closed && <div className="problem-list">{ps.map(p => <ProblemRow key={p.id} p={p} open={open} tufLinks={tufLinks} solutions={solutions} />)}</div>}
           </div>;
         })}
       </div>;
@@ -618,7 +634,7 @@ function Patterns({ problems, tufLinks, open, collapse, setCollapse }) {
                 {["Easy", "Medium", "Hard"].map(d => c.diff[d] > 0 && <span className={`pc-chip diff-${d.toLowerCase()}`} key={d}>{c.diff[d]} {d[0]}</span>)}
               </div>
               {c.next && !isExpanded && <button type="button" className="pc-next" onClick={() => open(c.next)}>Next up · {c.next.title}<ChevronRight size={14} /></button>}
-              {isExpanded && <div className="pattern-list">{c.ps.map(p => { const link = solutionLink(tufLinks[p.id]); return <div className="pattern-row" key={p.id}><button onClick={() => open(p)}><span>{p.title}</span><span className={`mini-status ${String(p.status || "Not Started").toLowerCase().replace(/\s+/g, "-")}`}>{p.status || "Not Started"}</span></button>{link && <a className="pattern-ext" href={link.href} target="_blank" rel="noreferrer" title={link.label} onClick={e => e.stopPropagation()}><ExternalLink size={13} /></a>}</div>; })}</div>}
+              {isExpanded && <div className="pattern-list">{c.ps.map(p => { const link = solutionLink(tufLinks[p.id]); return <div className="pattern-row" key={p.id}><button onClick={() => open(p)}><span>{p.title}</span><span className={`mini-status ${String(p.status || "Not Started").toLowerCase().replace(/\s+/g, "-")}`}>{p.status || "Not Started"}</span></button>{link && <a className="pattern-ext" href={link.href} target="_blank" rel="noreferrer" title={link.label} onClick={e => e.stopPropagation()}><FileText size={14} /></a>}</div>; })}</div>}
             </article>;
           })}
         </div>
@@ -811,7 +827,7 @@ function CodeBlock({ code, language }) {
 }
 function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufUrl, setSolutions, back, backLabel, recordActivity, setToast }) {
   const supplied = solutions?.approaches?.length ? solutions : builtInSolutions;
-  const [tab, setTab] = useState("notes");
+  const [tab, setTab] = useState("solutions");
   const [localNotes, setLocalNotes] = useState(() => ({ ...emptyNotes(), ...notes }));
   const [editingNotes, setEditingNotes] = useState(() => !Object.values(notes || {}).some(v => String(v || "").trim()));
   const [localSol, setLocalSol] = useState(() => (supplied?.approaches?.length ? supplied.approaches : defaultApproaches()));
@@ -834,7 +850,7 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
     setLocalSol(supplied?.approaches?.length ? supplied.approaches : defaultApproaches());
     setEditingSol(false);
     setOpenApproach(0);
-    setTab("notes");
+    setTab("solutions");
     // Saved solutions are intentionally not a dependency: saving must not reset the tab or accordion.
   }, [p.id, builtInSolutions]);
 
@@ -934,12 +950,16 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
     <div className="problem-header">
       <div>
         <span className="eyebrow">{p.topic} · {p.pattern}</span>
-        <h2>{p.title}</h2>
         <div className="meta">
+          <h2>{p.title}</h2>
           <span className={`diff ${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>
-          {link ? <a href={link.href} target="_blank" rel="noreferrer">{link.label} <ExternalLink size={13} /></a> : <span className="no-link">No TakeUForward solution available</span>}
-          {leetCode && <a className="tuf-link" href={leetCode.href} target="_blank" rel="noreferrer">{leetCode.label} <ExternalLink size={13} /></a>}
-          {video && <a className="tuf-link" href={video} target="_blank" rel="noreferrer"><Play size={13} /> Watch explanation video</a>}
+          <span className="meta-icons">
+            {hasPersonalSolution(solutions, p.id) && <button type="button" className="meta-ext mine" onClick={() => setTab("solutions")} title="View your saved solutions"><PenLine size={16} /></button>}
+            {link && <a className="meta-ext" href={link.href} target="_blank" rel="noreferrer" title="View TakeUForward solution"><FileText size={16} /></a>}
+            {leetCode && <a className="meta-ext" href={leetCode.href} target="_blank" rel="noreferrer" title="Open on LeetCode"><Code2 size={16} /></a>}
+            {video && <a className="meta-ext" href={video} target="_blank" rel="noreferrer" title="Watch explanation video"><Play size={16} /></a>}
+          </span>
+          {!link && <span className="no-link">No TakeUForward solution</span>}
         </div>
       </div>
       <div className="actions">
@@ -956,8 +976,8 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
     </div>
 
     <div className="problem-tabs">
+      <button type="button" className={tab === "solutions" ? "active" : ""} onClick={() => setTab("solutions")}><Code2 size={13} className="tab-icon" /> Java & C# solutions <em>{filledApproaches}/{localSol.length}</em></button>
       <button type="button" className={tab === "notes" ? "active" : ""} onClick={() => setTab("notes")}>Learning notes <em>{filledNotes}/5</em></button>
-      <button type="button" className={tab === "solutions" ? "active" : ""} onClick={() => setTab("solutions")}>Java & C# solutions <em>{filledApproaches}/{localSol.length}</em></button>
       <button type="button" className={tab === "meta" ? "active" : ""} onClick={() => setTab("meta")}>Revision & meta</button>
     </div>
 

@@ -6,9 +6,15 @@
 - [patterns.json](file://data/patterns.json)
 - [problems.json](file://public/data/problems.json)
 - [tuf-links.json](file://public/data/tuf-links.json)
-- [prepare-data.mjs](file://scripts/prepare-data.mjs)
-- [extract-tuf-links.mjs](file://scripts/extract-tuf-links.mjs)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Updated the Patterns component section to reflect the new card-based interface with progress metrics, difficulty breakdowns, and actionable insights
+- Added documentation for filtering by topic, progress status, and sorting options
+- Enhanced the architecture overview to include the new pattern cards system
+- Updated data model section to reflect the enhanced pattern card structure
+- Added new sections for pattern card rendering and filtering logic
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -22,10 +28,10 @@
 9. [Conclusion](#conclusion)
 
 ## Introduction
-The Patterns component provides a topic-first view of the DSA problem set, grouping problems by their assigned pattern within each topic. It shows completion progress per pattern using percentage bars and integrates external TakeUForward solution links where available. Users can navigate from a pattern card to an individual problem page for deeper work on notes, solutions, and revision scheduling.
+The Patterns component provides a comprehensive card-based interface for exploring DSA problems organized by topics and patterns. It displays progress metrics, difficulty breakdowns, and actionable insights for each topic-pattern combination. Users can filter by topic, progress status, and sort options to focus on specific areas of improvement. The component integrates external TakeUForward solution links and provides navigation to individual problem pages for detailed work on notes, solutions, and revision scheduling.
 
 ## Project Structure
-The Patterns feature is implemented as part of a single-page React application. The key data sources are:
+The Patterns feature is implemented as part of a single-page React application with an enhanced card-based interface. The key data sources are:
 - Problem catalog with topic, pattern, difficulty, and status fields
 - A precomputed mapping of problem IDs to TakeUForward solution URLs
 - A static patterns catalog that enumerates valid patterns per topic (used conceptually by preparation scripts)
@@ -35,15 +41,18 @@ graph TB
 App["App state<br/>problems, tufLinks"] --> Patterns["Patterns component"]
 Problems["problems.json"] --> App
 TUF["tuf-links.json"] --> App
-Patterns --> TopicBlock["Topic block"]
-TopicBlock --> PatternCard["Pattern card"]
-PatternCard --> ProgressBar["Percentage bar"]
-PatternCard --> ProblemList["Problem rows"]
-ProblemList --> OpenProblem["Open problem page"]
+Patterns --> PatternCards["Pattern cards"]
+PatternCards --> ProgressMetrics["Progress metrics"]
+PatternCards --> DifficultyBreakdown["Difficulty breakdown"]
+PatternCards --> ActionableInsights["Actionable insights"]
+PatternCards --> FilterControls["Filter controls"]
+FilterControls --> TopicFilter["Topic filter"]
+FilterControls --> StatusFilter["Status filter"]
+FilterControls --> SortOptions["Sort options"]
 ```
 
 **Diagram sources**
-- [main.jsx:297-318](file://src/main.jsx#L297-L318)
+- [main.jsx:524-628](file://src/main.jsx#L524-L628)
 - [problems.json:1-20](file://public/data/problems.json#L1-L20)
 - [tuf-links.json:1-10](file://public/data/tuf-links.json#L1-L10)
 
@@ -53,25 +62,27 @@ ProblemList --> OpenProblem["Open problem page"]
 - [tuf-links.json:1-10](file://public/data/tuf-links.json#L1-L10)
 
 ## Core Components
-- Grouping utility: Groups all problems into a nested map by topic then pattern.
-- Patterns component: Renders topics, each containing pattern cards with progress bars and problem lists.
-- External link helper: Detects whether a TakeUForward URL exists for a problem and renders an external link icon next to it.
-- Navigation: Clicking a problem row opens the problem detail page via a shared open handler.
+- **Pattern Card Builder**: Creates comprehensive cards for each topic-pattern combination with progress metrics, difficulty breakdowns, and actionable insights.
+- **Enhanced Patterns Component**: Renders a grid of pattern cards with filtering, sorting, and expansion capabilities.
+- **Filter System**: Provides filtering by topic, progress status, and sorting options including weakest, strongest, most problems, and alphabetical sorting.
+- **External Link Helper**: Detects whether a TakeUForward URL exists for a problem and renders an external link icon next to it.
+- **Navigation**: Clicking a problem row opens the problem detail page via a shared open handler.
 
 Key behaviors:
-- Grouped display structure: Problems are grouped first by topic, then by pattern.
-- Progress visualization: Each pattern card shows solved vs total and a percentage bar.
-- External link integration: If a TakeUForward solution URL exists for the problem ID, an external link icon appears next to the problem row.
-- Completion tracking: Uses the problem’s status field to compute “completed” counts.
-- Navigation: Clicking a problem navigates to the problem page while preserving origin context.
+- **Card-based interface**: Each topic-pattern combination is displayed as a comprehensive card with visual progress indicators.
+- **Progress visualization**: Cards show solved vs total counts, percentage bars, and completion status (Complete, In progress, Not started).
+- **Difficulty breakdown**: Each card displays Easy, Medium, and Hard problem counts with color-coded chips.
+- **Actionable insights**: Cards highlight weak problems, next recommended problems, and mastery indicators.
+- **Advanced filtering**: Users can filter by topic, progress status, and sort by various criteria.
+- **External link integration**: If a TakeUForward solution URL exists for the problem ID, an external link icon appears next to the problem row.
 
 **Section sources**
-- [main.jsx:237-244](file://src/main.jsx#L237-L244)
-- [main.jsx:297-318](file://src/main.jsx#L297-L318)
-- [main.jsx:59-66](file://src/main.jsx#L59-L66)
+- [main.jsx:507-522](file://src/main.jsx#L507-L522)
+- [main.jsx:524-628](file://src/main.jsx#L524-L628)
+- [main.jsx:63-66](file://src/main.jsx#L63-L66)
 
 ## Architecture Overview
-The Patterns page is rendered inside the main app when the current page equals “patterns”. It receives the enriched problem list and the loaded tufLinks map. The component computes groupings locally and renders UI accordingly.
+The Patterns page is rendered inside the main app when the current page equals "patterns". It receives the enriched problem list and the loaded tufLinks map. The component computes pattern cards locally with comprehensive metrics and renders UI accordingly.
 
 ```mermaid
 sequenceDiagram
@@ -82,8 +93,11 @@ participant Links as "tuf-links.json"
 App->>Data : Load problems
 App->>Links : Load tufLinks
 App-->>Patterns : Pass {problems, tufLinks}
-Patterns->>Patterns : Group by topic → pattern
-Patterns-->>User : Render topic blocks
+Patterns->>Patterns : Build pattern cards with metrics
+Patterns->>Patterns : Apply filters and sorting
+Patterns-->>User : Render card grid
+User->>Patterns : Apply filters/sort
+Patterns-->>User : Update visible cards
 User->>Patterns : Click problem row
 Patterns-->>App : open(problem)
 App-->>User : Navigate to problem page
@@ -92,115 +106,154 @@ App-->>User : Navigate to problem page
 **Diagram sources**
 - [main.jsx:123-126](file://src/main.jsx#L123-L126)
 - [main.jsx:213-216](file://src/main.jsx#L213-L216)
-- [main.jsx:297-318](file://src/main.jsx#L297-L318)
+- [main.jsx:524-628](file://src/main.jsx#L524-L628)
 
 ## Detailed Component Analysis
 
-### Grouping Logic
-Problems are grouped into a nested structure keyed by topic and pattern. This enables rendering a hierarchical view where each topic contains multiple pattern cards.
+### Pattern Card Building Logic
+Pattern cards are built by grouping problems by topic and pattern, then computing comprehensive metrics for each combination including solved counts, attempted counts, mastered counts, weak problem counts, difficulty distribution, and progress percentage.
 
 ```mermaid
 flowchart TD
-Start(["Input: problems"]) --> Init["Initialize empty groups"]
-Init --> ForEach["For each problem"]
-ForEach --> EnsureTopic["Ensure topic bucket exists"]
-EnsureTopic --> EnsurePattern["Ensure pattern bucket under topic exists"]
-EnsurePattern --> PushProblem["Push problem into pattern array"]
-PushProblem --> Next{"More problems?"}
-Next --> |Yes| ForEach
-Next --> |No| Return["Return {topic: {pattern: [problems]}}"]
+Start(["Input: problems"]) --> Group["Group by topic → pattern"]
+Group --> ForEach["For each pattern"]
+ForEach --> ComputeSolved["Count solved problems"]
+ComputeSolved --> ComputeAttempted["Count attempted problems"]
+ComputeAttempted --> ComputeMastered["Count mastered problems"]
+ComputeMastered --> ComputeWeak["Count weak confidence problems"]
+ComputeWeak --> ComputeDiff["Build difficulty breakdown"]
+ComputeDiff --> ComputePct["Calculate completion percentage"]
+ComputePct --> DetermineProgress["Determine progress status"]
+DetermineProgress --> FindNext["Find next problem to work on"]
+FindNext --> Return["Return pattern card object"]
 ```
 
 **Diagram sources**
-- [main.jsx:237-244](file://src/main.jsx#L237-L244)
+- [main.jsx:507-522](file://src/main.jsx#L507-L522)
 
 **Section sources**
-- [main.jsx:237-244](file://src/main.jsx#L237-L244)
+- [main.jsx:507-522](file://src/main.jsx#L507-L522)
 
-### Patterns Page Rendering
-The Patterns component iterates over topics and patterns, computing per-pattern completion and rendering:
-- Pattern header with count and percentage
-- A horizontal progress bar representing completion
-- A list of problems with status badges and optional external link icon
+### Enhanced Patterns Page Rendering
+The enhanced Patterns component renders a sophisticated card-based interface with:
+- Overview statistics showing overall completion across all patterns
+- Filter controls for topic, progress status, and sorting
+- Responsive grid layout of pattern cards
+- Expandable card details showing individual problems
+- Visual progress indicators and difficulty breakdowns
 
 ```mermaid
 flowchart TD
-PStart(["Render Patterns"]) --> Topics["Iterate topics"]
-Topics --> Pats["Iterate patterns per topic"]
-Pats --> Compute["Compute solved / total"]
-Compute --> Bar["Render percentage bar"]
-Bar --> Rows["Render problem rows"]
-Rows --> ExtLink{"Has tuf link?"}
-ExtLink --> |Yes| ShowExt["Show external link icon"]
-ExtLink --> |No| SkipExt["No external link"]
-ShowExt --> End(["Done"])
-SkipExt --> End
+PStart(["Render Enhanced Patterns"]) --> Overview["Render overview stats"]
+Overview --> Filters["Render filter controls"]
+Filters --> Cards["Build pattern cards"]
+Cards --> Visible["Apply filters & sorting"]
+Visible --> Grid["Render card grid"]
+Grid --> Expand{"Card expanded?"}
+Expand --> |Yes| Details["Show problem list with external links"]
+Expand --> |No| NextUp["Show next recommended problem"]
+Details --> End(["Done"])
+NextUp --> End
 ```
 
 **Diagram sources**
-- [main.jsx:297-318](file://src/main.jsx#L297-L318)
+- [main.jsx:524-628](file://src/main.jsx#L524-L628)
 
 **Section sources**
-- [main.jsx:297-318](file://src/main.jsx#L297-L318)
+- [main.jsx:524-628](file://src/main.jsx#L524-L628)
 
-### Progress Visualization
-- Percentage calculation: solved divided by total for the pattern, rounded to nearest integer.
-- Visual bar: An inline element width is set to the computed percentage.
-- Status definition: “Completed” means status is either “Solved” or “Mastered”.
+### Advanced Filtering and Sorting System
+The component implements a comprehensive filtering and sorting system:
+- **Topic filtering**: Filter patterns by specific topics or view all
+- **Progress filtering**: Filter by Complete, In progress, or Not started status
+- **Search functionality**: Search within pattern names, topics, and problem titles
+- **Sorting options**: Order, Weakest, Strongest, Most problems, Pattern A-Z
 
 ```mermaid
 flowchart TD
-S(["Solved count"]) --> T(["Total count"])
-T --> Calc{"Total > 0?"}
+Filters["User applies filters"] --> Topic["Apply topic filter"]
+Topic --> Progress["Apply progress filter"]
+Progress --> Search["Apply search filter"]
+Search --> Sort["Apply sorting"]
+Sort --> Visible["Generate visible cards"]
+Visible --> Reorder["Reorder by selected sort"]
+Reorder --> Render["Render filtered results"]
+```
+
+**Diagram sources**
+- [main.jsx:535-547](file://src/main.jsx#L535-L547)
+
+**Section sources**
+- [main.jsx:535-547](file://src/main.jsx#L535-L547)
+
+### Progress Visualization and Metrics
+- **Percentage calculation**: solved divided by total for the pattern, rounded to nearest integer
+- **Visual bar**: An inline element width is set to the computed percentage
+- **Status definition**: "Complete" means all problems solved, "In progress" has some attempts, "Not started" has no attempts
+- **Difficulty breakdown**: Color-coded chips showing Easy, Medium, and Hard problem counts
+- **Mastery indicators**: Special badges for mastered problems and weak confidence issues
+
+```mermaid
+flowchart TD
+Solved["Solved count"] --> Total["Total count"]
+Total --> Calc{"Total > 0?"}
 Calc --> |Yes| Pct["pct = round(solved / total * 100)"]
 Calc --> |No| Zero["pct = 0"]
 Pct --> Bar["Set bar width to pct%"]
 Zero --> Bar
+Bar --> Status{"All solved?"}
+Status --> |Yes| Complete["Mark as Complete"]
+Status --> |No| Attempted{"Any attempted?"}
+Attempted --> |Yes| InProgress["Mark as In progress"]
+Attempted --> |No| NotStarted["Mark as Not started"]
 ```
 
 **Diagram sources**
-- [main.jsx:307-311](file://src/main.jsx#L307-L311)
+- [main.jsx:516-517](file://src/main.jsx#L516-L517)
 
 **Section sources**
-- [main.jsx:307-311](file://src/main.jsx#L307-L311)
+- [main.jsx:516-517](file://src/main.jsx#L516-L517)
 
 ### External Link Integration with TakeUForward
-- Source of truth: tufLinks map keyed by problem id.
-- Detection: A helper checks if the provided URL is an HTTP(S) link; if so, it returns a link object with href and label.
-- Rendering: When present, an external link icon is appended to the problem row.
+- **Source of truth**: tufLinks map keyed by problem id
+- **Detection**: A helper checks if the provided URL is an HTTP(S) link; if so, it returns a link object with href and label
+- **Rendering**: When present, an external link icon is appended to the problem row within expanded cards
 
 ```mermaid
 sequenceDiagram
-participant P as "Problem row"
+participant Card as "Pattern card"
+participant Row as "Problem row"
 participant H as "solutionLink()"
 participant L as "tufLinks[id]"
-P->>L : Lookup by problem id
-L-->>P : URL or undefined
-P->>H : Call with URL
-H-->>P : Link object or null
-P-->>UI : Render icon if link exists
+Card->>Row : Render problem row
+Row->>L : Lookup by problem id
+L-->>Row : URL or undefined
+Row->>H : Call with URL
+H-->>Row : Link object or null
+Row-->>UI : Render icon if link exists
 ```
 
 **Diagram sources**
-- [main.jsx:59-66](file://src/main.jsx#L59-L66)
-- [main.jsx:307-312](file://src/main.jsx#L307-L312)
+- [main.jsx:63-66](file://src/main.jsx#L63-L66)
+- [main.jsx:621](file://src/main.jsx#L621)
 - [tuf-links.json:1-10](file://public/data/tuf-links.json#L1-L10)
 
 **Section sources**
-- [main.jsx:59-66](file://src/main.jsx#L59-L66)
-- [main.jsx:307-312](file://src/main.jsx#L307-L312)
+- [main.jsx:63-66](file://src/main.jsx#L63-L66)
+- [main.jsx:621](file://src/main.jsx#L621)
 - [tuf-links.json:1-10](file://public/data/tuf-links.json#L1-L10)
 
 ### Navigation to Individual Problems
-- Clicking a problem row triggers a shared open handler that sets the selected problem and navigates to the problem page.
-- The problem page displays metadata, status controls, notes, solutions, and revision scheduling.
+- **Clicking a problem row**: Triggers a shared open handler that sets the selected problem and navigates to the problem page
+- **Next up button**: Cards provide a quick action button to navigate directly to the next recommended problem
+- **Problem page display**: Shows metadata, status controls, notes, solutions, and revision scheduling
 
 ```mermaid
 sequenceDiagram
 participant U as "User"
 participant PC as "Patterns"
 participant APP as "App"
-U->>PC : Click problem row
+U->>PC : Click problem row or "Next up"
 PC->>APP : open(problem)
 APP->>APP : Set selected problem & page
 APP-->>U : Render problem page
@@ -209,15 +262,18 @@ APP-->>U : Render problem page
 **Diagram sources**
 - [main.jsx:181-186](file://src/main.jsx#L181-L186)
 - [main.jsx:213-216](file://src/main.jsx#L213-L216)
+- [main.jsx:620](file://src/main.jsx#L620)
 
 **Section sources**
 - [main.jsx:181-186](file://src/main.jsx#L181-L186)
 - [main.jsx:213-216](file://src/main.jsx#L213-L216)
+- [main.jsx:620](file://src/main.jsx#L620)
 
 ### Data Model and Relationships
-- Problem model includes id, title, topic, pattern, difficulty, status, url, videoUrl.
-- Patterns catalog defines valid patterns per topic used during data preparation.
-- tufLinks maps problem ids to TakeUForward URLs.
+- **Problem model**: Includes id, title, topic, pattern, difficulty, status, url, videoUrl
+- **Pattern card model**: Contains topic, pattern, problems array, solved/attempted/mastered counts, weak count, difficulty breakdown, percentage, progress status, and next recommended problem
+- **Patterns catalog**: Defines valid patterns per topic used during data preparation
+- **tufLinks**: Maps problem ids to TakeUForward URLs
 
 ```mermaid
 erDiagram
@@ -231,33 +287,42 @@ string status
 string url
 string videoUrl
 }
-PATTERNS_BY_TOPIC {
+PATTERN_CARD {
 string topic PK
-string[] patterns
+string pattern PK
+int solved
+int attempted
+int mastered
+int weak
+json diff
+int pct
+string progress
 }
 TUF_LINKS {
 string problem_id PK
 string url
 }
 PROBLEM ||--|| TUF_LINKS : "id maps to"
-PATTERNS_BY_TOPIC ||--o{ PROBLEM : "groups by topic"
+PATTERN_CARD ||--o{ PROBLEM : "contains problems"
 ```
 
 **Diagram sources**
 - [problems.json:1-20](file://public/data/problems.json#L1-L20)
 - [patterns.json:1-90](file://data/patterns.json#L1-L90)
 - [tuf-links.json:1-10](file://public/data/tuf-links.json#L1-L10)
+- [main.jsx:507-522](file://src/main.jsx#L507-L522)
 
 **Section sources**
 - [problems.json:1-20](file://public/data/problems.json#L1-L20)
 - [patterns.json:1-90](file://data/patterns.json#L1-L90)
 - [tuf-links.json:1-10](file://public/data/tuf-links.json#L1-L10)
+- [main.jsx:507-522](file://src/main.jsx#L507-L522)
 
 ## Dependency Analysis
-- Patterns component depends on:
+- **Patterns component depends on**:
   - Enriched problems list (includes local progress)
   - tufLinks map for external links
-- Data preparation pipeline:
+- **Data preparation pipeline**:
   - prepare-data.mjs assigns patterns to problems based on curated rules and writes problems.json and patterns.json
   - extract-tuf-links.mjs builds tuf-links.json by matching problem titles and source URLs to TakeUForward resources
 
@@ -270,7 +335,7 @@ Problems --> Extract["extract-tuf-links.mjs"]
 Extract --> TUF["tuf-links.json"]
 Problems --> App["App loads problems"]
 TUF --> App["App loads tufLinks"]
-App --> Patterns["Patterns component"]
+App --> Patterns["Enhanced Patterns component"]
 ```
 
 **Diagram sources**
@@ -284,29 +349,33 @@ App --> Patterns["Patterns component"]
 - [main.jsx:123-126](file://src/main.jsx#L123-L126)
 
 ## Performance Considerations
-- Grouping is O(n) over the problem list and performed with useMemo to avoid recomputation on unrelated re-renders.
-- Percentage calculations and bar widths are simple arithmetic operations per pattern.
-- External link lookup is O(1) via hash map access by problem id.
-- Rendering scales with the number of problems per pattern; consider virtualization only if the list grows significantly beyond current sizes.
-
-[No sources needed since this section provides general guidance]
+- **Pattern card building**: O(n) over the problem list using efficient grouping algorithms
+- **Filtering and sorting**: Optimized with useMemo hooks to avoid recomputation on unrelated re-renders
+- **Percentage calculations**: Simple arithmetic operations per pattern with minimal overhead
+- **External link lookup**: O(1) via hash map access by problem id
+- **Rendering optimization**: Cards are grouped by topic and only visible cards are rendered after filtering
+- **Expansion state**: Uses cloud-synced collapse state to maintain user preferences across sessions
 
 ## Troubleshooting Guide
-- Missing external links:
-  - Verify that tuf-links.json contains an entry for the problem id.
-  - Check that the problem’s url or title matches the extraction logic used by the script.
-- Incorrect progress:
-  - Ensure the problem status is one of “Solved” or “Mastered” to be counted as completed.
-  - Confirm that local progress updates are persisted and reflected in the enriched list passed to Patterns.
-- Navigation issues:
-  - Confirm that the open handler is invoked and that the selected problem exists in the enriched list before navigating.
+- **Missing external links**:
+  - Verify that tuf-links.json contains an entry for the problem id
+  - Check that the problem's url or title matches the extraction logic used by the script
+- **Incorrect progress metrics**:
+  - Ensure the problem status is one of "Solved" or "Mastered" to be counted as completed
+  - Confirm that local progress updates are persisted and reflected in the enriched list passed to Patterns
+- **Filter issues**:
+  - Verify that filter values are properly sanitized and validated
+  - Check that topic and pattern filters are synchronized with available data
+- **Navigation issues**:
+  - Confirm that the open handler is invoked and that the selected problem exists in the enriched list before navigating
+- **Card expansion problems**:
+  - Ensure collapse state is properly managed in localStorage and cloud sync
+  - Verify that card keys are unique and consistent across re-renders
 
 **Section sources**
-- [main.jsx:59-66](file://src/main.jsx#L59-L66)
-- [main.jsx:297-318](file://src/main.jsx#L297-L318)
+- [main.jsx:63-66](file://src/main.jsx#L63-L66)
+- [main.jsx:524-628](file://src/main.jsx#L524-L628)
 - [main.jsx:181-186](file://src/main.jsx#L181-L186)
 
 ## Conclusion
-The Patterns component organizes problems by topic and pattern, visualizes completion with percentage bars, and integrates TakeUForward solution links where available. It provides a clear, navigable interface to explore problems by pattern and drill down into detailed problem pages for focused study and revision.
-
-[No sources needed since this section summarizes without analyzing specific files]
+The enhanced Patterns component provides a comprehensive card-based interface for exploring DSA problems organized by topics and patterns. It displays progress metrics, difficulty breakdowns, and actionable insights for each topic-pattern combination with advanced filtering and sorting capabilities. The component integrates external TakeUForward solution links and provides intuitive navigation to individual problem pages for focused study and revision. The card-based design makes it easy to identify areas needing attention and track progress across different patterns and topics.
