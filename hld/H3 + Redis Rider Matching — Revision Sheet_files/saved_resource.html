@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<!-- saved from url=(0092)https://fe0a2514-d39a-4334-9cf4-e0f8fa2dd184.frame.claudeusercontent.com/_f/1790019464-efee/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><!-- frame-runtime --><script>window.__FRAME_PREAMBLE={"v":1,"cred":"cookie","capabilities":{"artifact":"artifact.Kiow93e4.js","assets":"assets.DOAjpBS9.js","comments":"comments.DrhK3r8W.js","db":"db.zFlAA4qL.js","downloads":"downloads.axDW2QAi.js","embed":"embed.DcZf-TSv.js","endpoints":"endpoints.BPfoKaE1.js","mcp":"mcp.C8qKIFvQ.js","network":"network.B5UA9Su4.js","permissions":"permissions.DWFFeHI0.js","room":"room.BF1j0KPr.js","sample":"sample.C7KQQdQj.js","self":"artifact.Kiow93e4.js","user":"user.CCh6oTS_.js"},"transforms":"_transforms.CkRgqq9F.js","comments":"_comments.DUaNQZcg.js","translate":"_translate.DqxC5ek1.js","ldx":"_ldx.CqNtBrkk.js"}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         </script><script>(function(){"use strict";function sr(t){return t==="cookie"||t==="query"?t:void 0}var Kn=3e5;function ir(t,e){try{const r=t("navigation")[0],n=[r.responseStart,r.redirectEnd-r.redirectStart,r.domContentLoadedEventStart,e(),r.connectEnd-r.domainLookupStart,r.responseStart-r.requestStart];r.requestStart>0||(n.length=4);for(let a=0;a<n.length;a++)if(n[a]>=0&&n[a]<=3e5)n[a]=n[a]|0;else{if(a<4)return;n.length=4}return n}catch{return}}var lr=["light","dark","system"],cr=/^[A-Za-z0-9_-]{1,64}$/,St=/^[a-zA-Z_:][a-zA-Z0-9_:.-]{0,127}$/,ur=new Set(["class","hidden","value","checked","style","title","alt","placeholder","lang","dir","role","tabindex","disabled","readonly","contenteditable","open","colspan","rowspan"]);function fr(t){const e=t.toLowerCase();return e.startsWith("data-")||e.startsWith("aria-")||ur.has(e)}var At="data-ldx-props";function dr(t,e){if(e.toLowerCase()===At)return!0;const r=t.getAttribute(At);if(r===null)return!1;try{const n=JSON.parse(r);if(n===null||typeof n!="object"||Array.isArray(n))return!0;const a=e.toLowerCase();return Object.keys(n).some(s=>s.toLowerCase()===a)}catch{return!0}}var Gn="http://www.w3.org/1999/xhtml",hr="http://www.w3.org/2000/svg",pr=new Set(["script","style","iframe","noscript","noframes","noembed","xmp","plaintext","template","title","textarea","object","embed"]),mr=new Set(["script","style"]);function vr(t){const e=t.localName.toLowerCase();return t.namespaceURI==="http://www.w3.org/1999/xhtml"?!pr.has(e):t.namespaceURI===hr?!mr.has(e):!1}function Ve(t,e){return t===e||(t===160||t===32)&&(e===160||e===32)}function _r(t,e){const r=t.length,n=e.length;let a=0;for(;a<r&&a<n&&Ve(t.charCodeAt(a),e.charCodeAt(a));)a++;let s=0;for(;s<r-a&&s<n-a&&Ve(t.charCodeAt(r-1-s),e.charCodeAt(n-1-s));)s++;return{p:a,s}}function yr(t,e){const r=t.firstChild;if(t.childNodes.length!==1||r===null||r.nodeType!==Node.TEXT_NODE){t.textContent=e;return}const n=r.data,a=n.length,s=e.length,{p:c,s:d}=_r(n,e);c===a&&d===0&&a===s||r.replaceData(c,a-c-d,e.slice(c,s-d));const O=r.data,w=t.ownerDocument.getSelection?.()??null,b=w!==null&&w.rangeCount>0&&(w.anchorNode===r||w.focusNode===r)?{anchor:w.anchorNode,anchorOffset:w.anchorOffset,focus:w.focusNode,focusOffset:w.focusOffset}:null;let m=-1,R=-1;for(let h=0;h<O.length&&h<e.length;h++){const p=O.charCodeAt(h),D=e.charCodeAt(h);p!==D&&Ve(p,D)&&(m<0&&(m=h),R=h)}const M=m>=0;if(M&&r.replaceData(m,R-m+1,e.slice(m,R+1)),M&&b!==null&&b.anchor!==null&&b.focus!==null)try{w.setBaseAndExtent(b.anchor,b.anchorOffset,b.focus,b.focusOffset)}catch{}}var gr=new Set(["html","head","body","frameset"]);function wr(t){return t.namespaceURI==="http://www.w3.org/1999/xhtml"&&gr.has(t.localName)}function br(t){if(t===null||typeof t!="object")return!1;const e=t;if(typeof e.target!="string"||!cr.test(e.target)||e.text!==void 0&&typeof e.text!="string")return!1;if(e.attrsSet!==void 0){if(e.attrsSet===null||typeof e.attrsSet!="object")return!1;for(const[r,n]of Object.entries(e.attrsSet))if(!St.test(r)||typeof n!="string")return!1}if(e.attrsRemoved!==void 0){if(!Array.isArray(e.attrsRemoved))return!1;for(const r of e.attrsRemoved)if(typeof r!="string"||!St.test(r))return!1}return!0}function Er(t,e){if(t===null||typeof t!="object")return!1;const{seq:r,elements:n}=t;if(typeof r!="number"||!Number.isSafeInteger(r)||!Array.isArray(n)||n.length===0||n.length>64)return!1;for(let a=0;a<n.length;a++)if(!e(n[a]))return!1;return!0}function Sr(t){return t===null||typeof t!="object"?!1:Er(t.__frame_patch,br)}function Ar(t){if(t===null||typeof t!="object")return!1;const e=t.__frame_init;return e!==null&&typeof e=="object"}function kr(t){return t!==null&&typeof t=="object"&&t.__frame_size_poke===!0}function Rr(t){if(t===null||typeof t!="object")return!1;const e=t.__frame_host_visible;return e!==null&&typeof e=="object"&&typeof e.visible=="boolean"}function Tr(t){if(t===null||typeof t!="object")return!1;const e=t.__frame_theme;if(e===null||typeof e!="object")return!1;const r=e.theme;return typeof r=="string"&&lr.includes(r)}var Lr=["ok","empty","snapshot_error","snapshot_timeout","unclonable","oversize","unavailable","restore_error","withheld"],Or=["TypeError","RangeError","ReferenceError","SyntaxError","DataCloneError","QuotaExceededError","AbortError","TimeoutError","SecurityError","Error","other"];function Mr(t){return typeof t=="string"&&Or.includes(t)?t:"other"}var Pr=Object.freeze({until:null,now:!1}),Nr="__claude_hot",Cr="__claude_hot_in",jr=/^__claude_hot(?:_in)?(?::|$)/,kt=/^[0-9a-z]{1,32}$/,Xe=t=>t===void 0?Nr:"__claude_hot:"+t,be=t=>t===void 0?Cr:"__claude_hot_in:"+t;function Fr(t,e){const r=[];for(let n=0;n<t.length;n++){const a=t.key(n);a!==null&&a!==e&&jr.test(a)&&r.push(a)}for(const n of r)t.removeItem(n)}function Ir(t){let e=null;try{e=q(JSON.parse(t)?.hot)}catch{return null}return e===null||typeof e.k!="string"||!kt.test(e.k)?null:le(e.g)?{k:e.k,g:e.g}:{k:e.k}}var zn=262144,Dr=3e3,xr=5e3,Rt=/^[a-z0-9._:-]{1,64}$/,Hr=["none","hot-restart","hard-reload"],qr=["asset","doc","added","removed"],Br=1500,Ur=/^[0-9a-f]{64}$/;function q(t){return t!==null&&typeof t=="object"?t:null}function le(t){return typeof t=="number"&&Number.isInteger(t)&&t>=0&&t<2**31}function Tt(t){return t===void 0||typeof t=="number"&&Number.isFinite(t)}function Kr(t){return t===void 0||typeof t=="string"&&Rt.test(t)}function Lt(t){const e=q(t);return e!==null&&(e.until===null||typeof e.until=="number"&&Number.isFinite(e.until))&&typeof e.now=="boolean"}function Ye(t){const e=q(t);return e!==null&&typeof e.ver=="string"&&e.ver.length<=128&&Tt(e.seq)&&typeof e.handoff=="string"&&Lr.includes(e.handoff)&&Kr(e.note)}function Gr(t){const e=q(t);return e!==null&&le(e.gen)&&(e.phase==="final"||e.phase==="pending")&&(e.from===null||Ye(e.from))}function zr(t){const e=q(t);return e!==null&&e.kv===1&&le(e.gen)&&Ye(e.from)&&Object.hasOwn(e,"data")}function $r(t){const e=q(t);return e!==null&&e.__frame_hot_snapshot===!0&&le(e.gen)&&typeof e.timeoutMs=="number"&&e.timeoutMs>=0&&e.timeoutMs<=6e4&&(e.handoff===void 0||typeof e.handoff=="boolean")&&(e.deadline===void 0||Lt(e.deadline))&&Tt(e.seq)&&(e.note===void 0||typeof e.note=="string")&&(e.key===void 0||typeof e.key=="string")}function Wr(t){const e=q(t);return e!==null&&e.__frame_hot_start===!0&&le(e.gen)&&Ye(e.from)}function Vr(t){return typeof t=="string"&&t.length>=1&&t.length<=128}function Ot(t){return q(t)!==null&&!Array.isArray(t)}function Xr(t){const e=q(t);return e!==null&&e.__frame_cap_grant===!0&&typeof e.cap=="string"&&Vr(e.ver)&&(e.grant===void 0||Ot(e.grant))&&(e.budgets===void 0||Ot(e.budgets)&&Object.values(e.budgets).every(Number.isFinite))&&(e.brokerGen===void 0||le(e.brokerGen))}function Yr(t){const e=q(t);return e!==null&&e.__frame_cap_rewired===!0&&(e.caps===void 0||Array.isArray(e.caps)&&e.caps.every(r=>typeof r=="string"))&&(e.brokerGen===void 0||le(e.brokerGen))}function Mt(t){const e=q(t);return e!==null&&typeof e.ver=="string"&&e.ver.length<=128&&Number.isFinite(e.seq)}function Pt(t){if(t==null||typeof t=="string")return!0;const e=q(t);return e!==null&&typeof e.doc=="string"&&typeof e.profile=="string"}function Jr(t){const e=q(t);return e!==null&&typeof e.path=="string"&&qr.includes(e.kind)&&Pt(e.from)&&Pt(e.to)}function Zr(t){return t===null?null:Object.freeze(t.filter(Jr))}function Qr(t){const e=q(t);return e!==null&&e.__frame_hot_update===!0&&Number.isFinite(e.id)&&Mt(e.from)&&Mt(e.to)&&(e.changed===null||Array.isArray(e.changed))&&Hr.includes(e.required)&&Lt(e.deadline)&&typeof e.verdictTimeoutMs=="number"&&e.verdictTimeoutMs>=0&&e.verdictTimeoutMs<=6e4&&(e.preflight===void 0||typeof e.preflight=="string"&&Ur.test(e.preflight))}var ce=/^[\w.-]+\.js$/;function en(t,e,r){return r?"inert":typeof e=="string"&&ce.test(e)?t?[e]:"inert":t?"inert":"framed"}var Nt=Object.freeze({[Symbol("claude.hot.restart")]:!0});function Ct(t,e){let r;try{r=t??sessionStorage}catch{return null}const n=Xe(e?.k),a=be(e?.k);let s=null;try{s=r.getItem(n)}catch{}try{r.removeItem(n)}catch{}try{Fr(r,a)}catch{}let c=null;if(s!==null&&!(e!==null&&e.g===void 0))try{const d=JSON.parse(s);zr(d)&&(e===null||d.gen===e.g)&&(c=d)}catch{}if(c===null)try{r.removeItem(a)}catch{}return c}function jt(){const t=/^\/_f\/([^/]{1,128})\//.exec(location.pathname);return t?t[1]:""}var tn=/^[^/\\?#]{1,128}$/,Ft=t=>tn.test(t)&&t!=="."&&t!=="..";function It(t,e,r){const n=new URL(t),a="/_f/"+e+"/";if(!e||!n.pathname.startsWith(a)||!Ft(r))return null;const s=n.search.slice(1).split("&").filter(c=>!/^__frame_t(?:=|$)/.test(c)).join("&");return n.origin+"/_f/"+r+"/"+n.pathname.slice(a.length)+(s?"?"+s:"")+n.hash}var Fe="{}";function Ee(t){if(!t)return null;const e={ver:t.ver,handoff:t.handoff};return t.seq!==void 0&&(e.seq=t.seq),t.note!==void 0&&(e.note=t.note),e}function Dt(t,e){return t!==null&&t.note===void 0&&e?.note!==void 0?{...t,note:e.note}:t}function xt(t){const e=t?.k;return e!==null&&typeof e=="object"?e:void 0}function rn(t,e,r,n=null){const a=setTimeout,s=clearTimeout,c=queueMicrotask,d=performance.now.bind(performance),O=new TextEncoder;let w=null,b=null;try{w=history,b=w.replaceState.bind(w)}catch{}const m=(...o)=>{try{console.warn(...o)}catch{}};let R=jt(),M=null;try{M=sessionStorage}catch{}const h={storage:M,fetch:typeof fetch=="function"?fetch.bind(globalThis):null,entry:location.origin+location.pathname+location.search,ver:R,key:n?.k};let p=n?.k;const D=typeof requestAnimationFrame=="function"?requestAnimationFrame:o=>a(()=>o(d()),16);let _=e?.data??{},C=Ee(e?.from),P=e?.gen??0,x=e!==null,W=!1,J=!1,X=null,Te=!1;const Le=new AbortController;let Oe=null,H=null,me=null,qe=!1,oe=()=>{};const l=new Promise(o=>{oe=o});let v=!1,E=!1,I=!1,j,L=null,K=!1,Me=!1,Z=!1,Be=!1,ae=!1,de=!1;const Pe=o=>{for(const u of[Xe(o),be(o)])try{M?.removeItem(u)}catch{}},V=(o,u)=>{try{u!==null&&r.post(o,u)}catch{}},se=()=>ae||=Z&&(H===null||Be),B=()=>{const o={__frame_hot:!0,ready:H!==null,accept:me!==null,demand:!0};de=!ae,de&&(o.booting=!0),v&&(o.readData=!0),I&&(o.threw=!0),L?.assess&&(o.preflight=!0),V(o,X)};let ve=!1,Ne=!1,ie=!1,Ce=!1;const i=()=>{ve||!Te||ie||(ve=!0,V({__frame_reveal_hold:!0},"*"))},g=()=>new Promise(o=>{let u,f=0;const S=F=>{if(u===void 0)u=F;else if(F!==u||++f>=8){o();return}try{D(S)}catch{o()}};try{D(S)}catch{o()}}),y=()=>{ie=!0,V({__frame_reveal_ready:!0},"*")},k=o=>{Ne||(Ne=!0,o.then(u=>{if(u===!1)return;let f=null;try{f=L?.settle?.()??null}catch{}return(f===null?g():new Promise(S=>{a(S,50),Promise.resolve(f).then(S,S)}).then(g)).then(y)}))},Q=()=>{if(Ce||!ie)return;Ce=!0;const o=()=>{try{L?.afterReveal?.()}catch{}};o(),g().then(()=>{o(),y()})},G=(o=!1)=>{if(qe||H===null||!x||!J)return;qe=!0;const u=H,f=_;c(()=>{let S;try{S=u(f)}catch(U){throw oe(!1),U}let F=!1;try{F=typeof S?.then=="function"}catch{}if(!F){oe(!0);return}Promise.resolve(S).then(()=>oe(!0),U=>{oe(!1),c(()=>{throw U})})}),k(o?l:r.dcl.then(()=>l))},ee=o=>typeof o=="string"&&Rt.test(o)?o:void 0,dt=o=>{const u={__frame_hot_restart:!0},f=ee(o?.note);f!==void 0&&(u.note=f),o?.required==="hard-reload"&&(u.required="hard-reload"),V(u,X)},Zt=Object.freeze({get data(){return J||(E=!0),!x&&!v&&(v=!0,J&&B()),_},get from(){return C},get gen(){return P},signal:Le.signal,snapshot(o){typeof o=="function"&&(Oe=o)},ready(o){typeof o!="function"||H!==null||(H=o,i(),B(),W&&V({__frame_hot_ready:!0,gen:P},X),G())},accept(o){typeof o=="function"&&(me=o,B())},restart(o){const u={note:o?.note,required:o?.required};if(J){dt(u);return}const f=j;j={note:ee(f?.note)??u.note,required:f?.required==="hard-reload"||u.required==="hard-reload"?"hard-reload":void 0}}});let Ue=null,Qt=()=>{};const Fn=new Promise(o=>{Qt=o});let In=null;const er=()=>In??=r.dcl.then(()=>{let o=!1;try{o=Ue!==null&&Ue.expect()}catch{}if(!o)return;const u=Ue.maxMs;return new Promise(f=>{Fn.then(f),a(f,u)})}),tr=()=>{if(!K||Me||L===null)return;Me=!0;const o=L;er().then(()=>{try{ie||o.afterStart(xt(e),!1)}catch{}})},rr=o=>{e!==null&&E&&(v=!0),_={},C=null,P=0;try{M?.removeItem(be(n?.k))}catch{}e!==null&&!o&&k(r.dcl.then(()=>H!==null?l:void 0))},Dn=()=>{K=!0,k(er().then(()=>H!==null?l:void 0)),tr()};try{addEventListener("error",()=>{I||H!==null||(I=!0,B())})}catch{}const nr=()=>{a(()=>{!ae&&se()&&de&&B()},0)};try{Z=document.readyState==="complete",Z||addEventListener("load",()=>{Z=!0,nr()},{once:!0})}catch{Z=!0}se(),l.then(()=>{Be=!0,nr()});let he=-1,ht,pt,je=!0,mt=!1,vt,Ke=null;const _t=o=>{const u=Ke===null;Ke=je&&o[0]!=="withheld"?o:["withheld",o[1],Fe];let f=o[0];if(je&&f!=="withheld"){const F={ver:R,handoff:f};ht!==void 0&&(F.seq=ht),pt!==void 0&&(F.note=pt);try{if(M===null)throw new Error("no storage");M.setItem(Xe(p),'{"kv":1,"gen":'+he+',"from":'+JSON.stringify(F)+(vt!==void 0?',"k":'+JSON.stringify(vt):"")+',"data":'+(f==="ok"?o[2]:Fe)+"}")}catch{f="unavailable"}}else{f="withheld",Pe(p);try{L?.release?.()}catch{}}const S={__frame_hot_snapshotted:!0,gen:he,handoff:f,bytes:o[1]};o[3]!==void 0&&(S.errName=o[3]),V(S,X),u&&(f==="snapshot_error"||f==="unclonable"||f==="oversize")&&m("claude.hot: snapshot",f,o[3])},_e=o=>{try{return Mr(o?.name)}catch{return"other"}},ye=(o,u,f=0)=>_t(u===void 0?[o,f,Fe]:[o,f,Fe,_e(u)]),xn=o=>{if(o.gen<=he)return;const u=he>=0;if(he=o.gen,ht=o.seq,pt=ee(o.note),typeof o.key=="string"&&kt.test(o.key)&&o.key!==p&&(Pe(p),p=o.key),je&&=o.handoff!==!1,u){Ke!==null?_t(Ke):mt&&V({__frame_hot_held:!0,gen:he},X);return}Le.abort();const f=Object.freeze({handoff:je,timeoutMs:o.timeoutMs,deadline:o.deadline??Pr}),S=Oe,F=()=>{if(je)try{vt=L?.capture()}catch{}if(S===null){ye("empty");return}let T=!1;const z=a(()=>{T||(T=!0,ye("snapshot_timeout"))},Math.max(0,f.timeoutMs));Promise.resolve().then(()=>S(f)).then(ge=>{if(T)return;T=!0,s(z);let re;try{re=JSON.stringify(ge)}catch(yt){ye("unclonable",yt);return}if(typeof re!="string"){ye("unclonable");return}let ne=re.length;try{ne=O.encode(re).length}catch{}if(ne>262144){ye("oversize",void 0,ne);return}_t(["ok",ne,re])},ge=>{T||(T=!0,s(z),ye("snapshot_error",ge))})};let U=null;try{U=L?.holdForIme()??null}catch{}if(U===null)F();else{mt=!0,V({__frame_hot_held:!0,gen:he},X);const T=()=>{mt=!1,F()};U.then(T,T)}},Hn=o=>{if(!W||x||H===null||o.gen!==P)return;let u=null;try{u=Ct(M,n&&{k:n.k,g:o.gen})}catch{}if(u!==null&&u.gen!==o.gen){u=null;try{M?.removeItem(be(n?.k))}catch{}}_=u?.data??{},C=Dt(Ee(u?.from??o.from),Ee(o.from)),u!==null&&(P=u.gen),x=!0,W=!1;const f=xt(u);l.then(S=>{try{S&&L?.afterStart(f,!0)}catch{}}),G(!0)};let Ge=0;const qn=o=>{const u=me;if(u===null||o.id<=Ge)return;Ge=o.id;const f=L?.assess;if(o.preflight===void 0||f===void 0){or(o,u);return}let S=!1;const F=z=>{S||(S=!0,s(T),o.id===Ge&&or(o,u,z))},U=()=>F(f.timeout(o)),T=a(U,Br+100);f.run(o,window).then(F,U)},or=(o,u,f)=>{let S,F=!1,U=!1,T,z,ge=null;const re=A=>{if(U)return!1;if(T!==void 0&&T!==A)return m(`claude.hot: u.${A}() ignored - u.${T}() was called first`),!1;const te=T===void 0;return T=A,te},ne=A=>{T="restart",m(`claude.hot: ${A} - restarting`)},yt=()=>{if(!re("adopt")||o.id!==Ge)return;const A=o.to.ver;if(ze.required!=="none"){ne(`u.adopt() needs required 'none', it is '${ze.required}'`);return}if(!Ft(A)){ne("u.adopt() cannot address this version");return}if(!R||A===R)return;const te=R,Y=h.entry;let $e="",wt,we=null,We;try{$e=location.href,wt=w.state,we=It($e,te,A),we!==null&&(b(wt,"",we),location.pathname.startsWith("/_f/"+A+"/")?we=location.href:We="navigate event canceled")}catch(Et){We=_e(Et)}if(We!==void 0){z="adopt_failed",ne(`adopt_failed ${We}; URL not changed`);return}we===null?(z="adopt_skipped",m(`claude.hot: adopt_skipped - page already left /_f/${te}/; URL not changed, update still applied`)):z="adopted",R=h.ver=A;try{h.entry=It(Y,te,A)??Y}catch{}const bt=we;ge=()=>{if(R===A){if(bt!==null)try{if(location.href!==bt)m("claude.hot: adopt_revert_skipped - update not applied; URL left where the page navigated");else{if(b(wt,"",$e),location.href!==$e){m("claude.hot: adopt_revert_failed navigate event canceled - URL still at the new version");return}z="adopt_reverted",m("claude.hot: adopt_reverted - adopt() was called but the handler threw; URL restored")}}catch(Et){m(`claude.hot: adopt_revert_failed ${_e(Et)} - URL still at the new version`);return}R=h.ver=te,h.entry=Y,bt===null&&(z=void 0)}}},ze=Object.freeze({from:{ver:o.from.ver,seq:o.from.seq},to:{ver:o.to.ver,seq:o.to.seq},changed:Zr(o.changed),required:o.required,deadline:o.deadline,adopt:yt,defer(){return re("defer")&&ze.deadline.now&&ne("u.defer() past the deadline"),Nt},restart(A){return re("restart"),T==="restart"&&!U&&(S??=ee(A?.note),F||=A?.required==="hard-reload"),Nt},...f?.update}),Bn=(A,te)=>{U=!0,A==="threw"?(ge?.(),S??=_e(te).toLowerCase()):T===void 0&&m(A==="timeout"?"claude.hot: accept handler did not answer in time - restarting":"claude.hot: accept handler settled without defer/restart/adopt - restarting");const Y={__frame_hot_verdict:!0,id:o.id};Y.verdict=A==="threw"||T===void 0||T==="restart"?"restart":T==="adopt"?"applied":"deferred",Y.verdict==="restart"&&(F&&(Y.required="hard-reload"),S!==void 0&&(Y.note=S)),z!==void 0&&(Y.verdict==="applied"||z!=="adopted")&&(Y.adopt=z),V(Object.assign(Y,f?.verdict),X)};let ar=!1;const gt=(A,te)=>ar?!1:(ar=!0,s(Un),Bn(A,te),!0),Un=a(()=>gt("timeout"),o.verdictTimeoutMs);Promise.resolve().then(()=>u(ze)).then(()=>gt("settled"),A=>{!gt("threw",A)&&T==="adopt"&&dt({note:_e(A).toLowerCase()}),m("claude.hot: accept",_e(A))})};try{t.hot===void 0&&Object.defineProperty(t,"hot",{value:Zt,writable:!1,configurable:!1,enumerable:!1})}catch{}return{hot:Zt,boot:h,afterConnect(){Te=!0,(e!==null||H!==null)&&i()},onInit(o,u){X=u,J=!0;const f=Gr(o)?o:null;f?.phase==="final"&&e!==null&&e.gen===f.gen?(x=!0,C=Dt(C,Ee(f.from)),Dn()):(W=f?.phase==="pending",rr(W),x=!W,P=f?.gen??0,C=Ee(f?.from)),B(),de&&a(()=>{ae||(ae=!0,B())},xr),W&&H!==null&&V({__frame_hot_ready:!0,gen:P},u),j!==void 0&&(dt(j),j=void 0),G()},onNoInit(){J=!0,rr(!1),x=!0,G()},onShell(o){return o?.__frame_revealed===!0?(Q(),!1):$r(o)?(xn(o),!0):Wr(o)?(Hn(o),!0):Qr(o)?(qn(o),!0):!1},attachExtras(o){L=o,tr(),o.assess&&B()},inSlot:()=>be(p),hydration(o,u){Ue??={expect:o,maxMs:u}},hydrated(){Qt()},carried(){return x?_:{}},presented:()=>ie}}var $n="frame_ldx_runtime",nn="frame_ldx_build",Wn="script#an-form",on=256;function Ht(t,e,r){for(const n of t)r(n)&&t.delete(n);t.size>=on&&!t.has(e)&&t.delete(t.values().next().value),t.add(e)}function Je(t,e,r){try{const n=t[e];if(typeof n!="function")return;t[e]=function(...a){const s=n.apply(this,a);try{r(this)}catch{}return s}}catch{}}var Ze;function an(){if(Ze)return Ze;const t={media:new Set,contexts:new Set,onStart:null,onPause:null};Ze=t;const e=window.HTMLMediaElement?.prototype;e&&(Je(e,"play",a=>{Ht(t.media,a,s=>s.paused),t.onStart?.(a)}),Je(e,"pause",a=>t.onPause?.(a)));const r=window.AudioContext,n=window.AudioNode?.prototype;return r&&n&&Je(n,"connect",a=>{const s=a.context;s instanceof r&&(Ht(t.contexts,s,c=>c.state==="closed"),t.onStart?.(s))}),t}function sn(t){let e=window;for(let r=0;e.parent&&e.parent!==e&&r<8;r++)if(e=e.parent,t(e))return!0;return!1}function ln(){let t=null;const e=()=>t??parent,r=n=>t?n===t:sn(a=>a===n);return{post(n,a){if(t){e().postMessage(n,a);return}let s=parent;for(let c=0;c<8&&(s.postMessage(n,a),!(!s.parent||s.parent===s));c++)s=s.parent},on(n){const a=s=>{const c=s.source;r(c)&&n(s.data,s.origin,s.isTrusted,()=>{t??=c})};return addEventListener("message",a),()=>removeEventListener("message",a)},port:n=>({post(a,s){if(s?.activation){e().postMessage(a,{targetOrigin:n,includeUserActivation:!0});return}if(s?.transfer){e().postMessage(a,n,s.transfer);return}e().postMessage(a,n)},on(a,s){const c=d=>{r(d.source)&&d.origin===n&&a(d.data,d)};return addEventListener("message",c,s),()=>removeEventListener("message",c,s)}})}}function cn(){const t={post:()=>{},on:()=>()=>{}};return{...t,port:()=>t}}var un=500,fn=2e4,dn="data-token-reads",hn="data-frame-refused-watch",pn="data-frame-unsupported",mn=/(?:^|\s)stylesheet(?:\s|$)/i;function vn(t,e){let r="";if(t instanceof HTMLScriptElement?r=t.src:t instanceof HTMLLinkElement&&mn.test(t.rel)&&(r=t.href),!r)return null;try{const n=new URL(r);return n.origin===location.origin&&n.pathname.startsWith(e)?n.origin+n.pathname:null}catch{return null}}function _n(t,e,r){if(!t||e!=="query")return;const n="/_f/"+t+"/";document.documentElement.setAttribute(hn,"");const a=location.href,s=fetch,c=setTimeout,d={method:"HEAD",cache:"no-store",credentials:"same-origin"},O=h=>h.ok||h.status===304;let w=!1,b=!1;const m=()=>removeEventListener("error",M,!0),R=async h=>{const p=await s(h,d);if(O(p))b=!0;else if(p.status===403){const D=await s(a,d);if(O(D)){const _=(await s(h,d)).status;_===403?(b=!0,document.documentElement.setAttribute(pn,""),r()):_<500&&(b=!0)}else D.status>=400&&D.status<500&&(b=!0)}},M=h=>{if(b||w)return;if(document.documentElement.hasAttribute(dn)){b=!0,m();return}const p=vn(h.target,n);p&&(w=!0,c(()=>{R(p).catch(()=>{}).finally(()=>{w=!1,b&&m()})},un))};addEventListener("error",M,!0),addEventListener("load",m,{once:!0}),c(m,fn)}var Qe="__frame_scroll",yn=150,gn=310,wn=160,bn=3e4;function En(){let t=0,e=!1,r=!1,n=!1,a=0,s=null;const c=_=>{try{sessionStorage.setItem(Qe,JSON.stringify({y:_}))}catch{}},d=()=>{if(clearTimeout(t),s===null)return;const _=s;s=null,c(_)},O=()=>{if(e){e=!1;return}r=!0,s=scrollY,clearTimeout(t),t=setTimeout(d,yn)};try{addEventListener("scroll",O,{passive:!0}),addEventListener("pagehide",d)}catch{}const w=()=>{let _;try{_=sessionStorage.getItem(Qe)}catch{return null}if(_===null)return null;let C;try{C=JSON.parse(_)}catch{C=null}const P=C?.y;if(!(typeof P=="number"&&Number.isFinite(P)&&P>=0)){try{sessionStorage.removeItem(Qe)}catch{}return null}return P};let b=!1;const m=_=>{try{const C=scrollY;scrollTo({top:_,left:0,behavior:"instant"}),a=_,n=!0,clearTimeout(t),s=null,c(_);const P=scrollY;P!==C&&(e=!0),P!==_&&!b&&(b=!0,addEventListener("load",()=>{try{if(scrollY===P){const x=w();m(x!==null?x:a)}}catch{}},{once:!0}))}catch{}},R=()=>{try{return!!location.hash}catch{return!0}};let M=!1;const h=()=>{try{if(M||innerWidth>gn||innerHeight>wn)return;M=!0;const _=Date.now(),C=()=>{try{removeEventListener("resize",C)}catch{}if(Date.now()-_>bn||r||R())return;const P=w();m(P!==null?P:a)};addEventListener("resize",C)}catch{}};let p=!1,D=!1;return{restore(){if(p||(p=!0,R()))return;const _=w();_!==null&&(m(_),h())},promoted(){if(D||(D=!0,R()))return;const _=w();_!==null?(m(_),h()):n&&m(a)}}}function Sn(t,e,r,n){let a=null;try{a=window.trustedTypes?.createPolicy("frame-runtime",{createScriptURL:O=>O})??null}catch{}const s=window.Worker,c=s?.prototype,d=Object.freeze({Worker:s,workerOn:c?.addEventListener,workerPost:c?.postMessage,workerTerminate:c?.terminate,fetch:window.fetch.bind(window),preventDefault:Event.prototype.preventDefault,now:Date.now,policy:a,origins:e});r(t).then(O=>O?.bootTopLevel?O.bootTopLevel(d,n):n.settle()).catch(()=>n.settle())}var Vn="modulepreload",Xn=function(t){return"/"+t},Yn={},An=function(e,r,n){let a=Promise.resolve();function s(c){const d=new Event("vite:preloadError",{cancelable:!0});if(d.payload=c,window.dispatchEvent(d),!d.defaultPrevented)throw c}return a.then(c=>{for(const d of c||[])d.status==="rejected"&&s(d.reason);return e().catch(s)})},kn=window===top,qt=Object.getOwnPropertyDescriptor(window,"claude"),Ie=en(kn,window.__FRAME_PREAMBLE?.topLevel,qt?.writable===!1),et=typeof Ie=="object"&&Ie[0],N=et?cn():ln();(function(){const t=Object.defineProperty,e=globalThis,r=["RTCPeerConnection","webkitRTCPeerConnection","RTCDataChannel","RTCIceCandidate","RTCSessionDescription","RTCRtpSender","RTCRtpReceiver"];let n=0;for(let a=0;a<r.length;a++){const s=r[a];try{t(e,s,{value:void 0,writable:!1,configurable:!1})}catch{try{delete e[s]}catch{}try{t(e,s,{value:void 0,writable:!1,configurable:!0})}catch{}}typeof e[s]=="function"&&n++}if(n&&Ie==="framed")try{N.post({__frame_rtc_lockdown_failed:n},"*")}catch{}})();var Bt=1e4,Rn=2e3,tt=2e3,rt=Object.freeze([...window.__FRAME_PREAMBLE?.origins??["https://claude.ai","https://preview.claude.ai"]]);function Ut(t){for(const e of rt)if(e.endsWith(":*"))try{const r=new URL(t);if(`${r.protocol}//${r.hostname}:*`===e)return!0}catch{}else if(t===e)return!0;return!1}var Se=Object.freeze({...window.__FRAME_PREAMBLE?.capabilities}),Ae=window.__FRAME_PREAMBLE?.transforms,nt=window.__FRAME_PREAMBLE?.comments,ot=window.__FRAME_PREAMBLE?.translate,ke=window.__FRAME_PREAMBLE?.ldx,at=sr(window.__FRAME_PREAMBLE?.cred);function Kt(t){return An(()=>import("/_runtime/"+t),void 0)}var Re=new Set,Gt=setTimeout,Tn=fetch,Ln=AbortController,On=800+800*Math.random(),Mn=3e3,De=null,zt=new Map;function Pn(t,e){let r=zt.get(t);return r||zt.set(t,r=Nn(t,e)),r}function Nn(t,e){if(De?.has(t))return Promise.resolve("csp");if(navigator.onLine===!1)return Promise.resolve("offline");const r=new Ln;let n=!1;return Gt(()=>{n=!0,r.abort()},Mn),Tn("/_runtime/"+t,{signal:r.signal}).then(a=>(r.abort(),a.ok?/javascript/i.test(a.headers.get("content-type")??"")?e instanceof Error&&/:\d+:\d+\)?$/m.test(e.stack??"")?"eval":"served":"mime":"http"),()=>n?"timeout":De?.has(t)?"csp":"net")}function ue(t){if(!De){const e=De=new Set;try{document.addEventListener("securitypolicyviolation",r=>{const n=/\/_runtime\/([^/?#]+)/.exec(r.blockedURI);n&&r.disposition!=="report"&&e.add(n[1])})}catch{}}return Kt(t).catch(()=>new Promise(e=>Gt(e,On)).then(()=>Kt(t+"?r=1")).then(e=>(e!==void 0&&Re.add(t),e)))}function $t(t,e,r){return{contract:t.contract,changes:new Set(t.changes??[]),flags:new Set(t.flags??[]),capabilities:t.capabilities??{},capBudgets:t.capBudgets??{},brokerGen:t.brokerGen,transforms:new Map,shellOrigin:e,shell:r,mount:ft,hooks:xe,pipe:()=>({wrap:(n,a)=>(...s)=>{try{return a(...s)}catch(c){return Promise.reject(c)}}})}}var pe=null,$=null;function Wt(t,e,r){try{Object.defineProperty(t,e,{value:r,writable:!1,configurable:!1,enumerable:!0})}catch{try{Object.defineProperty(t,e,{value:r,writable:!1,configurable:!0,enumerable:!0})}catch{}}}var st=!1,xe={editBefore:null,edit:null};function Cn(t,e,r=!1){const n=[];let a;if(r)try{xe.editBefore?.(t)}catch{}for(const s of t.elements){const c=document.querySelector(`[data-id="${s.target}"]`);if(!c){a=s.target;break}if([...Object.keys(s.attrsSet??{}),...s.attrsRemoved??[]].some(d=>!fr(d)||dr(c,d))){a=s.target;break}if(s.text!==void 0&&(!vr(c)||wr(c))){a=s.target;break}for(const[d,O]of Object.entries(s.attrsSet??{}))if(!Xt(c,d)){try{c.setAttribute(d,O)}catch{}Vt(c,d,O)}for(const d of s.attrsRemoved??[])Xt(c,d)||(c.removeAttribute(d),Vt(c,d,null));typeof s.text=="string"&&yr(c,s.text),n.push(s.target)}if(r)try{xe.edit?.(t.seq,n,a)}catch{}if(a!==void 0){N.post({__frame_patch_miss:{seq:t.seq}},e);return}try{document.dispatchEvent(new CustomEvent("claude:edit",{detail:{seq:t.seq,targets:n}}))}catch{}}function Vt(t,e,r){if(!(t instanceof HTMLInputElement))return;const n=e.toLowerCase();n==="checked"?t.checked=r!==null:n==="value"&&t.type!=="file"&&(t.value=r??"")}function Xt(t,e){const r=e.toLowerCase(),n=t;return r==="data-id"||(r==="value"||r==="checked")&&(n.__artifactSecret===!0||/^(password|hidden|file)$/.test(n.type??"")||/(^|\s)(cc-|one-time-code|current-password|new-password)/i.test(`${t.getAttribute("autocomplete")??""} ${n.autocomplete??""}`))}function Yt(t){const e=document.documentElement;t==="light"||t==="dark"?(e.dataset.theme=t,e.style.colorScheme=t,st=!0):st&&(delete e.dataset.theme,e.style.colorScheme="",st=!1)}var fe=new Map,it=null;function lt(){let t;const e={u:new Promise(r=>{t=r}),r:r=>{e.done=!0,t(r)},done:!1,nulled:!1};return e}function He(t,e){t.nulled=!0,t.ver=e,t.r(null)}function ct(t,e){for(const[r,n]of fe)n.done||(e&&n.asked?e(r,n):He(n,t))}var jn=Object.freeze(Object.assign(Object.create(null),{call:Function.prototype.call,apply:Function.prototype.apply,bind:Function.prototype.bind})),ut=!1,ft=(t,e)=>{let r=fe.get(t);if(r?.nulled&&ut)r=lt(),fe.set(t,r);else if(!r||r.done){r?.nulled&&$&&N.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:t,phase:"install"}},$);return}const n=typeof e=="function"?Object.setPrototypeOf(e,jn):Object.assign(Object.create(null),e);typeof n.then=="function"&&delete n.then,r.want=void 0,r.r(Object.freeze(n))};function Jt(){const t=qt?.value??{};Wt(window,"claude",t);for(const e of Object.keys(Se)){if(t[e]!==void 0){Wt(t,e,t[e]);continue}fe.set(e,lt())}if(t.use===void 0){const e=r=>{if(typeof r!="string"||!Object.hasOwn(Se,r))return Promise.resolve(null);let n=fe.get(r);return n?(it&&(n.nulled||n.want!==void 0)&&(n=it(r,n)),n.asked=!0,n.u):Promise.resolve(t[r]??null)};try{Object.defineProperty(t,"use",{value:e,writable:!0,configurable:!0,enumerable:!1})}catch{}}return t}if(Ie==="framed"){let t;const e=Ae&&ce.test(Ae)?ue(Ae).catch(l=>{t={f:Ae,e:l}}):Promise.resolve(void 0),r=l=>{if(l.type==="auxclick"&&l.button!==1)return;const v=l.target,E=v&&v.closest?v.closest("a[href],area[href]"):null;if(!E)return;const I=E.getAttribute("href");if(!I)return;let j;try{j=new URL(I,document.baseURI)}catch{return}if((j.protocol==="http:"||j.protocol==="https:")&&j.origin!==location.origin){l.preventDefault();const L=(E.getAttribute("target")??"").toLowerCase(),K=l.type==="auxclick"||l.metaKey||l.ctrlKey||l.shiftKey||l.altKey||!["","_self","_top","_parent"].includes(L);N.post({__frame_nav:!0,url:j.href,newTab:K},"*")}};addEventListener("click",r,!0),addEventListener("auxclick",r,!0);const n={},a=l=>{l.isTrusted&&(n.pointer=!0)},s=l=>{l.isTrusted&&(n.click=!0)};addEventListener("pointermove",a,{capture:!0,passive:!0}),addEventListener("click",s,{capture:!0,passive:!0});const c={cb:null};addEventListener("keydown",l=>c.cb?.(l),!0);const d={cb:null};addEventListener("keydown",l=>d.cb?.(l));const O=an();e.then(l=>l?.installEscapeForward?.(c,v=>{$&&N.post(v,$)})),e.then(l=>{try{l?.installFocusKeep?.()}catch{}}),e.then(l=>{if(!l?.wireNav)return;const v=N.port("*");l.wireNav(v),removeEventListener("click",r,!0),removeEventListener("auxclick",r,!0),removeEventListener("pointermove",a,!0),removeEventListener("click",s,!0),l.wireEngagement?.(n,v,O)});let w=null;try{w=En()}catch{}const b=document.readyState==="loading"?new Promise(l=>document.addEventListener("DOMContentLoaded",()=>l(),{once:!0})):Promise.resolve();let m=null,R=null;try{R=Ir(window.name),m=Ct(null,R)}catch{}const M=Jt();let h=null;try{h=rn(M,m,{post:(l,v)=>N.post(l,v),dcl:b},R)}catch{}e.then(l=>{try{h&&l?.installHotExtras?.(h)}catch{}});let p=null;const D=()=>Array.isArray(p?.flags)&&p.flags.includes("frame_ldx_runtime")&&!!ke&&ce.test(ke)&&document.querySelector("script#an-form")!==null;try{h?.hydration(D,Dr)}catch{}let _=null,C=0;const P=N.on((l,v,E,I)=>{Ut(v)&&Ar(l)&&(I(),p=l.__frame_init,$=v,P(),clearTimeout(C),_?.())});if(at)for(const l of rt)try{l.endsWith(":*")||N.post({__frame_cred:at},l)}catch{}N.post({__frame_connect:!0},"*");try{h?.afterConnect()}catch{}const x=setTimeout,W=clearTimeout;let J=()=>NaN,X=()=>[];try{J=performance.now.bind(performance),X=performance.getEntriesByType.bind(performance)}catch{}let Te=0;const Le=()=>{try{N.post({__frame_alive:!0},"*")}catch{}Te=x(Le,Rn)},Oe=()=>W(Te);Le(),addEventListener("load",Oe,{once:!0});const H=new Promise(l=>{_=l,C=setTimeout(()=>{P(),l()},Bt)}),me=new WeakSet;addEventListener("error",l=>{l.target&&me.add(l.target)},!0);try{_n(jt(),at,()=>{e.then(l=>{try{l?.drawRefusedNotice?.()}catch{}})})}catch{}const qe=()=>{let l=[];try{l=[...document.querySelectorAll("link[rel~=stylesheet]:not([rel~=alternate])")].filter(E=>!E.sheet&&!E.disabled&&!me.has(E)&&E.getAttribute("href")&&URL.canParse(E.href)&&(!E.media||matchMedia(E.media).matches))}catch{}let v=l.length;return v===0?Promise.resolve():new Promise(E=>{try{const I=tt-J(),j=x(E,I>0?I<tt?I:tt:0),L=()=>{--v===0&&(W(j),E())};for(const K of l)K.addEventListener("load",L,{once:!0}),K.addEventListener("error",L,{once:!0})}catch{E()}})};b.then(()=>{try{w?.restore()}catch{}}),Promise.all([H,b,e]).then(([,,l])=>{if(p?.hostOverlays!==!0||!$)return;let v=!1;try{v=l?.declaresCover?.()===!0}catch{}N.post({__frame_layout:{cover:v}},$)});const oe={cb:null};N.on((l,v)=>{if(Ut(v)&&kr(l)){try{w?.promoted()}catch{}oe.cb?.()}}),H.then(async()=>{if(!p||!$){ct();try{h?.onNoInit()}catch{}return}if(Yt(p.theme),p.hostVisible===!1&&e.then(i=>i?.applyHostVisible?.(!1,O)),p.hostKeys!==void 0){const i=$,g=p.hostKeys;e.then(y=>y?.installHostKeyForward?.(d,g,k=>N.post(k,i)))}try{h?.onInit(p.hot,$)}catch{}const l=$,v=N.port(l),E=(i,g)=>N.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:i,phase:g}},l),I=(i,g,y)=>{new Promise(k=>k(Pn(g,y))).then(k=>E(i,k),()=>E(i))},j=i=>N.post({__frame_cap_recovered:{cap:i}},l);let L=p.brokerGen;const K=()=>h?.boot.ver??"",Me=K(),Z=(i,g)=>{const y=K();W(g.t),g.want=y,g.t=x(()=>{g.done||He(g,y)},Bt),N.post({__frame_cap_want:!0,cap:i,ver:y},l)},Be=(i,g)=>{const y=fe.get(i.cap),k=Se[i.cap];if(!g||!y||y.done||y.want!==i.ver||!ce.test(k))return;if(W(y.t),y.want=void 0,L=i.brokerGen??L,i.ver!==K()){Z(i.cap,y);return}if(!i.grant||i.cap==="network"){He(y,i.ver);return}const Q=pe,G=pe={...Q,capabilities:{...Q.capabilities,[i.cap]:i.grant},capBudgets:{...Q.capBudgets,[i.cap]:{...Q.capBudgets[i.cap],...i.budgets}}};ue(k).then(ee=>{Re.has(k)&&j(i.cap),G.brokerGen=L,ut=!0;try{ee?.install?.(G)}catch{E(i.cap,"install")}finally{ut=!1}},ee=>I(i.cap,k,ee)).then(()=>{y.done||He(y,i.ver)})};let ae=!1,de=!1;N.on((i,g,y)=>{if(g!==l)return;try{if(h?.onShell(i))return}catch{}if(Tr(i)&&Yt(i.__frame_theme.theme),Xr(i)&&Be(i,y),y&&Yr(i)&&(L=i.brokerGen??L),Rr(i)){const G=i.__frame_host_visible.visible;e.then(ee=>ee?.applyHostVisible?.(G,O))}Sr(i)&&Cn(i.__frame_patch,l,y);const k=i?.__fc_mode;k&&typeof k=="object"&&!ae&&nt&&ce.test(nt)&&(ae=!0,ue(nt).then(G=>G.install?.(l,k.on===!0,v)).catch(()=>{}));const Q=i?.__ft_cmd;Q&&typeof Q=="object"&&!de&&ot&&ce.test(ot)&&(de=!0,ue(ot).then(G=>G.install?.(l,Q,v)).catch(()=>{}))});const Pe=Object.keys(p.capabilities??{}).filter(i=>Object.hasOwn(Se,i)).map(i=>[i,Se[i]]).filter(i=>typeof i[1]=="string"&&ce.test(i[1])),V=await Promise.allSettled(Pe.map(([,i])=>ue(i))),se=await e,B=l;if(se?.buildBoot||(t?I("_transforms",t.f,t.e):E("_transforms")),se?.buildBoot)try{pe=se.buildBoot(p,se.TRANSFORMS??{},{shellOrigin:B,mount:ft,hooks:xe,shell:v},i=>N.post({__frame_cap_telemetry:i},B))}catch{E("_transforms","install"),pe=$t(p,B,v)}else pe=$t(p,B,v);se?.buildBoot&&Re.has(Ae??"")&&j("_transforms");const ve=pe;ve.brokerGen=L,V.forEach((i,g)=>{const[y,k]=Pe[g];if(i.status!=="fulfilled"){I(y,k,i.reason);return}Re.has(k)&&j(y);try{i.value?.install?.(ve)}catch{E(y,"install")}});const Ne=p.capWants===!0;Ne&&(it=(i,g)=>{const y=K();if(!y)return g;if(!g.nulled)return g.want!==y&&Z(i,g),g;if(y===g.ver)return g;const k=lt();return fe.set(i,k),Z(i,k),k}),ct(Me,Ne&&K()!==Me?Z:void 0),await b,await qe(),Oe();const ie=ir(X,J);N.post(ie?{__frame_ready:!0,nav:ie}:{__frame_ready:!0},$),e.then(i=>{i?.installSizeReporter?.(B,oe,v),i?.installPaintReporter?.(v)});let Ce=!1;try{Ce=D()}catch{}ke&&Ce?ue(ke).then(i=>i?.boot?.({shellOrigin:l,build:ve.flags.has(nn),hot:h?.hot??null,carried:h?.carried(),presented:()=>h?.presented()??!0})).catch(()=>!1).then(i=>{h?.hydrated(),i!==!0?E("_ldx"):Re.has(ke)&&j("_ldx")}):h?.hydrated()})}else et&&(Jt(),Sn(et,rt,ue,{settle:ct,mount:ft}))})();</script><!-- /frame-runtime -->
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>H3 + Redis Rider Matching — Revision Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="./css2" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0E1620;
+    --panel: #141F2B;
+    --panel-2: #182530;
+    --line: #26333F;
+    --text: #E7EDF3;
+    --muted: #8FA0AF;
+    --amber: #E3A33D;
+    --amber-dim: #7A6538;
+    --teal: #45B8AE;
+    --teal-dim: #2C5B57;
+    --rust: #D8674A;
+    --rust-dim: #6B3A2C;
+    --violet: #8D86C9;
+    --violet-dim: #4A4570;
+    --radius-panel: 10px;
+    --radius-tag: 6px;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #F3F1EC;
+      --panel: #FFFFFF;
+      --panel-2: #FBFAF7;
+      --line: #DEDAD1;
+      --text: #1C2126;
+      --muted: #5B6470;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0E1620; --panel: #141F2B; --panel-2: #182530; --line: #26333F; --text: #E7EDF3; --muted: #8FA0AF;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); scroll-behavior: smooth; }
+  html, body { height: auto; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(227,163,61,0.05), transparent 40%),
+      radial-gradient(circle at 85% 75%, rgba(69,184,174,0.06), transparent 40%);
+    pointer-events: none;
+  }
+  h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin: 0 0 0.5em 0; letter-spacing: -0.01em; }
+  a { color: var(--teal); }
+  code, .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px 100px; }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    padding: 72px 0 48px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 56px;
+  }
+  .hero .kicker {
+    font-size: 14px;
+    color: var(--amber);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 1.08;
+    max-width: 14ch;
+  }
+  .hero p.sub {
+    color: var(--muted);
+    font-size: 17px;
+    max-width: 60ch;
+    margin-top: 16px;
+  }
+  .stat-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    margin-top: 36px;
+  }
+  .stat { min-width: 120px; }
+  .stat .num { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 600; color: var(--teal); }
+  .stat .label { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  /* ---------- SECTION ---------- */
+  section { margin-bottom: 64px; scroll-margin-top: 20px; }
+  .section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 22px; }
+  .section-num { font-family: 'JetBrains Mono', monospace; color: var(--amber); font-size: 14px; }
+  .section-head h2 { font-size: 24px; }
+  .section-intro { color: var(--muted); max-width: 68ch; margin-bottom: 24px; font-size: 15px; }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-panel);
+    padding: 24px;
+  }
+  .panel + .panel { margin-top: 18px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  @media (max-width: 720px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  svg { max-width: 100%; height: auto; display: block; }
+  .diagram-caption { color: var(--muted); font-size: 13px; margin-top: 10px; text-align: center; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 14px; font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: none; white-space: nowrap; }
+  td.mono, th.mono { font-family: 'JetBrains Mono', monospace; }
+
+  .tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: var(--radius-tag);
+    border: 1px solid var(--line);
+    color: var(--muted);
+  }
+  .tag.amber { color: var(--amber); border-color: var(--amber-dim); }
+  .tag.teal { color: var(--teal); border-color: var(--teal-dim); }
+  .tag.rust { color: var(--rust); border-color: var(--rust-dim); }
+  .tag.violet { color: var(--violet); border-color: var(--violet-dim); }
+
+  pre {
+    background: #0A1119;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 14px 0 0;
+  }
+  :root:not([data-theme="dark"]) pre { background: #F5F3EE; }
+  pre code { color: var(--text); }
+  .comment { color: var(--muted); }
+  .kw { color: var(--teal); }
+  .str { color: var(--amber); }
+
+  .edge-card {
+    border-left: 3px solid var(--rust);
+    padding-left: 18px;
+  }
+  .edge-card h3 { display: flex; align-items: center; gap: 10px; font-size: 17px; }
+  .edge-card .sev { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--rust); border: 1px solid var(--rust-dim); padding: 2px 7px; border-radius: 5px; }
+
+  .flow-step { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .flow-step:last-child { border-bottom: none; }
+  .flow-step .idx {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    color: var(--amber);
+    font-size: 15px;
+    min-width: 22px;
+  }
+  .flow-step .body h4 { font-size: 15.5px; margin-bottom: 4px; }
+  .flow-step .body p { color: var(--muted); font-size: 14px; margin: 0; }
+
+  .qa { border-bottom: 1px solid var(--line); padding: 16px 0; }
+  .qa:last-child { border-bottom: none; }
+  .qa .q { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+  .qa .a { color: var(--muted); font-size: 14.5px; }
+
+  .calc-line { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 14px; }
+  .calc-line:last-child { border-bottom: none; }
+  .calc-line .k { color: var(--muted); }
+  .calc-line .v { font-family: 'JetBrains Mono', monospace; color: var(--text); text-align: right; }
+  .calc-result { margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-weight: 600; }
+  .calc-result .v { color: var(--teal); font-family: 'JetBrains Mono', monospace; }
+
+  .toc {
+    position: sticky; top: 20px;
+    display: none;
+  }
+  @media (min-width: 1180px) {
+    .page { display: flex; gap: 40px; max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+    .wrap { padding: 0; max-width: none; flex: 1; }
+    .toc { display: block; width: 200px; padding-top: 90px; }
+    .toc a { display: block; color: var(--muted); text-decoration: none; font-size: 13px; padding: 6px 0; border-left: 2px solid transparent; padding-left: 12px; }
+    .toc a:hover { color: var(--text); border-left-color: var(--amber); }
+  }
+
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 40px 0 20px; border-top: 1px solid var(--line); margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="toc">
+    <a href="https://fe0a2514-d39a-4334-9cf4-e0f8fa2dd184.frame.claudeusercontent.com/_f/1790019464-efee/#flow">01 · Architecture</a>
+    <a href="https://fe0a2514-d39a-4334-9cf4-e0f8fa2dd184.frame.claudeusercontent.com/_f/1790019464-efee/#capacity">02 · Capacity Plan</a>
+    <a href="https://fe0a2514-d39a-4334-9cf4-e0f8fa2dd184.frame.claudeusercontent.com/_f/1790019464-efee/#geo">03 · Geohash vs H3</a>
+    <a href="https://fe0a2514-d39a-4334-9cf4-e0f8fa2dd184.frame.claudeusercontent.com/_f/1790019464-efee/#redis">04 · Redis Model</a>
+    <a href="https://fe0a2514-d39a-4334-9cf4-e0f8fa2dd184.frame.claudeusercontent.com/_f/1790019464-efee/#matching">05 · Match Algorithm</a>
+    <a href="https://fe0a2514-d39a-4334-9cf4-e0f8fa2dd184.frame.claudeusercontent.com/_f/1790019464-efee/#consistency">06 · Consistency &amp; Failures</a>
+    <a href="https://fe0a2514-d39a-4334-9cf4-e0f8fa2dd184.frame.claudeusercontent.com/_f/1790019464-efee/#edges">07 · Edge Cases</a>
+    <a href="https://fe0a2514-d39a-4334-9cf4-e0f8fa2dd184.frame.claudeusercontent.com/_f/1790019464-efee/#alternatives">08 · Alternatives Considered</a>
+    <a href="https://fe0a2514-d39a-4334-9cf4-e0f8fa2dd184.frame.claudeusercontent.com/_f/1790019464-efee/#playbook">09 · Interview Playbook</a>
+  </nav>
+
+  <div class="wrap">
+
+    <div class="hero">
+      <div class="kicker">SYSTEM DESIGN REVISION · SDE-2 DEPTH</div>
+      <h1>H3 + Redis Rider Matching</h1>
+      <p class="sub">How a delivery platform matches an accepted order to the nearest available rider in under a second, using hexagonal geo-indexing and shard-aware Redis structures — with the capacity math, consistency tradeoffs, and failure modes an SDE-2 round expects you to defend.</p>
+      <div class="stat-row">
+        <div class="stat"><div class="num">3s</div><div class="label">GPS ping interval</div></div>
+        <div class="stat"><div class="num">Res 8</div><div class="label">~740m ingest hex</div></div>
+        <div class="stat"><div class="num">Res 5</div><div class="label">~20km shard anchor</div></div>
+        <div class="stat"><div class="num">15s</div><div class="label">offer lock TTL</div></div>
+        <div class="stat"><div class="num">~35K</div><div class="label">writes/sec at 100K online riders</div></div>
+      </div>
+    </div>
+
+    <!-- 01 ARCHITECTURE -->
+    <section id="flow">
+      <div class="section-head"><span class="section-num">01</span><h2>Core Problem &amp; End-to-End Architecture</h2></div>
+      <p class="section-intro">Goal: given an order that just got accepted by a restaurant, find the rider who will arrive soonest — not just nearest in a straight line — while tens of thousands of riders stream location updates concurrently. The diagram separates the <span class="tag amber">write path</span> (constant location ingestion) from the <span class="tag teal">read path</span> (matching, triggered per order) because they have very different load shapes and failure tolerances.</p>
+
+      <div class="panel">
+        <svg viewBox="0 0 940 400" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrowA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#E3A33D"></path>
+            </marker>
+            <marker id="arrowT" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#45B8AE"></path>
+            </marker>
+            <marker id="arrowM" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#8FA0AF"></path>
+            </marker>
+          </defs>
+
+          <!-- lane labels -->
+          <text x="8" y="26" font-family="JetBrains Mono, monospace" font-size="11" fill="#E3A33D">WRITE PATH — every ~3s, per rider</text>
+          <line x1="0" y1="36" x2="940" y2="36" stroke="#26333F" stroke-dasharray="2 4"></line>
+          <text x="8" y="230" font-family="JetBrains Mono, monospace" font-size="11" fill="#45B8AE">READ PATH — once per order, on demand</text>
+          <line x1="0" y1="240" x2="940" y2="240" stroke="#26333F" stroke-dasharray="2 4"></line>
+
+          <g font-family="Inter, sans-serif" font-size="12" fill="#E7EDF3">
+            <!-- write path row -->
+            <rect x="10" y="55" width="120" height="58" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="70" y="79" text-anchor="middle" font-weight="600" font-size="12.5">Rider App</text>
+            <text x="70" y="95" text-anchor="middle" fill="#8FA0AF" font-size="10.5">WS / gRPC</text>
+
+            <rect x="165" y="55" width="120" height="58" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="225" y="79" text-anchor="middle" font-weight="600" font-size="12.5">WS Gateway</text>
+            <text x="225" y="95" text-anchor="middle" fill="#8FA0AF" font-size="10.5">stateless, LB'd</text>
+
+            <rect x="320" y="55" width="120" height="58" rx="8" fill="#182530" stroke="#8D86C9"></rect>
+            <text x="380" y="79" text-anchor="middle" font-weight="600" font-size="12.5" fill="#8D86C9">Kafka</text>
+            <text x="380" y="95" text-anchor="middle" fill="#8FA0AF" font-size="10.5">partition by region</text>
+
+            <rect x="475" y="55" width="130" height="58" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="540" y="76" text-anchor="middle" font-weight="600" font-size="12.5">Ingestion</text>
+            <text x="540" y="92" text-anchor="middle" font-weight="600" font-size="12.5">Worker</text>
+            <text x="540" y="106" text-anchor="middle" fill="#E3A33D" font-size="10.5">lat/lng → H3(res8)</text>
+
+            <rect x="645" y="30" width="150" height="108" rx="8" fill="#182530" stroke="#45B8AE"></rect>
+            <text x="720" y="53" text-anchor="middle" font-weight="600" fill="#45B8AE" font-size="12.5">Redis Cluster</text>
+            <text x="720" y="72" text-anchor="middle" fill="#8FA0AF" font-size="10.5">hex sets (SADD/SREM)</text>
+            <text x="720" y="87" text-anchor="middle" fill="#8FA0AF" font-size="10.5">rider status hash</text>
+            <text x="720" y="102" text-anchor="middle" fill="#8FA0AF" font-size="10.5">1 primary + 2 replicas</text>
+            <text x="720" y="120" text-anchor="middle" fill="#8FA0AF" font-size="10.5">per shard</text>
+
+            <rect x="830" y="55" width="105" height="58" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="882" y="76" text-anchor="middle" font-weight="600" font-size="12">Ghost-rider</text>
+            <text x="882" y="92" text-anchor="middle" font-weight="600" font-size="12">Reaper</text>
+            <text x="882" y="106" text-anchor="middle" fill="#8FA0AF" font-size="10">cron, TTL sweep</text>
+
+            <!-- read path row -->
+            <rect x="10" y="260" width="140" height="58" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="80" y="284" text-anchor="middle" font-weight="600" font-size="12.5">Order Service</text>
+            <text x="80" y="300" text-anchor="middle" fill="#8FA0AF" font-size="10.5">order → "ready"</text>
+
+            <rect x="195" y="260" width="140" height="58" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="265" y="284" text-anchor="middle" font-weight="600" font-size="12.5">Matching</text>
+            <text x="265" y="300" text-anchor="middle" font-weight="600" font-size="12.5">Engine</text>
+            <text x="265" y="312" text-anchor="middle" fill="#E3A33D" font-size="10">k-ring expand + SUNION</text>
+
+            <rect x="380" y="260" width="140" height="58" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="450" y="284" text-anchor="middle" font-weight="600" font-size="12.5">Routing Svc</text>
+            <text x="450" y="300" text-anchor="middle" fill="#8FA0AF" font-size="10.5">OSRM road ETA</text>
+
+            <rect x="565" y="260" width="140" height="58" rx="8" fill="#182530" stroke="#D8674A"></rect>
+            <text x="635" y="284" text-anchor="middle" font-weight="600" fill="#D8674A" font-size="12.5">Offer Lock</text>
+            <text x="635" y="300" text-anchor="middle" fill="#8FA0AF" font-size="10.5" class="mono">SET NX PX 15000</text>
+
+            <rect x="750" y="260" width="150" height="58" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="825" y="284" text-anchor="middle" font-weight="600" font-size="12.5">Push / Notify</text>
+            <text x="825" y="300" text-anchor="middle" fill="#8FA0AF" font-size="10.5">FCM/APNs to rider</text>
+          </g>
+
+          <!-- write path arrows -->
+          <path d="M130,84 H163" stroke="#E3A33D" stroke-width="1.4" marker-end="url(#arrowA)" fill="none"></path>
+          <path d="M285,84 H318" stroke="#E3A33D" stroke-width="1.4" marker-end="url(#arrowA)" fill="none"></path>
+          <path d="M440,84 H473" stroke="#E3A33D" stroke-width="1.4" marker-end="url(#arrowA)" fill="none"></path>
+          <path d="M605,84 H643" stroke="#E3A33D" stroke-width="1.4" marker-end="url(#arrowA)" fill="none"></path>
+          <path d="M795,84 H828" stroke="#8FA0AF" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#arrowM)" fill="none"></path>
+
+          <!-- read path arrows -->
+          <path d="M150,289 H193" stroke="#45B8AE" stroke-width="1.4" marker-end="url(#arrowT)" fill="none"></path>
+          <path d="M335,289 H378" stroke="#45B8AE" stroke-width="1.4" marker-end="url(#arrowT)" fill="none"></path>
+          <path d="M520,289 H563" stroke="#45B8AE" stroke-width="1.4" marker-end="url(#arrowT)" fill="none"></path>
+          <path d="M705,289 H748" stroke="#45B8AE" stroke-width="1.4" marker-end="url(#arrowT)" fill="none"></path>
+
+          <!-- matching engine reads redis -->
+          <path d="M265,258 Q265,170 645,105" stroke="#45B8AE" stroke-width="1.3" stroke-dasharray="4 3" fill="none" marker-end="url(#arrowT)"></path>
+          <text x="420" y="185" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#45B8AE">SUNION ring(k)</text>
+
+          <!-- offer lock writes to redis -->
+          <path d="M635,258 Q635,175 665,140" stroke="#D8674A" stroke-width="1.3" stroke-dasharray="4 3" fill="none" marker-end="url(#arrowM)"></path>
+
+          <!-- reaper reads/writes redis -->
+          <path d="M860,113 Q820,140 780,138" stroke="#8FA0AF" stroke-width="1.2" stroke-dasharray="3 3" fill="none" marker-end="url(#arrowM)"></path>
+
+          <!-- accept feedback loop -->
+          <path d="M825,318 Q825,360 80,360 Q10,360 10,318" stroke="#8FA0AF" stroke-width="1.2" stroke-dasharray="2 4" fill="none" marker-end="url(#arrowM)"></path>
+          <text x="420" y="378" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#8FA0AF">rider accepts → status flips to "on_delivery" (write path again)</text>
+        </svg>
+        <div class="legend">
+          <span><span class="swatch" style="background:#E3A33D;"></span>write path</span>
+          <span><span class="swatch" style="background:#45B8AE;"></span>read path</span>
+          <span><span class="swatch" style="background:#D8674A;"></span>lock / mutation</span>
+          <span><span class="swatch" style="background:#8D86C9;"></span>durable buffer</span>
+          <span><span class="swatch" style="background:#8FA0AF;"></span>background / async</span>
+        </div>
+        <div class="diagram-caption">Kafka sits between the stateless WS gateway and the ingestion worker so a burst of GPS pings never becomes a direct write storm on Redis — the worker consumes at its own pace, and a worker restart doesn't lose in-flight pings.</div>
+      </div>
+
+      <div class="panel">
+        <div class="flow-step">
+          <div class="idx">1</div>
+          <div class="body"><h4>Stream</h4><p>Riders push GPS over a persistent WebSocket roughly every 3 seconds. The gateway tier is stateless and horizontally scaled behind a load balancer — it only authenticates the connection and forwards the ping.</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="idx">2</div>
+          <div class="body"><h4>Buffer</h4><p>Pings land on a Kafka topic partitioned by coarse region (the res-5 hex, say), not by rider ID. This gives ingestion workers a durable, replayable queue and decouples gateway throughput spikes from Redis write throughput.</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="idx">3</div>
+          <div class="body"><h4>Bucket</h4><p>The Ingestion Worker converts each (lat, lng) into an H3 index at resolution 8 (~740m across) and moves the rider between hex sets: <code>SREM</code> old hex, <code>SADD</code> new hex, update the status hash — ideally as one Lua script for atomicity.</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="idx">4</div>
+          <div class="body"><h4>Trigger</h4><p>An order transitions to "ready for pickup." The Matching Engine resolves the restaurant's own H3 index at the same resolution.</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="idx">5</div>
+          <div class="body"><h4>Expand &amp; rank</h4><p>k-ring expansion gathers candidates via <code>SUNION</code>, a cheap haversine pre-filter shortlists the closest few, and only those go to OSRM for real road-network ETA.</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="idx">6</div>
+          <div class="body"><h4>Lock &amp; notify</h4><p>The winning rider is claimed atomically with <code>SET rider_lock:&lt;id&gt; NX PX 15000</code>, then pushed a notification. Accept flips their status — which re-enters the write path — or the lock expires and the next candidate is tried.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 CAPACITY -->
+    <section id="capacity">
+      <div class="section-head"><span class="section-num">02</span><h2>Capacity Estimation</h2></div>
+      <p class="section-intro">The numbers an interviewer expects you to derive live, not memorize — they're what justify Kafka as a buffer and Redis (not Postgres) as the hot store.</p>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Write-path load</h3>
+          <div class="calc-line"><span class="k">Online riders, peak, one metro</span><span class="v">100,000</span></div>
+          <div class="calc-line"><span class="k">Ping interval</span><span class="v">3s</span></div>
+          <div class="calc-line"><span class="k">Raw ping rate</span><span class="v">100,000 / 3 ≈ 33,000/s</span></div>
+          <div class="calc-line"><span class="k">Redis ops per ping (SREM+SADD+HSET)</span><span class="v">×3</span></div>
+          <div class="calc-result"><span>Sustained Redis write ops</span><span class="v">~100K ops/s</span></div>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Memory footprint</h3>
+          <div class="calc-line"><span class="k">Rider status hash (id, lat, lng, ts, state)</span><span class="v">~120 bytes</span></div>
+          <div class="calc-line"><span class="k">Hex-set membership entry</span><span class="v">~30 bytes</span></div>
+          <div class="calc-line"><span class="k">Riders online, nationwide</span><span class="v">500,000</span></div>
+          <div class="calc-result"><span>Total hot-state memory</span><span class="v">~75 MB</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">Takeaway to say out loud:</strong> the working set is tiny by Redis standards — this workload is bound by <em>operation rate and latency</em>, not by storage volume. That's exactly why a single logical Redis Cluster (sharded mainly for hot-spot isolation, not capacity) is the right tool, and why Postgres/PostGIS would struggle: it's not the row count, it's ~100K small mutations/sec with sub-10ms latency expectations.</p>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">Matching-path latency budget (target: rider notified within ~1s of order-ready)</h3>
+        <table>
+          <tbody><tr><th>Stage</th><th class="mono">Budget</th><th>Notes</th></tr>
+          <tr><td>k-ring SUNION (1–3 rings)</td><td class="mono">~5–15ms</td><td>Single shard, in-memory set union</td></tr>
+          <tr><td>Haversine pre-filter, top-N</td><td class="mono">~1ms</td><td>Pure CPU, no I/O</td></tr>
+          <tr><td>OSRM ETA calls ×N (parallel)</td><td class="mono">~50–150ms</td><td>Dominant cost — batch/parallelize, cap N to ~8</td></tr>
+          <tr><td>Offer lock + push dispatch</td><td class="mono">~10–30ms</td><td>Redis write + notification API call</td></tr>
+          <tr><td><strong>Total, best case</strong></td><td class="mono">~100–200ms</td><td>Leaves headroom under a 1s target even with retries</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- 03 GEOHASH VS H3 -->
+    <section id="geo">
+      <div class="section-head"><span class="section-num">03</span><h2>Geohash vs. Uber H3</h2></div>
+      <p class="section-intro">The whole design hinges on picking a geo-index whose neighbors behave predictably. This is the single most interview-worthy tradeoff in the system.</p>
+
+      <div class="grid-2">
+        <div class="panel">
+          <svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg">
+            <g stroke="#D8674A" stroke-width="1.2" fill="none">
+              <rect x="20" y="20" width="220" height="160"></rect>
+              <line x1="93.3" y1="20" x2="93.3" y2="180"></line>
+              <line x1="166.6" y1="20" x2="166.6" y2="180"></line>
+              <line x1="20" y1="73.3" x2="240" y2="73.3"></line>
+              <line x1="20" y1="126.6" x2="240" y2="126.6"></line>
+            </g>
+            <rect x="93.3" y="73.3" width="73.3" height="53.3" fill="#D8674A" opacity="0.25"></rect>
+            <circle cx="130" cy="100" r="3" fill="#D8674A"></circle>
+            <line x1="130" y1="100" x2="93.3" y2="73.3" stroke="#D8674A" stroke-width="1"></line>
+            <line x1="130" y1="100" x2="166.6" y2="73.3" stroke="#D8674A" stroke-width="1" stroke-dasharray="2 2"></line>
+            <text x="130" y="196" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#8FA0AF">cardinal = d, diagonal = d√2</text>
+          </svg>
+          <h3 style="margin-top:14px; font-size:15px;">Geohash — square grid</h3>
+          <p style="color:var(--muted); font-size:14px; margin:6px 0 0;">Redis-native (<code>GEOADD</code>/<code>GEORADIUS</code>), but a square's diagonal neighbor is <strong>√2× farther</strong> than its cardinal neighbor. A ring search either over- or under-reaches depending on direction, and cell size distorts with latitude because it's a lat/lng-derived grid, not a true equal-area one.</p>
+        </div>
+        <div class="panel">
+          <div style="position:relative; height:190px;">
+            <svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="position:absolute; inset:0;">
+              <g stroke="#45B8AE" stroke-width="1.2" fill="none">
+                <polygon points="130,60 160,77 160,111 130,128 100,111 100,77" fill="#45B8AE" opacity="0.25"></polygon>
+                <polygon points="190,60 220,77 220,111 190,128 160,111 160,77"></polygon>
+                <polygon points="70,60 100,77 100,111 70,128 40,111 40,77"></polygon>
+                <polygon points="160,111 190,128 190,162 160,179 130,162 130,128"></polygon>
+                <polygon points="100,111 130,128 130,162 100,179 70,162 70,128"></polygon>
+                <polygon points="130,-6 160,11 160,45 130,62 100,45 100,11"></polygon>
+              </g>
+              <circle cx="130" cy="94" r="3" fill="#45B8AE"></circle>
+              <line x1="130" y1="94" x2="160" y2="77" stroke="#45B8AE" stroke-width="1"></line>
+              <line x1="130" y1="94" x2="100" y2="111" stroke="#45B8AE" stroke-width="1"></line>
+              <text x="130" y="196" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#8FA0AF">all 6 neighbors = identical distance d</text>
+            </svg>
+          </div>
+          <h3 style="margin-top:14px; font-size:15px;">Uber H3 — hexagonal grid</h3>
+          <p style="color:var(--muted); font-size:14px; margin:6px 0 0;">Application-layer index (a library call, not a Redis feature). Every one of the 6 neighbors sits at the same distance from center, so a k-ring expansion is a mathematically uniform, evenly-growing search radius — no directional distortion.</p>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:18px;">
+        <table>
+          <tbody><tr><th>Resolution</th><th class="mono">Edge length</th><th>Used for</th></tr>
+          <tr><td>5</td><td class="mono">~8.5 km</td><td>Shard anchor / city-level hash-tag grouping</td></tr>
+          <tr><td>7</td><td class="mono">~1.2 km</td><td>Coarse hot-spot / surge-zone aggregation</td></tr>
+          <tr><td>8</td><td class="mono">~460 m edge (~740m diameter)</td><td>Rider ingest bucket — the working resolution</td></tr>
+          <tr><td>9</td><td class="mono">~175 m</td><td>Too fine for ingest — churns riders between cells on every ping</td></tr>
+        </tbody></table>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">One caveat worth raising unprompted:</strong> H3 hexagons aren't perfectly uniform either — 12 unavoidable pentagons exist where the icosahedron folds (near icosahedron vertices, mostly over oceans). Global logistics platforms note it but it essentially never touches dense urban delivery zones, so it's a "know it exists" fact, not a design blocker.</p>
+      </div>
+    </section>
+
+    <!-- 04 REDIS MODEL -->
+    <section id="redis">
+      <div class="section-head"><span class="section-num">04</span><h2>Redis Data Model &amp; Sharding</h2></div>
+      <p class="section-intro">Redis Cluster refuses multi-key operations that span shards — a <code>SUNION</code> across two hex sets on different nodes throws <span class="tag rust">CROSSSLOT</span>. Hash tags are the fix.</p>
+
+      <div class="panel">
+        <svg viewBox="0 0 760 170" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="JetBrains Mono, monospace" font-size="13">
+            <text x="0" y="30" fill="#8FA0AF">h3:index:</text>
+            <text x="82" y="30" fill="#E3A33D" font-weight="600">{res5_parent_id}</text>
+            <text x="235" y="30" fill="#E7EDF3">:res8_child_id</text>
+
+            <text x="0" y="70" fill="#8FA0AF">rider:status:</text>
+            <text x="105" y="70" fill="#E3A33D" font-weight="600">{res5_parent_id}</text>
+            <text x="258" y="70" fill="#E7EDF3">:rider_id</text>
+          </g>
+          <path d="M75,15 Q75,-8 155,-8 Q235,-8 235,15" stroke="#E3A33D" stroke-width="1.2" fill="none" transform="translate(0,20)"></path>
+          <path d="M98,55 Q98,32 178,32 Q258,32 258,55" stroke="#E3A33D" stroke-width="1.2" fill="none" transform="translate(0,20)"></path>
+          <text x="165" y="10" text-anchor="middle" fill="#E3A33D" font-size="11" font-family="JetBrains Mono, monospace">hashed → picks the shard</text>
+
+          <g transform="translate(0,110)">
+            <rect x="0" y="0" width="230" height="50" rx="8" fill="#182530" stroke="#45B8AE"></rect>
+            <text x="115" y="22" text-anchor="middle" fill="#45B8AE" font-size="12" font-weight="600">Shard A</text>
+            <text x="115" y="38" text-anchor="middle" fill="#8FA0AF" font-size="10.5">all Bengaluru-parent keys</text>
+
+            <rect x="265" y="0" width="230" height="50" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="380" y="22" text-anchor="middle" fill="#E7EDF3" font-size="12" font-weight="600">Shard B</text>
+            <text x="380" y="38" text-anchor="middle" fill="#8FA0AF" font-size="10.5">all Mumbai-parent keys</text>
+
+            <rect x="530" y="0" width="230" height="50" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="645" y="22" text-anchor="middle" fill="#E7EDF3" font-size="12" font-weight="600">Shard C</text>
+            <text x="645" y="38" text-anchor="middle" fill="#8FA0AF" font-size="10.5">all Delhi-parent keys</text>
+          </g>
+        </svg>
+        <div class="diagram-caption">Only the text inside <code>{ }</code> is hashed for slot placement — every child hex and every rider under one res-5 parent lands on the same physical node.</div>
+      </div>
+
+      <div class="panel">
+        <h3 style="font-size:15px;">Why this specific pair of resolutions</h3>
+        <p style="color:var(--muted); font-size:14px;">Res-8 (~740m) is fine enough that a k-ring of 2–3 rings covers a realistic pickup radius without pulling in irrelevant riders. Res-5 (~20km) is coarse enough that one parent hex safely contains an entire metro's worth of res-8 children — so a citywide k-ring search never needs to cross a hash-tag boundary, keeping <code>SUNION</code> and the locking Lua script single-shard and network-hop-free.</p>
+      </div>
+
+      <div class="panel">
+        <h3 style="font-size:15px;">Structures in use</h3>
+        <table>
+          <tbody><tr><th>Structure</th><th class="mono">Type</th><th>Purpose</th></tr>
+          <tr><td>Hex bucket</td><td class="mono">SET</td><td>Rider IDs currently inside one res-8 hexagon</td></tr>
+          <tr><td>Rider status</td><td class="mono">HASH</td><td><code>lat, lng, last_updated, state</code> — one hash per rider</td></tr>
+          <tr><td>Offer lock</td><td class="mono">STRING (NX PX)</td><td>Atomic single-writer claim during the accept/reject window</td></tr>
+          <tr><td>Hot-zone counter</td><td class="mono">SORTED SET</td><td>Demand/supply ratio per hex, feeds surge &amp; rebalancing</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- 05 MATCH ALGORITHM -->
+    <section id="matching">
+      <div class="section-head"><span class="section-num">05</span><h2>Matching Engine: k-ring Expansion</h2></div>
+      <p class="section-intro">Straight-line H3 distance is a cheap pre-filter. Only the surviving shortlist is worth the expensive routing-service call.</p>
+      <div class="panel">
+        <pre><code><span class="comment">-- pseudocode, run inside the Matching Engine</span>
+<span class="kw">function</span> findRider(order):
+  originHex = h3.fromLatLng(order.restaurant.lat, order.restaurant.lng, RES_8)
+  candidates = []
+  k = 0
+  <span class="kw">while</span> candidates.size &lt; MIN_CANDIDATES <span class="kw">and</span> k &lt;= MAX_K:
+    ring = h3.kRing(originHex, k)          <span class="comment">-- hexes at exactly/within ring k</span>
+    ids  = redis.SUNION(ring.map(hexKey))  <span class="comment">-- single shard, no cross-hop</span>
+    candidates += fetchStatus(ids).filter(isAvailable)
+    k += 1
+
+  shortlist = candidates
+    .sortBy(haversineDistance)
+    .take(TOP_N)                            <span class="comment">-- cheap pre-filter, e.g. top 8</span>
+
+  ranked = shortlist.map(r =&gt; osrm.eta(r, order.restaurant))
+                     .sortBy(eta)
+
+  <span class="kw">for</span> rider <span class="kw">in</span> ranked:
+    <span class="kw">if</span> redis.SET(<span class="str">"rider_lock:" + rider.id</span>, order.id, <span class="str">NX</span>, <span class="str">PX 15000</span>):
+      <span class="kw">return</span> offer(rider, order)   <span class="comment">-- push notification, wait for accept</span>
+  <span class="kw">return</span> NO_RIDER_AVAILABLE</code></pre>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">Why pre-filter by straight-line distance before calling OSRM:</strong> routing calls are the expensive step (network hop + graph search on the routing service). Running OSRM against every rider in a wide k-ring wastes latency budget on riders that were never going to win. Haversine on H3 centers is O(1) and gets the shortlist down to the handful worth a real ETA.</p>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">Complexity to state out loud:</strong> a k-ring at level k covers <code>3k² + 3k + 1</code> hexagons (1, 7, 19, 37…). SUNION over m sets of average size n is O(m·n) — with m capped by MAX_K and n bounded by rider density, this stays sub-linear in the total rider count, which is the whole point versus scanning every online rider.</p>
+      </div>
+    </section>
+
+    <!-- 06 CONSISTENCY & FAILURES -->
+    <section id="consistency">
+      <div class="section-head"><span class="section-num">06</span><h2>Consistency Model &amp; Failure Modes</h2></div>
+      <p class="section-intro">Different pieces of this system deliberately sit at different points on the consistency spectrum — naming that explicitly is what separates an SDE-2 answer from an SDE-1 one.</p>
+
+      <div class="panel">
+        <table>
+          <tbody><tr><th>Component</th><th>Consistency</th><th>Why that's the right choice</th></tr>
+          <tr><td>Rider location (hex sets)</td><td><span class="tag amber">Eventual</span></td><td>A rider's position is stale by definition the moment it's read — being off by one ping (~3s of travel) is a non-issue for a ~740m bucket.</td></tr>
+          <tr><td>Offer lock</td><td><span class="tag rust">Strong (linearizable)</span></td><td>Correctness bug, not a UX nit, if two orders both think they claimed the same rider — this is exactly what <code>SET NX</code>'s atomicity buys.</td></tr>
+          <tr><td>Order state machine</td><td><span class="tag rust">Strong</span></td><td>Owned by a transactional store (Postgres, not Redis) — an order must never be visible as both "ready" and "assigned" simultaneously to two workers.</td></tr>
+          <tr><td>Redis replica reads (if used for scale)</td><td><span class="tag amber">Eventual</span></td><td>Fine for candidate gathering (a slightly stale rider set just means one extra OSRM call gets wasted); never read the offer lock from a replica.</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="panel">
+        <h3 style="font-size:15px;">Failure modes and how the design degrades</h3>
+        <table>
+          <tbody><tr><th>Failure</th><th>Blast radius</th><th>Degradation</th></tr>
+          <tr><td>Redis primary shard dies</td><td>One metro's write &amp; read path</td><td>Cluster promotes a replica automatically (seconds); in-flight writes during the gap are retried by the ingestion worker since Kafka still has them un-acked</td></tr>
+          <tr><td>Kafka partition unavailable</td><td>One region's rider pings</td><td>Gateway buffers briefly / backpressures the WS connection; riders' last known position just ages a bit — acceptable for a location feed</td></tr>
+          <tr><td>OSRM instance slow/down</td><td>Matching latency only</td><td>Fall back to straight-line-distance ranking with a wider safety margin, or route to a secondary OSRM replica; never block the whole match on it</td></tr>
+          <tr><td>Ingestion worker crashes</td><td>Delayed hex updates for its partition</td><td>Kafka consumer group rebalances to a healthy worker; no data loss since offsets aren't committed until the Redis write succeeds</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- 07 EDGE CASES -->
+    <section id="edges">
+      <div class="section-head"><span class="section-num">07</span><h2>Production Edge Cases</h2></div>
+      <p class="section-intro">These are the two edge cases interviewers push on hardest — have the mitigation and its own failure mode ready.</p>
+
+      <div class="panel edge-card">
+        <h3>Ghost Riders <span class="sev">STALE DATA</span></h3>
+        <p style="color:var(--muted); font-size:14.5px;">A rider's app crashes, loses signal, or their phone dies — no clean disconnect event fires, so their ID stays sitting in the hex set forever, occasionally winning matches for a rider who was never there.</p>
+        <table style="margin-top:10px;">
+          <tbody><tr><th>Mitigation</th><td>Background cron scans <code>rider:status:*</code> hashes; any with <code>last_updated</code> older than ~15–20s (5–6 missed pings) gets <code>SREM</code>'d from its hex set and marked offline.</td></tr>
+          <tr><th>Residual risk</th><td>Cron interval creates a window where a ghost can still be matched — mitigated further by re-validating <code>last_updated</code> at offer time, right before the lock, not just at candidate-gathering time.</td></tr>
+          <tr><th>Scale note</th><td>A single sweeping cron becomes a bottleneck past a few hundred thousand riders — shard the sweep by hash-tag prefix so each shard's reaper only scans its own keys, running in parallel.</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="panel edge-card" style="margin-top:18px;">
+        <h3>Double Booking <span class="sev">RACE CONDITION</span></h3>
+        <p style="color:var(--muted); font-size:14.5px;">Two orders in overlapping hexes both shortlist the same nearby rider in the same few hundred milliseconds — without coordination, both could offer the order to them simultaneously.</p>
+        <table style="margin-top:10px;">
+          <tbody><tr><th>Mitigation</th><td class="mono">SET rider_lock:&lt;id&gt; &lt;order_id&gt; NX PX 15000</td></tr>
+          <tr><th>Why NX matters</th><td><code>NX</code> makes the write conditional on the key not already existing — atomic in Redis, so exactly one of the two concurrent matching processes wins the lock; the other falls through to its next-best candidate.</td></tr>
+          <tr><th>Why PX 15000</th><td>Bounds how long a rider can sit "reserved" without responding. If they don't accept/reject in 15s, the key expires and they become matchable again automatically — no manual cleanup needed.</td></tr>
+          <tr><th>Release-on-accept nuance</th><td>On explicit accept/reject, delete the lock immediately rather than waiting out the TTL — use a Lua script that checks the value equals the expected order_id before deleting, so a late duplicate accept can't delete a newer lock (classic check-then-delete race).</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- 08 ALTERNATIVES -->
+    <section id="alternatives">
+      <div class="section-head"><span class="section-num">08</span><h2>Alternatives Considered</h2></div>
+      <p class="section-intro">Naming what you didn't pick, and why, shows the tradeoff reasoning interviewers are actually grading.</p>
+      <div class="panel">
+        <table>
+          <tbody><tr><th>Alternative</th><th>Rejected because</th></tr>
+          <tr><td>PostGIS / PostgreSQL geospatial index</td><td>Strong consistency and rich querying, but ~100K small writes/sec with single-digit-ms latency is a poor fit for a disk-backed relational store under constant index churn from moving points.</td></tr>
+          <tr><td>Elasticsearch geo-queries</td><td>Great for complex, infrequently-changing geo search (store locators), but its indexing latency doesn't suit a value that changes every 3 seconds per document at this volume.</td></tr>
+          <tr><td>Redis native GEO (GEOADD/GEORADIUS)</td><td>Simpler — no external H3 library — but built on the same square-grid distortion as Geohash; ring/radius correctness suffers exactly where it matters most: mid-density urban cores.</td></tr>
+          <tr><td>Client-side polling (riders pull nearby orders)</td><td>Inverts the push model; every rider polling every few seconds for "any orders near me" multiplies read load by rider count instead of concentrating cost at match time.</td></tr>
+          <tr><td>In-memory app-server cache instead of Redis</td><td>Works at one-instance scale, but with N matching engine instances behind a load balancer, rider location would need to be replicated to every instance — Redis centralizes it once instead.</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- 09 PLAYBOOK -->
+    <section id="playbook">
+      <div class="section-head"><span class="section-num">09</span><h2>Interview Playbook</h2></div>
+      <p class="section-intro">Likely follow-ups once you've walked through the base design, with the shape of a strong SDE-2-level answer.</p>
+
+      <div class="panel">
+        <div class="qa">
+          <div class="q">Downtown hot-spot overloads a single shard (e.g. Friday night, one res-5 parent hex) — what breaks and how do you fix it?</div>
+          <div class="a">The hash-tag design that keeps things fast for normal load becomes the bottleneck: one parent hex means one shard absorbs all read/write traffic for that whole metro. Fixes to discuss: (1) split hot parents into multiple hash-tag shards by adding a sub-shard suffix derived from a hash of the child hex, trading some cross-shard SUNION cost for load spread; (2) cache read-heavy hot zones (surge multiplier, availability counts) in a local in-memory layer refreshed every second instead of hitting Redis per request; (3) apply write-side backpressure — batch rider pings for a hot zone instead of one write per ping per rider.</div>
+        </div>
+        <div class="qa">
+          <div class="q">A Redis shard crashes mid-match — what's the recovery flow?</div>
+          <div class="a">Redis Cluster promotes a replica automatically (assuming replicas are configured), so the shard-level state (hex sets, status hashes) survives with sub-second failover, but in-flight commands during the failover window can be lost. The Matching Engine should treat any Redis error during k-ring expansion as retryable with a short backoff, and any in-flight offer lock as unconfirmed until it reads back a success — never assume a write succeeded on a timeout. Idempotency matters here: retried matching for the same order should be safe to run twice.</div>
+        </div>
+        <div class="qa">
+          <div class="q">Why not just use Redis GEO commands instead of H3?</div>
+          <div class="a"><code>GEOADD</code>/<code>GEORADIUS</code> is geohash-backed under the hood, so it inherits the same square-grid distortion. H3 is chosen specifically for uniform ring expansion and because hexagon adjacency is a solved, well-tested library (used at Uber's actual scale) rather than something to reinvent on top of Redis GEO.</div>
+        </div>
+        <div class="qa">
+          <div class="q">How do you pick resolution 8 specifically, and how would you defend that number?</div>
+          <div class="a">It's a tradeoff between churn and search cost. Too fine (res 9, ~175m) and riders flip between cells on almost every ping, generating unnecessary SREM/SADD pairs. Too coarse (res 7, ~1.2km) and a single hex can hold far more riders than are actually reachable, forcing more OSRM calls than necessary. Res 8 (~740m) roughly matches a typical dense-urban pickup radius, so a k=1 or k=2 ring usually already has enough candidates.</div>
+        </div>
+        <div class="qa">
+          <div class="q">How would you extend this to handle rider preference / fairness, not just nearest-ETA?</div>
+          <div class="a">Pure nearest-ETA optimizes the current order but can starve riders at the edge of a zone over a shift. A common extension: weight ranking by a fairness score (e.g. time since a rider's last delivery, or a rolling earnings target) alongside ETA, or reserve a small percentage of offers for a round-robin pass. Flag the tension explicitly — it's a product tradeoff (customer wait time vs. rider fairness), not a purely technical one, and worth saying so.</div>
+        </div>
+        <div class="qa">
+          <div class="q">How do you test/validate this without a live fleet of riders?</div>
+          <div class="a">Replay recorded GPS traces through the ingestion path in a staging Redis cluster to validate bucket transitions; property-test the locking Lua script directly for the concurrent-claim race (spin up N goroutines/threads hammering the same rider_lock key and assert exactly one succeeds); load-test the matching path with synthetic hex distributions matching real density (dense downtown vs. sparse suburb) to catch k-ring performance cliffs before they hit production.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>H3 + Redis Rider Matching — revision sheet</footer>
+  </div>
+</div>
+
+
+
+</body></html>

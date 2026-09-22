@@ -10,11 +10,9 @@
 
 ## Update Summary
 **Changes Made**
-- Updated the Patterns component section to reflect the new card-based interface with progress metrics, difficulty breakdowns, and actionable insights
-- Added documentation for filtering by topic, progress status, and sorting options
-- Enhanced the architecture overview to include the new pattern cards system
-- Updated data model section to reflect the enhanced pattern card structure
-- Added new sections for pattern card rendering and filtering logic
+- Updated the External Link Integration section to reflect the FileText icon implementation for TakeUForward solution references
+- Enhanced the icon-based interface design documentation to maintain consistency with the new visual approach
+- Updated all references to external link icons throughout the component documentation
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -28,7 +26,7 @@
 9. [Conclusion](#conclusion)
 
 ## Introduction
-The Patterns component provides a comprehensive card-based interface for exploring DSA problems organized by topics and patterns. It displays progress metrics, difficulty breakdowns, and actionable insights for each topic-pattern combination. Users can filter by topic, progress status, and sort options to focus on specific areas of improvement. The component integrates external TakeUForward solution links and provides navigation to individual problem pages for detailed work on notes, solutions, and revision scheduling.
+The Patterns component provides a comprehensive card-based interface for exploring DSA problems organized by topics and patterns. It displays progress metrics, difficulty breakdowns, and actionable insights for each topic-pattern combination. Users can filter by topic, progress status, and sort options to focus on specific areas of improvement. The component integrates external TakeUForward solution links using a consistent FileText icon design and provides navigation to individual problem pages for detailed work on notes, solutions, and revision scheduling.
 
 ## Project Structure
 The Patterns feature is implemented as part of a single-page React application with an enhanced card-based interface. The key data sources are:
@@ -65,7 +63,7 @@ FilterControls --> SortOptions["Sort options"]
 - **Pattern Card Builder**: Creates comprehensive cards for each topic-pattern combination with progress metrics, difficulty breakdowns, and actionable insights.
 - **Enhanced Patterns Component**: Renders a grid of pattern cards with filtering, sorting, and expansion capabilities.
 - **Filter System**: Provides filtering by topic, progress status, and sorting options including weakest, strongest, most problems, and alphabetical sorting.
-- **External Link Helper**: Detects whether a TakeUForward URL exists for a problem and renders an external link icon next to it.
+- **External Link Helper**: Detects whether a TakeUForward URL exists for a problem and renders a FileText icon next to it for consistent visual design.
 - **Navigation**: Clicking a problem row opens the problem detail page via a shared open handler.
 
 Key behaviors:
@@ -74,7 +72,7 @@ Key behaviors:
 - **Difficulty breakdown**: Each card displays Easy, Medium, and Hard problem counts with color-coded chips.
 - **Actionable insights**: Cards highlight weak problems, next recommended problems, and mastery indicators.
 - **Advanced filtering**: Users can filter by topic, progress status, and sort by various criteria.
-- **External link integration**: If a TakeUForward solution URL exists for the problem ID, an external link icon appears next to the problem row.
+- **Icon-based external link integration**: If a TakeUForward solution URL exists for the problem ID, a FileText icon appears next to the problem row, maintaining consistency with the new icon-based interface design.
 
 **Section sources**
 - [main.jsx:507-522](file://src/main.jsx#L507-L522)
@@ -150,7 +148,7 @@ Filters --> Cards["Build pattern cards"]
 Cards --> Visible["Apply filters & sorting"]
 Visible --> Grid["Render card grid"]
 Grid --> Expand{"Card expanded?"}
-Expand --> |Yes| Details["Show problem list with external links"]
+Expand --> |Yes| Details["Show problem list with FileText icons"]
 Expand --> |No| NextUp["Show next recommended problem"]
 Details --> End(["Done"])
 NextUp --> End
@@ -214,10 +212,12 @@ Attempted --> |No| NotStarted["Mark as Not started"]
 **Section sources**
 - [main.jsx:516-517](file://src/main.jsx#L516-L517)
 
-### External Link Integration with TakeUForward
+### Icon-Based External Link Integration with TakeUForward
+**Updated** The external link integration now uses a consistent FileText icon design for TakeUForward solution references, replacing the previous ExternalLink icon to maintain visual consistency across the interface.
+
 - **Source of truth**: tufLinks map keyed by problem id
 - **Detection**: A helper checks if the provided URL is an HTTP(S) link; if so, it returns a link object with href and label
-- **Rendering**: When present, an external link icon is appended to the problem row within expanded cards
+- **Rendering**: When present, a FileText icon is appended to the problem row within expanded cards, providing a uniform visual experience across all external link representations
 
 ```mermaid
 sequenceDiagram
@@ -230,17 +230,17 @@ Row->>L : Lookup by problem id
 L-->>Row : URL or undefined
 Row->>H : Call with URL
 H-->>Row : Link object or null
-Row-->>UI : Render icon if link exists
+Row-->>UI : Render FileText icon if link exists
 ```
 
 **Diagram sources**
 - [main.jsx:63-66](file://src/main.jsx#L63-L66)
-- [main.jsx:621](file://src/main.jsx#L621)
+- [main.jsx:637](file://src/main.jsx#L637)
 - [tuf-links.json:1-10](file://public/data/tuf-links.json#L1-L10)
 
 **Section sources**
 - [main.jsx:63-66](file://src/main.jsx#L63-L66)
-- [main.jsx:621](file://src/main.jsx#L621)
+- [main.jsx:637](file://src/main.jsx#L637)
 - [tuf-links.json:1-10](file://public/data/tuf-links.json#L1-L10)
 
 ### Navigation to Individual Problems
@@ -355,6 +355,7 @@ App --> Patterns["Enhanced Patterns component"]
 - **External link lookup**: O(1) via hash map access by problem id
 - **Rendering optimization**: Cards are grouped by topic and only visible cards are rendered after filtering
 - **Expansion state**: Uses cloud-synced collapse state to maintain user preferences across sessions
+- **Icon rendering**: FileText icons are lightweight SVG components that minimize performance impact
 
 ## Troubleshooting Guide
 - **Missing external links**:
@@ -371,6 +372,9 @@ App --> Patterns["Enhanced Patterns component"]
 - **Card expansion problems**:
   - Ensure collapse state is properly managed in localStorage and cloud sync
   - Verify that card keys are unique and consistent across re-renders
+- **Icon display issues**:
+  - Verify that FileText icon imports are correctly configured from lucide-react
+  - Check that external link detection logic properly identifies HTTP(S) URLs
 
 **Section sources**
 - [main.jsx:63-66](file://src/main.jsx#L63-L66)
@@ -378,4 +382,4 @@ App --> Patterns["Enhanced Patterns component"]
 - [main.jsx:181-186](file://src/main.jsx#L181-L186)
 
 ## Conclusion
-The enhanced Patterns component provides a comprehensive card-based interface for exploring DSA problems organized by topics and patterns. It displays progress metrics, difficulty breakdowns, and actionable insights for each topic-pattern combination with advanced filtering and sorting capabilities. The component integrates external TakeUForward solution links and provides intuitive navigation to individual problem pages for focused study and revision. The card-based design makes it easy to identify areas needing attention and track progress across different patterns and topics.
+The enhanced Patterns component provides a comprehensive card-based interface for exploring DSA problems organized by topics and patterns. It displays progress metrics, difficulty breakdowns, and actionable insights for each topic-pattern combination with advanced filtering and sorting capabilities. The component integrates external TakeUForward solution links using a consistent FileText icon design and provides intuitive navigation to individual problem pages for focused study and revision. The icon-based interface maintains visual consistency across all external link representations, making it easy to identify areas needing attention and track progress across different patterns and topics.

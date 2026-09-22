@@ -5,12 +5,16 @@
 - [main.jsx](file://src/main.jsx)
 - [problems.json](file://public/data/problems.json)
 - [solutions.json](file://public/data/solutions.json)
-- [state.js](file://api/state.js)
-- [auth.js](file://api/auth.js)
-- [prepare-data.mjs](file://scripts/prepare-data.mjs)
+- [tuf-links.json](file://public/data/tuf-links.json)
 - [extract-tuf-links.mjs](file://scripts/extract-tuf-links.mjs)
-- [README.md](file://README.md)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Updated default tab behavior to prioritize Solutions over Notes for better user experience
+- Enhanced header navigation with improved icon-based external resource links
+- Improved integration with personal solutions and TakeUForward editorial content
+- Added visual indicators for personal solution availability and external link presence
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -25,23 +29,24 @@
 
 ## Introduction
 This document explains the Problem Detail component that powers per-problem learning, solution management, and revision tracking. It covers:
-- The three-tab interface: Learning Notes, Solutions, Meta
+- The three-tab interface: Learning Notes, Solutions, Meta (with enhanced default Solutions tab behavior)
 - Structured note editing with fields for insight, mistake, approach, complexity, and interview cues
 - Solution management with multi-language support (Java and C#), including built-in solutions, personal copies, locking, and code copying
 - Status marking, confidence tracking, revision scheduling, and favorites
 - Integration with external links (TakeUForward editorial, LeetCode, videos) and activity recording
+- Enhanced header navigation with icon-based external resource links
 
 The component is implemented as a single-page React application using local-first storage with optional cloud sync.
 
 **Section sources**
-- [README.md:1-59](file://README.md#L1-L59)
+- [main.jsx:828-855](file://src/main.jsx#L828-L855)
 
 ## Project Structure
 At runtime, the app loads problem metadata, built-in solutions, and TakeUForward link mappings from static JSON files, then renders the Problem Detail view when a problem is selected.
 
 ```mermaid
 graph TB
-A["App state<br/>progress, notes, solutions, activity, settings"] --> B["Problem Detail<br/>tabs: Notes / Solutions / Meta"]
+A["App state<br/>progress, notes, solutions, activity, settings"] --> B["Problem Detail<br/>tabs: Solutions / Notes / Meta"]
 C["problems.json"] --> A
 D["solutions.json"] --> B
 E["tuf-links.json"] --> B
@@ -50,28 +55,28 @@ G["Cloud sync API<br/>/api/auth, /api/state"] --> A
 ```
 
 **Diagram sources**
-- [main.jsx:74-125](file://src/main.jsx#L74-L125)
-- [main.jsx:153-182](file://src/main.jsx#L153-L182)
-- [main.jsx:450-653](file://src/main.jsx#L450-L653)
+- [main.jsx:120-128](file://src/main.jsx#L120-L128)
+- [main.jsx:182-217](file://src/main.jsx#L182-L217)
+- [main.jsx:828-855](file://src/main.jsx#L828-L855)
 
 **Section sources**
-- [main.jsx:74-125](file://src/main.jsx#L74-L125)
+- [main.jsx:120-128](file://src/main.jsx#L120-L128)
 - [problems.json:1-200](file://public/data/problems.json#L1-L200)
-- [solutions.json:1-13](file://public/data/solutions.json#L1-L13)
+- [solutions.json:1-200](file://public/data/solutions.json#L1-L200)
 
 ## Core Components
-- Problem Detail view: Renders header, status actions, toolbar, and three tabs (Learning Notes, Solutions, Meta).
+- Problem Detail view: Renders header with enhanced icon-based navigation, status actions, toolbar, and three tabs (Solutions, Learning Notes, Meta).
 - Learning Notes tab: Structured fields with edit/view modes and save/clear actions.
 - Solutions tab: Approach editor with complexity analysis, explanation, and Java/C# code; supports built-in solutions, personal copies, adding/removing approaches, locking, and copying code.
 - Meta tab: Revision ladder visualization, metadata display, and mastery checklist.
 - Status and confidence controls: Mark problems as Attempted/Solved/Mastered or reset to Not Started; set confidence levels.
 - Revision scheduler: Schedule next review using spaced intervals; track attempts and last revised time.
 - Favorites toggle: Star/unstar problems for quick filtering.
-- External integrations: Links to TakeUForward editorial, LeetCode, and video explanations.
+- External integrations: Links to TakeUForward editorial, LeetCode, and video explanations with improved icon-based navigation.
 - Activity recording: Increments daily activity count on meaningful interactions.
 
 **Section sources**
-- [main.jsx:450-653](file://src/main.jsx#L450-L653)
+- [main.jsx:828-1081](file://src/main.jsx#L828-L1081)
 
 ## Architecture Overview
 The Problem Detail component integrates data from multiple sources and persists user changes locally and optionally to the cloud.
@@ -97,35 +102,36 @@ Cloud-->>UI : Save confirmation or error
 ```
 
 **Diagram sources**
-- [main.jsx:74-125](file://src/main.jsx#L74-L125)
-- [main.jsx:133-146](file://src/main.jsx#L133-L146)
-- [main.jsx:450-653](file://src/main.jsx#L450-L653)
-- [state.js:40-63](file://api/state.js#L40-L63)
-- [auth.js:8-29](file://api/auth.js#L8-L29)
+- [main.jsx:120-128](file://src/main.jsx#L120-L128)
+- [main.jsx:182-217](file://src/main.jsx#L182-L217)
+- [main.jsx:828-855](file://src/main.jsx#L828-L855)
 
 ## Detailed Component Analysis
 
-### Three-Tab Interface
-- Learning Notes: Displays structured fields and counts filled fields; supports edit/view modes.
-- Solutions: Shows approach list with complexity, explanation, and language-specific code; supports built-in vs personal copy.
-- Meta: Shows revision steps, metadata, and mastery checklist.
+### Enhanced Three-Tab Interface with Default Solutions Tab
+- **Default Behavior**: The component now defaults to showing the Solutions tab when opening a problem, providing immediate access to reference implementations and personal solutions.
+- **Learning Notes**: Displays structured fields and counts filled fields; supports edit/view modes.
+- **Solutions**: Shows approach list with complexity, explanation, and language-specific code; supports built-in vs personal copy.
+- **Meta**: Shows revision steps, metadata, and mastery checklist.
 
 ```mermaid
 flowchart TD
-Start(["Open Problem Detail"]) --> Tabs["Select Tab"]
+Start(["Open Problem Detail"]) --> Default["Default to Solutions Tab"]
+Default --> SolView["Approach editor with languages"]
+SolView --> Tabs["User can switch to other tabs"]
 Tabs --> |Notes| NotesView["View/Edit structured notes"]
-Tabs --> |Solutions| SolView["Approach editor with languages"]
 Tabs --> |Meta| MetaView["Revision ladder & metadata"]
-NotesView --> SaveNotes["Save notes to local state"]
-SolView --> LockSol["Lock & save personal solutions"]
-MetaView --> Schedule["Schedule next revision"]
 ```
 
+**Updated** Enhanced default behavior prioritizes solutions access for better workflow efficiency.
+
 **Diagram sources**
-- [main.jsx:552-653](file://src/main.jsx#L552-L653)
+- [main.jsx:828-855](file://src/main.jsx#L828-L855)
+- [main.jsx:978-982](file://src/main.jsx#L978-L982)
 
 **Section sources**
-- [main.jsx:552-653](file://src/main.jsx#L552-L653)
+- [main.jsx:828-855](file://src/main.jsx#L828-L855)
+- [main.jsx:978-982](file://src/main.jsx#L978-L982)
 
 ### Note Editing System with Structured Fields
 - Fields: Insight, Mistake, Approach, Complexity, Interview cue.
@@ -146,10 +152,10 @@ Save --> Exit
 ```
 
 **Diagram sources**
-- [main.jsx:558-596](file://src/main.jsx#L558-L596)
+- [main.jsx:984-1023](file://src/main.jsx#L984-L1023)
 
 **Section sources**
-- [main.jsx:558-596](file://src/main.jsx#L558-L596)
+- [main.jsx:984-1023](file://src/main.jsx#L984-L1023)
 
 ### Solution Management with Multi-Language Support (Java & C#)
 - Built-in solutions: Loaded from solutions.json; displayed as read-only reference implementations.
@@ -182,12 +188,40 @@ LanguageSwitch --> Approach : "renders code[language]"
 ```
 
 **Diagram sources**
-- [main.jsx:598-646](file://src/main.jsx#L598-L646)
-- [solutions.json:1-13](file://public/data/solutions.json#L1-L13)
+- [main.jsx:1025-1073](file://src/main.jsx#L1025-L1073)
+- [solutions.json:1-200](file://public/data/solutions.json#L1-L200)
 
 **Section sources**
-- [main.jsx:598-646](file://src/main.jsx#L598-L646)
-- [solutions.json:1-13](file://public/data/solutions.json#L1-L13)
+- [main.jsx:1025-1073](file://src/main.jsx#L1025-L1073)
+- [solutions.json:1-200](file://public/data/solutions.json#L1-L200)
+
+### Enhanced Header Navigation with Icon-Based External Resource Links
+- **Personal Solutions Indicator**: Visual indicator showing when personal solutions exist for a problem, with direct navigation to solutions tab.
+- **TakeUForward Editorial Link**: Direct link to TakeUForward editorial content with FileText icon.
+- **LeetCode Integration**: Direct link to LeetCode problem page with Code2 icon.
+- **Video Integration**: Direct link to explanatory videos with Play icon.
+- **Visual Feedback**: Icons provide immediate visual cues about available external resources.
+
+```mermaid
+flowchart TD
+Header["Problem Header"] --> PersonalSol{"Has Personal Solutions?"}
+PersonalSol --> |Yes| PenIcon["PenLine Icon → Solutions Tab"]
+PersonalSol --> |No| NextCheck{"Has TUF Link?"}
+NextCheck --> |Yes| FileIcon["FileText Icon → TUF Editorial"]
+NextCheck --> |No| LeetCodeCheck{"Has LeetCode Link?"}
+LeetCodeCheck --> |Yes| CodeIcon["Code2 Icon → LeetCode"]
+LeetCodeCheck --> |No| VideoCheck{"Has Video Link?"}
+VideoCheck --> |Yes| PlayIcon["Play Icon → Video"]
+VideoCheck --> |No| NoLink["No external links"]
+```
+
+**Updated** Enhanced header navigation provides better visual indicators and direct access to external resources.
+
+**Diagram sources**
+- [main.jsx:950-963](file://src/main.jsx#L950-L963)
+
+**Section sources**
+- [main.jsx:950-963](file://src/main.jsx#L950-L963)
 
 ### Status Marking System, Confidence Tracking, Revision Scheduling, and Favorites
 - Status options: Not Started, Attempted, Solved, Mastered.
@@ -205,17 +239,15 @@ RecordActivity --> Feedback["Show toast confirmation"]
 ```
 
 **Diagram sources**
-- [main.jsx:511-524](file://src/main.jsx#L511-L524)
-- [main.jsx:539-550](file://src/main.jsx#L539-L550)
+- [main.jsx:930-946](file://src/main.jsx#L930-L946)
 
 **Section sources**
-- [main.jsx:511-524](file://src/main.jsx#L511-L524)
-- [main.jsx:539-550](file://src/main.jsx#L539-L550)
+- [main.jsx:930-946](file://src/main.jsx#L930-L946)
 
 ### Approach Editor with Complexity Analysis, Code Copying, and Solution Locking
 - Complexity analysis: Time and Space fields per approach; Level dropdown for categorization.
 - Explanation: Free-text field guiding reasoning and pattern recognition.
-- Code copying: Copies current language’s code to clipboard; visual feedback on success.
+- Code copying: Copies current language's code to clipboard; visual feedback on success.
 - Locking: Saving locks the personal copy and persists it locally; discarding reverts to built-in or default approaches.
 
 ```mermaid
@@ -232,61 +264,61 @@ Editor-->>User : Toast "Solutions locked & saved."
 ```
 
 **Diagram sources**
-- [main.jsx:491-510](file://src/main.jsx#L491-L510)
-- [main.jsx:616-646](file://src/main.jsx#L616-L646)
+- [main.jsx:910-929](file://src/main.jsx#L910-L929)
+- [main.jsx:1025-1073](file://src/main.jsx#L1025-L1073)
 
 **Section sources**
-- [main.jsx:491-510](file://src/main.jsx#L491-L510)
-- [main.jsx:616-646](file://src/main.jsx#L616-L646)
+- [main.jsx:910-929](file://src/main.jsx#L910-L929)
+- [main.jsx:1025-1073](file://src/main.jsx#L1025-L1073)
 
-### Integration with Built-in Solutions, External Links, and Activity Recording
-- Built-in solutions: Loaded from public/data/solutions.json; shown as reference implementations unless unlocked for personal editing.
-- External links:
-  - TakeUForward editorial link derived from tuf-links.json mapping.
+### Enhanced Integration with Built-in Solutions, External Links, and Activity Recording
+- **Built-in solutions**: Loaded from public/data/solutions.json; shown as reference implementations unless unlocked for personal editing.
+- **Enhanced External Links**:
+  - TakeUForward editorial link derived from tuf-links.json mapping with improved URL generation.
   - LeetCode link extracted from problem url when applicable.
   - Video link from problem metadata.
-- Activity recording: Increments daily activity on status changes and other meaningful interactions.
+  - Personal solutions indicator with direct navigation.
+- **Activity recording**: Increments daily activity on status changes and other meaningful interactions.
 
 ```mermaid
 graph LR
 P["Problem Metadata"] --> L1["TUF Editorial Link"]
 P --> L2["LeetCode Link"]
 P --> L3["Video Link"]
+P --> L4["Personal Solutions Indicator"]
 U["User Actions"] --> A["Activity Counter"]
 A --> LS["LocalStorage"]
 LS --> Cloud["Cloud Sync (optional)"]
 ```
 
+**Updated** Enhanced integration provides better visual indicators and more reliable external link resolution.
+
 **Diagram sources**
-- [main.jsx:528-537](file://src/main.jsx#L528-L537)
-- [main.jsx:180-182](file://src/main.jsx#L180-L182)
-- [extract-tuf-links.mjs:61-68](file://scripts/extract-tuf-links.mjs#L61-L68)
+- [main.jsx:950-963](file://src/main.jsx#L950-L963)
+- [extract-tuf-links.mjs:39-66](file://scripts/extract-tuf-links.mjs#L39-L66)
 
 **Section sources**
-- [main.jsx:528-537](file://src/main.jsx#L528-L537)
-- [main.jsx:180-182](file://src/main.jsx#L180-L182)
-- [extract-tuf-links.mjs:61-68](file://scripts/extract-tuf-links.mjs#L61-L68)
+- [main.jsx:950-963](file://src/main.jsx#L950-L963)
+- [extract-tuf-links.mjs:39-66](file://scripts/extract-tuf-links.mjs#L39-L66)
 
 ## Dependency Analysis
 - Data dependencies:
   - problems.json provides problem catalog with topic, pattern, difficulty, and URLs.
   - solutions.json provides built-in approaches with Java and C# code.
-  - tuf-links.json maps problem ids to TakeUForward editorial URLs.
+  - tuf-links.json maps problem ids to TakeUForward editorial URLs with improved URL generation.
 - Runtime dependencies:
   - LocalStorage for persistence of progress, notes, solutions, activity, and settings.
   - Optional cloud sync via /api/auth and /api/state endpoints backed by Neon Postgres.
 - Build-time dependencies:
-  - prepare-data.mjs curates problems and patterns.
-  - extract-tuf-links.mjs generates tuf-links.json from TakeUForward page content.
+  - extract-tuf-links.mjs generates tuf-links.json from TakeUForward page content with enhanced URL mapping logic.
 
 ```mermaid
 graph TB
 subgraph "Build-time"
-PD["prepare-data.mjs"] --> PJ["problems.json"]
 ET["extract-tuf-links.mjs"] --> TL["tuf-links.json"]
 end
 subgraph "Runtime"
-PJ --> App["App State"]
+PJ["problems.json"] --> App["App State"]
 SL["solutions.json"] --> PDet["Problem Detail"]
 TL --> PDet
 LS["localStorage"] --> App
@@ -295,26 +327,19 @@ end
 ```
 
 **Diagram sources**
-- [prepare-data.mjs:737-748](file://scripts/prepare-data.mjs#L737-L748)
-- [extract-tuf-links.mjs:61-68](file://scripts/extract-tuf-links.mjs#L61-L68)
-- [main.jsx:74-125](file://src/main.jsx#L74-L125)
-- [state.js:40-63](file://api/state.js#L40-L63)
-- [auth.js:8-29](file://api/auth.js#L8-L29)
+- [extract-tuf-links.mjs:39-66](file://scripts/extract-tuf-links.mjs#L39-L66)
+- [main.jsx:120-128](file://src/main.jsx#L120-L128)
 
 **Section sources**
-- [prepare-data.mjs:737-748](file://scripts/prepare-data.mjs#L737-L748)
-- [extract-tuf-links.mjs:61-68](file://scripts/extract-tuf-links.mjs#L61-L68)
-- [main.jsx:74-125](file://src/main.jsx#L74-L125)
-- [state.js:40-63](file://api/state.js#L40-L63)
-- [auth.js:8-29](file://api/auth.js#L8-L29)
+- [extract-tuf-links.mjs:39-66](file://scripts/extract-tuf-links.mjs#L39-L66)
+- [main.jsx:120-128](file://src/main.jsx#L120-L128)
 
 ## Performance Considerations
 - Local-first design minimizes network calls; only debounced cloud sync occurs after changes.
 - Static JSON assets are loaded once at startup; problem lists are large but filtered efficiently.
 - Avoid unnecessary re-renders by keeping local states scoped to components and using memoization where appropriate.
 - Clipboard operations should be guarded and brief to avoid blocking UI.
-
-[No sources needed since this section provides general guidance]
+- Enhanced icon-based navigation reduces DOM manipulation overhead compared to text-based links.
 
 ## Troubleshooting Guide
 - Storage errors: If localStorage fails, a toast prompts exporting a backup from Settings.
@@ -322,15 +347,11 @@ end
   - Authentication failures return descriptive errors; ensure APP_ACCESS_PASSWORD is configured.
   - Database unavailability returns an error; check DATABASE_URL configuration.
 - Data integrity: Import/export backups allow recovery; resetting clears all local data.
+- External link issues: Verify tuf-links.json contains valid URLs for problems; rebuild links if needed.
 
 **Section sources**
-- [main.jsx:29-52](file://src/main.jsx#L29-L52)
-- [main.jsx:147-152](file://src/main.jsx#L147-L152)
-- [main.jsx:656-677](file://src/main.jsx#L656-L677)
-- [state.js:40-63](file://api/state.js#L40-L63)
-- [auth.js:8-29](file://api/auth.js#L8-L29)
+- [main.jsx:240-244](file://src/main.jsx#L240-L244)
+- [main.jsx:1083-1104](file://src/main.jsx#L1083-L1104)
 
 ## Conclusion
-The Problem Detail component provides a comprehensive workflow for mastering DSA problems through structured notes, multi-language solution management, spaced revision scheduling, and robust tracking of progress and confidence. Its local-first architecture ensures fast, reliable operation, while optional cloud sync enables cross-device continuity. Integrations with external resources streamline access to explanations and videos, and activity recording helps maintain consistent practice habits.
-
-[No sources needed since this section summarizes without analyzing specific files]
+The Problem Detail component provides a comprehensive workflow for mastering DSA problems through structured notes, multi-language solution management, spaced revision scheduling, and robust tracking of progress and confidence. The enhanced default Solutions tab behavior and improved icon-based external resource navigation significantly improve user experience by providing immediate access to reference implementations and external learning materials. Its local-first architecture ensures fast, reliable operation, while optional cloud sync enables cross-device continuity. Integrations with external resources streamline access to explanations and videos, and activity recording helps maintain consistent practice habits.

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Distributed Job Scheduler — Revision Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try{var t=new URLSearchParams(location.search).get('theme');if(t==='dark'){document.documentElement.setAttribute('data-theme','dark')}else if(t==='light'){document.documentElement.setAttribute('data-theme','light')}}catch(e){}</script><style>
+  :root[data-theme="light"]{ --bg: #F1F2F0; --panel: #FFFFFF; --panel-2: #FAFBF9; --line: #DEE1DC; --text: #1A1F27; --muted: #5B6472; }
+  :root {
+    --bg: #0D1420; --panel: #131C2B; --panel-2: #17202F; --line: #253247; --text: #E6ECF5; --muted: #8A99AE;
+    --azure: #5BA9E0; --azure-dim: #2C4B6B; --amber: #E0A94F; --amber-dim: #6E5730;
+    --teal: #4FB5A8; --teal-dim: #2A5750; --rust: #DB6E56; --rust-dim: #6E392A;
+    --radius-panel: 10px; --radius-tag: 6px;
+    box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) { --bg: #F1F2F0; --panel: #FFFFFF; --panel-2: #FAFBF9; --line: #DEE1DC; --text: #1A1F27; --muted: #5B6472; }
+  }
+  :root[data-theme="dark"] { --bg: #0D1420; --panel: #131C2B; --panel-2: #17202F; --line: #253247; --text: #E6ECF5; --muted: #8A99AE; }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1;
+    background-image: radial-gradient(circle at 12% 15%, rgba(91,169,224,0.07), transparent 40%), radial-gradient(circle at 88% 80%, rgba(224,169,79,0.05), transparent 40%);
+    pointer-events: none;
+  }
+  h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin: 0 0 0.5em 0; letter-spacing: -0.01em; }
+  a { color: var(--teal); }
+  code, .mono { font-family: 'JetBrains Mono', monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px 100px; }
+
+  .hero { padding: 72px 0 48px; border-bottom: 1px solid var(--line); margin-bottom: 56px; }
+  .hero .kicker { font-size: 14px; color: var(--azure); font-family: 'JetBrains Mono', monospace; margin-bottom: 14px; }
+  .hero h1 { font-size: clamp(32px, 5vw, 48px); line-height: 1.08; max-width: 17ch; }
+  .hero p.sub { color: var(--muted); font-size: 17px; max-width: 62ch; margin-top: 16px; }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 36px; }
+  .stat { min-width: 120px; }
+  .stat .num { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 600; color: var(--teal); }
+  .stat .label { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  section { margin-bottom: 64px; scroll-margin-top: 20px; }
+  .section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 22px; }
+  .section-num { font-family: 'JetBrains Mono', monospace; color: var(--azure); font-size: 14px; }
+  .section-head h2 { font-size: 24px; }
+  .section-intro { color: var(--muted); max-width: 68ch; margin-bottom: 24px; font-size: 15px; }
+
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-panel); padding: 24px; }
+  .panel + .panel { margin-top: 18px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  @media (max-width: 720px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  svg { max-width: 100%; height: auto; display: block; }
+  .diagram-caption { color: var(--muted); font-size: 13px; margin-top: 10px; text-align: center; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 14px; font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-family: 'JetBrains Mono', monospace; font-size: 12px; white-space: nowrap; }
+  td.mono, th.mono { font-family: 'JetBrains Mono', monospace; }
+
+  .tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 2px 8px; border-radius: var(--radius-tag); border: 1px solid var(--line); color: var(--muted); }
+  .tag.azure { color: var(--azure); border-color: var(--azure-dim); }
+  .tag.amber { color: var(--amber); border-color: var(--amber-dim); }
+  .tag.teal { color: var(--teal); border-color: var(--teal-dim); }
+  .tag.rust { color: var(--rust); border-color: var(--rust-dim); }
+
+  pre { background: #0A0F18; border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 14px 0 0; }
+  :root:not([data-theme="dark"]) pre { background: #F3F2EE; }
+  pre code { color: var(--text); }
+  .comment { color: var(--muted); }
+  .kw { color: var(--teal); }
+  .str { color: var(--amber); }
+  .fn { color: var(--azure); }
+
+  .edge-card { border-left: 3px solid var(--rust); padding-left: 18px; }
+  .edge-card h3 { display: flex; align-items: center; gap: 10px; font-size: 17px; }
+  .edge-card .sev { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--rust); border: 1px solid var(--rust-dim); padding: 2px 7px; border-radius: 5px; }
+
+  .flow-step { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .flow-step:last-child { border-bottom: none; }
+  .flow-step .idx { font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--azure); font-size: 15px; min-width: 22px; }
+  .flow-step .body h4 { font-size: 15.5px; margin-bottom: 4px; }
+  .flow-step .body p { color: var(--muted); font-size: 14px; margin: 0; }
+
+  .qa { border-bottom: 1px solid var(--line); padding: 16px 0; }
+  .qa:last-child { border-bottom: none; }
+  .qa .q { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+  .qa .a { color: var(--muted); font-size: 14.5px; }
+
+  .calc-line { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 14px; }
+  .calc-line:last-child { border-bottom: none; }
+  .calc-line .k { color: var(--muted); }
+  .calc-line .v { font-family: 'JetBrains Mono', monospace; color: var(--text); text-align: right; }
+  .calc-result { margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-weight: 600; }
+  .calc-result .v { color: var(--teal); font-family: 'JetBrains Mono', monospace; }
+
+  .toc { position: sticky; top: 20px; display: none; }
+  @media (min-width: 1180px) {
+    .page { display: flex; gap: 40px; max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+    .wrap { padding: 0; max-width: none; flex: 1; }
+    .toc { display: block; width: 200px; padding-top: 90px; }
+    .toc a { display: block; color: var(--muted); text-decoration: none; font-size: 12.5px; padding: 5px 0; border-left: 2px solid transparent; padding-left: 12px; }
+    .toc a:hover { color: var(--text); border-left-color: var(--azure); }
+  }
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 40px 0 20px; border-top: 1px solid var(--line); margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <nav class="toc">
+    <a href="#reqs">01 · Requirements</a>
+    <a href="#flow">02 · Architecture</a>
+    <a href="#data">03 · Data Model</a>
+    <a href="#wheel">04 · Timing Wheel & Lease</a>
+    <a href="#query">05 · Querying Due Jobs</a>
+    <a href="#sharding">06 · Sharding Strategy</a>
+    <a href="#partition">07 · Table Partitioning</a>
+    <a href="#tiered">08 · Tiered Storage</a>
+    <a href="#faults">09 · Fault Tolerance</a>
+    <a href="#capacity">10 · Capacity Plan</a>
+    <a href="#alternatives">11 · Alternatives</a>
+    <a href="#playbook">12 · Interview Playbook</a>
+  </nav>
+
+  <div class="wrap">
+    <div class="hero">
+      <div class="kicker">SYSTEM DESIGN REVISION · SDE-2 DEPTH</div>
+      <h1>Distributed Job Scheduler</h1>
+      <p class="sub">Cron jobs, ad-hoc tasks, and billions of executions a day — how to orchestrate timing without polling a database into the ground, and how to shard, partition, and tier storage so the scan for "what's due right now" never touches more than a sliver of the data.</p>
+      <div class="stat-row">
+        <div class="stat"><div class="num">10⁴/s</div><div class="label">job submissions target</div></div>
+        <div class="stat"><div class="num">10⁹/day</div><div class="label">coordinated task executions</div></div>
+        <div class="stat"><div class="num">1–2s</div><div class="label">trigger latency target</div></div>
+        <div class="stat"><div class="num">≥1</div><div class="label">execution guarantee</div></div>
+      </div>
+    </div>
+
+    <!-- 01 REQUIREMENTS -->
+    <section id="reqs">
+      <div class="section-head"><span class="section-num">01</span><h2>Requirements</h2></div>
+      <p class="section-intro">State these before drawing anything — the non-functional column is what forces every interesting decision later (timing wheel, sharding key, tiered storage).</p>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Functional</h3>
+          <table>
+            <tr><td>Submit</td><td>Ad-hoc one-off tasks, or recurring jobs via cron expression</td></tr>
+            <tr><td>Query</td><td>Current status + historical execution record for a job</td></tr>
+            <tr><td>Manage</td><td>Pause, resume, cancel, or manually trigger a schedule</td></tr>
+            <tr><td>Logs</td><td>Retrieve stdout/telemetry for a past run</td></tr>
+          </table>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Non-functional</h3>
+          <table>
+            <tr><td>Scale</td><td>10⁴ submissions/s, billions of executions/day</td></tr>
+            <tr><td>Durability</td><td>Once accepted, a job must never be lost</td></tr>
+            <tr><td>Latency</td><td>Trigger within 1–2s of scheduled time</td></tr>
+            <tr><td>Execution guarantee</td><td>At-least-once dispatch to a runner</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">The tension to name up front:</strong> jobs are accessed two conflicting ways — by <em>time</em> (the scheduler asking "what's due now") and by <em>identity</em> (a user asking "what's the status of my job"). Almost every hard decision in this design — sharding key, index shape, storage tiering — exists to serve both access patterns without one degrading the other.</p>
+      </div>
+    </section>
+
+    <!-- 02 ARCHITECTURE -->
+    <section id="flow">
+      <div class="section-head"><span class="section-num">02</span><h2>End-to-End Architecture</h2></div>
+      <p class="section-intro">Three concerns, decoupled so each scales independently: <span class="tag azure">submission</span> (API path, write-heavy but simple), <span class="tag amber">scheduling</span> (time coordination, the hard part), and <span class="tag teal">execution</span> (resource management, embarrassingly parallel).</p>
+
+      <div class="panel">
+        <svg viewBox="0 0 940 340" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="jArrA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5BA9E0"/></marker>
+            <marker id="jArrB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#E0A94F"/></marker>
+            <marker id="jArrC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4FB5A8"/></marker>
+            <marker id="jArrM" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8A99AE"/></marker>
+          </defs>
+          <text x="8" y="24" font-family="JetBrains Mono, monospace" font-size="11" fill="#5BA9E0">SUBMISSION — sync, low latency</text>
+          <line x1="0" y1="34" x2="940" y2="34" stroke="#253247" stroke-dasharray="2 4"/>
+          <text x="8" y="150" font-family="JetBrains Mono, monospace" font-size="11" fill="#E0A94F">SCHEDULING — time coordination, in-memory</text>
+          <line x1="0" y1="160" x2="940" y2="160" stroke="#253247" stroke-dasharray="2 4"/>
+          <text x="8" y="270" font-family="JetBrains Mono, monospace" font-size="11" fill="#4FB5A8">EXECUTION — pull model, stateless</text>
+          <line x1="0" y1="280" x2="940" y2="280" stroke="#253247" stroke-dasharray="2 4"/>
+
+          <g font-family="Inter, sans-serif" font-size="12" fill="#E6ECF5">
+            <rect x="10" y="50" width="110" height="58" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="65" y="74" text-anchor="middle" font-weight="600" font-size="12">Client / UI</text>
+            <text x="65" y="90" text-anchor="middle" fill="#8A99AE" font-size="10">cron or ad-hoc</text>
+
+            <rect x="155" y="50" width="110" height="58" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="210" y="74" text-anchor="middle" font-weight="600" font-size="12">API Gateway</text>
+            <text x="210" y="90" text-anchor="middle" fill="#8A99AE" font-size="10">auth, validate</text>
+
+            <rect x="300" y="50" width="130" height="58" rx="8" fill="#17202F" stroke="#5BA9E0"/>
+            <text x="365" y="74" text-anchor="middle" font-weight="600" fill="#5BA9E0" font-size="12">Job Service</text>
+            <text x="365" y="90" text-anchor="middle" fill="#8A99AE" font-size="10">persists definition</text>
+
+            <rect x="470" y="50" width="150" height="58" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="545" y="72" text-anchor="middle" font-weight="600" font-size="12">Metadata DB</text>
+            <text x="545" y="88" text-anchor="middle" fill="#8A99AE" font-size="10">sharded Postgres</text>
+            <text x="545" y="101" text-anchor="middle" fill="#8A99AE" font-size="9.5">source of truth</text>
+
+            <rect x="670" y="50" width="140" height="58" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="740" y="74" text-anchor="middle" font-weight="600" font-size="12">Query Service</text>
+            <text x="740" y="90" text-anchor="middle" fill="#8A99AE" font-size="10">status / history reads</text>
+
+            <rect x="830" y="50" width="100" height="58" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="880" y="74" text-anchor="middle" font-weight="600" font-size="11.5">Read Replica</text>
+            <text x="880" y="90" text-anchor="middle" fill="#8A99AE" font-size="9.5">NoSQL/search</text>
+
+            <rect x="300" y="175" width="150" height="55" rx="8" fill="#17202F" stroke="#E0A94F"/>
+            <text x="375" y="197" text-anchor="middle" font-weight="600" fill="#E0A94F" font-size="12">Redis ZSET</text>
+            <text x="375" y="213" text-anchor="middle" fill="#8A99AE" font-size="10">time-indexed hot buffer</text>
+
+            <rect x="490" y="175" width="150" height="55" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="565" y="197" text-anchor="middle" font-weight="600" font-size="12">Scheduler Node</text>
+            <text x="565" y="213" text-anchor="middle" fill="#8A99AE" font-size="10">timing wheel + lease</text>
+
+            <rect x="30" y="290" width="150" height="40" rx="8" fill="#17202F" stroke="#4FB5A8"/>
+            <text x="105" y="315" text-anchor="middle" font-weight="600" fill="#4FB5A8" font-size="12">Kafka / RabbitMQ</text>
+
+            <rect x="220" y="290" width="130" height="40" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="285" y="315" text-anchor="middle" font-weight="600" font-size="12">Worker Pool</text>
+
+            <rect x="390" y="290" width="150" height="40" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="465" y="315" text-anchor="middle" font-weight="600" font-size="11.5">Cassandra / S3</text>
+            <text x="465" y="327" text-anchor="middle" fill="#8A99AE" font-size="9">logs &amp; history</text>
+          </g>
+
+          <path d="M120,79 H153" stroke="#5BA9E0" stroke-width="1.4" marker-end="url(#jArrA)" fill="none"/>
+          <path d="M265,79 H298" stroke="#5BA9E0" stroke-width="1.4" marker-end="url(#jArrA)" fill="none"/>
+          <path d="M430,79 H468" stroke="#5BA9E0" stroke-width="1.4" marker-end="url(#jArrA)" fill="none"/>
+          <path d="M620,79 H668" stroke="#8A99AE" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#jArrM)" fill="none"/>
+          <path d="M810,79 H828" stroke="#8A99AE" stroke-width="1.2" marker-end="url(#jArrM)" fill="none"/>
+          <text x="800" y="42" text-anchor="middle" fill="#8A99AE" font-size="9.5" font-family="JetBrains Mono, monospace">CDC</text>
+
+          <path d="M545,108 Q545,145 375,173" stroke="#E0A94F" stroke-width="1.3" stroke-dasharray="3 3" marker-end="url(#jArrB)" fill="none"/>
+          <text x="450" y="150" fill="#E0A94F" font-size="9.5" font-family="JetBrains Mono, monospace">sweeper / CDC</text>
+          <path d="M450,202 H488" stroke="#E0A94F" stroke-width="1.4" marker-end="url(#jArrB)" fill="none"/>
+          <text x="470" y="196" fill="#E0A94F" font-size="9" font-family="JetBrains Mono, monospace">ZRANGEBYSCORE</text>
+
+          <path d="M565,230 Q565,265 180,288" stroke="#4FB5A8" stroke-width="1.3" marker-end="url(#jArrC)" fill="none"/>
+          <text x="380" y="255" fill="#4FB5A8" font-size="9.5" font-family="JetBrains Mono, monospace">enqueue due tasks</text>
+          <path d="M180,310 H218" stroke="#4FB5A8" stroke-width="1.4" marker-end="url(#jArrC)" fill="none"/>
+          <text x="200" y="304" fill="#4FB5A8" font-size="9" font-family="JetBrains Mono, monospace">pull</text>
+          <path d="M350,310 H388" stroke="#8A99AE" stroke-width="1.3" marker-end="url(#jArrM)" fill="none"/>
+        </svg>
+        <div class="legend">
+          <span><span class="swatch" style="background:#5BA9E0;"></span>submission path</span>
+          <span><span class="swatch" style="background:#E0A94F;"></span>scheduling / time layer</span>
+          <span><span class="swatch" style="background:#4FB5A8;"></span>execution path</span>
+          <span><span class="swatch" style="background:#8A99AE;"></span>async / background</span>
+        </div>
+        <div class="diagram-caption">The metadata DB is the durable source of truth; Redis is a disposable, rebuildable cache of "what's due soon." Losing the Redis layer is an availability blip, not a data-loss event — that distinction is worth stating explicitly in an interview.</div>
+      </div>
+
+      <div class="panel">
+        <div class="flow-step"><div class="idx">1</div><div class="body"><h4>Submit</h4><p>Job Service validates the payload (cron syntax, command reference) and writes it to the sharded metadata DB — this write must succeed before the API returns, since durability is a hard requirement.</p></div></div>
+        <div class="flow-step"><div class="idx">2</div><div class="body"><h4>Surface</h4><p>A CDC stream (or periodic sweeper) moves jobs due within the next lookahead window from cold storage into a Redis sorted set, scored by their next trigger timestamp.</p></div></div>
+        <div class="flow-step"><div class="idx">3</div><div class="body"><h4>Coordinate</h4><p>Scheduler nodes load the imminent slice of that ZSET into an in-memory timing wheel and step through it once per second, claiming a distributed lease before dispatching each due job.</p></div></div>
+        <div class="flow-step"><div class="idx">4</div><div class="body"><h4>Buffer</h4><p>Claimed jobs are published to a message broker — this protects the worker pool from a burst of simultaneously-due jobs and lets workers consume at their own sustainable pace.</p></div></div>
+        <div class="flow-step"><div class="idx">5</div><div class="body"><h4>Execute</h4><p>Stateless workers pull tasks, run them, and write results/logs to a write-optimized store (Cassandra/S3), updating the execution's status in the metadata DB.</p></div></div>
+      </div>
+    </section>
+
+    <!-- 03 DATA MODEL -->
+    <section id="data">
+      <div class="section-head"><span class="section-num">03</span><h2>Data Model</h2></div>
+      <p class="section-intro">Two tables — one for the durable definition, one for each isolated run of it.</p>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">jobs — the definition</h3>
+          <table>
+            <tr><th>Column</th><th class="mono">Type</th></tr>
+            <tr><td>job_id (PK)</td><td class="mono">UUID</td></tr>
+            <tr><td>user_id / tenant_id</td><td class="mono">VARCHAR</td></tr>
+            <tr><td>cron_expression</td><td class="mono">VARCHAR (null = ad-hoc)</td></tr>
+            <tr><td>command</td><td class="mono">TEXT</td></tr>
+            <tr><td>created_at</td><td class="mono">TIMESTAMP</td></tr>
+          </table>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">job_executions — one row per run</h3>
+          <table>
+            <tr><th>Column</th><th class="mono">Type</th></tr>
+            <tr><td>execution_id (PK)</td><td class="mono">UUID</td></tr>
+            <tr><td>job_id (FK)</td><td class="mono">UUID</td></tr>
+            <tr><td>scheduled_time</td><td class="mono">TIMESTAMP</td></tr>
+            <tr><td>status</td><td class="mono">PENDING/RUNNING/SUCCESS/FAILED</td></tr>
+            <tr><td>updated_at</td><td class="mono">TIMESTAMP</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">Why two tables, not one:</strong> a recurring cron job has exactly one definition but potentially thousands of executions over its lifetime. Splitting them means updating a schedule (pause, change cron expression) touches one small row, while the high-volume write traffic (每次 execution's status transitions) lands in a separate table that can be partitioned and purged independently — this separation is what makes the partitioning strategy in section 07 possible at all.</p>
+      </div>
+    </section>
+
+    <!-- 04 TIMING WHEEL -->
+    <section id="wheel">
+      <div class="section-head"><span class="section-num">04</span><h2>Timing Wheel & Distributed Lease</h2></div>
+      <p class="section-intro">The two mechanisms that make "trigger within 1–2 seconds" possible without hammering a database every second.</p>
+
+      <div class="panel">
+        <h3 style="font-size:15px;">Timing wheel — a circular array of time buckets</h3>
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="200" cy="200" r="150" fill="none" stroke="#253247" stroke-width="1.5"/>
+          <g id="wheel-ticks"></g>
+          <script></script>
+          <!-- static rendering of 12 ticks -->
+          <g stroke="#253247" stroke-width="1">
+            <line x1="200" y1="50" x2="200" y2="65"/>
+            <line x1="330" y1="125" x2="317.5" y2="132.5"/>
+            <line x1="330" y1="275" x2="317.5" y2="267.5"/>
+            <line x1="200" y1="350" x2="200" y2="335"/>
+            <line x1="70" y1="275" x2="82.5" y2="267.5"/>
+            <line x1="70" y1="125" x2="82.5" y2="132.5"/>
+            <line x1="265" y1="70" x2="257.5" y2="83"/>
+            <line x1="335" y1="200" x2="320" y2="200"/>
+            <line x1="265" y1="330" x2="257.5" y2="317"/>
+            <line x1="135" y1="330" x2="142.5" y2="317"/>
+            <line x1="65" y1="200" x2="80" y2="200"/>
+            <line x1="135" y1="70" x2="142.5" y2="83"/>
+          </g>
+          <circle cx="200" cy="65" r="11" fill="#DB6E56"/>
+          <text x="200" y="69" text-anchor="middle" fill="#0D1420" font-size="9" font-weight="700">3</text>
+          <text x="200" y="45" text-anchor="middle" fill="#DB6E56" font-size="9.5" font-family="JetBrains Mono, monospace">bucket[00:00:12]</text>
+
+          <circle cx="320" cy="200" r="9" fill="#E0A94F"/>
+          <text x="320" y="204" text-anchor="middle" fill="#0D1420" font-size="8.5" font-weight="700">1</text>
+
+          <circle cx="257.5" cy="317" r="9" fill="#E0A94F"/>
+          <text x="257.5" y="321" text-anchor="middle" fill="#0D1420" font-size="8.5" font-weight="700">2</text>
+
+          <line x1="200" y1="200" x2="200" y2="65" stroke="#4FB5A8" stroke-width="2.5"/>
+          <circle cx="200" cy="200" r="5" fill="#4FB5A8"/>
+          <text x="200" y="225" text-anchor="middle" fill="#4FB5A8" font-size="10" font-family="JetBrains Mono, monospace">pointer</text>
+          <text x="200" y="240" text-anchor="middle" fill="#8A99AE" font-size="9.5" font-family="JetBrains Mono, monospace">advances 1 bucket/sec</text>
+        </svg>
+        <div class="diagram-caption">Each bucket = one second, holding the job_ids due at that instant. The pointer sweeps one bucket per second; when it lands on a bucket, every job listed there fires — O(1) per tick instead of a scan, regardless of how many total jobs exist in the wheel.</div>
+      </div>
+
+      <div class="panel">
+        <h3 style="font-size:15px;">Distributed lease — preventing duplicate dispatch</h3>
+        <p style="color:var(--muted); font-size:14px;">Multiple scheduler nodes tick the same wheel concurrently (for availability) — without coordination, two nodes could both see the same due job and dispatch it twice.</p>
+        <pre><code><span class="comment">-- Redis lease, atomic claim before dispatch</span>
+<span class="fn">SET</span> lease:{execution_id} {scheduler_node_id} <span class="kw">NX</span> <span class="kw">PX</span> 5000
+
+<span class="comment">-- or, if staying pure-SQL (see section 05):</span>
+<span class="kw">SELECT</span> ... <span class="kw">FOR UPDATE SKIP LOCKED</span></code></pre>
+        <p style="color:var(--muted); font-size:14px; margin-top:10px;">Whichever node wins the lease dispatches; every other node simply skips that execution_id for this tick. The short TTL means a node that dies mid-claim doesn't block the job forever — another node's next tick picks it up.</p>
+      </div>
+    </section>
+
+    <!-- 05 QUERYING DUE JOBS -->
+    <section id="query">
+      <div class="section-head"><span class="section-num">05</span><h2>Querying Due Jobs — Two Patterns</h2></div>
+      <p class="section-intro">Naive <code>WHERE scheduled_time &lt;= NOW()</code> polling degrades as rows grow into the billions. Two production patterns solve it very differently.</p>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Pattern 1 — CDC + Redis Sorted Set</h3>
+          <svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="10" width="110" height="40" rx="6" fill="#17202F" stroke="#253247"/>
+            <text x="65" y="34" text-anchor="middle" font-size="11" fill="#E6ECF5">Job Service</text>
+            <rect x="10" y="75" width="110" height="40" rx="6" fill="#17202F" stroke="#253247"/>
+            <text x="65" y="99" text-anchor="middle" font-size="11" fill="#E6ECF5">Kafka / Debezium</text>
+            <rect x="10" y="140" width="110" height="40" rx="6" fill="#17202F" stroke="#E0A94F"/>
+            <text x="65" y="164" text-anchor="middle" font-size="11" fill="#E0A94F">Redis ZSET</text>
+
+            <rect x="170" y="140" width="120" height="40" rx="6" fill="#17202F" stroke="#253247"/>
+            <text x="230" y="160" text-anchor="middle" font-size="10.5" fill="#E6ECF5">Scheduler Node</text>
+            <text x="230" y="174" text-anchor="middle" font-size="9" fill="#8A99AE">ZRANGEBYSCORE</text>
+
+            <path d="M65,50 V73" stroke="#8A99AE" stroke-width="1.2" fill="none" marker-end="url(#jArrM)"/>
+            <path d="M65,115 V138" stroke="#8A99AE" stroke-width="1.2" fill="none" marker-end="url(#jArrM)"/>
+            <path d="M120,160 H168" stroke="#E0A94F" stroke-width="1.3" fill="none" marker-end="url(#jArrB)"/>
+          </svg>
+          <p style="color:var(--muted); font-size:13.5px; margin-top:8px;">DB only ever handles inserts and cold storage. Scheduler never touches it during polling. Eventually consistent — Redis can lag the DB by milliseconds.</p>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Pattern 2 — SQL SKIP LOCKED</h3>
+          <pre style="margin-top:0;"><code><span class="kw">CREATE INDEX</span> idx_pending
+  <span class="kw">ON</span> job_executions (status, scheduled_time)
+  <span class="kw">WHERE</span> status = <span class="str">'PENDING'</span>;
+
+<span class="kw">BEGIN</span>;
+<span class="kw">SELECT</span> execution_id <span class="kw">FROM</span> job_executions
+<span class="kw">WHERE</span> status = <span class="str">'PENDING'</span>
+  <span class="kw">AND</span> scheduled_time &lt;= <span class="fn">NOW</span>()
+<span class="kw">ORDER BY</span> scheduled_time
+<span class="kw">LIMIT</span> 100
+<span class="kw">FOR UPDATE SKIP LOCKED</span>;
+<span class="comment">-- Node B's identical query skips
+-- rows Node A already locked</span>
+<span class="kw">COMMIT</span>;</code></pre>
+        </div>
+      </div>
+
+      <div class="panel">
+        <table>
+          <tr><th>Feature</th><th>CDC + Redis ZSET</th><th>SQL SKIP LOCKED</th></tr>
+          <tr><td>DB load</td><td>Extremely low</td><td>Medium–high, constant polling</td></tr>
+          <tr><td>Max scale</td><td>Millions of jobs/min</td><td>Tens of thousands/min</td></tr>
+          <tr><td>Complexity</td><td>Higher — Redis + CDC infra</td><td>Very low — pure SQL</td></tr>
+          <tr><td>Consistency</td><td>Eventual (ms-level lag)</td><td>Strict ACID</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">How to pick between them out loud:</strong> start with SKIP LOCKED — it's simpler and genuinely fine until tens of thousands of jobs/min. Name Redis+CDC as the upgrade path once that ceiling is hit, rather than reaching for the more complex pattern first. Interviewers notice when a candidate over-engineers the starting point.</p>
+      </div>
+    </section>
+
+    <!-- 06 SHARDING -->
+    <section id="sharding">
+      <div class="section-head"><span class="section-num">06</span><h2>Sharding Strategy</h2></div>
+      <p class="section-intro">Jobs are read two conflicting ways — by time (scheduler) and by identity (user dashboard). Shard purely by either one and the other pattern breaks.</p>
+      <div class="panel">
+        <table>
+          <tr><th>Shard purely by...</th><th>What breaks</th></tr>
+          <tr><td><code>scheduled_time</code></td><td>Hot shard — every write and read concentrates on whichever node owns "right now"; every other node sits idle</td></tr>
+          <tr><td><code>user_id</code></td><td>Fan-out problem — the scheduler must broadcast "what's due" to every shard instead of one</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">The resolution: shard by tenant, decouple the time-read path</h3>
+        <p style="color:var(--muted); font-size:14px;">Primary shards are keyed by <code>tenant_id</code> (consistent hashing) — this keeps a user's dashboard query, cancellations, and schedule edits confined to one shard, and eliminates cross-shard transactions for user-facing actions. The scheduler's time-based read never touches these shards directly: CDC streams new/updated jobs into the globally-accessible Redis ZSET (pattern 1 above), so "what's due now" is answered from one hot, purpose-built index instead of fanning out across every tenant shard.</p>
+      </div>
+      <div class="panel edge-card" style="border-left-color: var(--amber);">
+        <h3 style="color:var(--text);">Hot tenant edge case</h3>
+        <p style="color:var(--muted); font-size:14.5px;">One enterprise tenant triggering millions of jobs/minute can overwhelm its single assigned shard even though every other tenant is fine.</p>
+        <table style="margin-top:10px;">
+          <tr><th>Mitigation</th><td>Two-tier sharding — once a tenant's throughput crosses a threshold, sub-shard their own data using <code>hash(tenant_id, job_id)</code>, spreading just that tenant's load across multiple nodes while everyone else stays on simple single-shard routing.</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- 07 TABLE PARTITIONING -->
+    <section id="partition">
+      <div class="section-head"><span class="section-num">07</span><h2>Table Partitioning Inside a Shard</h2></div>
+      <p class="section-intro">Sharding spreads load across machines. Partitioning solves a different problem: one shard still holding hundreds of millions of rows in a single flat table.</p>
+      <div class="panel">
+        <svg viewBox="0 0 760 190" xmlns="http://www.w3.org/2000/svg">
+          <rect x="290" y="15" width="180" height="42" rx="6" fill="#17202F" stroke="#5BA9E0"/>
+          <text x="380" y="41" text-anchor="middle" fill="#5BA9E0" font-size="12" font-weight="600">job_executions (master)</text>
+          <path d="M380,57 V80" stroke="#253247" stroke-width="1.2"/>
+          <path d="M380,80 H140 V100" stroke="#253247" stroke-width="1.2" fill="none"/>
+          <path d="M380,80 H380 V100" stroke="#253247" stroke-width="1.2" fill="none"/>
+          <path d="M380,80 H620 V100" stroke="#253247" stroke-width="1.2" fill="none"/>
+
+          <rect x="60" y="100" width="160" height="65" rx="6" fill="#17202F" stroke="#253247"/>
+          <text x="140" y="126" text-anchor="middle" font-size="11.5" fill="#E6ECF5">p2026_09_21</text>
+          <text x="140" y="142" text-anchor="middle" font-size="10" fill="#8A99AE">yesterday</text>
+          <text x="140" y="156" text-anchor="middle" font-size="9" fill="#8A99AE">DROP-able</text>
+
+          <rect x="300" y="100" width="160" height="65" rx="6" fill="#17202F" stroke="#4FB5A8"/>
+          <text x="380" y="126" text-anchor="middle" font-size="11.5" fill="#4FB5A8" font-weight="600">p2026_09_22</text>
+          <text x="380" y="142" text-anchor="middle" font-size="10" fill="#8A99AE">active today</text>
+          <text x="380" y="156" text-anchor="middle" font-size="9" fill="#4FB5A8">tiny hot index</text>
+
+          <rect x="540" y="100" width="160" height="65" rx="6" fill="#17202F" stroke="#253247"/>
+          <text x="620" y="126" text-anchor="middle" font-size="11.5" fill="#E6ECF5">p2026_09_23</text>
+          <text x="620" y="142" text-anchor="middle" font-size="10" fill="#8A99AE">tomorrow</text>
+          <text x="620" y="156" text-anchor="middle" font-size="9" fill="#8A99AE">pre-created</text>
+        </svg>
+        <div class="diagram-caption">A query constrained by <code>scheduled_time</code> gets pruned by the planner to touch only <code>p2026_09_22</code> — the other partitions' data and indexes are never read from disk.</div>
+      </div>
+      <div class="panel">
+        <pre><code><span class="kw">CREATE TABLE</span> job_executions (
+  execution_id <span class="kw">UUID NOT NULL</span>,
+  tenant_id <span class="kw">VARCHAR</span>(64) <span class="kw">NOT NULL</span>,
+  scheduled_time <span class="kw">TIMESTAMP NOT NULL</span>,
+  status <span class="kw">VARCHAR</span>(20) <span class="kw">NOT NULL</span>,
+  <span class="kw">PRIMARY KEY</span> (tenant_id, scheduled_time, execution_id)
+) <span class="kw">PARTITION BY RANGE</span> (scheduled_time);
+
+<span class="kw">CREATE TABLE</span> job_executions_2026_09_22 <span class="kw">PARTITION OF</span> job_executions
+  <span class="kw">FOR VALUES FROM</span> (<span class="str">'2026-09-22 00:00:00'</span>) <span class="kw">TO</span> (<span class="str">'2026-09-23 00:00:00'</span>);</code></pre>
+      </div>
+      <div class="panel">
+        <table>
+          <tr><th>Win</th><th>Why</th></tr>
+          <tr><td>Index localization</td><td>Active partition's micro-index fits entirely in RAM instead of a billion-row B-tree thrashing disk</td></tr>
+          <tr><td>Partition pruning</td><td>A time-bounded query touches one sub-table; the planner skips every other month/week entirely</td></tr>
+          <tr><td>Zero-overhead purging</td><td class="mono">DROP TABLE p2026_08_15</td></tr>
+        </table>
+      </div>
+      <div class="panel edge-card" style="border-left-color: var(--amber);">
+        <h3 style="color:var(--text);">Operational gotcha: pre-allocation</h3>
+        <p style="color:var(--muted); font-size:14.5px;">A write for a future date fails outright if that date's partition table doesn't exist yet — partitions aren't created lazily on first write. A scheduled background job (cron/Kubernetes CronJob) must pre-create the next day's/week's partitions well ahead of time, and a filtered partial index (<code>WHERE status='PENDING'</code>) on each partition keeps lookups fast even as completed rows accumulate within the same day.</p>
+      </div>
+    </section>
+
+    <!-- 08 TIERED STORAGE -->
+    <section id="tiered">
+      <div class="section-head"><span class="section-num">08</span><h2>Tiered Storage for Far-Future Jobs</h2></div>
+      <p class="section-intro">A job scheduled for next month has no business sitting in an in-memory hot layer today — that's pure RAM waste at billions-of-jobs scale.</p>
+      <div class="panel">
+        <svg viewBox="0 0 900 160" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="30" width="260" height="90" rx="8" fill="#17202F" stroke="#253247"/>
+          <text x="140" y="55" text-anchor="middle" fill="#E6ECF5" font-weight="600" font-size="12">Cold — Next Month</text>
+          <text x="140" y="75" text-anchor="middle" fill="#8A99AE" font-size="10.5">Primary DB shards</text>
+          <text x="140" y="92" text-anchor="middle" fill="#8A99AE" font-size="10">(tenant-sharded, time-partitioned)</text>
+          <text x="140" y="108" text-anchor="middle" fill="#8A99AE" font-size="9.5">zero RAM, zero CPU cost</text>
+
+          <path d="M270,75 H328" stroke="#8A99AE" stroke-width="1.4" marker-end="url(#jArrM)" fill="none"/>
+          <text x="300" y="65" text-anchor="middle" fill="#8A99AE" font-size="9" font-family="JetBrains Mono, monospace">sweeper</text>
+
+          <rect x="330" y="30" width="260" height="90" rx="8" fill="#17202F" stroke="#E0A94F"/>
+          <text x="460" y="55" text-anchor="middle" fill="#E0A94F" font-weight="600" font-size="12">Warm — Next 24h</text>
+          <text x="460" y="75" text-anchor="middle" fill="#8A99AE" font-size="10.5">Daily sweeper scan</text>
+          <text x="460" y="92" text-anchor="middle" fill="#8A99AE" font-size="10">indexed on scheduled_time</text>
+          <text x="460" y="108" text-anchor="middle" fill="#8A99AE" font-size="9.5">staged for migration</text>
+
+          <path d="M590,75 H648" stroke="#E0A94F" stroke-width="1.4" marker-end="url(#jArrB)" fill="none"/>
+          <text x="620" y="65" text-anchor="middle" fill="#E0A94F" font-size="9" font-family="JetBrains Mono, monospace">migrate</text>
+
+          <rect x="650" y="30" width="250" height="90" rx="8" fill="#17202F" stroke="#4FB5A8"/>
+          <text x="775" y="55" text-anchor="middle" fill="#4FB5A8" font-weight="600" font-size="12">Hot — Next 60s</text>
+          <text x="775" y="75" text-anchor="middle" fill="#8A99AE" font-size="10.5">Redis ZSET</text>
+          <text x="775" y="92" text-anchor="middle" fill="#8A99AE" font-size="10">ZRANGEBYSCORE, every tick</text>
+          <text x="775" y="108" text-anchor="middle" fill="#8A99AE" font-size="9.5">ready for instant dispatch</text>
+        </svg>
+        <div class="diagram-caption">Same idea as an OS memory hierarchy — pay for RAM only for the sliver of data actually about to be used. A next-month job sits frozen on disk, in its own future-dated partition, costing nothing until its window approaches.</div>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">Two ways this stays correct automatically:</strong> under the CDC+Redis pattern, an hourly/daily sweeper explicitly promotes jobs into the warm buffer as their window nears. Under the pure SQL SKIP LOCKED pattern, nothing needs to actively "promote" anything — partition pruning already means the query planner ignores October's partition table entirely while it's still September, so cold data is invisible to the hot path for free, as a side effect of the partitioning scheme in section 07 rather than a separate mechanism.</p>
+      </div>
+    </section>
+
+    <!-- 09 FAULT TOLERANCE -->
+    <section id="faults">
+      <div class="section-head"><span class="section-num">09</span><h2>Fault Tolerance & Edge Cases</h2></div>
+      <div class="panel edge-card">
+        <h3>Worker crashes mid-job <span class="sev">VISIBILITY TIMEOUT</span></h3>
+        <p style="color:var(--muted); font-size:14.5px;">A worker pulls a task and dies before finishing — the task must not simply vanish.</p>
+        <table style="margin-top:10px;">
+          <tr><th>Mitigation</th><td>The broker's visibility timeout expires without an ack, so the message rolls back onto the queue automatically for another worker — this is exactly what satisfies "at-least-once."</td></tr>
+          <tr><th>Residual risk</th><td>A job that isn't idempotent can run twice with real side effects (e.g. double-charging) — the design guarantees at-least-once dispatch, not exactly-once side effects; the job itself needs to be idempotent if that matters.</td></tr>
+        </table>
+      </div>
+      <div class="panel edge-card" style="margin-top:18px;">
+        <h3>Scheduler node crashes <span class="sev">VOLATILE STATE</span></h3>
+        <p style="color:var(--muted); font-size:14.5px;">The timing wheel lives in memory — a crash could silently drop everything it had pre-cached.</p>
+        <table style="margin-top:10px;">
+          <tr><th>Mitigation</th><td>The wheel is rebuilt from a durable source on restart — either a write-ahead log of recent claims or simply re-reading the next window from Redis/DB, since the wheel is a cache, not the source of truth.</td></tr>
+        </table>
+      </div>
+      <div class="panel edge-card" style="margin-top:18px;">
+        <h3>Repeated task failure <span class="sev">RETRY EXHAUSTION</span></h3>
+        <table style="margin-top:10px;">
+          <tr><th>Mitigation</th><td>Exponential backoff on retry; after a fixed threshold (e.g. 5 attempts) the task routes to a dead-letter queue for manual inspection instead of retrying forever and masking a real bug.</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- 10 CAPACITY -->
+    <section id="capacity">
+      <div class="section-head"><span class="section-num">10</span><h2>Capacity Estimation</h2></div>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Submission throughput</h3>
+          <div class="calc-line"><span class="k">Target peak</span><span class="v">10,000 submissions/s</span></div>
+          <div class="calc-line"><span class="k">Row size (jobs table)</span><span class="v">~300 bytes</span></div>
+          <div class="calc-result"><span>Metadata write throughput</span><span class="v">~3 MB/s</span></div>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Execution volume</h3>
+          <div class="calc-line"><span class="k">Executions/day</span><span class="v">1,000,000,000</span></div>
+          <div class="calc-line"><span class="k">Avg executions/sec</span><span class="v">~11,600/s</span></div>
+          <div class="calc-line"><span class="k">Log row size</span><span class="v">~200 bytes</span></div>
+          <div class="calc-result"><span>Daily execution-log volume</span><span class="v">~200 GB/day</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">Hot Redis layer sizing</h3>
+        <div class="calc-line"><span class="k">Jobs due in next 24h, global</span><span class="v">~1B / 30 ≈ 33M</span></div>
+        <div class="calc-line"><span class="k">ZSET entry (job_id + score)</span><span class="v">~60 bytes</span></div>
+        <div class="calc-result"><span>Warm buffer memory footprint</span><span class="v">~2 GB</span></div>
+        <p style="color:var(--muted); font-size:13px; margin-top:10px;">This is the number that justifies tiered storage: without it, holding every future job (potentially months out) in Redis would be orders of magnitude larger — the 24h window keeps the hot layer small enough to be genuinely disposable and cheap to rebuild.</p>
+      </div>
+    </section>
+
+    <!-- 11 ALTERNATIVES -->
+    <section id="alternatives">
+      <div class="section-head"><span class="section-num">11</span><h2>Alternatives Considered</h2></div>
+      <div class="panel">
+        <table>
+          <tr><th>Alternative</th><th>Rejected because</th></tr>
+          <tr><td>Naive DB polling every second</td><td>Full or near-full table scans against a billion-row table — degrades immediately, regardless of indexing</td></tr>
+          <tr><td>Push model (scheduler dispatches straight to worker IPs)</td><td>Couples the scheduler to worker availability/capacity directly; a burst of simultaneously-due jobs can overwhelm a worker with no buffer</td></tr>
+          <tr><td>Sharding purely by scheduled_time</td><td>Creates a permanently hot shard — whichever node owns "now" absorbs all traffic while every other node idles</td></tr>
+          <tr><td>Sharding purely by user_id</td><td>Forces the scheduler to fan out its time-based query to every shard on every tick</td></tr>
+          <tr><td>Unpartitioned job_executions table</td><td>B-tree index bloats to hundreds of GB at billions of rows; purging old data requires slow, lock-heavy DELETEs instead of an instant partition drop</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- 12 PLAYBOOK -->
+    <section id="playbook">
+      <div class="section-head"><span class="section-num">12</span><h2>Interview Playbook</h2></div>
+      <div class="panel">
+        <div class="qa">
+          <div class="q">How do you handle a job whose execution takes longer than the tick interval?</div>
+          <div class="a">The scheduler's job is dispatch, not execution — once it hands a task to the broker and a worker picks it up, the scheduler's involvement ends. A long-running job is a worker/visibility-timeout concern (make the timeout comfortably longer than the expected max runtime, or have the worker send periodic heartbeats to extend it) rather than something that blocks the next tick of the wheel.</div>
+        </div>
+        <div class="qa">
+          <div class="q">Two scheduler nodes both think they own the same due job — walk through exactly what stops a duplicate dispatch.</div>
+          <div class="a">Both nodes' ticks land on the same wheel bucket and both attempt to claim the lease (<code>SET lease:{id} NX PX 5000</code> or <code>SELECT ... FOR UPDATE SKIP LOCKED</code>). Only one <code>SET NX</code> can succeed — Redis serializes it. The loser doesn't retry that execution this tick; it moves on. This is the same atomic-claim pattern as an offer lock in a matching system — worth drawing that parallel if it's come up earlier in the interview.</div>
+        </div>
+        <div class="qa">
+          <div class="q">How would you support job dependencies (run B only after A succeeds) without a full DAG engine?</div>
+          <div class="a">A lightweight version: job B's row carries a <code>depends_on: job_id</code> field and status <code>WAITING</code> instead of <code>PENDING</code>; a worker completing A publishes a completion event that flips B to PENDING. This avoids building full DAG orchestration (Airflow-style) but is honest about not handling complex fan-in/fan-out — worth naming that boundary rather than implying it scales to arbitrary DAGs.</div>
+        </div>
+        <div class="qa">
+          <div class="q">A tenant edits a cron schedule for a job that's already sitting in the Redis warm buffer — how does that propagate?</div>
+          <div class="a">The edit writes to the source-of-truth DB shard first. If using CDC, the change stream naturally emits an update event that overwrites (or removes and re-adds) the corresponding ZSET entry. If using a periodic sweeper instead of CDC, there's a real staleness window until the next sweep — worth flagging that gap explicitly and deciding whether the edit path should also directly patch Redis synchronously for that case, trading a bit of complexity for immediate consistency on edits specifically.</div>
+        </div>
+        <div class="qa">
+          <div class="q">How do you test the timing wheel and lease logic without waiting real-time for jobs to come due?</div>
+          <div class="a">Inject a mockable clock into the scheduler node rather than reading system time directly, so tests can advance time programmatically and assert the wheel fires the right bucket. For the lease race specifically, spin up concurrent threads hammering the same execution_id's claim and assert exactly one succeeds — the same property-test shape used to validate any NX-based distributed lock.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>Distributed Job Scheduler — revision sheet</footer>
+  </div>
+</div>
+</body>
+</html>

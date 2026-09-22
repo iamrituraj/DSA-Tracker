@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>H3 + Redis Rider Matching — Revision Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try{var t=new URLSearchParams(location.search).get('theme');if(t==='dark'){document.documentElement.setAttribute('data-theme','dark')}else if(t==='light'){document.documentElement.setAttribute('data-theme','light')}}catch(e){}</script><style>
+  :root[data-theme="light"]{
+      --bg: #F3F1EC;
+      --panel: #FFFFFF;
+      --panel-2: #FBFAF7;
+      --line: #DEDAD1;
+      --text: #1C2126;
+      --muted: #5B6470;
+    }
+  :root {
+    --bg: #0E1620;
+    --panel: #141F2B;
+    --panel-2: #182530;
+    --line: #26333F;
+    --text: #E7EDF3;
+    --muted: #8FA0AF;
+    --amber: #E3A33D;
+    --amber-dim: #7A6538;
+    --teal: #45B8AE;
+    --teal-dim: #2C5B57;
+    --rust: #D8674A;
+    --rust-dim: #6B3A2C;
+    --violet: #8D86C9;
+    --violet-dim: #4A4570;
+    --radius-panel: 10px;
+    --radius-tag: 6px;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #F3F1EC;
+      --panel: #FFFFFF;
+      --panel-2: #FBFAF7;
+      --line: #DEDAD1;
+      --text: #1C2126;
+      --muted: #5B6470;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0E1620; --panel: #141F2B; --panel-2: #182530; --line: #26333F; --text: #E7EDF3; --muted: #8FA0AF;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); scroll-behavior: smooth; }
+  html, body { height: auto; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(227,163,61,0.05), transparent 40%),
+      radial-gradient(circle at 85% 75%, rgba(69,184,174,0.06), transparent 40%);
+    pointer-events: none;
+  }
+  h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin: 0 0 0.5em 0; letter-spacing: -0.01em; }
+  a { color: var(--teal); }
+  code, .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px 100px; }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    padding: 72px 0 48px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 56px;
+  }
+  .hero .kicker {
+    font-size: 14px;
+    color: var(--amber);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 1.08;
+    max-width: 14ch;
+  }
+  .hero p.sub {
+    color: var(--muted);
+    font-size: 17px;
+    max-width: 60ch;
+    margin-top: 16px;
+  }
+  .stat-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    margin-top: 36px;
+  }
+  .stat { min-width: 120px; }
+  .stat .num { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 600; color: var(--teal); }
+  .stat .label { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  /* ---------- SECTION ---------- */
+  section { margin-bottom: 64px; scroll-margin-top: 20px; }
+  .section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 22px; }
+  .section-num { font-family: 'JetBrains Mono', monospace; color: var(--amber); font-size: 14px; }
+  .section-head h2 { font-size: 24px; }
+  .section-intro { color: var(--muted); max-width: 68ch; margin-bottom: 24px; font-size: 15px; }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-panel);
+    padding: 24px;
+  }
+  .panel + .panel { margin-top: 18px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  @media (max-width: 720px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  svg { max-width: 100%; height: auto; display: block; }
+  .diagram-caption { color: var(--muted); font-size: 13px; margin-top: 10px; text-align: center; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 14px; font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: none; white-space: nowrap; }
+  td.mono, th.mono { font-family: 'JetBrains Mono', monospace; }
+
+  .tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: var(--radius-tag);
+    border: 1px solid var(--line);
+    color: var(--muted);
+  }
+  .tag.amber { color: var(--amber); border-color: var(--amber-dim); }
+  .tag.teal { color: var(--teal); border-color: var(--teal-dim); }
+  .tag.rust { color: var(--rust); border-color: var(--rust-dim); }
+  .tag.violet { color: var(--violet); border-color: var(--violet-dim); }
+
+  pre {
+    background: #0A1119;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 14px 0 0;
+  }
+  :root:not([data-theme="dark"]) pre { background: #F5F3EE; }
+  pre code { color: var(--text); }
+  .comment { color: var(--muted); }
+  .kw { color: var(--teal); }
+  .str { color: var(--amber); }
+
+  .edge-card {
+    border-left: 3px solid var(--rust);
+    padding-left: 18px;
+  }
+  .edge-card h3 { display: flex; align-items: center; gap: 10px; font-size: 17px; }
+  .edge-card .sev { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--rust); border: 1px solid var(--rust-dim); padding: 2px 7px; border-radius: 5px; }
+
+  .flow-step { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .flow-step:last-child { border-bottom: none; }
+  .flow-step .idx {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    color: var(--amber);
+    font-size: 15px;
+    min-width: 22px;
+  }
+  .flow-step .body h4 { font-size: 15.5px; margin-bottom: 4px; }
+  .flow-step .body p { color: var(--muted); font-size: 14px; margin: 0; }
+
+  .qa { border-bottom: 1px solid var(--line); padding: 16px 0; }
+  .qa:last-child { border-bottom: none; }
+  .qa .q { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+  .qa .a { color: var(--muted); font-size: 14.5px; }
+
+  .calc-line { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 14px; }
+  .calc-line:last-child { border-bottom: none; }
+  .calc-line .k { color: var(--muted); }
+  .calc-line .v { font-family: 'JetBrains Mono', monospace; color: var(--text); text-align: right; }
+  .calc-result { margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-weight: 600; }
+  .calc-result .v { color: var(--teal); font-family: 'JetBrains Mono', monospace; }
+
+  .toc {
+    position: sticky; top: 20px;
+    display: none;
+  }
+  @media (min-width: 1180px) {
+    .page { display: flex; gap: 40px; max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+    .wrap { padding: 0; max-width: none; flex: 1; }
+    .toc { display: block; width: 200px; padding-top: 90px; }
+    .toc a { display: block; color: var(--muted); text-decoration: none; font-size: 13px; padding: 6px 0; border-left: 2px solid transparent; padding-left: 12px; }
+    .toc a:hover { color: var(--text); border-left-color: var(--amber); }
+  }
+
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 40px 0 20px; border-top: 1px solid var(--line); margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="toc">
+    <a href="#flow">01 · Architecture</a>
+    <a href="#capacity">02 · Capacity Plan</a>
+    <a href="#geo">03 · Geohash vs H3</a>
+    <a href="#redis">04 · Redis Model</a>
+    <a href="#matching">05 · Match Algorithm</a>
+    <a href="#consistency">06 · Consistency &amp; Failures</a>
+    <a href="#edges">07 · Edge Cases</a>
+    <a href="#alternatives">08 · Alternatives Considered</a>
+    <a href="#playbook">09 · Interview Playbook</a>
+  </nav>
+
+  <div class="wrap">
+
+    <div class="hero">
+      <div class="kicker">SYSTEM DESIGN REVISION · SDE-2 DEPTH</div>
+      <h1>H3 + Redis Rider Matching</h1>
+      <p class="sub">How a delivery platform matches an accepted order to the nearest available rider in under a second, using hexagonal geo-indexing and shard-aware Redis structures — with the capacity math, consistency tradeoffs, and failure modes an SDE-2 round expects you to defend.</p>
+      <div class="stat-row">
+        <div class="stat"><div class="num">3s</div><div class="label">GPS ping interval</div></div>
+        <div class="stat"><div class="num">Res 8</div><div class="label">~740m ingest hex</div></div>
+        <div class="stat"><div class="num">Res 5</div><div class="label">~20km shard anchor</div></div>
+        <div class="stat"><div class="num">15s</div><div class="label">offer lock TTL</div></div>
+        <div class="stat"><div class="num">~35K</div><div class="label">writes/sec at 100K online riders</div></div>
+      </div>
+    </div>
+
+    <!-- 01 ARCHITECTURE -->
+    <section id="flow">
+      <div class="section-head"><span class="section-num">01</span><h2>Core Problem &amp; End-to-End Architecture</h2></div>
+      <p class="section-intro">Goal: given an order that just got accepted by a restaurant, find the rider who will arrive soonest — not just nearest in a straight line — while tens of thousands of riders stream location updates concurrently. The diagram separates the <span class="tag amber">write path</span> (constant location ingestion) from the <span class="tag teal">read path</span> (matching, triggered per order) because they have very different load shapes and failure tolerances.</p>
+
+      <div class="panel">
+        <svg viewBox="0 0 940 400" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrowA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#E3A33D"></path>
+            </marker>
+            <marker id="arrowT" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#45B8AE"></path>
+            </marker>
+            <marker id="arrowM" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#8FA0AF"></path>
+            </marker>
+          </defs>
+
+          <!-- lane labels -->
+          <text x="8" y="26" font-family="JetBrains Mono, monospace" font-size="11" fill="#E3A33D">WRITE PATH — every ~3s, per rider</text>
+          <line x1="0" y1="36" x2="940" y2="36" stroke="#26333F" stroke-dasharray="2 4"></line>
+          <text x="8" y="230" font-family="JetBrains Mono, monospace" font-size="11" fill="#45B8AE">READ PATH — once per order, on demand</text>
+          <line x1="0" y1="240" x2="940" y2="240" stroke="#26333F" stroke-dasharray="2 4"></line>
+
+          <g font-family="Inter, sans-serif" font-size="12" fill="#E7EDF3">
+            <!-- write path row -->
+            <rect x="10" y="55" width="120" height="58" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="70" y="79" text-anchor="middle" font-weight="600" font-size="12.5">Rider App</text>
+            <text x="70" y="95" text-anchor="middle" fill="#8FA0AF" font-size="10.5">WS / gRPC</text>
+
+            <rect x="165" y="55" width="120" height="58" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="225" y="79" text-anchor="middle" font-weight="600" font-size="12.5">WS Gateway</text>
+            <text x="225" y="95" text-anchor="middle" fill="#8FA0AF" font-size="10.5">stateless, LB'd</text>
+
+            <rect x="320" y="55" width="120" height="58" rx="8" fill="#182530" stroke="#8D86C9"></rect>
+            <text x="380" y="79" text-anchor="middle" font-weight="600" font-size="12.5" fill="#8D86C9">Kafka</text>
+            <text x="380" y="95" text-anchor="middle" fill="#8FA0AF" font-size="10.5">partition by region</text>
+
+            <rect x="475" y="55" width="130" height="58" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="540" y="76" text-anchor="middle" font-weight="600" font-size="12.5">Ingestion</text>
+            <text x="540" y="92" text-anchor="middle" font-weight="600" font-size="12.5">Worker</text>
+            <text x="540" y="106" text-anchor="middle" fill="#E3A33D" font-size="10.5">lat/lng → H3(res8)</text>
+
+            <rect x="645" y="30" width="150" height="108" rx="8" fill="#182530" stroke="#45B8AE"></rect>
+            <text x="720" y="53" text-anchor="middle" font-weight="600" fill="#45B8AE" font-size="12.5">Redis Cluster</text>
+            <text x="720" y="72" text-anchor="middle" fill="#8FA0AF" font-size="10.5">hex sets (SADD/SREM)</text>
+            <text x="720" y="87" text-anchor="middle" fill="#8FA0AF" font-size="10.5">rider status hash</text>
+            <text x="720" y="102" text-anchor="middle" fill="#8FA0AF" font-size="10.5">1 primary + 2 replicas</text>
+            <text x="720" y="120" text-anchor="middle" fill="#8FA0AF" font-size="10.5">per shard</text>
+
+            <rect x="830" y="55" width="105" height="58" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="882" y="76" text-anchor="middle" font-weight="600" font-size="12">Ghost-rider</text>
+            <text x="882" y="92" text-anchor="middle" font-weight="600" font-size="12">Reaper</text>
+            <text x="882" y="106" text-anchor="middle" fill="#8FA0AF" font-size="10">cron, TTL sweep</text>
+
+            <!-- read path row -->
+            <rect x="10" y="260" width="140" height="58" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="80" y="284" text-anchor="middle" font-weight="600" font-size="12.5">Order Service</text>
+            <text x="80" y="300" text-anchor="middle" fill="#8FA0AF" font-size="10.5">order → "ready"</text>
+
+            <rect x="195" y="260" width="140" height="58" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="265" y="284" text-anchor="middle" font-weight="600" font-size="12.5">Matching</text>
+            <text x="265" y="300" text-anchor="middle" font-weight="600" font-size="12.5">Engine</text>
+            <text x="265" y="312" text-anchor="middle" fill="#E3A33D" font-size="10">k-ring expand + SUNION</text>
+
+            <rect x="380" y="260" width="140" height="58" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="450" y="284" text-anchor="middle" font-weight="600" font-size="12.5">Routing Svc</text>
+            <text x="450" y="300" text-anchor="middle" fill="#8FA0AF" font-size="10.5">OSRM road ETA</text>
+
+            <rect x="565" y="260" width="140" height="58" rx="8" fill="#182530" stroke="#D8674A"></rect>
+            <text x="635" y="284" text-anchor="middle" font-weight="600" fill="#D8674A" font-size="12.5">Offer Lock</text>
+            <text x="635" y="300" text-anchor="middle" fill="#8FA0AF" font-size="10.5" class="mono">SET NX PX 15000</text>
+
+            <rect x="750" y="260" width="150" height="58" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="825" y="284" text-anchor="middle" font-weight="600" font-size="12.5">Push / Notify</text>
+            <text x="825" y="300" text-anchor="middle" fill="#8FA0AF" font-size="10.5">FCM/APNs to rider</text>
+          </g>
+
+          <!-- write path arrows -->
+          <path d="M130,84 H163" stroke="#E3A33D" stroke-width="1.4" marker-end="url(#arrowA)" fill="none"></path>
+          <path d="M285,84 H318" stroke="#E3A33D" stroke-width="1.4" marker-end="url(#arrowA)" fill="none"></path>
+          <path d="M440,84 H473" stroke="#E3A33D" stroke-width="1.4" marker-end="url(#arrowA)" fill="none"></path>
+          <path d="M605,84 H643" stroke="#E3A33D" stroke-width="1.4" marker-end="url(#arrowA)" fill="none"></path>
+          <path d="M795,84 H828" stroke="#8FA0AF" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#arrowM)" fill="none"></path>
+
+          <!-- read path arrows -->
+          <path d="M150,289 H193" stroke="#45B8AE" stroke-width="1.4" marker-end="url(#arrowT)" fill="none"></path>
+          <path d="M335,289 H378" stroke="#45B8AE" stroke-width="1.4" marker-end="url(#arrowT)" fill="none"></path>
+          <path d="M520,289 H563" stroke="#45B8AE" stroke-width="1.4" marker-end="url(#arrowT)" fill="none"></path>
+          <path d="M705,289 H748" stroke="#45B8AE" stroke-width="1.4" marker-end="url(#arrowT)" fill="none"></path>
+
+          <!-- matching engine reads redis -->
+          <path d="M265,258 Q265,170 645,105" stroke="#45B8AE" stroke-width="1.3" stroke-dasharray="4 3" fill="none" marker-end="url(#arrowT)"></path>
+          <text x="420" y="185" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#45B8AE">SUNION ring(k)</text>
+
+          <!-- offer lock writes to redis -->
+          <path d="M635,258 Q635,175 665,140" stroke="#D8674A" stroke-width="1.3" stroke-dasharray="4 3" fill="none" marker-end="url(#arrowM)"></path>
+
+          <!-- reaper reads/writes redis -->
+          <path d="M860,113 Q820,140 780,138" stroke="#8FA0AF" stroke-width="1.2" stroke-dasharray="3 3" fill="none" marker-end="url(#arrowM)"></path>
+
+          <!-- accept feedback loop -->
+          <path d="M825,318 Q825,360 80,360 Q10,360 10,318" stroke="#8FA0AF" stroke-width="1.2" stroke-dasharray="2 4" fill="none" marker-end="url(#arrowM)"></path>
+          <text x="420" y="378" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#8FA0AF">rider accepts → status flips to "on_delivery" (write path again)</text>
+        </svg>
+        <div class="legend">
+          <span><span class="swatch" style="background:#E3A33D;"></span>write path</span>
+          <span><span class="swatch" style="background:#45B8AE;"></span>read path</span>
+          <span><span class="swatch" style="background:#D8674A;"></span>lock / mutation</span>
+          <span><span class="swatch" style="background:#8D86C9;"></span>durable buffer</span>
+          <span><span class="swatch" style="background:#8FA0AF;"></span>background / async</span>
+        </div>
+        <div class="diagram-caption">Kafka sits between the stateless WS gateway and the ingestion worker so a burst of GPS pings never becomes a direct write storm on Redis — the worker consumes at its own pace, and a worker restart doesn't lose in-flight pings.</div>
+      </div>
+
+      <div class="panel">
+        <div class="flow-step">
+          <div class="idx">1</div>
+          <div class="body"><h4>Stream</h4><p>Riders push GPS over a persistent WebSocket roughly every 3 seconds. The gateway tier is stateless and horizontally scaled behind a load balancer — it only authenticates the connection and forwards the ping.</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="idx">2</div>
+          <div class="body"><h4>Buffer</h4><p>Pings land on a Kafka topic partitioned by coarse region (the res-5 hex, say), not by rider ID. This gives ingestion workers a durable, replayable queue and decouples gateway throughput spikes from Redis write throughput.</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="idx">3</div>
+          <div class="body"><h4>Bucket</h4><p>The Ingestion Worker converts each (lat, lng) into an H3 index at resolution 8 (~740m across) and moves the rider between hex sets: <code>SREM</code> old hex, <code>SADD</code> new hex, update the status hash — ideally as one Lua script for atomicity.</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="idx">4</div>
+          <div class="body"><h4>Trigger</h4><p>An order transitions to "ready for pickup." The Matching Engine resolves the restaurant's own H3 index at the same resolution.</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="idx">5</div>
+          <div class="body"><h4>Expand &amp; rank</h4><p>k-ring expansion gathers candidates via <code>SUNION</code>, a cheap haversine pre-filter shortlists the closest few, and only those go to OSRM for real road-network ETA.</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="idx">6</div>
+          <div class="body"><h4>Lock &amp; notify</h4><p>The winning rider is claimed atomically with <code>SET rider_lock:&lt;id&gt; NX PX 15000</code>, then pushed a notification. Accept flips their status — which re-enters the write path — or the lock expires and the next candidate is tried.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 CAPACITY -->
+    <section id="capacity">
+      <div class="section-head"><span class="section-num">02</span><h2>Capacity Estimation</h2></div>
+      <p class="section-intro">The numbers an interviewer expects you to derive live, not memorize — they're what justify Kafka as a buffer and Redis (not Postgres) as the hot store.</p>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Write-path load</h3>
+          <div class="calc-line"><span class="k">Online riders, peak, one metro</span><span class="v">100,000</span></div>
+          <div class="calc-line"><span class="k">Ping interval</span><span class="v">3s</span></div>
+          <div class="calc-line"><span class="k">Raw ping rate</span><span class="v">100,000 / 3 ≈ 33,000/s</span></div>
+          <div class="calc-line"><span class="k">Redis ops per ping (SREM+SADD+HSET)</span><span class="v">×3</span></div>
+          <div class="calc-result"><span>Sustained Redis write ops</span><span class="v">~100K ops/s</span></div>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Memory footprint</h3>
+          <div class="calc-line"><span class="k">Rider status hash (id, lat, lng, ts, state)</span><span class="v">~120 bytes</span></div>
+          <div class="calc-line"><span class="k">Hex-set membership entry</span><span class="v">~30 bytes</span></div>
+          <div class="calc-line"><span class="k">Riders online, nationwide</span><span class="v">500,000</span></div>
+          <div class="calc-result"><span>Total hot-state memory</span><span class="v">~75 MB</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">Takeaway to say out loud:</strong> the working set is tiny by Redis standards — this workload is bound by <em>operation rate and latency</em>, not by storage volume. That's exactly why a single logical Redis Cluster (sharded mainly for hot-spot isolation, not capacity) is the right tool, and why Postgres/PostGIS would struggle: it's not the row count, it's ~100K small mutations/sec with sub-10ms latency expectations.</p>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">Matching-path latency budget (target: rider notified within ~1s of order-ready)</h3>
+        <table>
+          <tbody><tr><th>Stage</th><th class="mono">Budget</th><th>Notes</th></tr>
+          <tr><td>k-ring SUNION (1–3 rings)</td><td class="mono">~5–15ms</td><td>Single shard, in-memory set union</td></tr>
+          <tr><td>Haversine pre-filter, top-N</td><td class="mono">~1ms</td><td>Pure CPU, no I/O</td></tr>
+          <tr><td>OSRM ETA calls ×N (parallel)</td><td class="mono">~50–150ms</td><td>Dominant cost — batch/parallelize, cap N to ~8</td></tr>
+          <tr><td>Offer lock + push dispatch</td><td class="mono">~10–30ms</td><td>Redis write + notification API call</td></tr>
+          <tr><td><strong>Total, best case</strong></td><td class="mono">~100–200ms</td><td>Leaves headroom under a 1s target even with retries</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- 03 GEOHASH VS H3 -->
+    <section id="geo">
+      <div class="section-head"><span class="section-num">03</span><h2>Geohash vs. Uber H3</h2></div>
+      <p class="section-intro">The whole design hinges on picking a geo-index whose neighbors behave predictably. This is the single most interview-worthy tradeoff in the system.</p>
+
+      <div class="grid-2">
+        <div class="panel">
+          <svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg">
+            <g stroke="#D8674A" stroke-width="1.2" fill="none">
+              <rect x="20" y="20" width="220" height="160"></rect>
+              <line x1="93.3" y1="20" x2="93.3" y2="180"></line>
+              <line x1="166.6" y1="20" x2="166.6" y2="180"></line>
+              <line x1="20" y1="73.3" x2="240" y2="73.3"></line>
+              <line x1="20" y1="126.6" x2="240" y2="126.6"></line>
+            </g>
+            <rect x="93.3" y="73.3" width="73.3" height="53.3" fill="#D8674A" opacity="0.25"></rect>
+            <circle cx="130" cy="100" r="3" fill="#D8674A"></circle>
+            <line x1="130" y1="100" x2="93.3" y2="73.3" stroke="#D8674A" stroke-width="1"></line>
+            <line x1="130" y1="100" x2="166.6" y2="73.3" stroke="#D8674A" stroke-width="1" stroke-dasharray="2 2"></line>
+            <text x="130" y="196" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#8FA0AF">cardinal = d, diagonal = d√2</text>
+          </svg>
+          <h3 style="margin-top:14px; font-size:15px;">Geohash — square grid</h3>
+          <p style="color:var(--muted); font-size:14px; margin:6px 0 0;">Redis-native (<code>GEOADD</code>/<code>GEORADIUS</code>), but a square's diagonal neighbor is <strong>√2× farther</strong> than its cardinal neighbor. A ring search either over- or under-reaches depending on direction, and cell size distorts with latitude because it's a lat/lng-derived grid, not a true equal-area one.</p>
+        </div>
+        <div class="panel">
+          <div style="position:relative; height:190px;">
+            <svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="position:absolute; inset:0;">
+              <g stroke="#45B8AE" stroke-width="1.2" fill="none">
+                <polygon points="130,60 160,77 160,111 130,128 100,111 100,77" fill="#45B8AE" opacity="0.25"></polygon>
+                <polygon points="190,60 220,77 220,111 190,128 160,111 160,77"></polygon>
+                <polygon points="70,60 100,77 100,111 70,128 40,111 40,77"></polygon>
+                <polygon points="160,111 190,128 190,162 160,179 130,162 130,128"></polygon>
+                <polygon points="100,111 130,128 130,162 100,179 70,162 70,128"></polygon>
+                <polygon points="130,-6 160,11 160,45 130,62 100,45 100,11"></polygon>
+              </g>
+              <circle cx="130" cy="94" r="3" fill="#45B8AE"></circle>
+              <line x1="130" y1="94" x2="160" y2="77" stroke="#45B8AE" stroke-width="1"></line>
+              <line x1="130" y1="94" x2="100" y2="111" stroke="#45B8AE" stroke-width="1"></line>
+              <text x="130" y="196" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#8FA0AF">all 6 neighbors = identical distance d</text>
+            </svg>
+          </div>
+          <h3 style="margin-top:14px; font-size:15px;">Uber H3 — hexagonal grid</h3>
+          <p style="color:var(--muted); font-size:14px; margin:6px 0 0;">Application-layer index (a library call, not a Redis feature). Every one of the 6 neighbors sits at the same distance from center, so a k-ring expansion is a mathematically uniform, evenly-growing search radius — no directional distortion.</p>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:18px;">
+        <table>
+          <tbody><tr><th>Resolution</th><th class="mono">Edge length</th><th>Used for</th></tr>
+          <tr><td>5</td><td class="mono">~8.5 km</td><td>Shard anchor / city-level hash-tag grouping</td></tr>
+          <tr><td>7</td><td class="mono">~1.2 km</td><td>Coarse hot-spot / surge-zone aggregation</td></tr>
+          <tr><td>8</td><td class="mono">~460 m edge (~740m diameter)</td><td>Rider ingest bucket — the working resolution</td></tr>
+          <tr><td>9</td><td class="mono">~175 m</td><td>Too fine for ingest — churns riders between cells on every ping</td></tr>
+        </tbody></table>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">One caveat worth raising unprompted:</strong> H3 hexagons aren't perfectly uniform either — 12 unavoidable pentagons exist where the icosahedron folds (near icosahedron vertices, mostly over oceans). Global logistics platforms note it but it essentially never touches dense urban delivery zones, so it's a "know it exists" fact, not a design blocker.</p>
+      </div>
+    </section>
+
+    <!-- 04 REDIS MODEL -->
+    <section id="redis">
+      <div class="section-head"><span class="section-num">04</span><h2>Redis Data Model &amp; Sharding</h2></div>
+      <p class="section-intro">Redis Cluster refuses multi-key operations that span shards — a <code>SUNION</code> across two hex sets on different nodes throws <span class="tag rust">CROSSSLOT</span>. Hash tags are the fix.</p>
+
+      <div class="panel">
+        <svg viewBox="0 0 760 170" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="JetBrains Mono, monospace" font-size="13">
+            <text x="0" y="30" fill="#8FA0AF">h3:index:</text>
+            <text x="82" y="30" fill="#E3A33D" font-weight="600">{res5_parent_id}</text>
+            <text x="235" y="30" fill="#E7EDF3">:res8_child_id</text>
+
+            <text x="0" y="70" fill="#8FA0AF">rider:status:</text>
+            <text x="105" y="70" fill="#E3A33D" font-weight="600">{res5_parent_id}</text>
+            <text x="258" y="70" fill="#E7EDF3">:rider_id</text>
+          </g>
+          <path d="M75,15 Q75,-8 155,-8 Q235,-8 235,15" stroke="#E3A33D" stroke-width="1.2" fill="none" transform="translate(0,20)"></path>
+          <path d="M98,55 Q98,32 178,32 Q258,32 258,55" stroke="#E3A33D" stroke-width="1.2" fill="none" transform="translate(0,20)"></path>
+          <text x="165" y="10" text-anchor="middle" fill="#E3A33D" font-size="11" font-family="JetBrains Mono, monospace">hashed → picks the shard</text>
+
+          <g transform="translate(0,110)">
+            <rect x="0" y="0" width="230" height="50" rx="8" fill="#182530" stroke="#45B8AE"></rect>
+            <text x="115" y="22" text-anchor="middle" fill="#45B8AE" font-size="12" font-weight="600">Shard A</text>
+            <text x="115" y="38" text-anchor="middle" fill="#8FA0AF" font-size="10.5">all Bengaluru-parent keys</text>
+
+            <rect x="265" y="0" width="230" height="50" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="380" y="22" text-anchor="middle" fill="#E7EDF3" font-size="12" font-weight="600">Shard B</text>
+            <text x="380" y="38" text-anchor="middle" fill="#8FA0AF" font-size="10.5">all Mumbai-parent keys</text>
+
+            <rect x="530" y="0" width="230" height="50" rx="8" fill="#182530" stroke="#26333F"></rect>
+            <text x="645" y="22" text-anchor="middle" fill="#E7EDF3" font-size="12" font-weight="600">Shard C</text>
+            <text x="645" y="38" text-anchor="middle" fill="#8FA0AF" font-size="10.5">all Delhi-parent keys</text>
+          </g>
+        </svg>
+        <div class="diagram-caption">Only the text inside <code>{ }</code> is hashed for slot placement — every child hex and every rider under one res-5 parent lands on the same physical node.</div>
+      </div>
+
+      <div class="panel">
+        <h3 style="font-size:15px;">Why this specific pair of resolutions</h3>
+        <p style="color:var(--muted); font-size:14px;">Res-8 (~740m) is fine enough that a k-ring of 2–3 rings covers a realistic pickup radius without pulling in irrelevant riders. Res-5 (~20km) is coarse enough that one parent hex safely contains an entire metro's worth of res-8 children — so a citywide k-ring search never needs to cross a hash-tag boundary, keeping <code>SUNION</code> and the locking Lua script single-shard and network-hop-free.</p>
+      </div>
+
+      <div class="panel">
+        <h3 style="font-size:15px;">Structures in use</h3>
+        <table>
+          <tbody><tr><th>Structure</th><th class="mono">Type</th><th>Purpose</th></tr>
+          <tr><td>Hex bucket</td><td class="mono">SET</td><td>Rider IDs currently inside one res-8 hexagon</td></tr>
+          <tr><td>Rider status</td><td class="mono">HASH</td><td><code>lat, lng, last_updated, state</code> — one hash per rider</td></tr>
+          <tr><td>Offer lock</td><td class="mono">STRING (NX PX)</td><td>Atomic single-writer claim during the accept/reject window</td></tr>
+          <tr><td>Hot-zone counter</td><td class="mono">SORTED SET</td><td>Demand/supply ratio per hex, feeds surge &amp; rebalancing</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- 05 MATCH ALGORITHM -->
+    <section id="matching">
+      <div class="section-head"><span class="section-num">05</span><h2>Matching Engine: k-ring Expansion</h2></div>
+      <p class="section-intro">Straight-line H3 distance is a cheap pre-filter. Only the surviving shortlist is worth the expensive routing-service call.</p>
+      <div class="panel">
+        <pre><code><span class="comment">-- pseudocode, run inside the Matching Engine</span>
+<span class="kw">function</span> findRider(order):
+  originHex = h3.fromLatLng(order.restaurant.lat, order.restaurant.lng, RES_8)
+  candidates = []
+  k = 0
+  <span class="kw">while</span> candidates.size &lt; MIN_CANDIDATES <span class="kw">and</span> k &lt;= MAX_K:
+    ring = h3.kRing(originHex, k)          <span class="comment">-- hexes at exactly/within ring k</span>
+    ids  = redis.SUNION(ring.map(hexKey))  <span class="comment">-- single shard, no cross-hop</span>
+    candidates += fetchStatus(ids).filter(isAvailable)
+    k += 1
+
+  shortlist = candidates
+    .sortBy(haversineDistance)
+    .take(TOP_N)                            <span class="comment">-- cheap pre-filter, e.g. top 8</span>
+
+  ranked = shortlist.map(r =&gt; osrm.eta(r, order.restaurant))
+                     .sortBy(eta)
+
+  <span class="kw">for</span> rider <span class="kw">in</span> ranked:
+    <span class="kw">if</span> redis.SET(<span class="str">"rider_lock:" + rider.id</span>, order.id, <span class="str">NX</span>, <span class="str">PX 15000</span>):
+      <span class="kw">return</span> offer(rider, order)   <span class="comment">-- push notification, wait for accept</span>
+  <span class="kw">return</span> NO_RIDER_AVAILABLE</code></pre>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">Why pre-filter by straight-line distance before calling OSRM:</strong> routing calls are the expensive step (network hop + graph search on the routing service). Running OSRM against every rider in a wide k-ring wastes latency budget on riders that were never going to win. Haversine on H3 centers is O(1) and gets the shortlist down to the handful worth a real ETA.</p>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">Complexity to state out loud:</strong> a k-ring at level k covers <code>3k² + 3k + 1</code> hexagons (1, 7, 19, 37…). SUNION over m sets of average size n is O(m·n) — with m capped by MAX_K and n bounded by rider density, this stays sub-linear in the total rider count, which is the whole point versus scanning every online rider.</p>
+      </div>
+    </section>
+
+    <!-- 06 CONSISTENCY & FAILURES -->
+    <section id="consistency">
+      <div class="section-head"><span class="section-num">06</span><h2>Consistency Model &amp; Failure Modes</h2></div>
+      <p class="section-intro">Different pieces of this system deliberately sit at different points on the consistency spectrum — naming that explicitly is what separates an SDE-2 answer from an SDE-1 one.</p>
+
+      <div class="panel">
+        <table>
+          <tbody><tr><th>Component</th><th>Consistency</th><th>Why that's the right choice</th></tr>
+          <tr><td>Rider location (hex sets)</td><td><span class="tag amber">Eventual</span></td><td>A rider's position is stale by definition the moment it's read — being off by one ping (~3s of travel) is a non-issue for a ~740m bucket.</td></tr>
+          <tr><td>Offer lock</td><td><span class="tag rust">Strong (linearizable)</span></td><td>Correctness bug, not a UX nit, if two orders both think they claimed the same rider — this is exactly what <code>SET NX</code>'s atomicity buys.</td></tr>
+          <tr><td>Order state machine</td><td><span class="tag rust">Strong</span></td><td>Owned by a transactional store (Postgres, not Redis) — an order must never be visible as both "ready" and "assigned" simultaneously to two workers.</td></tr>
+          <tr><td>Redis replica reads (if used for scale)</td><td><span class="tag amber">Eventual</span></td><td>Fine for candidate gathering (a slightly stale rider set just means one extra OSRM call gets wasted); never read the offer lock from a replica.</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="panel">
+        <h3 style="font-size:15px;">Failure modes and how the design degrades</h3>
+        <table>
+          <tbody><tr><th>Failure</th><th>Blast radius</th><th>Degradation</th></tr>
+          <tr><td>Redis primary shard dies</td><td>One metro's write &amp; read path</td><td>Cluster promotes a replica automatically (seconds); in-flight writes during the gap are retried by the ingestion worker since Kafka still has them un-acked</td></tr>
+          <tr><td>Kafka partition unavailable</td><td>One region's rider pings</td><td>Gateway buffers briefly / backpressures the WS connection; riders' last known position just ages a bit — acceptable for a location feed</td></tr>
+          <tr><td>OSRM instance slow/down</td><td>Matching latency only</td><td>Fall back to straight-line-distance ranking with a wider safety margin, or route to a secondary OSRM replica; never block the whole match on it</td></tr>
+          <tr><td>Ingestion worker crashes</td><td>Delayed hex updates for its partition</td><td>Kafka consumer group rebalances to a healthy worker; no data loss since offsets aren't committed until the Redis write succeeds</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- 07 EDGE CASES -->
+    <section id="edges">
+      <div class="section-head"><span class="section-num">07</span><h2>Production Edge Cases</h2></div>
+      <p class="section-intro">These are the two edge cases interviewers push on hardest — have the mitigation and its own failure mode ready.</p>
+
+      <div class="panel edge-card">
+        <h3>Ghost Riders <span class="sev">STALE DATA</span></h3>
+        <p style="color:var(--muted); font-size:14.5px;">A rider's app crashes, loses signal, or their phone dies — no clean disconnect event fires, so their ID stays sitting in the hex set forever, occasionally winning matches for a rider who was never there.</p>
+        <table style="margin-top:10px;">
+          <tbody><tr><th>Mitigation</th><td>Background cron scans <code>rider:status:*</code> hashes; any with <code>last_updated</code> older than ~15–20s (5–6 missed pings) gets <code>SREM</code>'d from its hex set and marked offline.</td></tr>
+          <tr><th>Residual risk</th><td>Cron interval creates a window where a ghost can still be matched — mitigated further by re-validating <code>last_updated</code> at offer time, right before the lock, not just at candidate-gathering time.</td></tr>
+          <tr><th>Scale note</th><td>A single sweeping cron becomes a bottleneck past a few hundred thousand riders — shard the sweep by hash-tag prefix so each shard's reaper only scans its own keys, running in parallel.</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="panel edge-card" style="margin-top:18px;">
+        <h3>Double Booking <span class="sev">RACE CONDITION</span></h3>
+        <p style="color:var(--muted); font-size:14.5px;">Two orders in overlapping hexes both shortlist the same nearby rider in the same few hundred milliseconds — without coordination, both could offer the order to them simultaneously.</p>
+        <table style="margin-top:10px;">
+          <tbody><tr><th>Mitigation</th><td class="mono">SET rider_lock:&lt;id&gt; &lt;order_id&gt; NX PX 15000</td></tr>
+          <tr><th>Why NX matters</th><td><code>NX</code> makes the write conditional on the key not already existing — atomic in Redis, so exactly one of the two concurrent matching processes wins the lock; the other falls through to its next-best candidate.</td></tr>
+          <tr><th>Why PX 15000</th><td>Bounds how long a rider can sit "reserved" without responding. If they don't accept/reject in 15s, the key expires and they become matchable again automatically — no manual cleanup needed.</td></tr>
+          <tr><th>Release-on-accept nuance</th><td>On explicit accept/reject, delete the lock immediately rather than waiting out the TTL — use a Lua script that checks the value equals the expected order_id before deleting, so a late duplicate accept can't delete a newer lock (classic check-then-delete race).</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- 08 ALTERNATIVES -->
+    <section id="alternatives">
+      <div class="section-head"><span class="section-num">08</span><h2>Alternatives Considered</h2></div>
+      <p class="section-intro">Naming what you didn't pick, and why, shows the tradeoff reasoning interviewers are actually grading.</p>
+      <div class="panel">
+        <table>
+          <tbody><tr><th>Alternative</th><th>Rejected because</th></tr>
+          <tr><td>PostGIS / PostgreSQL geospatial index</td><td>Strong consistency and rich querying, but ~100K small writes/sec with single-digit-ms latency is a poor fit for a disk-backed relational store under constant index churn from moving points.</td></tr>
+          <tr><td>Elasticsearch geo-queries</td><td>Great for complex, infrequently-changing geo search (store locators), but its indexing latency doesn't suit a value that changes every 3 seconds per document at this volume.</td></tr>
+          <tr><td>Redis native GEO (GEOADD/GEORADIUS)</td><td>Simpler — no external H3 library — but built on the same square-grid distortion as Geohash; ring/radius correctness suffers exactly where it matters most: mid-density urban cores.</td></tr>
+          <tr><td>Client-side polling (riders pull nearby orders)</td><td>Inverts the push model; every rider polling every few seconds for "any orders near me" multiplies read load by rider count instead of concentrating cost at match time.</td></tr>
+          <tr><td>In-memory app-server cache instead of Redis</td><td>Works at one-instance scale, but with N matching engine instances behind a load balancer, rider location would need to be replicated to every instance — Redis centralizes it once instead.</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- 09 PLAYBOOK -->
+    <section id="playbook">
+      <div class="section-head"><span class="section-num">09</span><h2>Interview Playbook</h2></div>
+      <p class="section-intro">Likely follow-ups once you've walked through the base design, with the shape of a strong SDE-2-level answer.</p>
+
+      <div class="panel">
+        <div class="qa">
+          <div class="q">Downtown hot-spot overloads a single shard (e.g. Friday night, one res-5 parent hex) — what breaks and how do you fix it?</div>
+          <div class="a">The hash-tag design that keeps things fast for normal load becomes the bottleneck: one parent hex means one shard absorbs all read/write traffic for that whole metro. Fixes to discuss: (1) split hot parents into multiple hash-tag shards by adding a sub-shard suffix derived from a hash of the child hex, trading some cross-shard SUNION cost for load spread; (2) cache read-heavy hot zones (surge multiplier, availability counts) in a local in-memory layer refreshed every second instead of hitting Redis per request; (3) apply write-side backpressure — batch rider pings for a hot zone instead of one write per ping per rider.</div>
+        </div>
+        <div class="qa">
+          <div class="q">A Redis shard crashes mid-match — what's the recovery flow?</div>
+          <div class="a">Redis Cluster promotes a replica automatically (assuming replicas are configured), so the shard-level state (hex sets, status hashes) survives with sub-second failover, but in-flight commands during the failover window can be lost. The Matching Engine should treat any Redis error during k-ring expansion as retryable with a short backoff, and any in-flight offer lock as unconfirmed until it reads back a success — never assume a write succeeded on a timeout. Idempotency matters here: retried matching for the same order should be safe to run twice.</div>
+        </div>
+        <div class="qa">
+          <div class="q">Why not just use Redis GEO commands instead of H3?</div>
+          <div class="a"><code>GEOADD</code>/<code>GEORADIUS</code> is geohash-backed under the hood, so it inherits the same square-grid distortion. H3 is chosen specifically for uniform ring expansion and because hexagon adjacency is a solved, well-tested library (used at Uber's actual scale) rather than something to reinvent on top of Redis GEO.</div>
+        </div>
+        <div class="qa">
+          <div class="q">How do you pick resolution 8 specifically, and how would you defend that number?</div>
+          <div class="a">It's a tradeoff between churn and search cost. Too fine (res 9, ~175m) and riders flip between cells on almost every ping, generating unnecessary SREM/SADD pairs. Too coarse (res 7, ~1.2km) and a single hex can hold far more riders than are actually reachable, forcing more OSRM calls than necessary. Res 8 (~740m) roughly matches a typical dense-urban pickup radius, so a k=1 or k=2 ring usually already has enough candidates.</div>
+        </div>
+        <div class="qa">
+          <div class="q">How would you extend this to handle rider preference / fairness, not just nearest-ETA?</div>
+          <div class="a">Pure nearest-ETA optimizes the current order but can starve riders at the edge of a zone over a shift. A common extension: weight ranking by a fairness score (e.g. time since a rider's last delivery, or a rolling earnings target) alongside ETA, or reserve a small percentage of offers for a round-robin pass. Flag the tension explicitly — it's a product tradeoff (customer wait time vs. rider fairness), not a purely technical one, and worth saying so.</div>
+        </div>
+        <div class="qa">
+          <div class="q">How do you test/validate this without a live fleet of riders?</div>
+          <div class="a">Replay recorded GPS traces through the ingestion path in a staging Redis cluster to validate bucket transitions; property-test the locking Lua script directly for the concurrent-claim race (spin up N goroutines/threads hammering the same rider_lock key and assert exactly one succeeds); load-test the matching path with synthetic hex distributions matching real density (dense downtown vs. sparse suburb) to catch k-ring performance cliffs before they hit production.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>H3 + Redis Rider Matching — revision sheet</footer>
+  </div>
+</div>
+
+
+
+</body></html>

@@ -5,7 +5,15 @@
 - [main.jsx](file://src/main.jsx)
 - [styles.css](file://src/styles.css)
 - [README.md](file://README.md)
+- [tuf-links.json](file://public/data/tuf-links.json)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Added comprehensive documentation for the RowExtLinks component integration
+- Updated ProblemRow section to include external resource links functionality
+- Enhanced user interaction flows to cover external link navigation
+- Added new section covering external resource management and styling
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -13,16 +21,18 @@
 3. [Core Components](#core-components)
 4. [Architecture Overview](#architecture-overview)
 5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Dependency Analysis](#dependency-analysis)
-7. [Performance Considerations](#performance-considerations)
-8. [Troubleshooting Guide](#troubleshooting-guide)
-9. [Conclusion](#conclusion)
+6. [External Resources Integration](#external-resources-integration)
+7. [Dependency Analysis](#dependency-analysis)
+8. [Performance Considerations](#performance-considerations)
+9. [Troubleshooting Guide](#troubleshooting-guide)
+10. [Conclusion](#conclusion)
 
 ## Introduction
 This document explains the Dashboard component of the DSA Tracker application. It covers:
 - Progress visualization with a circular progress indicator
 - Statistics cards for streak, due problems, weak problems, and mastered count
 - Revision due panel, Continue A2Z section, weak problems prioritization, and study loop guidance
+- **New**: External resource integration via RowExtLinks component for quick access to personal solutions, TakeUForward editorials, LeetCode problems, and video explanations
 - Responsive grid layout and card-based UI patterns
 - User interaction flows from dashboard to roadmap, revision, and problem pages
 - Calculation logic for statistics and filtering for due items
@@ -60,15 +70,17 @@ Pages --> Problem["Problem Detail"]
 - Dashboard: Displays overall progress, stats, and quick actions.
 - DashboardPanel: Reusable panel wrapper used across dashboard sections.
 - ProblemRow: Compact row representing a problem with status, tags, and navigation.
+- **New**: RowExtLinks: Provides quick access to external resources (personal solutions, TakeUForward, LeetCode, videos) directly from problem rows.
 - Supporting helpers: enriched dataset, stats computation, filtering, and navigation functions.
 
 Key responsibilities:
 - Compute completion percentage and render a circular progress ring.
 - Show four stat cards: Streak, Due today, Weak, Mastered.
-- Render “Revision due” list sorted by next revision date.
-- Render “Continue A2Z” list of not-started problems.
-- Render “Weak problems” prioritized list.
+- Render "Revision due" list sorted by next revision date.
+- Render "Continue A2Z" list of not-started problems.
+- Render "Weak problems" prioritized list.
 - Provide Study loop guidance.
+- **Enhanced**: Display external resource links for each problem row.
 - Navigate to Roadmap, Revision, or open a specific Problem.
 
 **Section sources**
@@ -81,6 +93,8 @@ The Dashboard receives precomputed props from the parent App:
 - open(p): opens a specific problem
 - setPage(id): navigates to another page
 - settings: user preferences including daily goal
+- **New**: tufLinks: external link mappings for TakeUForward solutions
+- **New**: solutions: user's personal solution data
 
 ```mermaid
 sequenceDiagram
@@ -88,13 +102,16 @@ participant App as "App"
 participant Dashboard as "Dashboard"
 participant Panel as "DashboardPanel"
 participant Row as "ProblemRow"
-App->>Dashboard : {stats, problems, open, setPage, settings}
+participant ExtLinks as "RowExtLinks"
+App->>Dashboard : {stats, problems, open, setPage, settings, tufLinks, solutions}
 Dashboard->>Dashboard : compute pct = solved/total
 Dashboard->>Dashboard : filter due problems (nextRevision <= now)
 Dashboard->>Panel : "Revision due" with due list
 Dashboard->>Panel : "Continue A2Z" with not started list
 Dashboard->>Panel : "Weak problems" with weak list
 Panel->>Row : render each problem row
+Row->>ExtLinks : render external links
+ExtLinks-->>User : display external resource icons
 Row-->>Dashboard : onClick -> open(p)
 Panel-->>Dashboard : action click -> setPage("revision"/"roadmap")
 ```
@@ -136,7 +153,7 @@ Cards show:
 Calculation highlights:
 - Enriched dataset merges base problem data with per-problem progress
 - Stats are memoized to avoid recomputation
-- Today’s activity increments via recordActivity on interactions that mark progress
+- Today's activity increments via recordActivity on interactions that mark progress
 
 ```mermaid
 flowchart TD
@@ -272,7 +289,8 @@ end
 - Clicking a problem row opens the Problem detail page
 - Panel actions navigate to Roadmap or Revision
 - Marking progress updates stats and may schedule revisions
-- Daily goal shown in hero reflects current day’s activity vs target
+- Daily goal shown in hero reflects current day's activity vs target
+- **Enhanced**: External resource links provide quick access to supplementary materials without leaving the dashboard
 
 ```mermaid
 sequenceDiagram
@@ -280,12 +298,15 @@ participant U as "User"
 participant D as "Dashboard"
 participant P as "ProblemDetail"
 participant R as "Revision Page"
+participant E as "External Links"
 U->>D : Click problem row
 D->>P : open(problem)
 U->>D : Click "View all" (due)
 D->>R : setPage("revision")
 U->>D : Click "Open roadmap"
 D->>D : setPage("roadmap")
+U->>E : Click external link icon
+E-->>U : Open external resource
 ```
 
 **Diagram sources**
@@ -294,16 +315,104 @@ D->>D : setPage("roadmap")
 **Section sources**
 - [main.jsx:175-188](file://src/main.jsx#L175-L188)
 
+## External Resources Integration
+
+### RowExtLinks Component
+The RowExtLinks component provides quick access to external resources directly from problem rows in the dashboard view. It displays contextual action icons based on available resources for each problem.
+
+**Supported External Resources:**
+- **Personal Solutions**: Links to user's saved solutions within the app
+- **TakeUForward Editorials**: Direct links to official editorial solutions
+- **LeetCode Problems**: Links to original problem statements on LeetCode
+- **Video Explanations**: Links to explanatory videos when available
+
+**Component Logic:**
+```mermaid
+flowchart TD
+Start(["RowExtLinks Component"]) --> CheckMine["Check if user has personal solution"]
+CheckMine --> CheckTUF["Check for TakeUForward link"]
+CheckTUF --> CheckLeetCode["Check for LeetCode link"]
+CheckLeetCode --> CheckVideo["Check for video URL"]
+CheckVideo --> HasAny{"Has any resources?"}
+HasAny --> |Yes| Render["Render available link icons"]
+HasAny --> |No| Hide["Return null (no display)"]
+Render --> Style["Apply appropriate styling"]
+Style --> End(["Display in problem row"])
+```
+
+**Diagram sources**
+- [main.jsx:432-445](file://src/main.jsx#L432-L445)
+
+**Section sources**
+- [main.jsx:432-445](file://src/main.jsx#L432-L445)
+
+### External Link Data Management
+External link data is managed through a centralized mapping system:
+
+**Data Source:**
+- External links are loaded from `/public/data/tuf-links.json`
+- Each problem ID maps to its corresponding external resource URL
+- The data includes TakeUForward editorial URLs for most problems
+
+**Link Resolution Logic:**
+- Personal solutions: Detected by checking if user has saved approaches for the problem
+- TakeUForward links: Retrieved from the tufLinks mapping by problem ID
+- LeetCode links: Extracted from problem's URL field if it contains leetcode.com
+- Video links: Validated HTTP URLs from problem's videoUrl field
+
+**Section sources**
+- [main.jsx:127](file://src/main.jsx#L127)
+- [main.jsx:217](file://src/main.jsx#L217)
+- [main.jsx:65-72](file://src/main.jsx#L65-L72)
+
+### Styling and User Interface
+The RowExtLinks component features a clean, icon-based interface:
+
+**Visual Design:**
+- Compact 26x26px icon buttons with rounded corners
+- Subtle background colors that change on hover
+- Proper spacing and alignment within problem rows
+- Dark mode support with appropriate color adjustments
+
+**Accessibility Features:**
+- Tooltips provide context for each link type
+- Keyboard navigation support
+- Screen reader friendly titles
+- Focus indicators for interactive elements
+
+**Section sources**
+- [styles.css:711-728](file://src/styles.css#L711-L728)
+
+### Integration with Problem Rows
+The RowExtLinks component is seamlessly integrated into the ProblemRow component:
+
+**Placement:**
+- Positioned between the problem title/topic and difficulty badge
+- Maintains consistent spacing and visual hierarchy
+- Does not interfere with row click behavior
+
+**Behavior:**
+- Clicking the row still opens the problem detail page
+- External link clicks are prevented from triggering row navigation
+- Links open in new tabs for external resources
+- Personal solution links navigate within the app
+
+**Section sources**
+- [main.jsx:446](file://src/main.jsx#L446)
+
 ## Dependency Analysis
 - Dashboard depends on:
   - Enriched problems (base problems merged with per-problem progress)
   - Stats computed from enriched problems and activity
   - Navigation helpers (open, setPage)
   - Settings (dailyGoal)
+  - **New**: tufLinks (external link mappings)
+  - **New**: solutions (user's personal solution data)
 - Data flow:
   - Base problems loaded from local JSON seed
   - Per-problem progress stored in localStorage and optionally synced to cloud
   - Activity tracked per day and used for streak and analytics
+  - External links loaded from tuf-links.json
   - Stats recompute whenever enriched data or activity changes
 
 ```mermaid
@@ -311,14 +420,19 @@ graph TB
 Seed["problems.json"] --> Enrich["enriched (merge progress)"]
 Local["localStorage (progress/activity/settings)"] --> Enrich
 Cloud["Cloud sync (optional)"] --> Local
+TUF["tuf-links.json"] --> TUFLinks["tufLinks mapping"]
 Enrich --> Stats["stats"]
 Enrich --> Dashboard["Dashboard"]
 Activity["activity"] --> Stats
 Stats --> Dashboard
+TUFLinks --> RowExtLinks["RowExtLinks"]
+Solutions["User solutions"] --> RowExtLinks
+RowExtLinks --> Dashboard
 ```
 
 **Diagram sources**
 - [main.jsx:47-126](file://src/main.jsx#L47-L126)
+- [main.jsx:217](file://src/main.jsx#L217)
 
 **Section sources**
 - [main.jsx:47-126](file://src/main.jsx#L47-L126)
@@ -327,14 +441,16 @@ Stats --> Dashboard
 - Memoization:
   - enriched dataset and stats are wrapped in useMemo to avoid unnecessary recalculations
   - Filtering for dashboard panels is lightweight but still benefits from minimal recomputation
+  - External link resolution is optimized to prevent redundant checks
 - Rendering:
   - Limiting displayed items (e.g., top 5 due, top 5 continue, top 4 weak) reduces DOM size
+  - RowExtLinks only renders when external resources are available, minimizing overhead
 - Storage:
   - LocalStorage writes occur on state changes; consider batching if frequent updates are added
+  - External link data is cached in component state after initial load
 - Network:
   - Optional cloud sync uses debounced saves to reduce network calls
-
-[No sources needed since this section provides general guidance]
+  - External link data is loaded once during initialization
 
 ## Troubleshooting Guide
 Common issues and resolutions:
@@ -343,22 +459,31 @@ Common issues and resolutions:
 - Due panel empty:
   - Check that nextRevision is set and dates are valid; ensure time zone handling is consistent
 - Streak not updating:
-  - Confirm recordActivity is called when marking progress; verify today’s key matches current date
+  - Confirm recordActivity is called when marking progress; verify today's key matches current date
 - Navigation not working:
   - Verify setPage and open callbacks are passed to Dashboard and invoked correctly
+- **New**: External links not showing:
+  - Verify tufLinks data is loaded correctly from tuf-links.json
+  - Check that problem IDs match between problems and tufLinks mapping
+  - Ensure external link URLs are valid HTTP/HTTPS addresses
+- **New**: External link styling issues:
+  - Verify CSS classes are properly applied to RowExtLinks component
+  - Check for CSS conflicts or missing styles in the stylesheet
+  - Test both light and dark mode rendering
 
 **Section sources**
 - [main.jsx:115-126](file://src/main.jsx#L115-L126)
 - [main.jsx:175-188](file://src/main.jsx#L175-L188)
 
 ## Conclusion
-The Dashboard provides a clear, actionable overview of learning progress:
+The Dashboard provides a clear, actionable overview of learning progress with enhanced external resource integration:
 - Visual feedback via a circular progress ring
 - Immediate insights through stat cards
 - Focused tasks via due, continue, and weak problem panels
+- **Enhanced**: Quick access to external resources through RowExtLinks component
 - Guided study loop to reinforce retention
 - Seamless navigation to deeper pages for focused work
 
-It integrates tightly with the rest of the app’s state model and UI patterns, offering a responsive and accessible experience across devices.
+The integration of external resources significantly enhances the learning experience by providing immediate access to supplementary materials without disrupting the workflow. Users can quickly reference official solutions, watch video explanations, or practice on external platforms while maintaining their progress tracking within the app.
 
-[No sources needed since this section summarizes without analyzing specific files]
+It integrates tightly with the rest of the app's state model and UI patterns, offering a responsive and accessible experience across devices with comprehensive external resource support.

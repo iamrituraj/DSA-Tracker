@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Search, LayoutDashboard, BookOpen, RefreshCw, Brain, BarChart3, Settings, CheckCircle2, Clock3, Download, Upload, ChevronRight, ChevronDown, Flame, Star, Filter, CalendarDays, Target, RotateCcw, Trash2, Timer, Lightbulb, BookmarkCheck, Lock, Unlock, Pencil, Plus, Code2, Moon, Sun, Copy, Check, Play, Layers, List, LayoutGrid, AlertCircle, FileText, PenLine } from "lucide-react";
+import { Search, LayoutDashboard, BookOpen, RefreshCw, Brain, BarChart3, Settings, CheckCircle2, Clock3, Download, Upload, ChevronRight, ChevronDown, Flame, Star, Filter, CalendarDays, Target, RotateCcw, Trash2, Timer, Lightbulb, BookmarkCheck, Lock, Unlock, Pencil, Plus, Code2, Moon, Sun, Copy, Check, Play, Layers, Layers3, List, LayoutGrid, AlertCircle, FileText, PenLine } from "lucide-react";
 import "./styles.css";
 import "./cloud-sync.css";
 import { highlightCode } from "./highlight.js";
 import { LLDPage } from "./lld.jsx";
+import { HLDPage } from "./hld.jsx";
 import { LLD_CHAPTERS } from "./lld-data.js";
 
 const SEED = "/data/problems.json";
@@ -70,8 +71,8 @@ function leetCodeLink(p) {
   if (isHttp(p.url) && /leetcode\.com/i.test(p.url)) return { href: p.url, label: "Open on LeetCode" };
   return null;
 }
-const VALID_PAGES = ["dashboard", "roadmap", "revision", "lld", "patterns", "analytics", "settings"];
-const pageLabels = { dashboard: "Dashboard", roadmap: "A2Z Roadmap", revision: "Revision", lld: "LLD Lab", patterns: "Patterns", analytics: "Analytics", settings: "Settings" };
+const VALID_PAGES = ["dashboard", "roadmap", "revision", "lld", "hld", "patterns", "analytics", "settings"];
+const pageLabels = { dashboard: "Dashboard", roadmap: "A2Z Roadmap", revision: "Revision", lld: "LLD Lab", hld: "HLD Lab", patterns: "Patterns", analytics: "Analytics", settings: "Settings" };
 function parseHash() {
   try { return decodeURIComponent(window.location.hash.replace(/^#\/?/, "")); } catch { return ""; }
 }
@@ -315,7 +316,7 @@ function App() {
   }, [roadmapFilters.topic, roadmapFilters.pattern, patterns, topics]);
   return <div className={`app theme-${settings.theme || "light"}`}>
     <aside><div className="brand"><div className="logo">DS</div><div><b>DSA Tracker</b><small>A2Z Learning System</small></div></div>
-      <nav>{[["dashboard", "Dashboard", LayoutDashboard], ["roadmap", "A2Z Roadmap", BookOpen], ["revision", "Revision", RefreshCw], ["lld", "LLD Lab", Layers], ["patterns", "Patterns", Brain], ["analytics", "Analytics", BarChart3], ["settings", "Settings", Settings]].map(([id, label, I]) => <button className={page === id ? "active" : ""} onClick={() => setPage(id)} key={id}><I size={18} /><span>{label}</span></button>)}</nav>
+      <nav>{[["dashboard", "Dashboard", LayoutDashboard], ["roadmap", "A2Z Roadmap", BookOpen], ["revision", "Revision", RefreshCw], ["lld", "LLD Lab", Layers], ["hld", "HLD Lab", Layers3], ["patterns", "Patterns", Brain], ["analytics", "Analytics", BarChart3], ["settings", "Settings", Settings]].map(([id, label, I]) => <button className={page === id ? "active" : ""} onClick={() => setPage(id)} key={id}><I size={18} /><span>{label}</span></button>)}</nav>
       <div className="sidebar-foot"><Flame size={16} /> {syncStatus === "synced" ? "Cloud sync on" : syncStatus === "syncing" ? "Saving changes…" : "Local data"}</div>
       <button className="theme-toggle" type="button" onClick={() => setSettings(s => ({ ...s, theme: s.theme === "dark" ? "light" : "dark" }))} aria-label="Toggle dark mode">{settings.theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}<span>{settings.theme === "dark" ? "Light mode" : "Dark mode"}</span></button>
     </aside>
@@ -324,6 +325,7 @@ function App() {
       {page === "roadmap" && <Roadmap problems={enriched} topics={topics} patterns={patterns} open={open} filters={roadmapFilters} setFilters={setRoadmapFilters} filtered={filtered} collapse={collapse} setCollapse={setCollapse} query={query} clearQuery={() => setQuery("")} tufLinks={tufLinks} solutions={solutions} />}
       {page === "revision" && <Revision problems={enriched} open={open} update={update} recordActivity={recordActivity} query={query} />}
       {page === "lld" && <LLDPage focus={lldFocus} />}
+      {page === "hld" && <HLDPage theme={settings.theme === "dark" ? "dark" : "light"} />}
       {page === "patterns" && <Patterns problems={enriched} tufLinks={tufLinks} open={open} collapse={collapse} setCollapse={setCollapse} />}
       {page === "analytics" && <Analytics stats={stats} problems={enriched} activity={activity} notes={notes} solutions={solutions} builtInSolutions={builtInSolutions} settings={settings} />}
       {page === "settings" && <SettingsPage exportData={exportData} importData={importData} resetAll={resetAll} settings={settings} setSettings={setSettings} syncStatus={syncStatus} signIn={signIn} signOut={signOut} hasLocalData={hasLocalData} />}

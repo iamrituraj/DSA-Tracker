@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<!-- saved from url=(0092)https://1214feee-3499-47f7-8d36-8f02cfddee4b.frame.claudeusercontent.com/_f/1790082716-a6c7/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><!-- frame-runtime --><script>window.__FRAME_PREAMBLE={"v":1,"cred":"cookie","capabilities":{"artifact":"artifact.Kiow93e4.js","assets":"assets.DOAjpBS9.js","comments":"comments.DrhK3r8W.js","db":"db.zFlAA4qL.js","downloads":"downloads.axDW2QAi.js","embed":"embed.DcZf-TSv.js","endpoints":"endpoints.BPfoKaE1.js","mcp":"mcp.C8qKIFvQ.js","network":"network.B5UA9Su4.js","permissions":"permissions.DWFFeHI0.js","room":"room.BF1j0KPr.js","sample":"sample.C7KQQdQj.js","self":"artifact.Kiow93e4.js","user":"user.CCh6oTS_.js"},"transforms":"_transforms.CkRgqq9F.js","comments":"_comments.DUaNQZcg.js","translate":"_translate.DqxC5ek1.js","ldx":"_ldx.CqNtBrkk.js"}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         </script><script>(function(){"use strict";function sr(t){return t==="cookie"||t==="query"?t:void 0}var Kn=3e5;function ir(t,e){try{const r=t("navigation")[0],n=[r.responseStart,r.redirectEnd-r.redirectStart,r.domContentLoadedEventStart,e(),r.connectEnd-r.domainLookupStart,r.responseStart-r.requestStart];r.requestStart>0||(n.length=4);for(let a=0;a<n.length;a++)if(n[a]>=0&&n[a]<=3e5)n[a]=n[a]|0;else{if(a<4)return;n.length=4}return n}catch{return}}var lr=["light","dark","system"],cr=/^[A-Za-z0-9_-]{1,64}$/,St=/^[a-zA-Z_:][a-zA-Z0-9_:.-]{0,127}$/,ur=new Set(["class","hidden","value","checked","style","title","alt","placeholder","lang","dir","role","tabindex","disabled","readonly","contenteditable","open","colspan","rowspan"]);function fr(t){const e=t.toLowerCase();return e.startsWith("data-")||e.startsWith("aria-")||ur.has(e)}var At="data-ldx-props";function dr(t,e){if(e.toLowerCase()===At)return!0;const r=t.getAttribute(At);if(r===null)return!1;try{const n=JSON.parse(r);if(n===null||typeof n!="object"||Array.isArray(n))return!0;const a=e.toLowerCase();return Object.keys(n).some(s=>s.toLowerCase()===a)}catch{return!0}}var Gn="http://www.w3.org/1999/xhtml",hr="http://www.w3.org/2000/svg",pr=new Set(["script","style","iframe","noscript","noframes","noembed","xmp","plaintext","template","title","textarea","object","embed"]),mr=new Set(["script","style"]);function vr(t){const e=t.localName.toLowerCase();return t.namespaceURI==="http://www.w3.org/1999/xhtml"?!pr.has(e):t.namespaceURI===hr?!mr.has(e):!1}function Ve(t,e){return t===e||(t===160||t===32)&&(e===160||e===32)}function _r(t,e){const r=t.length,n=e.length;let a=0;for(;a<r&&a<n&&Ve(t.charCodeAt(a),e.charCodeAt(a));)a++;let s=0;for(;s<r-a&&s<n-a&&Ve(t.charCodeAt(r-1-s),e.charCodeAt(n-1-s));)s++;return{p:a,s}}function yr(t,e){const r=t.firstChild;if(t.childNodes.length!==1||r===null||r.nodeType!==Node.TEXT_NODE){t.textContent=e;return}const n=r.data,a=n.length,s=e.length,{p:c,s:d}=_r(n,e);c===a&&d===0&&a===s||r.replaceData(c,a-c-d,e.slice(c,s-d));const O=r.data,w=t.ownerDocument.getSelection?.()??null,b=w!==null&&w.rangeCount>0&&(w.anchorNode===r||w.focusNode===r)?{anchor:w.anchorNode,anchorOffset:w.anchorOffset,focus:w.focusNode,focusOffset:w.focusOffset}:null;let m=-1,R=-1;for(let h=0;h<O.length&&h<e.length;h++){const p=O.charCodeAt(h),D=e.charCodeAt(h);p!==D&&Ve(p,D)&&(m<0&&(m=h),R=h)}const M=m>=0;if(M&&r.replaceData(m,R-m+1,e.slice(m,R+1)),M&&b!==null&&b.anchor!==null&&b.focus!==null)try{w.setBaseAndExtent(b.anchor,b.anchorOffset,b.focus,b.focusOffset)}catch{}}var gr=new Set(["html","head","body","frameset"]);function wr(t){return t.namespaceURI==="http://www.w3.org/1999/xhtml"&&gr.has(t.localName)}function br(t){if(t===null||typeof t!="object")return!1;const e=t;if(typeof e.target!="string"||!cr.test(e.target)||e.text!==void 0&&typeof e.text!="string")return!1;if(e.attrsSet!==void 0){if(e.attrsSet===null||typeof e.attrsSet!="object")return!1;for(const[r,n]of Object.entries(e.attrsSet))if(!St.test(r)||typeof n!="string")return!1}if(e.attrsRemoved!==void 0){if(!Array.isArray(e.attrsRemoved))return!1;for(const r of e.attrsRemoved)if(typeof r!="string"||!St.test(r))return!1}return!0}function Er(t,e){if(t===null||typeof t!="object")return!1;const{seq:r,elements:n}=t;if(typeof r!="number"||!Number.isSafeInteger(r)||!Array.isArray(n)||n.length===0||n.length>64)return!1;for(let a=0;a<n.length;a++)if(!e(n[a]))return!1;return!0}function Sr(t){return t===null||typeof t!="object"?!1:Er(t.__frame_patch,br)}function Ar(t){if(t===null||typeof t!="object")return!1;const e=t.__frame_init;return e!==null&&typeof e=="object"}function kr(t){return t!==null&&typeof t=="object"&&t.__frame_size_poke===!0}function Rr(t){if(t===null||typeof t!="object")return!1;const e=t.__frame_host_visible;return e!==null&&typeof e=="object"&&typeof e.visible=="boolean"}function Tr(t){if(t===null||typeof t!="object")return!1;const e=t.__frame_theme;if(e===null||typeof e!="object")return!1;const r=e.theme;return typeof r=="string"&&lr.includes(r)}var Lr=["ok","empty","snapshot_error","snapshot_timeout","unclonable","oversize","unavailable","restore_error","withheld"],Or=["TypeError","RangeError","ReferenceError","SyntaxError","DataCloneError","QuotaExceededError","AbortError","TimeoutError","SecurityError","Error","other"];function Mr(t){return typeof t=="string"&&Or.includes(t)?t:"other"}var Pr=Object.freeze({until:null,now:!1}),Nr="__claude_hot",Cr="__claude_hot_in",jr=/^__claude_hot(?:_in)?(?::|$)/,kt=/^[0-9a-z]{1,32}$/,Xe=t=>t===void 0?Nr:"__claude_hot:"+t,be=t=>t===void 0?Cr:"__claude_hot_in:"+t;function Fr(t,e){const r=[];for(let n=0;n<t.length;n++){const a=t.key(n);a!==null&&a!==e&&jr.test(a)&&r.push(a)}for(const n of r)t.removeItem(n)}function Ir(t){let e=null;try{e=q(JSON.parse(t)?.hot)}catch{return null}return e===null||typeof e.k!="string"||!kt.test(e.k)?null:le(e.g)?{k:e.k,g:e.g}:{k:e.k}}var zn=262144,Dr=3e3,xr=5e3,Rt=/^[a-z0-9._:-]{1,64}$/,Hr=["none","hot-restart","hard-reload"],qr=["asset","doc","added","removed"],Br=1500,Ur=/^[0-9a-f]{64}$/;function q(t){return t!==null&&typeof t=="object"?t:null}function le(t){return typeof t=="number"&&Number.isInteger(t)&&t>=0&&t<2**31}function Tt(t){return t===void 0||typeof t=="number"&&Number.isFinite(t)}function Kr(t){return t===void 0||typeof t=="string"&&Rt.test(t)}function Lt(t){const e=q(t);return e!==null&&(e.until===null||typeof e.until=="number"&&Number.isFinite(e.until))&&typeof e.now=="boolean"}function Ye(t){const e=q(t);return e!==null&&typeof e.ver=="string"&&e.ver.length<=128&&Tt(e.seq)&&typeof e.handoff=="string"&&Lr.includes(e.handoff)&&Kr(e.note)}function Gr(t){const e=q(t);return e!==null&&le(e.gen)&&(e.phase==="final"||e.phase==="pending")&&(e.from===null||Ye(e.from))}function zr(t){const e=q(t);return e!==null&&e.kv===1&&le(e.gen)&&Ye(e.from)&&Object.hasOwn(e,"data")}function $r(t){const e=q(t);return e!==null&&e.__frame_hot_snapshot===!0&&le(e.gen)&&typeof e.timeoutMs=="number"&&e.timeoutMs>=0&&e.timeoutMs<=6e4&&(e.handoff===void 0||typeof e.handoff=="boolean")&&(e.deadline===void 0||Lt(e.deadline))&&Tt(e.seq)&&(e.note===void 0||typeof e.note=="string")&&(e.key===void 0||typeof e.key=="string")}function Wr(t){const e=q(t);return e!==null&&e.__frame_hot_start===!0&&le(e.gen)&&Ye(e.from)}function Vr(t){return typeof t=="string"&&t.length>=1&&t.length<=128}function Ot(t){return q(t)!==null&&!Array.isArray(t)}function Xr(t){const e=q(t);return e!==null&&e.__frame_cap_grant===!0&&typeof e.cap=="string"&&Vr(e.ver)&&(e.grant===void 0||Ot(e.grant))&&(e.budgets===void 0||Ot(e.budgets)&&Object.values(e.budgets).every(Number.isFinite))&&(e.brokerGen===void 0||le(e.brokerGen))}function Yr(t){const e=q(t);return e!==null&&e.__frame_cap_rewired===!0&&(e.caps===void 0||Array.isArray(e.caps)&&e.caps.every(r=>typeof r=="string"))&&(e.brokerGen===void 0||le(e.brokerGen))}function Mt(t){const e=q(t);return e!==null&&typeof e.ver=="string"&&e.ver.length<=128&&Number.isFinite(e.seq)}function Pt(t){if(t==null||typeof t=="string")return!0;const e=q(t);return e!==null&&typeof e.doc=="string"&&typeof e.profile=="string"}function Jr(t){const e=q(t);return e!==null&&typeof e.path=="string"&&qr.includes(e.kind)&&Pt(e.from)&&Pt(e.to)}function Zr(t){return t===null?null:Object.freeze(t.filter(Jr))}function Qr(t){const e=q(t);return e!==null&&e.__frame_hot_update===!0&&Number.isFinite(e.id)&&Mt(e.from)&&Mt(e.to)&&(e.changed===null||Array.isArray(e.changed))&&Hr.includes(e.required)&&Lt(e.deadline)&&typeof e.verdictTimeoutMs=="number"&&e.verdictTimeoutMs>=0&&e.verdictTimeoutMs<=6e4&&(e.preflight===void 0||typeof e.preflight=="string"&&Ur.test(e.preflight))}var ce=/^[\w.-]+\.js$/;function en(t,e,r){return r?"inert":typeof e=="string"&&ce.test(e)?t?[e]:"inert":t?"inert":"framed"}var Nt=Object.freeze({[Symbol("claude.hot.restart")]:!0});function Ct(t,e){let r;try{r=t??sessionStorage}catch{return null}const n=Xe(e?.k),a=be(e?.k);let s=null;try{s=r.getItem(n)}catch{}try{r.removeItem(n)}catch{}try{Fr(r,a)}catch{}let c=null;if(s!==null&&!(e!==null&&e.g===void 0))try{const d=JSON.parse(s);zr(d)&&(e===null||d.gen===e.g)&&(c=d)}catch{}if(c===null)try{r.removeItem(a)}catch{}return c}function jt(){const t=/^\/_f\/([^/]{1,128})\//.exec(location.pathname);return t?t[1]:""}var tn=/^[^/\\?#]{1,128}$/,Ft=t=>tn.test(t)&&t!=="."&&t!=="..";function It(t,e,r){const n=new URL(t),a="/_f/"+e+"/";if(!e||!n.pathname.startsWith(a)||!Ft(r))return null;const s=n.search.slice(1).split("&").filter(c=>!/^__frame_t(?:=|$)/.test(c)).join("&");return n.origin+"/_f/"+r+"/"+n.pathname.slice(a.length)+(s?"?"+s:"")+n.hash}var Fe="{}";function Ee(t){if(!t)return null;const e={ver:t.ver,handoff:t.handoff};return t.seq!==void 0&&(e.seq=t.seq),t.note!==void 0&&(e.note=t.note),e}function Dt(t,e){return t!==null&&t.note===void 0&&e?.note!==void 0?{...t,note:e.note}:t}function xt(t){const e=t?.k;return e!==null&&typeof e=="object"?e:void 0}function rn(t,e,r,n=null){const a=setTimeout,s=clearTimeout,c=queueMicrotask,d=performance.now.bind(performance),O=new TextEncoder;let w=null,b=null;try{w=history,b=w.replaceState.bind(w)}catch{}const m=(...o)=>{try{console.warn(...o)}catch{}};let R=jt(),M=null;try{M=sessionStorage}catch{}const h={storage:M,fetch:typeof fetch=="function"?fetch.bind(globalThis):null,entry:location.origin+location.pathname+location.search,ver:R,key:n?.k};let p=n?.k;const D=typeof requestAnimationFrame=="function"?requestAnimationFrame:o=>a(()=>o(d()),16);let _=e?.data??{},C=Ee(e?.from),P=e?.gen??0,x=e!==null,W=!1,J=!1,X=null,Te=!1;const Le=new AbortController;let Oe=null,H=null,me=null,qe=!1,oe=()=>{};const l=new Promise(o=>{oe=o});let v=!1,E=!1,I=!1,j,L=null,K=!1,Me=!1,Z=!1,Be=!1,ae=!1,de=!1;const Pe=o=>{for(const u of[Xe(o),be(o)])try{M?.removeItem(u)}catch{}},V=(o,u)=>{try{u!==null&&r.post(o,u)}catch{}},se=()=>ae||=Z&&(H===null||Be),B=()=>{const o={__frame_hot:!0,ready:H!==null,accept:me!==null,demand:!0};de=!ae,de&&(o.booting=!0),v&&(o.readData=!0),I&&(o.threw=!0),L?.assess&&(o.preflight=!0),V(o,X)};let ve=!1,Ne=!1,ie=!1,Ce=!1;const i=()=>{ve||!Te||ie||(ve=!0,V({__frame_reveal_hold:!0},"*"))},g=()=>new Promise(o=>{let u,f=0;const S=F=>{if(u===void 0)u=F;else if(F!==u||++f>=8){o();return}try{D(S)}catch{o()}};try{D(S)}catch{o()}}),y=()=>{ie=!0,V({__frame_reveal_ready:!0},"*")},k=o=>{Ne||(Ne=!0,o.then(u=>{if(u===!1)return;let f=null;try{f=L?.settle?.()??null}catch{}return(f===null?g():new Promise(S=>{a(S,50),Promise.resolve(f).then(S,S)}).then(g)).then(y)}))},Q=()=>{if(Ce||!ie)return;Ce=!0;const o=()=>{try{L?.afterReveal?.()}catch{}};o(),g().then(()=>{o(),y()})},G=(o=!1)=>{if(qe||H===null||!x||!J)return;qe=!0;const u=H,f=_;c(()=>{let S;try{S=u(f)}catch(U){throw oe(!1),U}let F=!1;try{F=typeof S?.then=="function"}catch{}if(!F){oe(!0);return}Promise.resolve(S).then(()=>oe(!0),U=>{oe(!1),c(()=>{throw U})})}),k(o?l:r.dcl.then(()=>l))},ee=o=>typeof o=="string"&&Rt.test(o)?o:void 0,dt=o=>{const u={__frame_hot_restart:!0},f=ee(o?.note);f!==void 0&&(u.note=f),o?.required==="hard-reload"&&(u.required="hard-reload"),V(u,X)},Zt=Object.freeze({get data(){return J||(E=!0),!x&&!v&&(v=!0,J&&B()),_},get from(){return C},get gen(){return P},signal:Le.signal,snapshot(o){typeof o=="function"&&(Oe=o)},ready(o){typeof o!="function"||H!==null||(H=o,i(),B(),W&&V({__frame_hot_ready:!0,gen:P},X),G())},accept(o){typeof o=="function"&&(me=o,B())},restart(o){const u={note:o?.note,required:o?.required};if(J){dt(u);return}const f=j;j={note:ee(f?.note)??u.note,required:f?.required==="hard-reload"||u.required==="hard-reload"?"hard-reload":void 0}}});let Ue=null,Qt=()=>{};const Fn=new Promise(o=>{Qt=o});let In=null;const er=()=>In??=r.dcl.then(()=>{let o=!1;try{o=Ue!==null&&Ue.expect()}catch{}if(!o)return;const u=Ue.maxMs;return new Promise(f=>{Fn.then(f),a(f,u)})}),tr=()=>{if(!K||Me||L===null)return;Me=!0;const o=L;er().then(()=>{try{ie||o.afterStart(xt(e),!1)}catch{}})},rr=o=>{e!==null&&E&&(v=!0),_={},C=null,P=0;try{M?.removeItem(be(n?.k))}catch{}e!==null&&!o&&k(r.dcl.then(()=>H!==null?l:void 0))},Dn=()=>{K=!0,k(er().then(()=>H!==null?l:void 0)),tr()};try{addEventListener("error",()=>{I||H!==null||(I=!0,B())})}catch{}const nr=()=>{a(()=>{!ae&&se()&&de&&B()},0)};try{Z=document.readyState==="complete",Z||addEventListener("load",()=>{Z=!0,nr()},{once:!0})}catch{Z=!0}se(),l.then(()=>{Be=!0,nr()});let he=-1,ht,pt,je=!0,mt=!1,vt,Ke=null;const _t=o=>{const u=Ke===null;Ke=je&&o[0]!=="withheld"?o:["withheld",o[1],Fe];let f=o[0];if(je&&f!=="withheld"){const F={ver:R,handoff:f};ht!==void 0&&(F.seq=ht),pt!==void 0&&(F.note=pt);try{if(M===null)throw new Error("no storage");M.setItem(Xe(p),'{"kv":1,"gen":'+he+',"from":'+JSON.stringify(F)+(vt!==void 0?',"k":'+JSON.stringify(vt):"")+',"data":'+(f==="ok"?o[2]:Fe)+"}")}catch{f="unavailable"}}else{f="withheld",Pe(p);try{L?.release?.()}catch{}}const S={__frame_hot_snapshotted:!0,gen:he,handoff:f,bytes:o[1]};o[3]!==void 0&&(S.errName=o[3]),V(S,X),u&&(f==="snapshot_error"||f==="unclonable"||f==="oversize")&&m("claude.hot: snapshot",f,o[3])},_e=o=>{try{return Mr(o?.name)}catch{return"other"}},ye=(o,u,f=0)=>_t(u===void 0?[o,f,Fe]:[o,f,Fe,_e(u)]),xn=o=>{if(o.gen<=he)return;const u=he>=0;if(he=o.gen,ht=o.seq,pt=ee(o.note),typeof o.key=="string"&&kt.test(o.key)&&o.key!==p&&(Pe(p),p=o.key),je&&=o.handoff!==!1,u){Ke!==null?_t(Ke):mt&&V({__frame_hot_held:!0,gen:he},X);return}Le.abort();const f=Object.freeze({handoff:je,timeoutMs:o.timeoutMs,deadline:o.deadline??Pr}),S=Oe,F=()=>{if(je)try{vt=L?.capture()}catch{}if(S===null){ye("empty");return}let T=!1;const z=a(()=>{T||(T=!0,ye("snapshot_timeout"))},Math.max(0,f.timeoutMs));Promise.resolve().then(()=>S(f)).then(ge=>{if(T)return;T=!0,s(z);let re;try{re=JSON.stringify(ge)}catch(yt){ye("unclonable",yt);return}if(typeof re!="string"){ye("unclonable");return}let ne=re.length;try{ne=O.encode(re).length}catch{}if(ne>262144){ye("oversize",void 0,ne);return}_t(["ok",ne,re])},ge=>{T||(T=!0,s(z),ye("snapshot_error",ge))})};let U=null;try{U=L?.holdForIme()??null}catch{}if(U===null)F();else{mt=!0,V({__frame_hot_held:!0,gen:he},X);const T=()=>{mt=!1,F()};U.then(T,T)}},Hn=o=>{if(!W||x||H===null||o.gen!==P)return;let u=null;try{u=Ct(M,n&&{k:n.k,g:o.gen})}catch{}if(u!==null&&u.gen!==o.gen){u=null;try{M?.removeItem(be(n?.k))}catch{}}_=u?.data??{},C=Dt(Ee(u?.from??o.from),Ee(o.from)),u!==null&&(P=u.gen),x=!0,W=!1;const f=xt(u);l.then(S=>{try{S&&L?.afterStart(f,!0)}catch{}}),G(!0)};let Ge=0;const qn=o=>{const u=me;if(u===null||o.id<=Ge)return;Ge=o.id;const f=L?.assess;if(o.preflight===void 0||f===void 0){or(o,u);return}let S=!1;const F=z=>{S||(S=!0,s(T),o.id===Ge&&or(o,u,z))},U=()=>F(f.timeout(o)),T=a(U,Br+100);f.run(o,window).then(F,U)},or=(o,u,f)=>{let S,F=!1,U=!1,T,z,ge=null;const re=A=>{if(U)return!1;if(T!==void 0&&T!==A)return m(`claude.hot: u.${A}() ignored - u.${T}() was called first`),!1;const te=T===void 0;return T=A,te},ne=A=>{T="restart",m(`claude.hot: ${A} - restarting`)},yt=()=>{if(!re("adopt")||o.id!==Ge)return;const A=o.to.ver;if(ze.required!=="none"){ne(`u.adopt() needs required 'none', it is '${ze.required}'`);return}if(!Ft(A)){ne("u.adopt() cannot address this version");return}if(!R||A===R)return;const te=R,Y=h.entry;let $e="",wt,we=null,We;try{$e=location.href,wt=w.state,we=It($e,te,A),we!==null&&(b(wt,"",we),location.pathname.startsWith("/_f/"+A+"/")?we=location.href:We="navigate event canceled")}catch(Et){We=_e(Et)}if(We!==void 0){z="adopt_failed",ne(`adopt_failed ${We}; URL not changed`);return}we===null?(z="adopt_skipped",m(`claude.hot: adopt_skipped - page already left /_f/${te}/; URL not changed, update still applied`)):z="adopted",R=h.ver=A;try{h.entry=It(Y,te,A)??Y}catch{}const bt=we;ge=()=>{if(R===A){if(bt!==null)try{if(location.href!==bt)m("claude.hot: adopt_revert_skipped - update not applied; URL left where the page navigated");else{if(b(wt,"",$e),location.href!==$e){m("claude.hot: adopt_revert_failed navigate event canceled - URL still at the new version");return}z="adopt_reverted",m("claude.hot: adopt_reverted - adopt() was called but the handler threw; URL restored")}}catch(Et){m(`claude.hot: adopt_revert_failed ${_e(Et)} - URL still at the new version`);return}R=h.ver=te,h.entry=Y,bt===null&&(z=void 0)}}},ze=Object.freeze({from:{ver:o.from.ver,seq:o.from.seq},to:{ver:o.to.ver,seq:o.to.seq},changed:Zr(o.changed),required:o.required,deadline:o.deadline,adopt:yt,defer(){return re("defer")&&ze.deadline.now&&ne("u.defer() past the deadline"),Nt},restart(A){return re("restart"),T==="restart"&&!U&&(S??=ee(A?.note),F||=A?.required==="hard-reload"),Nt},...f?.update}),Bn=(A,te)=>{U=!0,A==="threw"?(ge?.(),S??=_e(te).toLowerCase()):T===void 0&&m(A==="timeout"?"claude.hot: accept handler did not answer in time - restarting":"claude.hot: accept handler settled without defer/restart/adopt - restarting");const Y={__frame_hot_verdict:!0,id:o.id};Y.verdict=A==="threw"||T===void 0||T==="restart"?"restart":T==="adopt"?"applied":"deferred",Y.verdict==="restart"&&(F&&(Y.required="hard-reload"),S!==void 0&&(Y.note=S)),z!==void 0&&(Y.verdict==="applied"||z!=="adopted")&&(Y.adopt=z),V(Object.assign(Y,f?.verdict),X)};let ar=!1;const gt=(A,te)=>ar?!1:(ar=!0,s(Un),Bn(A,te),!0),Un=a(()=>gt("timeout"),o.verdictTimeoutMs);Promise.resolve().then(()=>u(ze)).then(()=>gt("settled"),A=>{!gt("threw",A)&&T==="adopt"&&dt({note:_e(A).toLowerCase()}),m("claude.hot: accept",_e(A))})};try{t.hot===void 0&&Object.defineProperty(t,"hot",{value:Zt,writable:!1,configurable:!1,enumerable:!1})}catch{}return{hot:Zt,boot:h,afterConnect(){Te=!0,(e!==null||H!==null)&&i()},onInit(o,u){X=u,J=!0;const f=Gr(o)?o:null;f?.phase==="final"&&e!==null&&e.gen===f.gen?(x=!0,C=Dt(C,Ee(f.from)),Dn()):(W=f?.phase==="pending",rr(W),x=!W,P=f?.gen??0,C=Ee(f?.from)),B(),de&&a(()=>{ae||(ae=!0,B())},xr),W&&H!==null&&V({__frame_hot_ready:!0,gen:P},u),j!==void 0&&(dt(j),j=void 0),G()},onNoInit(){J=!0,rr(!1),x=!0,G()},onShell(o){return o?.__frame_revealed===!0?(Q(),!1):$r(o)?(xn(o),!0):Wr(o)?(Hn(o),!0):Qr(o)?(qn(o),!0):!1},attachExtras(o){L=o,tr(),o.assess&&B()},inSlot:()=>be(p),hydration(o,u){Ue??={expect:o,maxMs:u}},hydrated(){Qt()},carried(){return x?_:{}},presented:()=>ie}}var $n="frame_ldx_runtime",nn="frame_ldx_build",Wn="script#an-form",on=256;function Ht(t,e,r){for(const n of t)r(n)&&t.delete(n);t.size>=on&&!t.has(e)&&t.delete(t.values().next().value),t.add(e)}function Je(t,e,r){try{const n=t[e];if(typeof n!="function")return;t[e]=function(...a){const s=n.apply(this,a);try{r(this)}catch{}return s}}catch{}}var Ze;function an(){if(Ze)return Ze;const t={media:new Set,contexts:new Set,onStart:null,onPause:null};Ze=t;const e=window.HTMLMediaElement?.prototype;e&&(Je(e,"play",a=>{Ht(t.media,a,s=>s.paused),t.onStart?.(a)}),Je(e,"pause",a=>t.onPause?.(a)));const r=window.AudioContext,n=window.AudioNode?.prototype;return r&&n&&Je(n,"connect",a=>{const s=a.context;s instanceof r&&(Ht(t.contexts,s,c=>c.state==="closed"),t.onStart?.(s))}),t}function sn(t){let e=window;for(let r=0;e.parent&&e.parent!==e&&r<8;r++)if(e=e.parent,t(e))return!0;return!1}function ln(){let t=null;const e=()=>t??parent,r=n=>t?n===t:sn(a=>a===n);return{post(n,a){if(t){e().postMessage(n,a);return}let s=parent;for(let c=0;c<8&&(s.postMessage(n,a),!(!s.parent||s.parent===s));c++)s=s.parent},on(n){const a=s=>{const c=s.source;r(c)&&n(s.data,s.origin,s.isTrusted,()=>{t??=c})};return addEventListener("message",a),()=>removeEventListener("message",a)},port:n=>({post(a,s){if(s?.activation){e().postMessage(a,{targetOrigin:n,includeUserActivation:!0});return}if(s?.transfer){e().postMessage(a,n,s.transfer);return}e().postMessage(a,n)},on(a,s){const c=d=>{r(d.source)&&d.origin===n&&a(d.data,d)};return addEventListener("message",c,s),()=>removeEventListener("message",c,s)}})}}function cn(){const t={post:()=>{},on:()=>()=>{}};return{...t,port:()=>t}}var un=500,fn=2e4,dn="data-token-reads",hn="data-frame-refused-watch",pn="data-frame-unsupported",mn=/(?:^|\s)stylesheet(?:\s|$)/i;function vn(t,e){let r="";if(t instanceof HTMLScriptElement?r=t.src:t instanceof HTMLLinkElement&&mn.test(t.rel)&&(r=t.href),!r)return null;try{const n=new URL(r);return n.origin===location.origin&&n.pathname.startsWith(e)?n.origin+n.pathname:null}catch{return null}}function _n(t,e,r){if(!t||e!=="query")return;const n="/_f/"+t+"/";document.documentElement.setAttribute(hn,"");const a=location.href,s=fetch,c=setTimeout,d={method:"HEAD",cache:"no-store",credentials:"same-origin"},O=h=>h.ok||h.status===304;let w=!1,b=!1;const m=()=>removeEventListener("error",M,!0),R=async h=>{const p=await s(h,d);if(O(p))b=!0;else if(p.status===403){const D=await s(a,d);if(O(D)){const _=(await s(h,d)).status;_===403?(b=!0,document.documentElement.setAttribute(pn,""),r()):_<500&&(b=!0)}else D.status>=400&&D.status<500&&(b=!0)}},M=h=>{if(b||w)return;if(document.documentElement.hasAttribute(dn)){b=!0,m();return}const p=vn(h.target,n);p&&(w=!0,c(()=>{R(p).catch(()=>{}).finally(()=>{w=!1,b&&m()})},un))};addEventListener("error",M,!0),addEventListener("load",m,{once:!0}),c(m,fn)}var Qe="__frame_scroll",yn=150,gn=310,wn=160,bn=3e4;function En(){let t=0,e=!1,r=!1,n=!1,a=0,s=null;const c=_=>{try{sessionStorage.setItem(Qe,JSON.stringify({y:_}))}catch{}},d=()=>{if(clearTimeout(t),s===null)return;const _=s;s=null,c(_)},O=()=>{if(e){e=!1;return}r=!0,s=scrollY,clearTimeout(t),t=setTimeout(d,yn)};try{addEventListener("scroll",O,{passive:!0}),addEventListener("pagehide",d)}catch{}const w=()=>{let _;try{_=sessionStorage.getItem(Qe)}catch{return null}if(_===null)return null;let C;try{C=JSON.parse(_)}catch{C=null}const P=C?.y;if(!(typeof P=="number"&&Number.isFinite(P)&&P>=0)){try{sessionStorage.removeItem(Qe)}catch{}return null}return P};let b=!1;const m=_=>{try{const C=scrollY;scrollTo({top:_,left:0,behavior:"instant"}),a=_,n=!0,clearTimeout(t),s=null,c(_);const P=scrollY;P!==C&&(e=!0),P!==_&&!b&&(b=!0,addEventListener("load",()=>{try{if(scrollY===P){const x=w();m(x!==null?x:a)}}catch{}},{once:!0}))}catch{}},R=()=>{try{return!!location.hash}catch{return!0}};let M=!1;const h=()=>{try{if(M||innerWidth>gn||innerHeight>wn)return;M=!0;const _=Date.now(),C=()=>{try{removeEventListener("resize",C)}catch{}if(Date.now()-_>bn||r||R())return;const P=w();m(P!==null?P:a)};addEventListener("resize",C)}catch{}};let p=!1,D=!1;return{restore(){if(p||(p=!0,R()))return;const _=w();_!==null&&(m(_),h())},promoted(){if(D||(D=!0,R()))return;const _=w();_!==null?(m(_),h()):n&&m(a)}}}function Sn(t,e,r,n){let a=null;try{a=window.trustedTypes?.createPolicy("frame-runtime",{createScriptURL:O=>O})??null}catch{}const s=window.Worker,c=s?.prototype,d=Object.freeze({Worker:s,workerOn:c?.addEventListener,workerPost:c?.postMessage,workerTerminate:c?.terminate,fetch:window.fetch.bind(window),preventDefault:Event.prototype.preventDefault,now:Date.now,policy:a,origins:e});r(t).then(O=>O?.bootTopLevel?O.bootTopLevel(d,n):n.settle()).catch(()=>n.settle())}var Vn="modulepreload",Xn=function(t){return"/"+t},Yn={},An=function(e,r,n){let a=Promise.resolve();function s(c){const d=new Event("vite:preloadError",{cancelable:!0});if(d.payload=c,window.dispatchEvent(d),!d.defaultPrevented)throw c}return a.then(c=>{for(const d of c||[])d.status==="rejected"&&s(d.reason);return e().catch(s)})},kn=window===top,qt=Object.getOwnPropertyDescriptor(window,"claude"),Ie=en(kn,window.__FRAME_PREAMBLE?.topLevel,qt?.writable===!1),et=typeof Ie=="object"&&Ie[0],N=et?cn():ln();(function(){const t=Object.defineProperty,e=globalThis,r=["RTCPeerConnection","webkitRTCPeerConnection","RTCDataChannel","RTCIceCandidate","RTCSessionDescription","RTCRtpSender","RTCRtpReceiver"];let n=0;for(let a=0;a<r.length;a++){const s=r[a];try{t(e,s,{value:void 0,writable:!1,configurable:!1})}catch{try{delete e[s]}catch{}try{t(e,s,{value:void 0,writable:!1,configurable:!0})}catch{}}typeof e[s]=="function"&&n++}if(n&&Ie==="framed")try{N.post({__frame_rtc_lockdown_failed:n},"*")}catch{}})();var Bt=1e4,Rn=2e3,tt=2e3,rt=Object.freeze([...window.__FRAME_PREAMBLE?.origins??["https://claude.ai","https://preview.claude.ai"]]);function Ut(t){for(const e of rt)if(e.endsWith(":*"))try{const r=new URL(t);if(`${r.protocol}//${r.hostname}:*`===e)return!0}catch{}else if(t===e)return!0;return!1}var Se=Object.freeze({...window.__FRAME_PREAMBLE?.capabilities}),Ae=window.__FRAME_PREAMBLE?.transforms,nt=window.__FRAME_PREAMBLE?.comments,ot=window.__FRAME_PREAMBLE?.translate,ke=window.__FRAME_PREAMBLE?.ldx,at=sr(window.__FRAME_PREAMBLE?.cred);function Kt(t){return An(()=>import("/_runtime/"+t),void 0)}var Re=new Set,Gt=setTimeout,Tn=fetch,Ln=AbortController,On=800+800*Math.random(),Mn=3e3,De=null,zt=new Map;function Pn(t,e){let r=zt.get(t);return r||zt.set(t,r=Nn(t,e)),r}function Nn(t,e){if(De?.has(t))return Promise.resolve("csp");if(navigator.onLine===!1)return Promise.resolve("offline");const r=new Ln;let n=!1;return Gt(()=>{n=!0,r.abort()},Mn),Tn("/_runtime/"+t,{signal:r.signal}).then(a=>(r.abort(),a.ok?/javascript/i.test(a.headers.get("content-type")??"")?e instanceof Error&&/:\d+:\d+\)?$/m.test(e.stack??"")?"eval":"served":"mime":"http"),()=>n?"timeout":De?.has(t)?"csp":"net")}function ue(t){if(!De){const e=De=new Set;try{document.addEventListener("securitypolicyviolation",r=>{const n=/\/_runtime\/([^/?#]+)/.exec(r.blockedURI);n&&r.disposition!=="report"&&e.add(n[1])})}catch{}}return Kt(t).catch(()=>new Promise(e=>Gt(e,On)).then(()=>Kt(t+"?r=1")).then(e=>(e!==void 0&&Re.add(t),e)))}function $t(t,e,r){return{contract:t.contract,changes:new Set(t.changes??[]),flags:new Set(t.flags??[]),capabilities:t.capabilities??{},capBudgets:t.capBudgets??{},brokerGen:t.brokerGen,transforms:new Map,shellOrigin:e,shell:r,mount:ft,hooks:xe,pipe:()=>({wrap:(n,a)=>(...s)=>{try{return a(...s)}catch(c){return Promise.reject(c)}}})}}var pe=null,$=null;function Wt(t,e,r){try{Object.defineProperty(t,e,{value:r,writable:!1,configurable:!1,enumerable:!0})}catch{try{Object.defineProperty(t,e,{value:r,writable:!1,configurable:!0,enumerable:!0})}catch{}}}var st=!1,xe={editBefore:null,edit:null};function Cn(t,e,r=!1){const n=[];let a;if(r)try{xe.editBefore?.(t)}catch{}for(const s of t.elements){const c=document.querySelector(`[data-id="${s.target}"]`);if(!c){a=s.target;break}if([...Object.keys(s.attrsSet??{}),...s.attrsRemoved??[]].some(d=>!fr(d)||dr(c,d))){a=s.target;break}if(s.text!==void 0&&(!vr(c)||wr(c))){a=s.target;break}for(const[d,O]of Object.entries(s.attrsSet??{}))if(!Xt(c,d)){try{c.setAttribute(d,O)}catch{}Vt(c,d,O)}for(const d of s.attrsRemoved??[])Xt(c,d)||(c.removeAttribute(d),Vt(c,d,null));typeof s.text=="string"&&yr(c,s.text),n.push(s.target)}if(r)try{xe.edit?.(t.seq,n,a)}catch{}if(a!==void 0){N.post({__frame_patch_miss:{seq:t.seq}},e);return}try{document.dispatchEvent(new CustomEvent("claude:edit",{detail:{seq:t.seq,targets:n}}))}catch{}}function Vt(t,e,r){if(!(t instanceof HTMLInputElement))return;const n=e.toLowerCase();n==="checked"?t.checked=r!==null:n==="value"&&t.type!=="file"&&(t.value=r??"")}function Xt(t,e){const r=e.toLowerCase(),n=t;return r==="data-id"||(r==="value"||r==="checked")&&(n.__artifactSecret===!0||/^(password|hidden|file)$/.test(n.type??"")||/(^|\s)(cc-|one-time-code|current-password|new-password)/i.test(`${t.getAttribute("autocomplete")??""} ${n.autocomplete??""}`))}function Yt(t){const e=document.documentElement;t==="light"||t==="dark"?(e.dataset.theme=t,e.style.colorScheme=t,st=!0):st&&(delete e.dataset.theme,e.style.colorScheme="",st=!1)}var fe=new Map,it=null;function lt(){let t;const e={u:new Promise(r=>{t=r}),r:r=>{e.done=!0,t(r)},done:!1,nulled:!1};return e}function He(t,e){t.nulled=!0,t.ver=e,t.r(null)}function ct(t,e){for(const[r,n]of fe)n.done||(e&&n.asked?e(r,n):He(n,t))}var jn=Object.freeze(Object.assign(Object.create(null),{call:Function.prototype.call,apply:Function.prototype.apply,bind:Function.prototype.bind})),ut=!1,ft=(t,e)=>{let r=fe.get(t);if(r?.nulled&&ut)r=lt(),fe.set(t,r);else if(!r||r.done){r?.nulled&&$&&N.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:t,phase:"install"}},$);return}const n=typeof e=="function"?Object.setPrototypeOf(e,jn):Object.assign(Object.create(null),e);typeof n.then=="function"&&delete n.then,r.want=void 0,r.r(Object.freeze(n))};function Jt(){const t=qt?.value??{};Wt(window,"claude",t);for(const e of Object.keys(Se)){if(t[e]!==void 0){Wt(t,e,t[e]);continue}fe.set(e,lt())}if(t.use===void 0){const e=r=>{if(typeof r!="string"||!Object.hasOwn(Se,r))return Promise.resolve(null);let n=fe.get(r);return n?(it&&(n.nulled||n.want!==void 0)&&(n=it(r,n)),n.asked=!0,n.u):Promise.resolve(t[r]??null)};try{Object.defineProperty(t,"use",{value:e,writable:!0,configurable:!0,enumerable:!1})}catch{}}return t}if(Ie==="framed"){let t;const e=Ae&&ce.test(Ae)?ue(Ae).catch(l=>{t={f:Ae,e:l}}):Promise.resolve(void 0),r=l=>{if(l.type==="auxclick"&&l.button!==1)return;const v=l.target,E=v&&v.closest?v.closest("a[href],area[href]"):null;if(!E)return;const I=E.getAttribute("href");if(!I)return;let j;try{j=new URL(I,document.baseURI)}catch{return}if((j.protocol==="http:"||j.protocol==="https:")&&j.origin!==location.origin){l.preventDefault();const L=(E.getAttribute("target")??"").toLowerCase(),K=l.type==="auxclick"||l.metaKey||l.ctrlKey||l.shiftKey||l.altKey||!["","_self","_top","_parent"].includes(L);N.post({__frame_nav:!0,url:j.href,newTab:K},"*")}};addEventListener("click",r,!0),addEventListener("auxclick",r,!0);const n={},a=l=>{l.isTrusted&&(n.pointer=!0)},s=l=>{l.isTrusted&&(n.click=!0)};addEventListener("pointermove",a,{capture:!0,passive:!0}),addEventListener("click",s,{capture:!0,passive:!0});const c={cb:null};addEventListener("keydown",l=>c.cb?.(l),!0);const d={cb:null};addEventListener("keydown",l=>d.cb?.(l));const O=an();e.then(l=>l?.installEscapeForward?.(c,v=>{$&&N.post(v,$)})),e.then(l=>{try{l?.installFocusKeep?.()}catch{}}),e.then(l=>{if(!l?.wireNav)return;const v=N.port("*");l.wireNav(v),removeEventListener("click",r,!0),removeEventListener("auxclick",r,!0),removeEventListener("pointermove",a,!0),removeEventListener("click",s,!0),l.wireEngagement?.(n,v,O)});let w=null;try{w=En()}catch{}const b=document.readyState==="loading"?new Promise(l=>document.addEventListener("DOMContentLoaded",()=>l(),{once:!0})):Promise.resolve();let m=null,R=null;try{R=Ir(window.name),m=Ct(null,R)}catch{}const M=Jt();let h=null;try{h=rn(M,m,{post:(l,v)=>N.post(l,v),dcl:b},R)}catch{}e.then(l=>{try{h&&l?.installHotExtras?.(h)}catch{}});let p=null;const D=()=>Array.isArray(p?.flags)&&p.flags.includes("frame_ldx_runtime")&&!!ke&&ce.test(ke)&&document.querySelector("script#an-form")!==null;try{h?.hydration(D,Dr)}catch{}let _=null,C=0;const P=N.on((l,v,E,I)=>{Ut(v)&&Ar(l)&&(I(),p=l.__frame_init,$=v,P(),clearTimeout(C),_?.())});if(at)for(const l of rt)try{l.endsWith(":*")||N.post({__frame_cred:at},l)}catch{}N.post({__frame_connect:!0},"*");try{h?.afterConnect()}catch{}const x=setTimeout,W=clearTimeout;let J=()=>NaN,X=()=>[];try{J=performance.now.bind(performance),X=performance.getEntriesByType.bind(performance)}catch{}let Te=0;const Le=()=>{try{N.post({__frame_alive:!0},"*")}catch{}Te=x(Le,Rn)},Oe=()=>W(Te);Le(),addEventListener("load",Oe,{once:!0});const H=new Promise(l=>{_=l,C=setTimeout(()=>{P(),l()},Bt)}),me=new WeakSet;addEventListener("error",l=>{l.target&&me.add(l.target)},!0);try{_n(jt(),at,()=>{e.then(l=>{try{l?.drawRefusedNotice?.()}catch{}})})}catch{}const qe=()=>{let l=[];try{l=[...document.querySelectorAll("link[rel~=stylesheet]:not([rel~=alternate])")].filter(E=>!E.sheet&&!E.disabled&&!me.has(E)&&E.getAttribute("href")&&URL.canParse(E.href)&&(!E.media||matchMedia(E.media).matches))}catch{}let v=l.length;return v===0?Promise.resolve():new Promise(E=>{try{const I=tt-J(),j=x(E,I>0?I<tt?I:tt:0),L=()=>{--v===0&&(W(j),E())};for(const K of l)K.addEventListener("load",L,{once:!0}),K.addEventListener("error",L,{once:!0})}catch{E()}})};b.then(()=>{try{w?.restore()}catch{}}),Promise.all([H,b,e]).then(([,,l])=>{if(p?.hostOverlays!==!0||!$)return;let v=!1;try{v=l?.declaresCover?.()===!0}catch{}N.post({__frame_layout:{cover:v}},$)});const oe={cb:null};N.on((l,v)=>{if(Ut(v)&&kr(l)){try{w?.promoted()}catch{}oe.cb?.()}}),H.then(async()=>{if(!p||!$){ct();try{h?.onNoInit()}catch{}return}if(Yt(p.theme),p.hostVisible===!1&&e.then(i=>i?.applyHostVisible?.(!1,O)),p.hostKeys!==void 0){const i=$,g=p.hostKeys;e.then(y=>y?.installHostKeyForward?.(d,g,k=>N.post(k,i)))}try{h?.onInit(p.hot,$)}catch{}const l=$,v=N.port(l),E=(i,g)=>N.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:i,phase:g}},l),I=(i,g,y)=>{new Promise(k=>k(Pn(g,y))).then(k=>E(i,k),()=>E(i))},j=i=>N.post({__frame_cap_recovered:{cap:i}},l);let L=p.brokerGen;const K=()=>h?.boot.ver??"",Me=K(),Z=(i,g)=>{const y=K();W(g.t),g.want=y,g.t=x(()=>{g.done||He(g,y)},Bt),N.post({__frame_cap_want:!0,cap:i,ver:y},l)},Be=(i,g)=>{const y=fe.get(i.cap),k=Se[i.cap];if(!g||!y||y.done||y.want!==i.ver||!ce.test(k))return;if(W(y.t),y.want=void 0,L=i.brokerGen??L,i.ver!==K()){Z(i.cap,y);return}if(!i.grant||i.cap==="network"){He(y,i.ver);return}const Q=pe,G=pe={...Q,capabilities:{...Q.capabilities,[i.cap]:i.grant},capBudgets:{...Q.capBudgets,[i.cap]:{...Q.capBudgets[i.cap],...i.budgets}}};ue(k).then(ee=>{Re.has(k)&&j(i.cap),G.brokerGen=L,ut=!0;try{ee?.install?.(G)}catch{E(i.cap,"install")}finally{ut=!1}},ee=>I(i.cap,k,ee)).then(()=>{y.done||He(y,i.ver)})};let ae=!1,de=!1;N.on((i,g,y)=>{if(g!==l)return;try{if(h?.onShell(i))return}catch{}if(Tr(i)&&Yt(i.__frame_theme.theme),Xr(i)&&Be(i,y),y&&Yr(i)&&(L=i.brokerGen??L),Rr(i)){const G=i.__frame_host_visible.visible;e.then(ee=>ee?.applyHostVisible?.(G,O))}Sr(i)&&Cn(i.__frame_patch,l,y);const k=i?.__fc_mode;k&&typeof k=="object"&&!ae&&nt&&ce.test(nt)&&(ae=!0,ue(nt).then(G=>G.install?.(l,k.on===!0,v)).catch(()=>{}));const Q=i?.__ft_cmd;Q&&typeof Q=="object"&&!de&&ot&&ce.test(ot)&&(de=!0,ue(ot).then(G=>G.install?.(l,Q,v)).catch(()=>{}))});const Pe=Object.keys(p.capabilities??{}).filter(i=>Object.hasOwn(Se,i)).map(i=>[i,Se[i]]).filter(i=>typeof i[1]=="string"&&ce.test(i[1])),V=await Promise.allSettled(Pe.map(([,i])=>ue(i))),se=await e,B=l;if(se?.buildBoot||(t?I("_transforms",t.f,t.e):E("_transforms")),se?.buildBoot)try{pe=se.buildBoot(p,se.TRANSFORMS??{},{shellOrigin:B,mount:ft,hooks:xe,shell:v},i=>N.post({__frame_cap_telemetry:i},B))}catch{E("_transforms","install"),pe=$t(p,B,v)}else pe=$t(p,B,v);se?.buildBoot&&Re.has(Ae??"")&&j("_transforms");const ve=pe;ve.brokerGen=L,V.forEach((i,g)=>{const[y,k]=Pe[g];if(i.status!=="fulfilled"){I(y,k,i.reason);return}Re.has(k)&&j(y);try{i.value?.install?.(ve)}catch{E(y,"install")}});const Ne=p.capWants===!0;Ne&&(it=(i,g)=>{const y=K();if(!y)return g;if(!g.nulled)return g.want!==y&&Z(i,g),g;if(y===g.ver)return g;const k=lt();return fe.set(i,k),Z(i,k),k}),ct(Me,Ne&&K()!==Me?Z:void 0),await b,await qe(),Oe();const ie=ir(X,J);N.post(ie?{__frame_ready:!0,nav:ie}:{__frame_ready:!0},$),e.then(i=>{i?.installSizeReporter?.(B,oe,v),i?.installPaintReporter?.(v)});let Ce=!1;try{Ce=D()}catch{}ke&&Ce?ue(ke).then(i=>i?.boot?.({shellOrigin:l,build:ve.flags.has(nn),hot:h?.hot??null,carried:h?.carried(),presented:()=>h?.presented()??!0})).catch(()=>!1).then(i=>{h?.hydrated(),i!==!0?E("_ldx"):Re.has(ke)&&j("_ldx")}):h?.hydrated()})}else et&&(Jt(),Sn(et,rt,ue,{settle:ct,mount:ft}))})();</script><!-- /frame-runtime -->
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Notification System — Revision Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="./css2" rel="stylesheet">
+<style>
+  :root {
+    --bg: #10131C; --panel: #171B27; --panel-2: #1B2130; --line: #2A3040; --text: #E8EAF2; --muted: #8D93A6;
+    --violet: #9A8CD9; --violet-dim: #4A4270; --amber: #E0A94F; --amber-dim: #6E5730;
+    --teal: #4FB5A8; --teal-dim: #2A5750; --rust: #DB6E56; --rust-dim: #6E392A;
+    --radius-panel: 10px; --radius-tag: 6px;
+    box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) { --bg: #F2F1EE; --panel: #FFFFFF; --panel-2: #FBFAF8; --line: #DFDCD4; --text: #1B1E27; --muted: #5D6274; }
+  }
+  :root[data-theme="dark"] { --bg: #10131C; --panel: #171B27; --panel-2: #1B2130; --line: #2A3040; --text: #E8EAF2; --muted: #8D93A6; }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1;
+    background-image: radial-gradient(circle at 12% 15%, rgba(154,140,217,0.06), transparent 40%), radial-gradient(circle at 88% 80%, rgba(79,181,168,0.05), transparent 40%);
+    pointer-events: none;
+  }
+  h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin: 0 0 0.5em 0; letter-spacing: -0.01em; }
+  a { color: var(--teal); }
+  code, .mono { font-family: 'JetBrains Mono', monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px 100px; }
+
+  .hero { padding: 72px 0 48px; border-bottom: 1px solid var(--line); margin-bottom: 56px; }
+  .hero .kicker { font-size: 14px; color: var(--violet); font-family: 'JetBrains Mono', monospace; margin-bottom: 14px; }
+  .hero h1 { font-size: clamp(32px, 5vw, 48px); line-height: 1.08; max-width: 16ch; }
+  .hero p.sub { color: var(--muted); font-size: 17px; max-width: 62ch; margin-top: 16px; }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 36px; }
+  .stat { min-width: 120px; }
+  .stat .num { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 600; color: var(--teal); }
+  .stat .label { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  section { margin-bottom: 64px; scroll-margin-top: 20px; }
+  .section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 22px; }
+  .section-num { font-family: 'JetBrains Mono', monospace; color: var(--violet); font-size: 14px; }
+  .section-head h2 { font-size: 24px; }
+  .section-intro { color: var(--muted); max-width: 68ch; margin-bottom: 24px; font-size: 15px; }
+
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-panel); padding: 24px; }
+  .panel + .panel { margin-top: 18px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  @media (max-width: 720px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  svg { max-width: 100%; height: auto; display: block; }
+  .diagram-caption { color: var(--muted); font-size: 13px; margin-top: 10px; text-align: center; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 14px; font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-family: 'JetBrains Mono', monospace; font-size: 12px; white-space: nowrap; }
+  td.mono, th.mono { font-family: 'JetBrains Mono', monospace; }
+
+  .tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 2px 8px; border-radius: var(--radius-tag); border: 1px solid var(--line); color: var(--muted); }
+  .tag.violet { color: var(--violet); border-color: var(--violet-dim); }
+  .tag.amber { color: var(--amber); border-color: var(--amber-dim); }
+  .tag.teal { color: var(--teal); border-color: var(--teal-dim); }
+  .tag.rust { color: var(--rust); border-color: var(--rust-dim); }
+
+  pre { background: #0B0E16; border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 14px 0 0; }
+  :root:not([data-theme="dark"]) pre { background: #F4F2EE; }
+  pre code { color: var(--text); }
+  .comment { color: var(--muted); }
+  .kw { color: var(--teal); }
+  .str { color: var(--amber); }
+
+  .edge-card { border-left: 3px solid var(--rust); padding-left: 18px; }
+  .edge-card h3 { display: flex; align-items: center; gap: 10px; font-size: 17px; }
+  .edge-card .sev { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--rust); border: 1px solid var(--rust-dim); padding: 2px 7px; border-radius: 5px; }
+
+  .flow-step { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .flow-step:last-child { border-bottom: none; }
+  .flow-step .idx { font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--violet); font-size: 15px; min-width: 22px; }
+  .flow-step .body h4 { font-size: 15.5px; margin-bottom: 4px; }
+  .flow-step .body p { color: var(--muted); font-size: 14px; margin: 0; }
+
+  .qa { border-bottom: 1px solid var(--line); padding: 16px 0; }
+  .qa:last-child { border-bottom: none; }
+  .qa .q { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+  .qa .a { color: var(--muted); font-size: 14.5px; }
+
+  .calc-line { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 14px; }
+  .calc-line:last-child { border-bottom: none; }
+  .calc-line .k { color: var(--muted); }
+  .calc-line .v { font-family: 'JetBrains Mono', monospace; color: var(--text); text-align: right; }
+  .calc-result { margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-weight: 600; }
+  .calc-result .v { color: var(--teal); font-family: 'JetBrains Mono', monospace; }
+
+  .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 720px) { .metric-grid { grid-template-columns: 1fr 1fr; } }
+  .metric { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
+  .metric .mnum { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 600; }
+  .metric .mlabel { font-size: 11.5px; color: var(--muted); margin-top: 3px; font-family: 'JetBrains Mono', monospace; }
+  .metric.ok .mnum { color: var(--teal); }
+  .metric.warn .mnum { color: var(--amber); }
+  .metric.bad .mnum { color: var(--rust); }
+
+  .toc { position: sticky; top: 20px; display: none; }
+  @media (min-width: 1180px) {
+    .page { display: flex; gap: 40px; max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+    .wrap { padding: 0; max-width: none; flex: 1; }
+    .toc { display: block; width: 200px; padding-top: 90px; }
+    .toc a { display: block; color: var(--muted); text-decoration: none; font-size: 12.5px; padding: 5px 0; border-left: 2px solid transparent; padding-left: 12px; }
+    .toc a:hover { color: var(--text); border-left-color: var(--violet); }
+  }
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 40px 0 20px; border-top: 1px solid var(--line); margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <nav class="toc">
+    <a href="https://1214feee-3499-47f7-8d36-8f02cfddee4b.frame.claudeusercontent.com/_f/1790082716-a6c7/#reqs">01 · Requirements</a>
+    <a href="https://1214feee-3499-47f7-8d36-8f02cfddee4b.frame.claudeusercontent.com/_f/1790082716-a6c7/#flow">02 · Architecture</a>
+    <a href="https://1214feee-3499-47f7-8d36-8f02cfddee4b.frame.claudeusercontent.com/_f/1790082716-a6c7/#sequence">03 · Request Sequence</a>
+    <a href="https://1214feee-3499-47f7-8d36-8f02cfddee4b.frame.claudeusercontent.com/_f/1790082716-a6c7/#data">04 · Data Models</a>
+    <a href="https://1214feee-3499-47f7-8d36-8f02cfddee4b.frame.claudeusercontent.com/_f/1790082716-a6c7/#reliability">05 · Reliability</a>
+    <a href="https://1214feee-3499-47f7-8d36-8f02cfddee4b.frame.claudeusercontent.com/_f/1790082716-a6c7/#scale">06 · Scaling to Millions/s</a>
+    <a href="https://1214feee-3499-47f7-8d36-8f02cfddee4b.frame.claudeusercontent.com/_f/1790082716-a6c7/#stores">07 · Data Store Choice</a>
+    <a href="https://1214feee-3499-47f7-8d36-8f02cfddee4b.frame.claudeusercontent.com/_f/1790082716-a6c7/#vendors">08 · Vendor Rate Limits</a>
+    <a href="https://1214feee-3499-47f7-8d36-8f02cfddee4b.frame.claudeusercontent.com/_f/1790082716-a6c7/#capacity">09 · Capacity Plan</a>
+    <a href="https://1214feee-3499-47f7-8d36-8f02cfddee4b.frame.claudeusercontent.com/_f/1790082716-a6c7/#observability">10 · Observability</a>
+    <a href="https://1214feee-3499-47f7-8d36-8f02cfddee4b.frame.claudeusercontent.com/_f/1790082716-a6c7/#security">11 · Security &amp; Compliance</a>
+    <a href="https://1214feee-3499-47f7-8d36-8f02cfddee4b.frame.claudeusercontent.com/_f/1790082716-a6c7/#dr">12 · Multi-Region &amp; DR</a>
+    <a href="https://1214feee-3499-47f7-8d36-8f02cfddee4b.frame.claudeusercontent.com/_f/1790082716-a6c7/#alternatives">13 · Alternatives</a>
+    <a href="https://1214feee-3499-47f7-8d36-8f02cfddee4b.frame.claudeusercontent.com/_f/1790082716-a6c7/#playbook">14 · Interview Playbook</a>
+  </nav>
+
+  <div class="wrap">
+    <div class="hero">
+      <div class="kicker">SYSTEM DESIGN REVISION · SDE-2 DEPTH</div>
+      <h1>Multi-Channel Notification System</h1>
+      <p class="sub">Push, SMS, and email delivery at scale — how the pieces fit together to guarantee at-least-once delivery, absorb vendor rate limits, and survive a flash-sale-sized fan-out without losing a message.</p>
+      <div class="stat-row">
+        <div class="stat"><div class="num">10K+/s</div><div class="label">baseline peak target</div></div>
+        <div class="stat"><div class="num">3</div><div class="label">channels: push, SMS, email</div></div>
+        <div class="stat"><div class="num">≥1</div><div class="label">delivery guarantee</div></div>
+        <div class="stat"><div class="num">64+</div><div class="label">Kafka partitions at scale</div></div>
+        <div class="stat"><div class="num">2</div><div class="label">regions for DR</div></div>
+      </div>
+    </div>
+
+    <!-- 01 REQUIREMENTS -->
+    <section id="reqs">
+      <div class="section-head"><span class="section-num">01</span><h2>Requirements</h2></div>
+      <p class="section-intro">State these out loud before drawing anything — this is the part of the round that separates a scoped, defensible design from a guess.</p>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Functional</h3>
+          <table>
+            <tbody><tr><td>Channels</td><td>Push (APNs/FCM), SMS (Twilio/SNS), Email (SES/SendGrid)</td></tr>
+            <tr><td>Types</td><td>Transactional (OTP, receipts), alerts (password reset), marketing</td></tr>
+            <tr><td>Preferences</td><td>Per-channel, per-category opt-in/opt-out</td></tr>
+            <tr><td>Throttling</td><td>Cap marketing volume per user</td></tr>
+            <tr><td>Templating</td><td>Localized templates, dynamic variable injection</td></tr>
+          </tbody></table>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Non-functional</h3>
+          <table>
+            <tbody><tr><td>Availability</td><td>No single point of failure; survive vendor outages</td></tr>
+            <tr><td>Latency</td><td>Transactional: seconds. Marketing: minutes is fine</td></tr>
+            <tr><td>Reliability</td><td>At-least-once — never silently drop a message</td></tr>
+            <tr><td>Extensibility</td><td>New channel/provider = new worker, no core rewrite</td></tr>
+            <tr><td>Scale</td><td>10K/s baseline, must reason about millions/s bursts</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">Worth flagging explicitly:</strong> "at-least-once" is a deliberate choice, not a default — it means duplicates are possible and the client/vendor side needs to tolerate or dedupe them. Exactly-once delivery across a network boundary to a third-party vendor is not achievable without the vendor's cooperation (idempotency keys on their end), so don't over-promise it.</p>
+      </div>
+    </section>
+
+    <!-- 02 ARCHITECTURE -->
+    <section id="flow">
+      <div class="section-head"><span class="section-num">02</span><h2>End-to-End Architecture</h2></div>
+      <p class="section-intro">Same separation-of-concerns principle as any high-throughput system: keep the synchronous API thin, push everything slow or bursty onto a queue, and make workers stateless so they scale horizontally.</p>
+
+      <div class="panel">
+        <svg viewBox="0 0 940 380" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrV" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9A8CD9"></path></marker>
+            <marker id="arrT" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4FB5A8"></path></marker>
+            <marker id="arrM" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8D93A6"></path></marker>
+          </defs>
+
+          <text x="8" y="26" font-family="JetBrains Mono, monospace" font-size="11" fill="#9A8CD9">SYNCHRONOUS PATH — API request/response, sub-second</text>
+          <line x1="0" y1="36" x2="940" y2="36" stroke="#2A3040" stroke-dasharray="2 4"></line>
+          <text x="8" y="215" font-family="JetBrains Mono, monospace" font-size="11" fill="#4FB5A8">ASYNC DISPATCH PATH — decoupled, per-channel</text>
+          <line x1="0" y1="225" x2="940" y2="225" stroke="#2A3040" stroke-dasharray="2 4"></line>
+
+          <g font-family="Inter, sans-serif" font-size="12" fill="#E8EAF2">
+            <rect x="10" y="55" width="110" height="58" rx="8" fill="#1B2130" stroke="#2A3040"></rect>
+            <text x="65" y="79" text-anchor="middle" font-weight="600" font-size="12">Client App</text>
+            <text x="65" y="95" text-anchor="middle" fill="#8D93A6" font-size="10">order, OTP, promo</text>
+
+            <rect x="155" y="55" width="110" height="58" rx="8" fill="#1B2130" stroke="#2A3040"></rect>
+            <text x="210" y="79" text-anchor="middle" font-weight="600" font-size="12">API Gateway</text>
+            <text x="210" y="95" text-anchor="middle" fill="#8D93A6" font-size="10">auth, LB</text>
+
+            <rect x="300" y="55" width="130" height="58" rx="8" fill="#1B2130" stroke="#9A8CD9"></rect>
+            <text x="365" y="76" text-anchor="middle" font-weight="600" fill="#9A8CD9" font-size="12">Notification</text>
+            <text x="365" y="92" text-anchor="middle" font-weight="600" fill="#9A8CD9" font-size="12">API</text>
+            <text x="365" y="107" text-anchor="middle" fill="#8D93A6" font-size="10">assigns notification_id</text>
+
+            <rect x="470" y="10" width="130" height="45" rx="8" fill="#1B2130" stroke="#2A3040"></rect>
+            <text x="535" y="30" text-anchor="middle" font-weight="600" font-size="11.5">Dedup + Rate</text>
+            <text x="535" y="45" text-anchor="middle" fill="#8D93A6" font-size="10">Redis INCR/EXPIRE</text>
+
+            <rect x="470" y="65" width="130" height="45" rx="8" fill="#1B2130" stroke="#2A3040"></rect>
+            <text x="535" y="85" text-anchor="middle" font-weight="600" font-size="11.5">User Prefs</text>
+            <text x="535" y="100" text-anchor="middle" fill="#8D93A6" font-size="10">Redis / DynamoDB</text>
+
+            <rect x="470" y="120" width="130" height="45" rx="8" fill="#1B2130" stroke="#2A3040"></rect>
+            <text x="535" y="140" text-anchor="middle" font-weight="600" font-size="11.5">Template Svc</text>
+            <text x="535" y="155" text-anchor="middle" fill="#8D93A6" font-size="10">render + cache</text>
+
+            <rect x="655" y="55" width="130" height="58" rx="8" fill="#1B2130" stroke="#4FB5A8"></rect>
+            <text x="720" y="79" text-anchor="middle" font-weight="600" fill="#4FB5A8" font-size="12">Kafka</text>
+            <text x="720" y="95" text-anchor="middle" fill="#8D93A6" font-size="10">priority × channel topics</text>
+
+            <rect x="30" y="240" width="120" height="55" rx="8" fill="#1B2130" stroke="#2A3040"></rect>
+            <text x="90" y="262" text-anchor="middle" font-weight="600" font-size="12">Push Worker</text>
+            <text x="90" y="278" text-anchor="middle" fill="#8D93A6" font-size="10">stateless pool</text>
+
+            <rect x="180" y="240" width="120" height="55" rx="8" fill="#1B2130" stroke="#2A3040"></rect>
+            <text x="240" y="262" text-anchor="middle" font-weight="600" font-size="12">SMS Worker</text>
+            <text x="240" y="278" text-anchor="middle" fill="#8D93A6" font-size="10">stateless pool</text>
+
+            <rect x="330" y="240" width="120" height="55" rx="8" fill="#1B2130" stroke="#2A3040"></rect>
+            <text x="390" y="262" text-anchor="middle" font-weight="600" font-size="12">Email Worker</text>
+            <text x="390" y="278" text-anchor="middle" fill="#8D93A6" font-size="10">stateless pool</text>
+
+            <rect x="30" y="315" width="120" height="45" rx="8" fill="#1B2130" stroke="#2A3040"></rect>
+            <text x="90" y="343" text-anchor="middle" font-weight="600" font-size="11.5">APNs / FCM</text>
+
+            <rect x="180" y="315" width="120" height="45" rx="8" fill="#1B2130" stroke="#2A3040"></rect>
+            <text x="240" y="343" text-anchor="middle" font-weight="600" font-size="11.5">Twilio / SNS</text>
+
+            <rect x="330" y="315" width="120" height="45" rx="8" fill="#1B2130" stroke="#2A3040"></rect>
+            <text x="390" y="343" text-anchor="middle" font-weight="600" font-size="11.5">SES / SendGrid</text>
+
+            <rect x="500" y="240" width="150" height="55" rx="8" fill="#1B2130" stroke="#DB6E56"></rect>
+            <text x="575" y="262" text-anchor="middle" font-weight="600" fill="#DB6E56" font-size="12">Retry Queue</text>
+            <text x="575" y="278" text-anchor="middle" fill="#8D93A6" font-size="10">2s, 8s, 32s backoff</text>
+
+            <rect x="690" y="240" width="150" height="55" rx="8" fill="#1B2130" stroke="#2A3040"></rect>
+            <text x="765" y="262" text-anchor="middle" font-weight="600" font-size="12">Dead Letter Q</text>
+            <text x="765" y="278" text-anchor="middle" fill="#8D93A6" font-size="10">after N retries → alert</text>
+          </g>
+
+          <path d="M120,84 H153" stroke="#9A8CD9" stroke-width="1.4" marker-end="url(#arrV)" fill="none"></path>
+          <path d="M265,84 H298" stroke="#9A8CD9" stroke-width="1.4" marker-end="url(#arrV)" fill="none"></path>
+          <path d="M430,70 Q450,55 468,40" stroke="#9A8CD9" stroke-width="1.2" marker-end="url(#arrV)" fill="none"></path>
+          <path d="M430,84 H468" stroke="#9A8CD9" stroke-width="1.2" marker-end="url(#arrV)" fill="none"></path>
+          <path d="M430,98 Q450,120 468,140" stroke="#9A8CD9" stroke-width="1.2" marker-end="url(#arrV)" fill="none"></path>
+          <path d="M600,80 H653" stroke="#9A8CD9" stroke-width="1.4" marker-end="url(#arrV)" fill="none"></path>
+
+          <path d="M720,113 V222" stroke="#4FB5A8" stroke-width="1.3" fill="none"></path>
+          <path d="M720,222 Q720,235 650,238 Q450,238 300,255 Q220,262 152,265" stroke="#4FB5A8" stroke-width="1.2" marker-end="url(#arrT)" fill="none"></path>
+          <path d="M720,222 Q720,235 500,258 Q400,264 302,265" stroke="#4FB5A8" stroke-width="1.2" marker-end="url(#arrT)" fill="none"></path>
+          <path d="M720,222 V265" stroke="#4FB5A8" stroke-width="1.2" marker-end="url(#arrT)" fill="none"></path>
+
+          <path d="M90,295 V313" stroke="#8D93A6" stroke-width="1.3" marker-end="url(#arrM)" fill="none"></path>
+          <path d="M240,295 V313" stroke="#8D93A6" stroke-width="1.3" marker-end="url(#arrM)" fill="none"></path>
+          <path d="M390,295 V313" stroke="#8D93A6" stroke-width="1.3" marker-end="url(#arrM)" fill="none"></path>
+
+          <path d="M300,267 H498" stroke="#DB6E56" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#arrM)" fill="none"></path>
+          <path d="M650,267 H688" stroke="#8D93A6" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#arrM)" fill="none"></path>
+          <text x="575" y="230" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#DB6E56">on failure</text>
+        </svg>
+        <div class="legend">
+          <span><span class="swatch" style="background:#9A8CD9;"></span>sync request path</span>
+          <span><span class="swatch" style="background:#4FB5A8;"></span>async dispatch</span>
+          <span><span class="swatch" style="background:#DB6E56;"></span>failure / retry</span>
+          <span><span class="swatch" style="background:#8D93A6;"></span>vendor call</span>
+        </div>
+        <div class="diagram-caption">The API only validates, dedupes, and enqueues — it never waits on a third-party vendor. Everything vendor-latency-sensitive lives in the async dispatch path so a slow SMS provider can't back up push or email.</div>
+      </div>
+
+      <div class="panel">
+        <div class="flow-step"><div class="idx">1</div><div class="body"><h4>Accept</h4><p>Notification API validates the request, assigns a <code>notification_id</code>, and returns immediately — it never blocks on delivery.</p></div></div>
+        <div class="flow-step"><div class="idx">2</div><div class="body"><h4>Dedupe &amp; gate</h4><p>Redis idempotency key (<code>user_id + event_type + timestamp_minute</code>) drops duplicate triggers; the preference service checks the user hasn't opted out of this category/channel.</p></div></div>
+        <div class="flow-step"><div class="idx">3</div><div class="body"><h4>Render</h4><p>Template service fetches the localized template by <code>template_id</code> and substitutes runtime variables, with a cache in front since templates change far less often than they're read.</p></div></div>
+        <div class="flow-step"><div class="idx">4</div><div class="body"><h4>Enqueue</h4><p>Message lands on Kafka, split by priority (high: OTP/security vs. low: marketing) and by channel (push/SMS/email topics), decoupling API latency from provider latency entirely.</p></div></div>
+        <div class="flow-step"><div class="idx">5</div><div class="body"><h4>Dispatch</h4><p>Stateless channel workers pull from their topic and call the vendor. A Strategy-pattern abstraction lets a worker fail over from, say, Twilio to AWS SNS on a 5xx without any caller-side change.</p></div></div>
+        <div class="flow-step"><div class="idx">6</div><div class="body"><h4>Retry or park</h4><p>Failures go to a backoff retry queue (2s → 8s → 32s); after N attempts, the message moves to a dead-letter queue that pages someone instead of silently vanishing.</p></div></div>
+      </div>
+    </section>
+
+    <!-- 03 SEQUENCE -->
+    <section id="sequence">
+      <div class="section-head"><span class="section-num">03</span><h2>Request Lifecycle — Sequence View</h2></div>
+      <p class="section-intro">The box diagram shows what talks to what. This shows the order things happen in and where time is actually spent — the view an interviewer will ask you to trace through for a single request.</p>
+      <div class="panel">
+        <svg viewBox="0 0 920 430" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="sArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#E8EAF2"></path></marker>
+            <marker id="sArrD" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#DB6E56"></path></marker>
+          </defs>
+          <!-- lifelines -->
+          <g font-family="JetBrains Mono, monospace" font-size="11" fill="#8D93A6">
+            <text x="40" y="20" text-anchor="middle" fill="#E8EAF2" font-weight="600">Client</text>
+            <text x="180" y="20" text-anchor="middle" fill="#E8EAF2" font-weight="600">API</text>
+            <text x="320" y="20" text-anchor="middle" fill="#E8EAF2" font-weight="600">Redis</text>
+            <text x="460" y="20" text-anchor="middle" fill="#E8EAF2" font-weight="600">Template</text>
+            <text x="600" y="20" text-anchor="middle" fill="#E8EAF2" font-weight="600">Kafka</text>
+            <text x="740" y="20" text-anchor="middle" fill="#E8EAF2" font-weight="600">Worker</text>
+            <text x="870" y="20" text-anchor="middle" fill="#E8EAF2" font-weight="600">Vendor</text>
+          </g>
+          <g stroke="#2A3040" stroke-width="1">
+            <line x1="40" y1="30" x2="40" y2="410"></line>
+            <line x1="180" y1="30" x2="180" y2="410"></line>
+            <line x1="320" y1="30" x2="320" y2="410"></line>
+            <line x1="460" y1="30" x2="460" y2="410"></line>
+            <line x1="600" y1="30" x2="600" y2="410"></line>
+            <line x1="740" y1="30" x2="740" y2="410"></line>
+            <line x1="870" y1="30" x2="870" y2="410"></line>
+          </g>
+          <g font-family="Inter, sans-serif" font-size="11" fill="#E8EAF2">
+            <path d="M40,55 H178" stroke="#E8EAF2" stroke-width="1.2" marker-end="url(#sArr)" fill="none"></path>
+            <text x="45" y="49">POST /v1/notifications</text>
+
+            <path d="M180,85 H318" stroke="#E8EAF2" stroke-width="1.2" marker-end="url(#sArr)" fill="none"></path>
+            <text x="185" y="79">check dedup key (INCR/EXPIRE)</text>
+            <path d="M320,105 H182" stroke="#8D93A6" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#sArr)" fill="none"></path>
+            <text x="185" y="100" fill="#8D93A6" font-size="10">not seen → proceed</text>
+
+            <path d="M180,130 H318" stroke="#E8EAF2" stroke-width="1.2" marker-end="url(#sArr)" fill="none"></path>
+            <text x="185" y="124">GET user_prefs(user_id)</text>
+            <path d="M320,150 H182" stroke="#8D93A6" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#sArr)" fill="none"></path>
+            <text x="185" y="145" fill="#8D93A6" font-size="10">channel enabled → proceed</text>
+
+            <path d="M180,175 H458" stroke="#E8EAF2" stroke-width="1.2" marker-end="url(#sArr)" fill="none"></path>
+            <text x="185" y="169">render(template_id, template_data)</text>
+            <path d="M460,195 H182" stroke="#8D93A6" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#sArr)" fill="none"></path>
+            <text x="185" y="190" fill="#8D93A6" font-size="10">rendered payload</text>
+
+            <path d="M180,220 H598" stroke="#E8EAF2" stroke-width="1.2" marker-end="url(#sArr)" fill="none"></path>
+            <text x="185" y="214">publish(topic=push-high, key=user_id)</text>
+
+            <path d="M40,245 H178" stroke="#E8EAF2" stroke-width="1.2" marker-end="url(#sArr)" fill="none"></path>
+            <text x="45" y="239">202 Accepted { notification_id }</text>
+            <rect x="0" y="228" width="130" height="26" fill="none" stroke="#9A8CD9" stroke-width="1" rx="4"></rect>
+            <text x="65" y="245" text-anchor="middle" fill="#9A8CD9" font-size="9.5" font-family="JetBrains Mono, monospace">~sync path ends</text>
+
+            <path d="M600,280 H738" stroke="#4FB5A8" stroke-width="1.2" marker-end="url(#sArr)" fill="none"></path>
+            <text x="605" y="274" fill="#4FB5A8">consume(topic, partition)</text>
+
+            <path d="M740,305 H868" stroke="#4FB5A8" stroke-width="1.2" marker-end="url(#sArr)" fill="none"></path>
+            <text x="745" y="299" fill="#4FB5A8">send(push_token, payload)</text>
+
+            <path d="M870,340 H742" stroke="#DB6E56" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#sArrD)" fill="none"></path>
+            <text x="745" y="334" fill="#DB6E56">503 timeout</text>
+
+            <path d="M740,365 H602" stroke="#DB6E56" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#sArrD)" fill="none"></path>
+            <text x="605" y="359" fill="#DB6E56">publish to retry-queue (2s delay)</text>
+
+            <path d="M600,390 H738" stroke="#4FB5A8" stroke-width="1.2" marker-end="url(#sArr)" fill="none"></path>
+            <text x="605" y="384" fill="#4FB5A8">redeliver after backoff</text>
+          </g>
+          <text x="460" y="405" text-anchor="middle" fill="#8D93A6" font-size="10" font-family="JetBrains Mono, monospace">offset committed only after this step succeeds</text>
+        </svg>
+        <div class="diagram-caption">Everything above the "sync path ends" marker happens inside the client's request/response window — typically tens of milliseconds. Everything below is decoupled and can legitimately take seconds without the client ever knowing.</div>
+      </div>
+    </section>
+
+    <!-- 04 DATA MODELS -->
+    <section id="data">
+      <div class="section-head"><span class="section-num">04</span><h2>Data Models</h2></div>
+      <p class="section-intro">Two schemas worth having memorized well enough to sketch from scratch, plus the delivery-log shape that powers observability later.</p>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Notification request (API input)</h3>
+          <pre><code>{
+  <span class="str">"user_id"</span>: <span class="str">"usr_987654321"</span>,
+  <span class="str">"notification_type"</span>: <span class="str">"ORDER_CONFIRMATION"</span>,
+  <span class="str">"priority"</span>: <span class="str">"HIGH"</span>,
+  <span class="str">"channels"</span>: [<span class="str">"PUSH"</span>, <span class="str">"EMAIL"</span>],
+  <span class="str">"template_id"</span>: <span class="str">"tmpl_order_ack_v2"</span>,
+  <span class="str">"template_data"</span>: {
+    <span class="str">"order_id"</span>: <span class="str">"ord_112233"</span>,
+    <span class="str">"amount"</span>: <span class="str">"$45.00"</span>
+  }
+}</code></pre>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">User preferences</h3>
+          <pre><code>{
+  <span class="str">"user_id"</span>: <span class="str">"usr_987654321"</span>,
+  <span class="str">"channels_enabled"</span>: {
+    <span class="str">"PUSH"</span>: <span class="kw">true</span>,
+    <span class="str">"SMS"</span>: <span class="kw">false</span>,
+    <span class="str">"EMAIL"</span>: <span class="kw">true</span>
+  },
+  <span class="str">"opt_out_categories"</span>: [
+    <span class="str">"PROMOTIONAL"</span>,
+    <span class="str">"NEWSLETTER"</span>
+  ]
+}</code></pre>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">Delivery log entry (Cassandra/ClickHouse, append-only)</h3>
+        <pre><code>{
+  <span class="str">"notification_id"</span>: <span class="str">"ntf_a83fbc21"</span>,
+  <span class="str">"user_id"</span>: <span class="str">"usr_987654321"</span>,
+  <span class="str">"channel"</span>: <span class="str">"PUSH"</span>,
+  <span class="str">"provider"</span>: <span class="str">"FCM"</span>,
+  <span class="str">"status"</span>: <span class="str">"DELIVERED"</span>,  <span class="comment">// QUEUED | SENT | DELIVERED | FAILED | BOUNCED</span>
+  <span class="str">"attempt"</span>: 1,
+  <span class="str">"latency_ms"</span>: 340,
+  <span class="str">"ts"</span>: <span class="str">"2026-09-22T10:14:02.331Z"</span>
+}</code></pre>
+        <p style="color:var(--muted); font-size:13.5px; margin-top:10px;">Partition/cluster this by <code>(notification_id, ts)</code> — write-heavy, rarely updated, and the access pattern is almost always "all events for one notification" or "all events in a time window," which a wide-column store handles far better than a relational table with a hot index.</p>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">Device token management, briefly:</strong> mobile clients rotate their FCM/APNs tokens periodically — store them keyed by <code>user_id</code>, and when a push provider responds <code>Unregistered</code> / <code>BadDeviceToken</code>, mark that token inactive asynchronously rather than failing the whole dispatch. This is a small detail interviewers specifically listen for, since it's the kind of production wrinkle a spec-only design misses.</p>
+      </div>
+    </section>
+
+    <!-- 05 RELIABILITY -->
+    <section id="reliability">
+      <div class="section-head"><span class="section-num">05</span><h2>Reliability &amp; Delivery Guarantees</h2></div>
+      <p class="section-intro">At-least-once is the target — the interesting part is defending exactly where the "at least" comes from and what it costs.</p>
+      <div class="panel">
+        <table>
+          <tbody><tr><th>Mechanism</th><th>What it guarantees</th></tr>
+          <tr><td>Kafka offset commit only after vendor confirms</td><td>A crashed worker mid-dispatch never loses the message — it's redelivered to another consumer on rebalance</td></tr>
+          <tr><td>Retry with exponential backoff</td><td>Transient vendor errors (5xx, timeout) don't become permanent failures</td></tr>
+          <tr><td>Dead-letter queue after N retries</td><td>Permanent failures (bad token, invalid number) are surfaced for inspection instead of retried forever</td></tr>
+          <tr><td>Idempotency key at ingestion</td><td>Client-side retries of the *request* don't fan out into duplicate sends</td></tr>
+        </tbody></table>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">Idempotency key design, one level deeper</h3>
+        <p style="color:var(--muted); font-size:14px;">Key shape: <code>dedup:{user_id}:{event_type}:{minute_bucket}</code>, written with <code>SET key notification_id NX EX 90</code>. The minute-bucket granularity is a deliberate tradeoff — coarse enough to catch a retry storm (a client hammering "resend OTP" in a tight loop), fine enough not to suppress two legitimately distinct events of the same type in the same minute (two separate orders confirmed 10 seconds apart). If the business needs per-event rather than per-minute dedup, the caller should supply its own idempotency key (e.g. <code>order_id</code>) instead of relying on the time bucket.</p>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">The tradeoff to name:</strong> "commit offset only after vendor confirms" trades throughput for safety — the consumer can't move on to the next message on that partition until the current one is acked (or the worker parallelizes within a partition and tracks acks separately, which adds complexity). This is exactly why partition count and consumer parallelism become the throughput knob, not single-consumer speed.</p>
+      </div>
+    </section>
+
+    <!-- 06 SCALE -->
+    <section id="scale">
+      <div class="section-head"><span class="section-num">06</span><h2>Scaling to Millions per Second</h2></div>
+      <p class="section-intro">The baseline design handles thousands/sec comfortably. The interesting follow-up — almost guaranteed in an SDE-2 round — is "now do it for a flash sale to 5 million users."</p>
+
+      <div class="panel edge-card" style="border-left-color: var(--violet);">
+        <h3 style="color:var(--text);">The fan-out problem</h3>
+        <p style="color:var(--muted); font-size:14.5px;">A single broadcast trigger ("sale starts now") must not become 5 million synchronous API calls — that crashes the gateway before a single notification goes out.</p>
+        <table style="margin-top:10px;">
+          <tbody><tr><th>Fix</th><td>API accepts one <code>broadcast_id</code> + <code>target_segment_id</code>; a dedicated fan-out worker pages through matching users in batches (e.g. 50K at a time) from a fast read store and publishes individual dispatch tasks onto Kafka — the fan-out happens inside the system, not at the API boundary.</td></tr>
+          <tr><th>Where reads come from</th><td>A high-throughput read replica or wide-column store (Cassandra/ScyllaDB) built for exactly this kind of segment scan, not the primary transactional DB.</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="panel" style="margin-top:18px;">
+        <h3 style="font-size:15px;">Kafka partitioning &amp; consumer scaling</h3>
+        <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="kArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8D93A6"></path></marker>
+          </defs>
+          <text x="10" y="24" font-family="JetBrains Mono, monospace" font-size="12" fill="#4FB5A8" font-weight="600">topic: push-high</text>
+          <g font-family="JetBrains Mono, monospace" font-size="10" fill="#8D93A6">
+            <rect x="10" y="35" width="100" height="34" rx="4" fill="#1B2130" stroke="#2A3040"></rect>
+            <text x="60" y="56" text-anchor="middle">p0</text>
+            <rect x="120" y="35" width="100" height="34" rx="4" fill="#1B2130" stroke="#2A3040"></rect>
+            <text x="170" y="56" text-anchor="middle">p1</text>
+            <rect x="230" y="35" width="100" height="34" rx="4" fill="#1B2130" stroke="#2A3040"></rect>
+            <text x="280" y="56" text-anchor="middle">p2</text>
+            <rect x="340" y="35" width="100" height="34" rx="4" fill="#1B2130" stroke="#2A3040"></rect>
+            <text x="390" y="56" text-anchor="middle">p3</text>
+            <text x="465" y="56" fill="#8D93A6" font-size="13">… up to p63</text>
+          </g>
+          <text x="10" y="100" font-family="JetBrains Mono, monospace" font-size="11" fill="#9A8CD9">consumer group: push-workers</text>
+          <g>
+            <rect x="10" y="110" width="90" height="36" rx="6" fill="#1B2130" stroke="#9A8CD9"></rect>
+            <text x="55" y="132" text-anchor="middle" fill="#E8EAF2" font-size="11">worker 1</text>
+            <rect x="112" y="110" width="90" height="36" rx="6" fill="#1B2130" stroke="#9A8CD9"></rect>
+            <text x="157" y="132" text-anchor="middle" fill="#E8EAF2" font-size="11">worker 2</text>
+            <rect x="214" y="110" width="90" height="36" rx="6" fill="#1B2130" stroke="#9A8CD9"></rect>
+            <text x="259" y="132" text-anchor="middle" fill="#E8EAF2" font-size="11">worker 3</text>
+            <rect x="316" y="110" width="90" height="36" rx="6" fill="#2A3040" stroke="#9A8CD9" stroke-dasharray="3 3"></rect>
+            <text x="361" y="132" text-anchor="middle" fill="#9A8CD9" font-size="11">+N (KEDA)</text>
+          </g>
+          <path d="M60,69 V108" stroke="#8D93A6" stroke-width="1.1" marker-end="url(#kArr)" fill="none"></path>
+          <path d="M170,69 V108" stroke="#8D93A6" stroke-width="1.1" marker-end="url(#kArr)" fill="none"></path>
+          <path d="M280,69 V108" stroke="#8D93A6" stroke-width="1.1" marker-end="url(#kArr)" fill="none"></path>
+          <path d="M390,69 Q390,90 360,108" stroke="#8D93A6" stroke-width="1.1" marker-end="url(#kArr)" fill="none"></path>
+
+          <rect x="500" y="105" width="380" height="80" rx="8" fill="#1B2130" stroke="#DB6E56"></rect>
+          <text x="690" y="126" text-anchor="middle" fill="#DB6E56" font-size="12" font-weight="600">KEDA autoscaler</text>
+          <text x="690" y="146" text-anchor="middle" fill="#8D93A6" font-size="10.5">watches consumer-lag metric, not CPU</text>
+          <text x="690" y="163" text-anchor="middle" fill="#8D93A6" font-size="10.5">lag ↑ beyond threshold → scale worker pods out</text>
+          <path d="M406,128 H498" stroke="#DB6E56" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#kArr)" fill="none"></path>
+        </svg>
+        <div class="diagram-caption">Partition key = <code>hash(user_id)</code> — one user's events always land on the same partition (preserving per-user order), while total load spreads evenly across up to 64+ partitions. Each partition is owned by exactly one consumer in the group at a time, so partition count is the hard ceiling on dispatch parallelism.</div>
+      </div>
+
+      <div class="grid-2" style="margin-top:18px;">
+        <div class="panel">
+          <h3 style="font-size:15px;">Vendor batch dispatch</h3>
+          <table>
+            <tbody><tr><td>Push</td><td>HTTP/2 multiplexed connections to APNs/FCM</td></tr>
+            <tr><td>Email</td><td>Batch SMTP / provider batch API, up to ~500/call</td></tr>
+            <tr><td>SMS</td><td>Per-provider token-bucket to respect per-second caps</td></tr>
+            <tr><td>Why it matters</td><td>1 request per message at millions/sec is a self-inflicted bottleneck before vendor limits even kick in</td></tr>
+          </tbody></table>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Retry / DLQ timeline for one message</h3>
+          <svg viewBox="0 0 300 130" xmlns="http://www.w3.org/2000/svg">
+            <line x1="10" y1="70" x2="290" y2="70" stroke="#2A3040" stroke-width="1.4"></line>
+            <circle cx="30" cy="70" r="4" fill="#DB6E56"></circle>
+            <text x="30" y="55" text-anchor="middle" font-size="9.5" fill="#DB6E56" font-family="JetBrains Mono, monospace">t=0 fail</text>
+            <circle cx="100" cy="70" r="4" fill="#DB6E56"></circle>
+            <text x="100" y="55" text-anchor="middle" font-size="9.5" fill="#DB6E56" font-family="JetBrains Mono, monospace">t=2s fail</text>
+            <circle cx="180" cy="70" r="4" fill="#DB6E56"></circle>
+            <text x="180" y="55" text-anchor="middle" font-size="9.5" fill="#DB6E56" font-family="JetBrains Mono, monospace">t=10s fail</text>
+            <circle cx="270" cy="70" r="5" fill="#4FB5A8"></circle>
+            <text x="270" y="55" text-anchor="middle" font-size="9.5" fill="#4FB5A8" font-family="JetBrains Mono, monospace">t=42s ✓</text>
+            <text x="270" y="95" text-anchor="middle" font-size="9" fill="#8D93A6">or → DLQ</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 DATA STORES -->
+    <section id="stores">
+      <div class="section-head"><span class="section-num">07</span><h2>Data Store Selection</h2></div>
+      <p class="section-intro">A relational store buckles under millions of small, rapid reads/writes for preferences and delivery logs — the store choice has to match the access pattern, not just "we need a database."</p>
+      <div class="panel">
+        <table>
+          <tbody><tr><th>Data</th><th>Store</th><th>Why</th></tr>
+          <tr><td>User preferences &amp; device tokens</td><td class="mono">Redis + DynamoDB/ScyllaDB</td><td>Sub-5ms key-value lookups (user_id → tokens, opt-ins), read-dominant</td></tr>
+          <tr><td>Notification status &amp; logs</td><td class="mono">Cassandra / ClickHouse</td><td>Append-only, millions of writes/sec, analytics-friendly for delivery dashboards</td></tr>
+          <tr><td>Dedup / rate-limit counters</td><td class="mono">Redis Cluster</td><td>Atomic <code>INCR</code>/<code>EXPIRE</code> — idempotency checked in microseconds</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- 08 VENDOR LIMITS -->
+    <section id="vendors">
+      <div class="section-head"><span class="section-num">08</span><h2>Vendor Connection &amp; Rate-Limit Management</h2></div>
+      <p class="section-intro">Third-party providers are the ceiling on this system's real-world throughput, not your own infrastructure — this is the section most candidates skip and most interviewers care about.</p>
+      <div class="panel">
+        <div class="flow-step"><div class="idx">·</div><div class="body"><h4>Connection pooling</h4><p>Persistent HTTP/2 connections to APNs/FCM avoid a TLS handshake per notification — the difference between milliseconds and tens of milliseconds per call at volume.</p></div></div>
+        <div class="flow-step"><div class="idx">·</div><div class="body"><h4>Token-bucket throttling per provider</h4><p>Each worker pool enforces its own vendor's documented rate limit locally, so a burst never trips the vendor's own rate limiter and risks account suspension.</p></div></div>
+        <div class="flow-step"><div class="idx">·</div><div class="body"><h4>Provider fallback (Strategy pattern)</h4><p>A common interface (<code>send(notification)</code>) with Twilio and AWS SNS both implementing it — a 5xx or timeout from the primary triggers an automatic swap, invisible to the rest of the pipeline.</p></div></div>
+      </div>
+    </section>
+
+    <!-- 09 CAPACITY -->
+    <section id="capacity">
+      <div class="section-head"><span class="section-num">09</span><h2>Capacity Estimation</h2></div>
+      <p class="section-intro">Back-of-envelope numbers to derive live — they're what justify partition counts and store choices instead of asserting them.</p>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Baseline throughput</h3>
+          <div class="calc-line"><span class="k">Target peak</span><span class="v">10,000 notifications/s</span></div>
+          <div class="calc-line"><span class="k">Avg channels per notification</span><span class="v">1.5</span></div>
+          <div class="calc-line"><span class="k">Vendor calls/s</span><span class="v">~15,000/s</span></div>
+          <div class="calc-result"><span>Kafka messages/s (dispatch topics)</span><span class="v">~15K/s</span></div>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Flash-sale burst</h3>
+          <div class="calc-line"><span class="k">Broadcast target</span><span class="v">5,000,000 users</span></div>
+          <div class="calc-line"><span class="k">Fan-out batch size</span><span class="v">50,000</span></div>
+          <div class="calc-line"><span class="k">Batches to enumerate</span><span class="v">100</span></div>
+          <div class="calc-result"><span>Time to fully enqueue @ 200ms/batch</span><span class="v">~20s</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">Storage growth</h3>
+        <div class="calc-line"><span class="k">Delivery-log rows/day at 10K/s sustained</span><span class="v">~864M/day</span></div>
+        <div class="calc-line"><span class="k">Bytes per row (compact log entry)</span><span class="v">~150 bytes</span></div>
+        <div class="calc-line"><span class="k">Raw daily volume</span><span class="v">~130 GB/day</span></div>
+        <div class="calc-result"><span>90-day retention, uncompressed</span><span class="v">~11.7 TB</span></div>
+        <p style="color:var(--muted); font-size:13px; margin-top:10px;">This is exactly why delivery logs go to a columnar/wide-column store with compression and TTL-based expiry, not the same Postgres instance handling order transactions.</p>
+      </div>
+    </section>
+
+    <!-- 10 OBSERVABILITY -->
+    <section id="observability">
+      <div class="section-head"><span class="section-num">10</span><h2>Observability &amp; Alerting</h2></div>
+      <p class="section-intro">A system that can silently drop messages needs to be provably not doing that — this is where "at-least-once" stops being a claim and becomes something you can show a dashboard for.</p>
+      <div class="panel">
+        <div class="metric-grid">
+          <div class="metric ok"><div class="mnum">99.2%</div><div class="mlabel">DELIVERY SUCCESS RATE</div></div>
+          <div class="metric ok"><div class="mnum">340ms</div><div class="mlabel">P50 DISPATCH LATENCY</div></div>
+          <div class="metric warn"><div class="mnum">1,240</div><div class="mlabel">CONSUMER LAG (push-high)</div></div>
+          <div class="metric ok"><div class="mnum">2.1s</div><div class="mlabel">P99 QUEUE-TO-VENDOR TIME</div></div>
+          <div class="metric bad"><div class="mnum">312</div><div class="mlabel">DLQ SIZE (last 1h)</div></div>
+          <div class="metric ok"><div class="mnum">0.04%</div><div class="mlabel">DEDUP HIT RATE</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <table>
+          <tbody><tr><th>Signal</th><th>Alert condition</th></tr>
+          <tr><td>Consumer lag per partition</td><td>Sustained growth over 5 min → autoscale trigger; still growing after scale-out → page on-call</td></tr>
+          <tr><td>DLQ ingress rate</td><td>Any sustained non-zero rate on the high-priority topic → immediate page, since it means transactional messages are failing permanently</td></tr>
+          <tr><td>Vendor error rate (per provider)</td><td>5xx rate crossing a threshold → trip the circuit breaker and fail over before the retry queue backs up</td></tr>
+          <tr><td>End-to-end p99 latency</td><td>Transactional path exceeding its SLA (seconds) → separate, tighter alert than the marketing path</td></tr>
+        </tbody></table>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">Worth saying explicitly:</strong> "DELIVERED" status for push/SMS often relies on the vendor's own delivery webhook, not just a successful API call — a 200 from FCM means "accepted for delivery," not "landed on the device." A complete design distinguishes <code>SENT</code> (we handed it to the vendor) from <code>DELIVERED</code> (the vendor confirms receipt), and treats only the latter as the real success metric where the vendor supports it.</p>
+      </div>
+    </section>
+
+    <!-- 11 SECURITY -->
+    <section id="security">
+      <div class="section-head"><span class="section-num">11</span><h2>Security &amp; Compliance</h2></div>
+      <p class="section-intro">A system that sends messages to real phone numbers and inboxes has obligations beyond throughput — this section is a quick way to show breadth without derailing the core design.</p>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Security</h3>
+          <table>
+            <tbody><tr><td>API auth</td><td>Service-to-service auth (mTLS or signed JWT) — this is an internal API called by other services, not end users directly</td></tr>
+            <tr><td>Vendor secrets</td><td>API keys/certs in a secrets manager (Vault/KMS), never in worker config or source</td></tr>
+            <tr><td>PII in transit</td><td>TLS everywhere; template data (order amounts, addresses) never logged in plaintext at the info level</td></tr>
+            <tr><td>Webhook verification</td><td>Vendor delivery-status webhooks (bounce, click, delivered) must be signature-verified — an unverified webhook is a spoofable status-update vector</td></tr>
+          </tbody></table>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Compliance</h3>
+          <table>
+            <tbody><tr><td>Unsubscribe</td><td>Every marketing email needs a working one-click unsubscribe (CAN-SPAM); honoring it must be near-immediate, not eventually-consistent over hours</td></tr>
+            <tr><td>Quiet hours / TCPA</td><td>SMS to US numbers has time-of-day and consent restrictions — enforce at the preference-check step, not left to the vendor</td></tr>
+            <tr><td>Data retention</td><td>Delivery logs containing PII need a retention policy and deletion path (GDPR "right to erasure") — ties directly into the TTL/compression story from capacity planning</td></tr>
+            <tr><td>Audit trail</td><td>Who/what triggered a notification (service, admin action) should be traceable from the delivery log, not just the outcome</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 DR -->
+    <section id="dr">
+      <div class="section-head"><span class="section-num">12</span><h2>Multi-Region &amp; Disaster Recovery</h2></div>
+      <p class="section-intro">A transactional notification path (OTPs, password resets) can't go dark because one region's data center has a bad day.</p>
+      <div class="panel">
+        <svg viewBox="0 0 900 230" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="drArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8D93A6"></path></marker>
+          </defs>
+          <rect x="20" y="20" width="380" height="190" rx="10" fill="#1B2130" stroke="#4FB5A8"></rect>
+          <text x="210" y="45" text-anchor="middle" fill="#4FB5A8" font-family="JetBrains Mono, monospace" font-size="12" font-weight="600">REGION: us-east</text>
+          <rect x="45" y="60" width="150" height="40" rx="6" fill="#171B27" stroke="#2A3040"></rect>
+          <text x="120" y="84" text-anchor="middle" fill="#E8EAF2" font-size="11">API + workers</text>
+          <rect x="215" y="60" width="150" height="40" rx="6" fill="#171B27" stroke="#2A3040"></rect>
+          <text x="290" y="84" text-anchor="middle" fill="#E8EAF2" font-size="11">Kafka cluster</text>
+          <rect x="45" y="115" width="320" height="40" rx="6" fill="#171B27" stroke="#2A3040"></rect>
+          <text x="205" y="139" text-anchor="middle" fill="#E8EAF2" font-size="11">Redis + preference store (primary)</text>
+          <rect x="45" y="170" width="320" height="30" rx="6" fill="#171B27" stroke="#2A3040"></rect>
+          <text x="205" y="190" text-anchor="middle" fill="#8D93A6" font-size="10.5">healthy — serving all traffic</text>
+
+          <rect x="500" y="20" width="380" height="190" rx="10" fill="#1B2130" stroke="#DB6E56" stroke-dasharray="4 3"></rect>
+          <text x="690" y="45" text-anchor="middle" fill="#DB6E56" font-family="JetBrains Mono, monospace" font-size="12" font-weight="600">REGION: eu-west (standby)</text>
+          <rect x="525" y="60" width="150" height="40" rx="6" fill="#171B27" stroke="#2A3040"></rect>
+          <text x="600" y="84" text-anchor="middle" fill="#E8EAF2" font-size="11">API + workers</text>
+          <rect x="695" y="60" width="150" height="40" rx="6" fill="#171B27" stroke="#2A3040"></rect>
+          <text x="770" y="84" text-anchor="middle" fill="#E8EAF2" font-size="11">Kafka cluster</text>
+          <rect x="525" y="115" width="320" height="40" rx="6" fill="#171B27" stroke="#2A3040"></rect>
+          <text x="685" y="139" text-anchor="middle" fill="#E8EAF2" font-size="11">Redis + preference store (replica)</text>
+          <rect x="525" y="170" width="320" height="30" rx="6" fill="#171B27" stroke="#2A3040"></rect>
+          <text x="685" y="190" text-anchor="middle" fill="#8D93A6" font-size="10.5">warm — promoted on failover</text>
+
+          <path d="M290,100 Q400,115 525,80" stroke="#8D93A6" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#drArr)" fill="none"></path>
+          <text x="410" y="105" text-anchor="middle" fill="#8D93A6" font-size="9.5" font-family="JetBrains Mono, monospace">MirrorMaker replication</text>
+          <path d="M205,155 Q400,175 525,145" stroke="#8D93A6" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#drArr)" fill="none"></path>
+        </svg>
+        <div class="diagram-caption">Active-passive by default: one region takes live traffic, the other stays warm via cross-region replication (Kafka MirrorMaker, DB replica). DNS/global load balancer failover redirects traffic on region-health failure. Active-active is possible but adds real complexity — cross-region dedup keys, conflict resolution on preference writes — worth mentioning as the next step, not the starting point.</div>
+      </div>
+      <div class="panel">
+        <table>
+          <tbody><tr><th>Failure</th><th>Recovery</th></tr>
+          <tr><td>One region fully down</td><td>Global LB fails traffic over to standby region; Kafka consumer groups in the new active region pick up from the last mirrored offset</td></tr>
+          <tr><td>Cross-region replication lag</td><td>A brief window where a just-changed preference (e.g. new opt-out) might not yet be visible in the standby — acceptable for this workload's consistency model, flagged explicitly rather than hidden</td></tr>
+          <tr><td>Split-brain risk if active-active</td><td>Only relevant if you extend beyond active-passive — requires a conflict-resolution strategy on preference writes (e.g. last-write-wins with vector clocks), worth naming as a known cost of that upgrade</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- 13 ALTERNATIVES -->
+    <section id="alternatives">
+      <div class="section-head"><span class="section-num">13</span><h2>Alternatives Considered</h2></div>
+      <div class="panel">
+        <table>
+          <tbody><tr><th>Alternative</th><th>Rejected because</th></tr>
+          <tr><td>Synchronous send in the API request</td><td>Ties API latency to the slowest vendor of the moment; one degraded provider takes down the whole notification path</td></tr>
+          <tr><td>Single Kafka topic for all channels/priorities</td><td>A marketing backlog would delay OTP delivery — priority and channel separation exists specifically to prevent that</td></tr>
+          <tr><td>RabbitMQ/SQS instead of Kafka at scale</td><td>Fine at thousands/sec, but Kafka's partition-based horizontal scaling and consumer-lag-driven autoscaling suit sustained millions/sec better</td></tr>
+          <tr><td>Relational DB for preferences at scale</td><td>Millions of small concurrent reads/writes with sub-5ms expectations don't fit a disk-backed relational store well</td></tr>
+          <tr><td>Exactly-once delivery semantics</td><td>Not achievable end-to-end across a third-party vendor boundary without their cooperation — at-least-once + idempotent clients is the honest guarantee</td></tr>
+          <tr><td>Active-active multi-region from day one</td><td>Conflict resolution on preference writes and cross-region dedup add real complexity that isn't justified until the availability requirement demands it</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- 14 PLAYBOOK -->
+    <section id="playbook">
+      <div class="section-head"><span class="section-num">14</span><h2>Interview Playbook</h2></div>
+      <div class="panel">
+        <div class="qa">
+          <div class="q">A vendor (say, Twilio) goes down entirely for an hour — what happens?</div>
+          <div class="a">The Strategy-pattern abstraction fails over to AWS SNS automatically on repeated 5xx/timeout from Twilio. If both are degraded, messages accumulate in the retry queue with backoff rather than being dropped; the dead-letter queue and an alert catch anything that exceeds the retry budget so a human is paged instead of silently losing OTPs for an hour.</div>
+        </div>
+        <div class="qa">
+          <div class="q">How do you guarantee ordering, and do you even need to?</div>
+          <div class="a">Kafka guarantees order only within a partition, so partitioning by <code>hash(user_id)</code> keeps one user's notifications in order relative to each other, which is usually the only ordering guarantee that matters (a user shouldn't see "delivered" before "order confirmed"). Cross-user ordering is never required, which is exactly what makes horizontal partitioning safe here.</div>
+        </div>
+        <div class="qa">
+          <div class="q">How would you prevent a marketing broadcast from starving transactional notifications?</div>
+          <div class="a">Separate topics per priority, separate consumer groups sized differently (more workers on the high-priority topic), and if using a single shared worker pool, weighted polling that always drains high-priority before low-priority. The design already splits high/low priority topics for exactly this reason — worth calling that out proactively rather than waiting to be asked.</div>
+        </div>
+        <div class="qa">
+          <div class="q">How do you avoid re-notifying a user who already unsubscribed mid-flight?</div>
+          <div class="a">Check preferences at enqueue time (before Kafka) and again at dispatch time (right before the vendor call) — a user could opt out in the seconds between a marketing broadcast being fanned out and a given worker actually processing their message. The second check is cheap (single key lookup) relative to the cost of an unwanted send and the compliance risk it carries.</div>
+        </div>
+        <div class="qa">
+          <div class="q">How would you test this without hitting real vendor APIs?</div>
+          <div class="a">Mock vendor adapters behind the same Strategy interface used in production, so a test send exercises the real dispatch/retry/DLQ logic against a fake that can be told to fail on command. Load-test the fan-out path separately with synthetic segment sizes to find the batch-read bottleneck before it shows up in a real flash sale.</div>
+        </div>
+        <div class="qa">
+          <div class="q">How do you know the delivery-success number on the dashboard is actually trustworthy?</div>
+          <div class="a">Distinguish SENT (accepted by vendor's API) from DELIVERED (vendor's own webhook confirms receipt on-device/inbox) in the data model, and compute the headline metric from DELIVERED where the vendor supports webhooks, falling back to SENT with that caveat stated where it doesn't (SMS delivery receipts, for instance, are less universally reliable than push).</div>
+        </div>
+        <div class="qa">
+          <div class="q">If this needs to run in two regions for compliance (EU data residency) as well as DR, what changes?</div>
+          <div class="a">Data residency is stricter than DR — EU user data and its delivery logs must stay in-region, not just be replicated there as a warm standby. That pushes toward per-region partitioning of the user base itself (a user's preferences and logs live only in their home region) rather than the simpler active-passive replication used for pure availability, and it's worth naming that distinction explicitly since interviewers sometimes probe whether a candidate conflates the two.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>Multi-Channel Notification System — revision sheet</footer>
+  </div>
+</div>
+
+
+</body></html>

@@ -10,14 +10,11 @@
 
 ## Update Summary
 **Changes Made**
-- Enhanced search integration with global search functionality across all pages
-- Implemented dynamic filtering based on query text with real-time updates
-- Improved collapse/expand behavior during searches with automatic pattern expansion
-- Added better visual feedback when search terms are active with match counts and highlighting
-- Enhanced filtering system with confidence-based filtering (Weak, Learning, Strong, Interview Ready, Not set)
-- Added new 'Strongest' sort option alongside existing sorting capabilities
-- Implemented robust filter validation with sanitizeFilters() function
-- Updated filtering logic to handle confidence-based queries and special "Not set" cases
+- Integrated RowExtLinks component to provide contextual action buttons on problem entries
+- Added immediate access to solutions and external resources directly from roadmap rows
+- Enhanced ProblemRow component with contextual action buttons for personal solutions, editorial links, LeetCode access, and video explanations
+- Updated visual legend to include new contextual action indicators
+- Improved user interaction patterns for quick access to supplementary resources
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -31,7 +28,7 @@
 9. [Conclusion](#conclusion)
 
 ## Introduction
-This document explains the Roadmap component that organizes practice problems by topic and pattern, supports advanced filtering and sorting, and provides collapsible groups with progress indicators and search. It also documents the groupByTopicPattern utility, enhanced filter logic with confidence-based filtering, user interactions for expanding/collapsing sections, visual legend, problem row components, and navigation integration. The component now features enhanced search integration with dynamic filtering, improved collapse/expand behavior during searches, and better visual feedback when search terms are active.
+This document explains the Roadmap component that organizes practice problems by topic and pattern, supports advanced filtering and sorting, and provides collapsible groups with progress indicators and search. It also documents the groupByTopicPattern utility, enhanced filter logic with confidence-based filtering, user interactions for expanding/collapsing sections, visual legend, problem row components with contextual action buttons, and navigation integration. The component now features enhanced search integration with dynamic filtering, improved collapse/expand behavior during searches, better visual feedback when search terms are active, and contextual action buttons for immediate resource access.
 
 ## Project Structure
 The application is a single-page React app built with Vite. The core UI and logic live in one file, while problem data and metadata are bundled as JSON files.
@@ -42,17 +39,20 @@ A["App (main.jsx)"] --> B["Roadmap (main.jsx)"]
 A --> C["Problem Row (main.jsx)"]
 A --> D["groupedByTopicPattern (main.jsx)"]
 A --> E["GlobalSearch (main.jsx)"]
-F["problems.json"] --> A
-G["topics.json"] --> A
-H["patterns.json"] --> A
+A --> F["RowExtLinks (main.jsx)"]
+G["problems.json"] --> A
+H["topics.json"] --> A
+I["patterns.json"] --> A
 E --> B
 B --> C
+C --> F
 ```
 
 **Diagram sources**
 - [main.jsx:47-173](file://src/main.jsx#L47-L173)
 - [main.jsx:190-245](file://src/main.jsx#L190-L245)
 - [main.jsx:349-428](file://src/main.jsx#L349-L428)
+- [main.jsx:432-446](file://src/main.jsx#L432-L446)
 - [problems.json:1-200](file://data/problems.json#L1-L200)
 - [topics.json:1-20](file://data/topics.json#L1-L20)
 - [patterns.json:1-91](file://data/patterns.json#L1-L91)
@@ -67,7 +67,8 @@ B --> C
 - App shell: loads problem data, manages global state (progress, notes, solutions, activity, settings), search query, and page routing between Dashboard, Roadmap, Revision, Patterns, Analytics, Settings, and Problem detail.
 - **Enhanced GlobalSearch**: Provides cross-page search functionality with keyboard shortcuts (/ key), result grouping, and navigation to problems, patterns, and LLD chapters.
 - Roadmap: renders grouped topics and patterns, filters/sorts with confidence support, shows counts and legend, and handles collapse/expand toggles with search-aware behavior.
-- ProblemRow: displays a single problem entry with status dot, title, topic/pattern, difficulty badge, and optional tags; clicking opens the problem detail.
+- ProblemRow: displays a single problem entry with status dot, title, topic/pattern, difficulty badge, optional tags, and contextual action buttons; clicking opens the problem detail.
+- **RowExtLinks**: provides contextual action buttons for immediate access to personal solutions, editorial links, LeetCode problems, and video explanations directly from problem rows.
 - groupByTopicPattern: utility to organize a list into nested topic → pattern → problems structure.
 
 Key responsibilities:
@@ -77,16 +78,18 @@ Key responsibilities:
 - Collapsible topic and pattern groups with search-aware defaults
 - Progress indicators per group
 - Search across title, topic, and pattern with real-time filtering
+- Contextual action buttons for immediate resource access
 - Navigation to problem detail and pattern groups
 
 **Section sources**
 - [main.jsx:47-173](file://src/main.jsx#L47-L173)
 - [main.jsx:190-245](file://src/main.jsx#L190-L245)
 - [main.jsx:349-428](file://src/main.jsx#L349-L428)
+- [main.jsx:432-446](file://src/main.jsx#L432-L446)
 - [main.jsx:188-189](file://src/main.jsx#L188-L189)
 
 ## Architecture Overview
-The Roadmap view is rendered conditionally based on the current page. It receives precomputed enriched problems, available topics, patterns, and filter state from the parent App. Filtering and grouping are computed via memoized values to avoid unnecessary re-renders. The enhanced search system integrates globally across all pages while providing specific filtering for the roadmap view.
+The Roadmap view is rendered conditionally based on the current page. It receives precomputed enriched problems, available topics, patterns, and filter state from the parent App. Filtering and grouping are computed via memoized values to avoid unnecessary re-renders. The enhanced search system integrates globally across all pages while providing specific filtering for the roadmap view. The RowExtLinks component enhances problem rows with contextual actions that don't require navigation to the full problem view.
 
 ```mermaid
 sequenceDiagram
@@ -95,6 +98,7 @@ participant GS as "GlobalSearch (main.jsx)"
 participant App as "App (main.jsx)"
 participant RM as "Roadmap (main.jsx)"
 participant PR as "ProblemRow (main.jsx)"
+participant REL as "RowExtLinks (main.jsx)"
 participant Det as "Problem Detail (main.jsx)"
 U->>GS : Type search query
 GS-->>App : Update global query state
@@ -102,6 +106,9 @@ App->>RM : Pass filtered results based on query
 RM->>RM : Apply search + filters + confidence
 RM->>RM : Group by topic → pattern with search-aware collapse
 RM-->>U : Render groups with match counts
+U->>PR : Click contextual action button
+PR->>REL : Trigger contextual action
+REL-->>Det : Open problem detail or external resource
 U->>PR : Click a problem row
 PR-->>App : open(p)
 App-->>Det : Show Problem detail for p
@@ -112,6 +119,7 @@ App-->>Det : Show Problem detail for p
 - [main.jsx:349-428](file://src/main.jsx#L349-L428)
 - [main.jsx:127-139](file://src/main.jsx#L127-L139)
 - [main.jsx:190-245](file://src/main.jsx#L190-L245)
+- [main.jsx:432-446](file://src/main.jsx#L432-L446)
 - [main.jsx:188-189](file://src/main.jsx#L188-L189)
 
 ## Detailed Component Analysis
@@ -145,6 +153,48 @@ GroupResults --> Display["Display dropdown with navigation"]
 **Section sources**
 - [main.jsx:349-428](file://src/main.jsx#L349-L428)
 
+### RowExtLinks Component
+The RowExtLinks component provides contextual action buttons directly on problem rows, enabling immediate access to supplementary resources without navigating to the full problem view:
+
+- **Personal Solution Access**: PenLine icon links to saved personal solutions for the problem
+- **Editorial Solution Link**: FileText icon opens TakeUForward editorial solutions in new tabs
+- **LeetCode Integration**: Code2 icon provides direct access to LeetCode problems
+- **Video Explanation**: Play icon opens video explanations for problem walkthroughs
+- **Contextual Actions**: Buttons appear only when relevant resources are available
+- **Event Handling**: Prevents event propagation to avoid triggering row click actions
+
+```mermaid
+flowchart TD
+Start(["Problem Row Rendered"]) --> CheckResources{"Check Available Resources"}
+CheckResources --> HasMine{"Has Personal Solution?"}
+CheckResources --> HasTUF{"Has TUF Link?"}
+CheckResources --> HasLeetCode{"Has LeetCode URL?"}
+CheckResources --> HasVideo{"Has Video URL?"}
+HasMine --> |Yes| AddMineBtn["Add Personal Solution Button"]
+HasTUF --> |Yes| AddTUFBtn["Add Editorial Link Button"]
+HasLeetCode --> |Yes| AddLeetCodeBtn["Add LeetCode Button"]
+HasVideo --> |Yes| AddVideoBtn["Add Video Button"]
+HasMine --> |No| SkipMine["Skip Personal Button"]
+HasTUF --> |No| SkipTUF["Skip Editorial Button"]
+HasLeetCode --> |No| SkipLeetCode["Skip LeetCode Button"]
+HasVideo --> |No| SkipVideo["Skip Video Button"]
+AddMineBtn --> RenderButtons["Render Available Buttons"]
+AddTUFBtn --> RenderButtons
+AddLeetCodeBtn --> RenderButtons
+AddVideoBtn --> RenderButtons
+SkipMine --> RenderButtons
+SkipTUF --> RenderButtons
+SkipLeetCode --> RenderButtons
+SkipVideo --> RenderButtons
+RenderButtons --> End(["End"])
+```
+
+**Diagram sources**
+- [main.jsx:432-446](file://src/main.jsx#L432-L446)
+
+**Section sources**
+- [main.jsx:432-446](file://src/main.jsx#L432-L446)
+
 ### groupByTopicPattern Utility
 Organizes an array of problems into a nested object keyed by topic, then by pattern, containing arrays of problems.
 
@@ -165,10 +215,10 @@ Return --> End(["End"])
 ```
 
 **Diagram sources**
-- [main.jsx:432-439](file://src/main.jsx#L432-L439)
+- [main.jsx:448-455](file://src/main.jsx#L448-L455)
 
 **Section sources**
-- [main.jsx:432-439](file://src/main.jsx#L432-L439)
+- [main.jsx:448-455](file://src/main.jsx#L448-L455)
 
 ### Enhanced Filtering and Sorting Logic
 Filtering combines multiple criteria including the new confidence-based filtering and search integration:
@@ -253,7 +303,7 @@ The Roadmap component now features enhanced search integration with improved col
 - Renders collapsible topic blocks with solved/total counts
 - Within each topic, renders collapsible pattern blocks with their own counts
 - Displays search match counts and active search indicators
-- Renders problem rows inside expanded patterns
+- Renders problem rows inside expanded patterns with contextual action buttons
 - Displays a legend indicating status dots for solved, not started, and weak
 
 ```mermaid
@@ -271,16 +321,25 @@ class Roadmap {
 class ProblemRow {
 +p
 +open(p)
++tufLinks
++solutions
+}
+class RowExtLinks {
++p
++tufLinks
++solutions
 }
 Roadmap --> ProblemRow : "renders multiple"
+ProblemRow --> RowExtLinks : "includes"
 ```
 
 **Diagram sources**
-- [main.jsx:441-497](file://src/main.jsx#L441-L497)
-- [main.jsx:188-189](file://src/main.jsx#L188-L189)
+- [main.jsx:457-513](file://src/main.jsx#L457-L513)
+- [main.jsx:446-446](file://src/main.jsx#L446-L446)
+- [main.jsx:432-446](file://src/main.jsx#L432-L446)
 
 **Section sources**
-- [main.jsx:441-497](file://src/main.jsx#L441-L497)
+- [main.jsx:457-513](file://src/main.jsx#L457-L513)
 
 ### Enhanced User Interaction Patterns
 - **Global Search**: Search input updates a global query used by filtering across all pages
@@ -291,6 +350,7 @@ Roadmap --> ProblemRow : "renders multiple"
 - Sorting changes ordering without altering visibility
 - **Enhanced**: Topic header toggles expand/collapse all patterns within that topic
 - **Enhanced**: Pattern header toggles expand/collapse its problem list with search-aware defaults
+- **Enhanced**: Contextual action buttons provide immediate access to resources without navigation
 - Clicking a problem row navigates to the Problem detail page
 - **New**: Keyboard shortcuts (/ to focus search, arrow keys for navigation, Enter to select)
 
@@ -300,11 +360,15 @@ participant U as "User"
 participant GS as "GlobalSearch"
 participant RM as "Roadmap"
 participant PR as "ProblemRow"
+participant REL as "RowExtLinks"
 participant App as "App"
 U->>GS : Type search query
 GS-->>App : Update global query
 App->>RM : Pass query to roadmap
 RM->>RM : Auto-expand matching patterns
+U->>PR : Click contextual action button
+PR->>REL : Trigger contextual action
+REL-->>App : Navigate to resource or open problem
 U->>RM : Change filter or sort (including confidence)
 RM->>RM : Update roadmapFilters
 RM->>RM : Recompute filtered and grouped
@@ -316,7 +380,8 @@ App-->>App : Set selected problem and page
 **Diagram sources**
 - [main.jsx:349-428](file://src/main.jsx#L349-L428)
 - [main.jsx:256-270](file://src/main.jsx#L256-L270)
-- [main.jsx:441-497](file://src/main.jsx#L441-L497)
+- [main.jsx:457-513](file://src/main.jsx#L457-L513)
+- [main.jsx:432-446](file://src/main.jsx#L432-L446)
 - [main.jsx:188-189](file://src/main.jsx#L188-L189)
 
 ### Visual Legend and Progress Indicators
@@ -324,14 +389,16 @@ App-->>App : Set selected problem and page
 - Topic block shows solved/total count
 - Pattern block shows solved/count for its problems
 - ProblemRow shows a small status dot aligned with the problem's current status
+- **Enhanced**: Contextual action buttons appear next to problem entries for immediate resource access
 - **Enhanced**: Confidence levels are now visible in analytics and can be filtered
 - **Enhanced**: Active search indicators showing match counts and search terms
 - **Enhanced**: Visual feedback when search terms are active with highlighted match counts
 
 **Section sources**
-- [main.jsx:458-466](file://src/main.jsx#L458-L466)
-- [main.jsx:478-493](file://src/main.jsx#L478-L493)
-- [main.jsx:188-189](file://src/main.jsx#L188-L189)
+- [main.jsx:474-482](file://src/main.jsx#L474-L482)
+- [main.jsx:494-509](file://src/main.jsx#L494-L509)
+- [main.jsx:446-446](file://src/main.jsx#L446-L446)
+- [main.jsx:432-446](file://src/main.jsx#L432-L446)
 
 ### Data Model and Enrichment
 - Problems are loaded from bundled JSON and enriched with local progress (status, confidence, nextRevision, etc.)
@@ -339,6 +406,7 @@ App-->>App : Set selected problem and page
 - **Enhanced**: Confidence system includes four levels: Weak, Learning, Strong, Interview Ready
 - Enriched problems feed filtering, grouping, and rendering
 - **Enhanced**: Global search works across enriched problem data for comprehensive results
+- **Enhanced**: RowExtLinks uses enriched problem data to determine available contextual actions
 
 ```mermaid
 erDiagram
@@ -390,16 +458,24 @@ PROBLEM ||--|| PATTERN_MAP : "matches"
   - **Enhanced**: Query state for search-aware collapse behavior
 - ProblemRow depends on:
   - Problem object shape (id, title, topic, pattern, difficulty, status, favorite, confidence)
+  - **Enhanced**: RowExtLinks component for contextual actions
+  - **Enhanced**: tufLinks and solutions data for contextual action availability
+- RowExtLinks depends on:
+  - Problem object with URL and videoUrl properties
+  - tufLinks data for editorial solution links
+  - solutions data for personal solution detection
 
 ```mermaid
 graph LR
 App["App (main.jsx)"] --> GS["GlobalSearch (main.jsx)"]
 App --> RM["Roadmap (main.jsx)"]
 App --> PR["ProblemRow (main.jsx)"]
+App --> REL["RowExtLinks (main.jsx)"]
 GS --> RM
 RM --> GRP["groupByTopicPattern (main.jsx)"]
 RM --> PR
-PR --> Det["Problem Detail (main.jsx)"]
+PR --> REL
+REL --> Det["Problem Detail (main.jsx)"]
 App --> Data["problems.json"]
 App --> Meta["topics.json / patterns.json"]
 ```
@@ -408,6 +484,7 @@ App --> Meta["topics.json / patterns.json"]
 - [main.jsx:47-173](file://src/main.jsx#L47-L173)
 - [main.jsx:349-428](file://src/main.jsx#L349-L428)
 - [main.jsx:190-245](file://src/main.jsx#L190-L245)
+- [main.jsx:432-446](file://src/main.jsx#L432-L446)
 - [problems.json:1-200](file://data/problems.json#L1-L200)
 - [topics.json:1-20](file://data/topics.json#L1-L20)
 - [patterns.json:1-91](file://data/patterns.json#L1-L91)
@@ -416,6 +493,7 @@ App --> Meta["topics.json / patterns.json"]
 - [main.jsx:47-173](file://src/main.jsx#L47-L173)
 - [main.jsx:349-428](file://src/main.jsx#L349-L428)
 - [main.jsx:190-245](file://src/main.jsx#L190-L245)
+- [main.jsx:432-446](file://src/main.jsx#L432-L446)
 
 ## Performance Considerations
 - Memoization:
@@ -424,6 +502,7 @@ App --> Meta["topics.json / patterns.json"]
   - Filtered list computed once per change in enriched, query, or filters (including confidence)
   - Grouped results computed once per change in filtered list
   - **Enhanced**: Global search results computed once per change in query, problems, pattern groups, and chapters
+  - **Enhanced**: RowExtLinks computed efficiently per problem row with conditional rendering
 - Filtering complexity:
   - Linear scan over enriched problems per filter change (now includes confidence checks)
   - **Enhanced**: Global search performs efficient filtering with ranking algorithm
@@ -431,11 +510,13 @@ App --> Meta["topics.json / patterns.json"]
   - Linear pass over filtered list to build nested structure
 - **Enhanced**: Confidence-based filtering adds minimal overhead due to simple string comparisons
 - **Enhanced**: Search-aware collapse behavior reduces unnecessary re-renders by maintaining collapse state
+- **Enhanced**: RowExtLinks uses conditional rendering to minimize DOM operations when no contextual actions are available
 - Recommendations:
   - Keep filter set minimal to reduce recomputation
   - Avoid deep nesting beyond topic → pattern unless necessary
   - Consider virtualization if problem lists grow very large
   - **Enhanced**: Global search limits results to prevent performance issues with large datasets
+  - **Enhanced**: RowExtLinks prevents event propagation to avoid unnecessary re-renders
 
 [No sources needed since this section provides general guidance]
 
@@ -459,6 +540,11 @@ App --> Meta["topics.json / patterns.json"]
   - Press "/" key to focus search if keyboard shortcut doesn't work
   - Search results may be limited to top matches (7 problems, 4 patterns, 3 chapters)
   - Clear search with Escape key to return to normal filtering
+- **New**: Contextual action button issues:
+  - Action buttons only appear when corresponding resources are available
+  - Personal solution button requires saved approaches for the problem
+  - External links open in new tabs to maintain app context
+  - Event propagation is prevented to avoid triggering row navigation
 
 **Section sources**
 - [main.jsx:151-155](file://src/main.jsx#L151-L155)
@@ -466,8 +552,9 @@ App --> Meta["topics.json / patterns.json"]
 - [main.jsx:586-605](file://src/main.jsx#L586-L605)
 - [main.jsx:84-93](file://src/main.jsx#L84-L93)
 - [main.jsx:349-428](file://src/main.jsx#L349-L428)
+- [main.jsx:432-446](file://src/main.jsx#L432-L446)
 
 ## Conclusion
-The Roadmap component provides a clear, hierarchical view of problems organized by topic and pattern, with powerful enhanced filtering including confidence-based filtering and sorting capabilities. The new global search functionality seamlessly integrates across all pages while providing specific filtering for the roadmap view. Enhanced collapse/expand behavior during searches automatically reveals matching content, while the new 'Strongest' sort option and confidence filtering system allow users to focus on problems based on their mastery level. The component integrates seamlessly with the rest of the app through shared state and navigation, offering progress indicators and a consistent user experience for tracking learning and mastery.
+The Roadmap component provides a clear, hierarchical view of problems organized by topic and pattern, with powerful enhanced filtering including confidence-based filtering and sorting capabilities. The new global search functionality seamlessly integrates across all pages while providing specific filtering for the roadmap view. Enhanced collapse/expand behavior during searches automatically reveals matching content, while the new 'Strongest' sort option and confidence filtering system allow users to focus on problems based on their mastery level. The integrated RowExtLinks component enhances the user experience by providing contextual action buttons directly on problem rows, enabling immediate access to personal solutions, editorial links, LeetCode problems, and video explanations without requiring navigation to the full problem view. The component integrates seamlessly with the rest of the app through shared state and navigation, offering progress indicators, contextual actions, and a consistent user experience for tracking learning and mastery.
 
 [No sources needed since this section summarizes without analyzing specific files]

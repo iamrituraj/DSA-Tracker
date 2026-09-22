@@ -726,3 +726,40 @@
 .meta-ext.mine:hover,.row-ext-btn.mine:hover{background:#ffefb8;color:#7c5a00}
 .theme-dark .meta-ext.mine,.theme-dark .row-ext-btn.mine{background:#3a2d12;color:#f0c674}
 .theme-dark .meta-ext.mine:hover,.theme-dark .row-ext-btn.mine:hover{background:#4a3a18;color:#ffd97a}
+/* ---------------- HLD Lab ---------------- */
+.hld-hero{position:relative;overflow:hidden;border-radius:18px;background:radial-gradient(620px 260px at 85% 18%,#2c4b6b88,transparent 60%),radial-gradient(520px 240px at 66% 92%,#6e573066,transparent 60%),linear-gradient(120deg,#172033,#1c2a41 55%,#22354f);margin-bottom:17px;min-height:222px;display:flex;align-items:center}
+.hld-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#172033d9 30%,#17203380 58%,#17203333 100%)}
+.hld-hero h2{font-size:26px;margin:6px 0 8px;color:#fff}
+.hld-hero p{color:#c3cede;font-size:13px;line-height:1.55;margin:0}
+.hld-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.hld-card{text-align:left;background:#fff;border:1px solid #dce1e9;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s;font:inherit}
+.hld-card:hover{border-color:#b9c6da;box-shadow:0 6px 18px #1720331a;transform:translateY(-1px)}
+.hld-card-head{display:flex;gap:10px;align-items:center}
+.hld-card-icon{width:38px;height:38px;border-radius:10px;background:#172033;color:#fff;display:grid;place-items:center;flex:none}
+.hld-card h3{margin:0;font-size:14px;color:#172033}
+.hld-card small{color:#8994a5;font-size:11px}
+.hld-card p{margin:0;font-size:12px;line-height:1.55;color:#4b5568;flex:1}
+.hld-card-chips{display:flex;flex-wrap:wrap;gap:6px}
+.hld-card-chips span{border:1px solid #dce1e9;background:#f7f8fa;color:#59667a;font-size:10.5px;font-weight:700;border-radius:999px;padding:4px 9px}
+.hld-card-cta{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:#4f46e5}
+.hld-viewer{padding:12px}
+.hld-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.hld-back,.hld-open{display:inline-flex;align-items:center;gap:6px;border:1px solid #dce1e9;background:#fff;border-radius:8px;padding:6px 11px;font-size:11px;font-weight:700;color:#59667a;text-decoration:none;cursor:pointer;font-family:inherit}
+.hld-tabs{display:flex;gap:6px;flex:1;flex-wrap:wrap}
+.hld-tabs button{border:1px solid #dce1e9;background:#fff;border-radius:8px;padding:6px 11px;font-size:11px;font-weight:700;color:#59667a;cursor:pointer;font-family:inherit}
+.hld-tabs button.active{background:#172033;color:#fff;border-color:#172033}
+.hld-frame{width:100%;height:calc(100vh - 250px);min-height:540px;border:1px solid #dce1e9;border-radius:12px;background:#fff;display:block}
+@media(max-width:980px){.hld-grid{grid-template-columns:1fr}}
+.theme-dark .hld-hero{background-color:#0d1728}
+.theme-dark .hld-hero::before{background:linear-gradient(90deg,#0d1728e6 30%,#0d17288a 58%,#0d172840 100%)}
+.theme-dark .hld-card{background:#152238;border-color:#24344d}
+.theme-dark .hld-card:hover{border-color:#33476a;box-shadow:0 6px 18px #00000040}
+.theme-dark .hld-card h3{color:#e2e8f0}
+.theme-dark .hld-card p{color:#a8b7cc}
+.theme-dark .hld-card small{color:#7d90ab}
+.theme-dark .hld-card-chips span{background:#1b2a41;border-color:#2b3f5e;color:#a9c1e8}
+.theme-dark .hld-card-icon{background:#243a5c;color:#cfe0ff}
+.theme-dark .hld-card-cta{color:#a5b4ff}
+.theme-dark .hld-back,.theme-dark .hld-open,.theme-dark .hld-tabs button{background:#152238;border-color:#24344d;color:#a8b7cc}
+.theme-dark .hld-tabs button.active{background:#2c4b6b;border-color:#2c4b6b;color:#fff}
+.theme-dark .hld-frame{border-color:#24344d;background:#0d1728}
