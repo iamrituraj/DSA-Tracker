@@ -1,0 +1,347 @@
+{
+  "a2z-150": {
+    "description": "Given the head of a singly linked list and an integer value, insert a new node with that value at the head (front) of the list and return the new head. The insertion must run in O(1) time by relinking one pointer.",
+    "examples": [
+      { "input": "list = 1 -> 2 -> 3, value = 0", "output": "0 -> 1 -> 2 -> 3" }
+    ]
+  },
+  "a2z-151": {
+    "description": "Given the head of a singly linked list, delete the head node and return the new head of the remaining list. Handle the empty list by returning null; the deletion itself is a single pointer relink in O(1).",
+    "examples": [
+      { "input": "list = 2 -> 3 -> 4", "output": "3 -> 4" },
+      { "input": "list = 9", "output": "null" }
+    ]
+  },
+  "a2z-152": {
+    "description": "Given the head of a singly linked list, return the number of nodes it contains. Walk from head to null counting one node per step, in O(n) time and O(1) space.",
+    "examples": [
+      { "input": "list = 1 -> 2 -> 3 -> 4", "output": "4" },
+      { "input": "list = (empty)", "output": "0" }
+    ]
+  },
+  "a2z-153": {
+    "description": "Given the head of a singly linked list and a target value, determine whether the value exists in the list (returning its 1-based position or true/false as the variant asks). Traverse node by node, stopping early on a match.",
+    "examples": [
+      { "input": "list = 1 -> 2 -> 3, target = 2", "output": "true (position 2)" },
+      { "input": "list = 1 -> 2 -> 3, target = 5", "output": "false" }
+    ]
+  },
+  "a2z-155": {
+    "description": "Given the head of a doubly linked list and a value, insert a new node with that value before the current head, wiring both next and prev pointers correctly, and return the new head. The insertion is O(1).",
+    "examples": [
+      { "input": "list = 2 <-> 3 <-> 4, value = 1", "output": "1 <-> 2 <-> 3 <-> 4" }
+    ]
+  },
+  "a2z-156": {
+    "description": "Given the head of a doubly linked list, delete the head node and return the new head, taking care to null the prev pointer of the surviving first node. Handle the empty and single-node cases explicitly.",
+    "examples": [
+      { "input": "list = 2 <-> 3 <-> 4", "output": "3 <-> 4" },
+      { "input": "list = 9", "output": "null" }
+    ]
+  },
+  "a2z-157": {
+    "description": "Given the head of a doubly linked list, reverse it in place so the last node becomes the head. Swap the next and prev pointers of every node during one traversal; both the iterative and recursive forms run in O(n) with O(1) extra space (iterative).",
+    "examples": [
+      { "input": "list = 1 <-> 2 <-> 3 <-> 4", "output": "4 <-> 3 <-> 2 <-> 1" }
+    ]
+  },
+  "a2z-158": {
+    "description": "Given the head of a singly linked list, return its middle node. Use the tortoise-and-hare technique: slow moves one step, fast moves two, and slow is at the middle when fast reaches the end. For an even number of nodes, the second middle is returned.",
+    "examples": [
+      { "input": "list = 1 -> 2 -> 3 -> 4 -> 5", "output": "3" },
+      { "input": "list = 1 -> 2 -> 3 -> 4 -> 5 -> 6", "output": "4" }
+    ]
+  },
+  "a2z-159": {
+    "description": "Given the head of a singly linked list, reverse it iteratively in place using three pointers (prev, curr, next) so that the last node becomes the head. The reversal runs in O(n) time with O(1) extra space.",
+    "examples": [
+      { "input": "list = 1 -> 2 -> 3 -> 4", "output": "4 -> 3 -> 2 -> 1" }
+    ]
+  },
+  "a2z-160": {
+    "description": "Given the head of a singly linked list, reverse it using recursion: reverse the sublist after the current node, then attach the current node to its end. Each call handles one pointer relink, giving O(n) time and O(n) recursion stack.",
+    "examples": [
+      { "input": "list = 1 -> 2 -> 3 -> 4 -> 5", "output": "5 -> 4 -> 3 -> 2 -> 1" }
+    ]
+  },
+  "a2z-161": {
+    "description": "Given the head of a linked list that may contain a cycle (a node's next pointer pointing back to an earlier node), detect whether a cycle exists. Floyd's tortoise-and-hare algorithm moves a slow and a fast pointer and detects a cycle if they meet, in O(n) time and O(1) space.",
+    "examples": [
+      { "input": "list = 1 -> 2 -> 3 -> 4 -> 5, node 5 links back to node 3", "output": "true (cycle detected)" },
+      { "input": "list = 1 -> 2 -> 3 -> null", "output": "false" }
+    ]
+  },
+  "a2z-162": {
+    "description": "Given a linked list with a cycle, return the node where the cycle begins. After Floyd's slow and fast pointers meet inside the cycle, reset one pointer to the head and advance both one step at a time; they meet exactly at the cycle's entry.",
+    "examples": [
+      { "input": "list = 1 -> 2 -> 3 -> 4 -> 5, cycle entry = node 3", "output": "node 3" }
+    ]
+  },
+  "a2z-163": {
+    "description": "Given a linked list with a cycle, return the number of nodes in the cycle. Find any node inside the loop with Floyd's algorithm, then walk once around until you return to it, counting the steps.",
+    "examples": [
+      { "input": "list = 1 -> 2 -> 3 -> 4 -> 5, node 5 links back to node 3", "output": "3", "explanation": "The cycle is 3 -> 4 -> 5 -> 3." }
+    ]
+  },
+  "a2z-164": {
+    "description": "Given the head of a singly linked list of integers, check whether the sequence of values reads the same forwards and backwards. Reverse the second half in place after finding the middle, or copy values to an array, achieving O(n) time.",
+    "examples": [
+      { "input": "list = 1 -> 2 -> 3 -> 2 -> 1", "output": "true" },
+      { "input": "list = 1 -> 2 -> 2 -> 1", "output": "true" },
+      { "input": "list = 1 -> 2 -> 3", "output": "false" }
+    ]
+  },
+  "a2z-165": {
+    "description": "Given the head of a linked list, rearrange it so all odd-valued nodes come before even-valued nodes while preserving the relative order within each group. Stitch separate odd and even chains and join them, in one O(n) pass.",
+    "examples": [
+      { "input": "list = 1 -> 2 -> 3 -> 4 -> 5", "output": "1 -> 3 -> 5 -> 2 -> 4" }
+    ]
+  },
+  "a2z-166": {
+    "description": "Given the head of a linked list and an integer n, remove the n-th node from the end in one pass. Use a fast pointer that starts n steps ahead; when it reaches the end, the slow pointer sits just before the node to delete.",
+    "examples": [
+      { "input": "list = 1 -> 2 -> 3 -> 4 -> 5, n = 2", "output": "1 -> 2 -> 3 -> 5" },
+      { "input": "list = 1 -> 2, n = 2", "output": "2" }
+    ]
+  },
+  "a2z-167": {
+    "description": "Given the head of a linked list, delete its middle node: the second of the two middles for an even length, and nothing for a list of one node. A slow pointer that lags one step behind the classic tortoise lands right before the middle.",
+    "examples": [
+      { "input": "list = 1 -> 2 -> 3 -> 4 -> 5", "output": "1 -> 2 -> 4 -> 5" },
+      { "input": "list = 1 -> 2 -> 3 -> 4", "output": "1 -> 3 -> 4" }
+    ]
+  },
+  "a2z-168": {
+    "description": "Given the head of a linked list, sort it in O(n log n) time and O(1) space where possible. Merge sort is the natural fit: find the middle with tortoise-and-hare, recursively sort both halves, and merge the sorted runs.",
+    "examples": [
+      { "input": "list = 4 -> 2 -> 1 -> 3", "output": "1 -> 2 -> 3 -> 4" },
+      { "input": "list = 5 -> 4 -> 3 -> 2 -> 1", "output": "1 -> 2 -> 3 -> 4 -> 5" }
+    ]
+  },
+  "a2z-169": {
+    "description": "Given the head of a linked list containing only 0s, 1s and 2s, sort it in one pass without changing node values if possible. Maintain three dummy chains for 0s, 1s and 2s, then link them together.",
+    "examples": [
+      { "input": "list = 1 -> 0 -> 2 -> 1 -> 0 -> 2 -> 1", "output": "0 -> 0 -> 1 -> 1 -> 1 -> 2 -> 2" }
+    ]
+  },
+  "a2z-170": {
+    "description": "Given the heads of two linked lists that merge into a common tail (a Y shape), return the node where they intersect; the tails after that node are identical. Align both pointers to the same distance from the end by swapping lists at the null, in O(n) and O(1) space.",
+    "examples": [
+      { "input": "listA = 4 -> 1 -> 8 -> 4 -> 5, listB = 5 -> 6 -> 1 -> 8 -> 4 -> 5", "output": "node 8", "explanation": "Both lists share the tail starting at 8." }
+    ]
+  },
+  "a2z-171": {
+    "description": "A number is stored in a linked list, one digit per node, most significant digit first. Add one to the number and return the resulting list, correctly handling carries that ripple left (for example 199 becomes 200) and new leading digits (999 becomes 1000).",
+    "examples": [
+      { "input": "list = 1 -> 9 -> 9", "output": "2 -> 0 -> 0" },
+      { "input": "list = 9 -> 9", "output": "1 -> 0 -> 0" }
+    ]
+  },
+  "a2z-172": {
+    "description": "Two non-negative numbers are stored in linked lists with digits in reverse order (least significant first). Add them and return the sum as a similarly stored list, carrying as you walk both lists in one O(max(m, n)) pass.",
+    "examples": [
+      { "input": "l1 = 2 -> 4 -> 3, l2 = 5 -> 6 -> 4", "output": "7 -> 0 -> 8", "explanation": "342 + 465 = 807, stored as 7 -> 0 -> 8." }
+    ]
+  },
+  "a2z-173": {
+    "description": "Given the head of a doubly linked list and a key, delete every node whose value equals the key, correctly rewiring prev and next pointers (including the head) for each deletion. One traversal suffices; return the resulting head.",
+    "examples": [
+      { "input": "list = 10 <-> 4 <-> 10 <-> 3 <-> 10, key = 10", "output": "4 <-> 3" }
+    ]
+  },
+  "a2z-174": {
+    "description": "Given a sorted doubly linked list and a target sum, find all pairs of nodes whose values add up to the target. Start a pointer at each end and move inward based on the comparison, yielding O(n) time after O(n) traversal to reach the tail.",
+    "examples": [
+      { "input": "list = 1 <-> 2 <-> 4 <-> 5 <-> 6 <-> 8 <-> 9, target = 7", "output": "(1, 6), (2, 5)", "explanation": "Both pairs sum to 7 and no others do." }
+    ]
+  },
+  "a2z-175": {
+    "description": "Given a sorted doubly linked list, remove duplicate values so each value appears exactly once, keeping the first occurrence of each. Rewire prev and next pointers around every removed node and return the head.",
+    "examples": [
+      { "input": "list = 1 <-> 1 <-> 2 <-> 3 <-> 3", "output": "1 <-> 2 <-> 3" }
+    ]
+  },
+  "a2z-176": {
+    "description": "Given the head of a linked list and an integer k, reverse the nodes of the list k at a time and return the modified list; a final incomplete group of fewer than k nodes stays as is. Recursively reverse each group while preserving the links between groups.",
+    "examples": [
+      { "input": "list = 1 -> 2 -> 3 -> 4 -> 5, k = 3", "output": "3 -> 2 -> 1 -> 4 -> 5", "explanation": "The first three nodes reverse; the leftover pair of two nodes is untouched." },
+      { "input": "list = 1 -> 2 -> 3 -> 4 -> 5, k = 2", "output": "2 -> 1 -> 4 -> 3 -> 5" }
+    ]
+  },
+  "a2z-177": {
+    "description": "Given the head of a linked list and an integer k, rotate the list to the right by k places. Make the list circular, compute the effective rotation modulo the length, break the circle at the correct node and return the new head, in O(n).",
+    "examples": [
+      { "input": "list = 1 -> 2 -> 3 -> 4 -> 5, k = 2", "output": "4 -> 5 -> 1 -> 2 -> 3" }
+    ]
+  },
+  "a2z-178": {
+    "description": "Given a linked list where each node has a next pointer to the main row and a bottom pointer to a vertical chain (each vertical chain is sorted, as is the main row), flatten the structure into one singly linked list sorted by value, connected through bottom pointers.",
+    "examples": [
+      { "input": "5 -> 10 -> 19 -> 28 with bottoms 5->7->8->30, 10->20, 19->22->50, 28->35->40->45", "output": "5 -> 7 -> 8 -> 10 -> 19 -> 20 -> 22 -> 28 -> 30 -> 35 -> 40 -> 45 -> 50 (via bottom)" }
+    ]
+  },
+  "a2z-179": {
+    "description": "Given the head of a linked list where each node has a next pointer and a random pointer to any node or null, build a deep copy of the list with identical next and random structure. The O(1)-space trick interleaves copied nodes into the original list before extracting them.",
+    "examples": [
+      { "input": "list = [[7, null], [13, 0], [11, 4], [10, 2], [1, 0]] as (value, random index)", "output": "a brand new list of five nodes with the same values and random targets" }
+    ]
+  },
+  "a2z-180": {
+    "description": "Implement string-to-integer conversion recursively: skip leading spaces and an optional sign, then convert digits one by one through recursive calls. Follow atoi rules including clamping to the 32-bit signed range and stopping at the first non-digit.",
+    "examples": [
+      { "input": "s = ' -42'", "output": "-42" },
+      { "input": "s = '4193 with words'", "output": "4193" }
+    ]
+  },
+  "a2z-181": {
+    "description": "Implement pow(x, n): raise x to the integer power n in O(log n) using fast exponentiation - halve the exponent each step and square the half-result, negating once for negative exponents. Handle overflow by using a 64-bit exponent.",
+    "examples": [
+      { "input": "x = 2.0, n = 10", "output": "1024.0" },
+      { "input": "x = 2.0, n = -2", "output": "0.25" }
+    ]
+  },
+  "a2z-182": {
+    "description": "A good number is a digit string of length n where digits at even indices (0-based) are even (0, 2, 4, 6, 8) and digits at odd indices are prime (2, 3, 5, 7). Count good numbers of length n, modulo 10^9 + 7, using fast exponentiation of 5 and 4.",
+    "examples": [
+      { "input": "n = 1", "output": "5", "explanation": "The single digit must be even: 0, 2, 4, 6 or 8." },
+      { "input": "n = 4", "output": "400", "explanation": "5 * 4 * 5 * 4 = 400 combinations." }
+    ]
+  },
+  "a2z-183": {
+    "description": "Given a stack of integers, sort it (smallest on top, or largest on top as specified) using only recursion - no loops or extra data structures besides the call stack. The pattern is: pop the top, recursively sort the rest, then insert the popped value back in sorted position.",
+    "examples": [
+      { "input": "stack (top first) = 3, -7, 9, -2, 5", "output": "stack (top first) = -7, -2, 3, 5, 9" }
+    ]
+  },
+  "a2z-184": {
+    "description": "Given a stack, reverse its elements using only recursion (the call stack is the only auxiliary storage). Pop the top, recursively reverse the remainder, then push the popped element to the bottom of the reversed stack.",
+    "examples": [
+      { "input": "stack (top first) = 1, 2, 3, 4", "output": "stack (top first) = 4, 3, 2, 1" }
+    ]
+  },
+  "a2z-185": {
+    "description": "Generate all binary strings of length n that contain no two consecutive 1s. Recurse on the next character, remembering that a '1' may only follow a '0'; print or collect every complete string.",
+    "examples": [
+      { "input": "n = 2", "output": "00, 01, 10", "explanation": "11 is excluded because it has consecutive ones." },
+      { "input": "n = 3", "output": "000, 001, 010, 100, 101" }
+    ]
+  },
+  "a2z-186": {
+    "description": "Given n pairs of parentheses, generate all strings of well-formed parentheses of length 2n. Recurse with counts of open and close brackets used, only adding '(' when opens remain and ')' when it would not unbalance the prefix.",
+    "examples": [
+      { "input": "n = 3", "output": "((())), (()()), (())(), ()(()), ()()()", "explanation": "All five distinct valid combinations." },
+      { "input": "n = 1", "output": "()" }
+    ]
+  },
+  "a2z-187": {
+    "description": "Given an array of distinct integers, return the power set: every possible subset including the empty set and the full set (2^n subsets). Either decide include-or-skip for each element recursively, or index subsets by bitmask.",
+    "examples": [
+      { "input": "nums = [1, 2, 3]", "output": "[], [1], [2], [3], [1,2], [1,3], [2,3], [1,2,3]" }
+    ]
+  },
+  "a2z-189": {
+    "description": "Given an array of integers and a target k, count all subsequences (elements in original order, not necessarily contiguous) whose elements sum to exactly k. Recurse with pick/not-pick choices, optionally pruning when all values are positive.",
+    "examples": [
+      { "input": "arr = [1, 2, 1], k = 2", "output": "2", "explanation": "The subsequences [2] and [1, 1] sum to 2." }
+    ]
+  },
+  "a2z-190": {
+    "description": "Given an array of non-negative integers and a target k, determine whether any subsequence sums to exactly k. Recurse with pick/not-pick and return true as soon as a matching branch is found; the empty subsequence counts only for k = 0.",
+    "examples": [
+      { "input": "arr = [1, 2, 3], k = 5", "output": "true", "explanation": "The subsequence [2, 3] sums to 5." },
+      { "input": "arr = [1, 2, 3], k = 11", "output": "false" }
+    ]
+  },
+  "a2z-191": {
+    "description": "Given an array of distinct candidates and a target, return all unique combinations summing to the target where each candidate may be reused any number of times. Recurse on the same index after picking to allow reuse; combinations are printed in non-decreasing order.",
+    "examples": [
+      { "input": "candidates = [2, 3, 6, 7], target = 7", "output": "[2, 2, 3], [7]" }
+    ]
+  },
+  "a2z-192": {
+    "description": "Given an array of candidates (may contain duplicates) and a target, return all unique combinations summing to the target where each candidate is used at most once. Sort first, recurse on the next index, and skip duplicate values at the same recursion depth.",
+    "examples": [
+      { "input": "candidates = [10, 1, 2, 7, 6, 1, 5], target = 8", "output": "[1, 1, 6], [1, 2, 5], [1, 7], [2, 6]" }
+    ]
+  },
+  "a2z-193": {
+    "description": "Given an array of distinct integers, return all possible subsets (the power set). Build them recursively by deciding for each element whether to include it, yielding 2^n subsets that may be in any order.",
+    "examples": [
+      { "input": "nums = [1, 2, 3]", "output": "[], [1], [2], [1,2], [3], [1,3], [2,3], [1,2,3]" }
+    ]
+  },
+  "a2z-194": {
+    "description": "Given an integer array that may contain duplicates, return all unique subsets (the power set without repeated subsets). Sort the array and skip equal elements at the same recursion level so no subset is generated twice.",
+    "examples": [
+      { "input": "nums = [1, 2, 2]", "output": "[], [1], [1,2], [1,2,2], [2], [2,2]" }
+    ]
+  },
+  "a2z-195": {
+    "description": "Find all valid combinations of k distinct digits from 1 to 9 that sum to n, each digit used at most once. Recurse over the digits 1..9, tracking how many slots remain and how much sum is left.",
+    "examples": [
+      { "input": "k = 3, n = 7", "output": "[1, 2, 4]" },
+      { "input": "k = 3, n = 9", "output": "[1, 2, 6], [1, 3, 5], [2, 3, 4]" }
+    ]
+  },
+  "a2z-196": {
+    "description": "Given a string of digits (2-9), return all possible letter combinations the number could represent on a phone keypad (2 = abc, 3 = def, ...). Explore every mapping of each digit in order; the result has product-of-mapping-sizes entries.",
+    "examples": [
+      { "input": "digits = '23'", "output": "ad, ae, af, bd, be, bf, cd, ce, cf" },
+      { "input": "digits = '2'", "output": "a, b, c" }
+    ]
+  },
+  "a2z-197": {
+    "description": "Given a string s, partition it into substrings such that every piece is a palindrome; return all possible partitions. Recurse on every prefix that is a palindrome and collect complete partitionings at the end of the string.",
+    "examples": [
+      { "input": "s = 'aab'", "output": "[a, a, b], [aa, b]" },
+      { "input": "s = 'a'", "output": "[a]" }
+    ]
+  },
+  "a2z-198": {
+    "description": "Given an m x n grid of letters and a word, determine whether the word can be traced as a path of adjacent cells (up, down, left, right), using each cell at most once. Backtrack from every cell that starts the word, marking visited cells during the recursion.",
+    "examples": [
+      { "input": "board = [[A,B,C,E],[S,F,C,S],[A,D,E,E]], word = 'ABCCED'", "output": "true" },
+      { "input": "board = [[A,B,C,E],[S,F,C,S],[A,D,E,E]], word = 'ABCB'", "output": "false", "explanation": "The B can only be reused, which is not allowed." }
+    ]
+  },
+  "a2z-199": {
+    "description": "Place n queens on an n x n chessboard so no two queens attack each other (no shared row, column or diagonal), and return all distinct boards. Backtrack row by row, using sets or arrays to check column and diagonal conflicts in O(1).",
+    "examples": [
+      { "input": "n = 4", "output": "2 solutions", "explanation": "One board places queens in row 1, 3, 0, 2 across rows 0-3 ('.Q..', '...Q', 'Q...', '..Q.')." },
+      { "input": "n = 1", "output": "1 solution" }
+    ]
+  },
+  "a2z-200": {
+    "description": "Given an n x n binary maze where 1 is an open cell and 0 is blocked, list all paths from the top-left cell to the bottom-right cell moving only right or down (as the classic variant states), returning them in lexicographic order of direction letters (D, L, R, U).",
+    "examples": [
+      { "input": "maze = [[1,0,0,0],[1,1,0,1],[1,1,0,0],[0,1,1,1]]", "output": "DDRDRR, DRDDRR", "explanation": "Both paths avoid the blocked cells and end at (3,3)." }
+    ]
+  },
+  "a2z-201": {
+    "description": "Given a string s and a dictionary of words, determine whether s can be segmented into a space-separated sequence of one or more dictionary words. Try every dictionary word that matches a prefix and recurse on the remainder (memoize for efficiency).",
+    "examples": [
+      { "input": "s = 'leetcode', dict = ['leet', 'code']", "output": "true" },
+      { "input": "s = 'applepenapple', dict = ['apple', 'pen']", "output": "true" }
+    ]
+  },
+  "a2z-202": {
+    "description": "Given an undirected graph and m colors, determine whether the vertices can be colored so no two adjacent vertices share a color. Backtrack vertex by vertex, trying each color that conflicts with none of its already-colored neighbours.",
+    "examples": [
+      { "input": "graph edges = (0-1), (1-2), (2-3), (3-0), (0-2), m = 3", "output": "1 (colorable)" },
+      { "input": "graph edges = (0-1), (1-2), (2-3), (3-0), (0-2), m = 2", "output": "0 (not colorable)" }
+    ]
+  },
+  "a2z-203": {
+    "description": "Given a 9 x 9 Sudoku board partially filled with digits 1-9 (empty cells marked '.'), fill every cell so each row, column and 3 x 3 box contains all nine digits. Backtrack over empty cells, trying digits that violate no constraint.",
+    "examples": [
+      { "input": "board with 51 clues, top-left 3x3 = [[5,3,.],[6,.,.],[.,9,8]]", "output": "the completed unique board, top-left 3x3 = [[5,3,4],[6,7,2],[1,9,8]]" }
+    ]
+  },
+  "a2z-204": {
+    "description": "Given a string of digits num and an integer target, return all expressions formed by inserting the binary operators '+', '-' or '*' between digits that evaluate to the target. Backtrack over operator choices and operand boundaries, tracking the running value and the last term for multiplication precedence.",
+    "examples": [
+      { "input": "num = '123', target = 6", "output": "'1+2+3', '1*2*3'" },
+      { "input": "num = '232', target = 8", "output": "'2*3+2', '2+3*2'" }
+    ]
+  }
+}

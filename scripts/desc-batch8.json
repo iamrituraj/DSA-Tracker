@@ -1,0 +1,381 @@
+{
+  "a2z-405": {
+    "description": "You are climbing a staircase with n steps and can climb either 1 or 2 steps at a time; count the number of distinct ways to reach the top. The recurrence ways(i) = ways(i-1) + ways(i-2) makes this a Fibonacci-style DP in O(n) with O(1) space.",
+    "examples": [
+      { "input": "n = 3", "output": "3", "explanation": "The ways are 1+1+1, 1+2 and 2+1." }
+    ]
+  },
+  "a2z-406": {
+    "description": "A frog starts on stone 0 of a row of stones and may jump to the next stone or skip one stone; each jump costs the absolute difference of the stone heights. Find the minimum total energy to reach the last stone. DP over positions with the two-jump recurrence, in O(n) time.",
+    "examples": [
+      { "input": "heights = [30, 10, 60, 10, 60, 50]", "output": "40", "explanation": "Jump 30 -> 60 (cost 30), 60 -> 60 (cost 0), then 60 -> 50 (cost 10)." }
+    ]
+  },
+  "a2z-407": {
+    "description": "The frog may now jump anywhere from 1 to k stones ahead, paying the absolute height difference for each jump; find the minimum energy to reach the last stone. The DP checks the last k predecessors of each position, giving O(n*k).",
+    "examples": [
+      { "input": "heights = [30, 10, 60, 10, 60, 50], k = 2", "output": "40" }
+    ]
+  },
+  "a2z-408": {
+    "description": "Given an array of positive integers, find the maximum sum of elements such that no two chosen elements are adjacent in the array. The DP keeps the best sum ending at each index including or excluding it, in O(n) time and O(1) space.",
+    "examples": [
+      { "input": "arr = [2, 1, 4, 9]", "output": "11", "explanation": "Pick 2 and 9 for a total of 11." }
+    ]
+  },
+  "a2z-409": {
+    "description": "Houses in a circle each hold money, but robbing two adjacent houses triggers an alarm; maximize the loot where the first and last houses are also adjacent. Solve two linear subproblems - houses 0..n-2 and 1..n-1 - with the non-adjacent DP and take the better result.",
+    "examples": [
+      { "input": "nums = [2, 3, 2]", "output": "3", "explanation": "Robbing house 1 alone is best because 0 and 2 are adjacent in the circle." },
+      { "input": "nums = [1, 2, 3, 1]", "output": "4" }
+    ]
+  },
+  "a2z-410": {
+    "description": "A ninja trains for n days choosing one of three tasks each day, gaining the task's merit points, but never the same task on two consecutive days. Maximize total merit with DP carrying (day, lastTask), in O(n*3*3).",
+    "examples": [
+      { "input": "points = [[1, 2, 5], [3, 1, 1], [3, 3, 3]]", "output": "11", "explanation": "Take task 2 on day 0 (5), task 0 on day 1 (3) and any task worth 3 on day 2." }
+    ]
+  },
+  "a2z-411": {
+    "description": "A robot starts at the top-left of an m x n grid and moves only right or down; count the number of unique paths to the bottom-right cell. Paths(i, j) = paths(i-1, j) + paths(i, j-1), computed by DP in O(m*n) or combinatorially as C(m+n-2, m-1).",
+    "examples": [
+      { "input": "m = 3, n = 7", "output": "28" },
+      { "input": "m = 2, n = 2", "output": "2" }
+    ]
+  },
+  "a2z-412": {
+    "description": "Count unique top-left to bottom-right paths in a grid where cells marked 1 are obstacles the robot cannot enter; movement is still only right or down. The same DP passes the value 0 through obstacle cells, with mod arithmetic if required.",
+    "examples": [
+      { "input": "grid = [[0, 0, 0], [0, 1, 0], [0, 0, 0]]", "output": "2", "explanation": "Every path must skirt the central obstacle, leaving exactly two routes." }
+    ]
+  },
+  "a2z-413": {
+    "description": "Given an n x n matrix of integers, start anywhere in the top row and move to the row below choosing the same column or an adjacent one; find the minimum path sum to the bottom row. DP left-to-right with min over the up-to-three predecessors, in O(n^2).",
+    "examples": [
+      { "input": "matrix = [[2, 1, 3], [6, 5, 4], [7, 8, 9]]", "output": "13", "explanation": "The path 1 -> 5 -> 7 sums to 13." }
+    ]
+  },
+  "a2z-414": {
+    "description": "Given a triangle of numbers, find the minimum path sum from the apex to the base, moving from each cell to one of the two cells directly below it. Bottom-up DP over rows - triangle[i][j] += min(triangle[i+1][j], triangle[i+1][j+1]) - runs in O(n^2) and O(1) extra space.",
+    "examples": [
+      { "input": "triangle = [[2], [3, 4], [6, 5, 7], [4, 1, 8, 3]]", "output": "11", "explanation": "The path 2 -> 3 -> 5 -> 1 sums to 11." }
+    ]
+  },
+  "a2z-415": {
+    "description": "Two friends start at the top-left and top-right corners of an m x n grid and move down one row each step, each drifting at most one column sideways; both collect their cell's points, sharing a cell's points only once. Maximize the combined points with 3D DP over (row, colA, colB), in O(m*n^2).",
+    "examples": [
+      { "input": "grid = [[3, 1, 1], [2, 5, 1], [1, 5, 5], [2, 1, 1]]", "output": "24", "explanation": "The two walkers together sweep up the central 5s on the way down." }
+    ]
+  },
+  "a2z-416": {
+    "description": "Given an array of non-negative integers and a target sum, determine whether some subset of the elements adds up exactly to the target. Subset-sum DP over (index, remaining target) with take/skip choices, in O(n*target) time.",
+    "examples": [
+      { "input": "arr = [1, 2, 3, 4], target = 4", "output": "true", "explanation": "The element 4 itself, or 1 + 3, hits the target." },
+      { "input": "arr = [1, 2, 3, 4], target = 11", "output": "false" }
+    ]
+  },
+  "a2z-417": {
+    "description": "Given a positive integer array, decide whether it can be partitioned into two subsets with equal sums. The total must be even, and the question reduces to subset-sum with target = total/2, solvable with a bitset or boolean DP in O(n*total/2).",
+    "examples": [
+      { "input": "nums = [1, 5, 11, 5]", "output": "true", "explanation": "The subsets [1, 5, 5] and [11] both sum to 11." },
+      { "input": "nums = [1, 2, 5]", "output": "false" }
+    ]
+  },
+  "a2z-418": {
+    "description": "Given a positive integer array, split it into two subsets S1 and S2 minimizing |S1 - S2| in sums. Run subset-sum DP up to total/2 recording which sums are reachable; the best reachable sum closest to total/2 gives the minimum difference.",
+    "examples": [
+      { "input": "arr = [1, 2, 3, 4]", "output": "0", "explanation": "[1, 4] and [2, 3] both sum to 5." },
+      { "input": "arr = [8, 6, 5]", "output": "3", "explanation": "The best split is {8} versus {6, 5} with sums 8 and 11." }
+    ]
+  },
+  "a2z-419": {
+    "description": "Given an array of non-negative integers and a target k, count the subsets whose elements sum exactly to k. DP over (index, remaining sum) adds the take and skip branches instead of OR-ing them, all modulo 10^9 + 7 if required.",
+    "examples": [
+      { "input": "arr = [1, 2, 2, 3], k = 3", "output": "3", "explanation": "The subsets are [1, 2], [1, 2] (the other 2) and [3]." }
+    ]
+  },
+  "a2z-420": {
+    "description": "Given an array and a difference d, count the partitions into two subsets S1 (larger) and S2 with S1 - S2 = d. Since S1 = (total + d) / 2 is fixed, the problem becomes counting subsets with that sum via DP (return 0 when the expression is not a valid integer).",
+    "examples": [
+      { "input": "arr = [1, 2, 3, 4], d = 2", "output": "2", "explanation": "Subsets summing to 6 are [2, 4] and [1, 2, 3], each pairing with a complement subset." }
+    ]
+  },
+  "a2z-421": {
+    "description": "Children each have a greed factor and cookies each have a size; a child is content when a cookie is at least their greed, and each child gets at most one cookie. Maximize content children by sorting both arrays and greedily matching the smallest sufficient cookie to each child, in O(n log n + m log m).",
+    "examples": [
+      { "input": "g = [1, 2, 3], s = [1, 1]", "output": "1" },
+      { "input": "g = [1, 2], s = [1, 2, 3]", "output": "2" }
+    ]
+  },
+  "a2z-422": {
+    "description": "Given coin denominations (infinite supply of each) and a target amount, find the minimum number of coins that make up the amount, or -1 when impossible. Unbounded-knapsack DP over amounts - dp[a] = 1 + min(dp[a - coin]) - runs in O(n*amount).",
+    "examples": [
+      { "input": "coins = [1, 2, 3], amount = 7", "output": "3", "explanation": "3 + 2 + 2 = 7 uses three coins." },
+      { "input": "coins = [2], amount = 3", "output": "-1" }
+    ]
+  },
+  "a2z-423": {
+    "description": "Given an array of numbers, assign '+' or '-' before each so the expression sums to target S; count the number of ways. The transformation S1 - S2 = S with S1 + S2 = total fixes S1, reducing the count to a subset-sum count DP over (total + S) / 2.",
+    "examples": [
+      { "input": "nums = [1, 1, 1, 1, 1], target = 3", "output": "5", "explanation": "Exactly one of the five 1s must be negative, giving five ways." }
+    ]
+  },
+  "a2z-424": {
+    "description": "Given coin denominations (infinite supply) and an amount, count the distinct combinations (order does not matter) that form the amount. Iterate coins in the outer loop of the 1D DP so each combination is counted once, in O(n*amount).",
+    "examples": [
+      { "input": "amount = 5, coins = [1, 2, 5]", "output": "4", "explanation": "The combinations are 5, 2+2+1, 2+1+1+1 and 1+1+1+1+1." }
+    ]
+  },
+  "a2z-425": {
+    "description": "Given item weights and values with unlimited copies of each item, fill a knapsack of capacity W maximizing total value. Unbounded-knapsack DP iterates amounts upward so an item can be reused: dp[w] = max(dp[w], val + dp[w - wt]).",
+    "examples": [
+      { "input": "weights = [2, 4, 6], values = [5, 11, 13], capacity = 10", "output": "27", "explanation": "Packing one 2-weight and two 4-weight items yields 5 + 11 + 11 = 27." }
+    ]
+  },
+  "a2z-426": {
+    "description": "Given the price of a rod piece of every integer length up to n, cut the rod into pieces (possibly none) to maximize total revenue. Unbounded-knapsack DP: dp[len] = max(price[i] + dp[len - i]) over all piece lengths i, in O(n^2).",
+    "examples": [
+      { "input": "prices (length 1..8) = [1, 5, 8, 9, 10, 17, 17, 20], n = 8", "output": "22", "explanation": "Cutting lengths 2 and 6 earns 5 + 17 = 22." }
+    ]
+  },
+  "a2z-427": {
+    "description": "Given two strings, find the length of their longest common subsequence (LCS): the longest sequence appearing in both with relative order preserved, not necessarily contiguously. DP over (i, j) - match extends the diagonal, otherwise take the best of skipping either character - in O(m*n).",
+    "examples": [
+      { "input": "s1 = 'adebc', s2 = 'dcadb'", "output": "3", "explanation": "'adb' is common to both strings." },
+      { "input": "s1 = 'abcde', s2 = 'ace'", "output": "3" }
+    ]
+  },
+  "a2z-428": {
+    "description": "Given two strings, print one of their longest common subsequences. Build the standard LCS DP table, then walk from (0, 0): matching characters emit and move diagonally, otherwise step toward the larger neighbour, reconstructing the string in O(m + n).",
+    "examples": [
+      { "input": "s1 = 'adebc', s2 = 'dcadb'", "output": "'adb'" }
+    ]
+  },
+  "a2z-429": {
+    "description": "Given two strings, find the length of the longest common substring: the longest run of identical consecutive characters appearing in both. DP over (i, j) resets to zero on mismatch and extends the diagonal run on match, tracking the global maximum, in O(m*n).",
+    "examples": [
+      { "input": "s1 = 'abcjklp', s2 = 'acjkp'", "output": "3", "explanation": "'cjk' is the longest common substring." }
+    ]
+  },
+  "a2z-430": {
+    "description": "Given a string, find the length of the longest palindromic subsequence (not necessarily contiguous). It equals the LCS of the string with its reverse, or can be computed directly with interval DP over (i, j), in O(n^2).",
+    "examples": [
+      { "input": "s = 'bbabcbcab'", "output": "7", "explanation": "'babcbab' is the longest palindromic subsequence." }
+    ]
+  },
+  "a2z-431": {
+    "description": "Given a string, find the minimum number of characters to insert anywhere so the result is a palindrome. The answer is n minus the longest palindromic subsequence length, since characters around an LPS skeleton need mirrors, in O(n^2).",
+    "examples": [
+      { "input": "s = 'abcaa'", "output": "2", "explanation": "Keeping the LPS 'aca' (or 'aba'), two insertions mirror the leftovers." }
+    ]
+  },
+  "a2z-432": {
+    "description": "Given strings s1 and s2, find the minimum number of insertions and deletions on s1 required to transform it into s2. With L = LCS length, the answer is (m - L) deletions plus (n - L) insertions, computed in O(m*n).",
+    "examples": [
+      { "input": "s1 = 'abcd', s2 = 'anc'", "output": "3 (2 deletions + 1 insertion)", "explanation": "Delete b and d, keep a and c, then insert n." }
+    ]
+  },
+  "a2z-433": {
+    "description": "Given two strings, build the shortest string that has both as subsequences (the shortest common supersequence). Its length is m + n - LCS; walk the LCS DP table emitting characters from both strings while following the common skeleton, in O(m*n).",
+    "examples": [
+      { "input": "str1 = 'abac', str2 = 'cab'", "output": "'cabac' (length 5)" }
+    ]
+  },
+  "a2z-434": {
+    "description": "Given strings s and t, count the distinct subsequences of s that equal t. DP over (i, j): dp[i][j] = dp[i-1][j] + (match ? dp[i-1][j-1] : 0), counting how many ways the suffix of s covers the suffix of t, in O(m*n).",
+    "examples": [
+      { "input": "s = 'babgbag', t = 'bag'", "output": "5", "explanation": "'bag' hides in 'babgbag' five different ways." }
+    ]
+  },
+  "a2z-435": {
+    "description": "Given two words, return the minimum number of operations (insert, delete or replace a character) to convert word1 into word2. Classic edit distance DP over (i, j): a match costs nothing, otherwise pay one plus the best of insert, delete or replace, in O(m*n).",
+    "examples": [
+      { "input": "word1 = 'horse', word2 = 'ros'", "output": "3", "explanation": "horse -> rorse (replace h) -> rose (remove r) -> ros (remove e)." },
+      { "input": "word1 = 'intention', word2 = 'execution'", "output": "5" }
+    ]
+  },
+  "a2z-436": {
+    "description": "Given a string s and pattern p where '?' matches any single character and '*' matches any sequence (including empty), decide whether the pattern matches the entire string. DP over (i, j) with a special branch for '*' consuming zero or more characters, in O(m*n).",
+    "examples": [
+      { "input": "s = 'aa', p = 'a'", "output": "false" },
+      { "input": "s = 'adceb', p = '*a*b'", "output": "true", "explanation": "The leading '*' absorbs 'ad' and the inner '*' absorbs 'ce'." }
+    ]
+  },
+  "a2z-437": {
+    "description": "Given daily stock prices, complete at most one buy followed by one sell and return the maximum profit (0 when prices only fall). Track the minimum price so far and the best difference achievable today, in one O(n) pass.",
+    "examples": [
+      { "input": "prices = [7, 1, 5, 3, 6, 4]", "output": "5", "explanation": "Buy at 1, sell at 6." }
+    ]
+  },
+  "a2z-438": {
+    "description": "Given daily stock prices, you may complete as many transactions as you like (buy before you sell, one holding at a time); maximize total profit. Every upward consecutive price difference can be captured, or run a two-state (hold / free) DP, in O(n).",
+    "examples": [
+      { "input": "prices = [7, 1, 5, 3, 6, 4]", "output": "7", "explanation": "Buy at 1 sell at 5 (+4), then buy at 3 sell at 6 (+3)." }
+    ]
+  },
+  "a2z-439": {
+    "description": "Given daily stock prices, complete at most two transactions (non-overlapping buy-sell pairs) and maximize total profit. DP tracks the best profit after first buy, first sell, second buy and second sell in one sweep, in O(n) time and O(1) space.",
+    "examples": [
+      { "input": "prices = [3, 3, 5, 0, 0, 3, 1, 4]", "output": "6", "explanation": "Buy at 0 sell at 3 (+3), then buy at 1 sell at 4 (+3)." }
+    ]
+  },
+  "a2z-440": {
+    "description": "Given daily stock prices and a limit k on transactions, maximize profit with at most k buy-sell pairs. DP over (day, transactions used, holding) states - or buy/sell profit arrays per transaction tier - in O(n*k).",
+    "examples": [
+      { "input": "k = 2, prices = [3, 2, 6, 5, 0, 3]", "output": "7", "explanation": "Buy at 2 sell at 6 (+4), then buy at 0 sell at 3 (+3)." }
+    ]
+  },
+  "a2z-441": {
+    "description": "Given daily stock prices, maximize profit with unlimited transactions but a mandatory one-day cooldown after each sell (no buy on the day right after selling). DP over three states - holding, just sold, free - transitioning in O(n).",
+    "examples": [
+      { "input": "prices = [1, 2, 3, 0, 2]", "output": "3", "explanation": "Buy at 1 sell at 2, cooldown, buy at 0 sell at 2." }
+    ]
+  },
+  "a2z-442": {
+    "description": "Given daily stock prices and a fixed transaction fee per completed sale, maximize profit with unlimited transactions. DP with hold/free states where each sell subtracts the fee, in O(n) time and O(1) space.",
+    "examples": [
+      { "input": "prices = [1, 3, 2, 8, 4, 9], fee = 2", "output": "8", "explanation": "Buy at 1 sell at 8 (net +5), buy at 4 sell at 9 (net +3)." }
+    ]
+  },
+  "a2z-443": {
+    "description": "Given an integer array, find the length of the longest strictly increasing subsequence (elements keep order but need not be adjacent). The O(n^2) DP keeps the best LIS ending at each index; patience sorting with binary search improves it to O(n log n).",
+    "examples": [
+      { "input": "nums = [10, 9, 2, 5, 3, 7, 101, 18]", "output": "4", "explanation": "The subsequence 2, 3, 7, 101 is longest." }
+    ]
+  },
+  "a2z-444": {
+    "description": "Given an integer array, print one longest strictly increasing subsequence. Store a predecessor index alongside each DP value while computing LIS lengths, then backtrack from the best index to recover the actual elements, in O(n^2).",
+    "examples": [
+      { "input": "arr = [5, 4, 11, 1, 16, 8]", "output": "5 -> 11 -> 16", "explanation": "This chain of length 3 is a longest increasing subsequence." }
+    ]
+  },
+  "a2z-445": {
+    "description": "Find the length of the longest strictly increasing subsequence in O(n log n) using the patience-sorting/tails-array method: binary-search each element's position in the tails array, replacing an existing tail or appending a new one.",
+    "examples": [
+      { "input": "nums = [10, 9, 2, 5, 3, 7, 101, 18]", "output": "4", "explanation": "The tails array grows to [2, 3, 7, 101] and never needs a fifth slot." }
+    ]
+  },
+  "a2z-446": {
+    "description": "Given a set of distinct positive integers, return the largest subset in which every pair (a, b) has a % b == 0 or b % a == 0. Sort the array, DP the longest divisible chain ending at each index with predecessor links, then backtrack to print the subset, in O(n^2).",
+    "examples": [
+      { "input": "nums = [1, 2, 3]", "output": "[1, 2] (or [1, 3])" },
+      { "input": "nums = [1, 2, 4, 8]", "output": "[1, 2, 4, 8]" }
+    ]
+  },
+  "a2z-447": {
+    "description": "A word a is a predecessor of word b when inserting exactly one letter into a produces b; a chain uses each word at most once. Given a list of words, find the length of the longest possible chain. Sort by length and DP with a hashmap from word to best chain length, in O(n*L^2).",
+    "examples": [
+      { "input": "words = ['a', 'b', 'ba', 'bca', 'bda', 'bdca']", "output": "4", "explanation": "The chain a -> ba -> bda -> bdca inserts one letter each time." }
+    ]
+  },
+  "a2z-448": {
+    "description": "A bitonic subsequence first strictly increases then strictly decreases (either part may be empty). Given an array, find the length of its longest bitonic subsequence: for each index add the best increasing-run ending there to the best decreasing-run starting there, minus one, in O(n^2).",
+    "examples": [
+      { "input": "arr = [1, 11, 2, 10, 4, 5, 2, 1]", "output": "6", "explanation": "The sequence 1, 2, 10, 4, 2, 1 rises then falls." }
+    ]
+  },
+  "a2z-449": {
+    "description": "Given an integer array, count the number of longest strictly increasing subsequences. DP stores (length, count) per index; when a chain of equal length is found, counts add up, and the final answer sums counts of maximal length, in O(n^2).",
+    "examples": [
+      { "input": "nums = [1, 3, 5, 4, 7]", "output": "2", "explanation": "Both 1, 3, 5, 7 and 1, 3, 4, 7 have length 4." }
+    ]
+  },
+  "a2z-450": {
+    "description": "Given the dimensions of n matrices (an array where arr[i-1] x arr[i] is matrix i), find the minimum number of scalar multiplications to multiply the whole chain. Partition DP: split the range at every k, multiply the two halves, and pay arr[i-1]*arr[k]*arr[j] for the merge, in O(n^3) with memoization.",
+    "examples": [
+      { "input": "dims = [40, 20, 30, 10, 30]", "output": "26000", "explanation": "Grouping as (A1(A2A3))A4 costs 6000 + 8000 + 12000 = 26000." }
+    ]
+  },
+  "a2z-451": {
+    "description": "Solve matrix chain multiplication bottom-up with tabulation instead of memoization. Fill the DP table for shorter ranges first so every split cost dp[i][k] + dp[k+1][j] + arr[i-1]*arr[k]*arr[j] is already available, in O(n^3) time and O(n^2) space.",
+    "examples": [
+      { "input": "dims = [40, 20, 30, 10, 30]", "output": "26000" }
+    ]
+  },
+  "a2z-452": {
+    "description": "A stick of length n must be cut at the given cut positions (in order chosen by you); each cut costs the current length of the piece being cut. Find the minimum total cost by partition DP over the sorted cut points (with 0 and n as sentinels), in O(m^3).",
+    "examples": [
+      { "input": "n = 7, cuts = [1, 3, 4, 5]", "output": "16", "explanation": "Cutting 4, 3, 5, 1 (in that chosen order) costs 7 + 4 + 3 + 2 = 16." }
+    ]
+  },
+  "a2z-453": {
+    "description": "Given balloons with numbers, bursting balloon i earns nums[left] * nums[i] * nums[right] using its current neighbours (1 outside the array); find the maximum coins from bursting all balloons. Interval DP decides the LAST balloon burst in each range, avoiding neighbour invalidation, in O(n^3).",
+    "examples": [
+      { "input": "nums = [3, 1, 5, 8]", "output": "167", "explanation": "Bursting 1, 5, 3, 8 in that order maximizes the coins." }
+    ]
+  },
+  "a2z-454": {
+    "description": "Given an expression string of digits and the operators +, -, *, return all possible results from evaluating it under every possible parenthesization. Recursively split at each operator, compute the result sets of both sides, and combine every pair, in exponential time bounded by Catalan numbers.",
+    "examples": [
+      { "input": "expression = '2-1-1'", "output": "[0, 2]", "explanation": "(2-1)-1 = 0 while 2-(1-1) = 2." },
+      { "input": "expression = '2*3-4*5'", "output": "[-34, -14, -10, -10, 10]" }
+    ]
+  },
+  "a2z-455": {
+    "description": "Given a string, split it into the fewest palindromic substrings and return that minimum number of cuts. Precompute a palindrome table with expand-around-center or interval DP, then run a min-cut DP over cut positions, in O(n^2).",
+    "examples": [
+      { "input": "s = 'aab'", "output": "1", "explanation": "One cut separates 'aa' from 'b'." },
+      { "input": "s = 'a'", "output": "0" }
+    ]
+  },
+  "a2z-456": {
+    "description": "Given an integer array and a length limit k, partition it into contiguous groups of length at most k; each group's value becomes its maximum element times the group length. Maximize the total array sum after this transformation with partition DP, in O(n*k).",
+    "examples": [
+      { "input": "arr = [1, 15, 7, 9, 2, 5, 10], k = 3", "output": "84", "explanation": "Groups [1,15,7], [9] and [2,5,10] score 15*3 + 9*1 + 10*3 = 45 + 9 + 30 = 84." }
+    ]
+  },
+  "a2z-457": {
+    "description": "Given a binary matrix of 0s and 1s, find the area of the largest rectangle containing only 1s. Process each row as a histogram base (heights reset at 0s) and run the largest-rectangle-in-histogram stack algorithm per row, in O(n*m).",
+    "examples": [
+      { "input": "matrix = [[1, 0, 1, 0, 0], [1, 0, 1, 1, 1], [1, 1, 1, 1, 1], [1, 0, 0, 1, 0]]", "output": "6", "explanation": "A 2 x 3 all-ones rectangle spans rows 1-2, columns 2-4." }
+    ]
+  },
+  "a2z-458": {
+    "description": "Given a matrix of 0s and 1s, count the square submatrices (of every size) whose entries are all 1s. DP over cells: dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) when the cell is 1, and the answer is the sum of all dp values, in O(n*m).",
+    "examples": [
+      { "input": "matrix = [[0, 1, 1, 1], [1, 1, 1, 1], [0, 1, 1, 1]]", "output": "15", "explanation": "There are ten 1x1, four 2x2 and one 3x3 all-ones squares." }
+    ]
+  },
+  "a2z-459": {
+    "description": "Implement a trie (prefix tree) with insert(word), search(word) and startsWith(prefix), each in O(L) time. Each node holds a child map (or 26-slot array) and an end-of-word flag; walk the tree character by character for every operation.",
+    "examples": [
+      { "input": "insert('apple'), search('apple'), search('app'), startsWith('app')", "output": "true, false, true", "explanation": "'apple' is stored exactly, while 'app' exists only as a prefix." }
+    ]
+  },
+  "a2z-460": {
+    "description": "Extend the trie with advanced operations: countWordsEqualTo(word), countWordsStartingWith(prefix) and erase(word). Store word-count and prefix-count fields on every node, incrementing along insert paths and decrementing along erase paths, all in O(L).",
+    "examples": [
+      { "input": "insert('samsung'), insert('samsung'), insert('samsung'), countWordsEqualTo('samsung'), erase('samsung'), countWordsStartingWith('sams')", "output": "3, then 2", "explanation": "Counts are tracked per node, so erasing one copy drops both totals." }
+    ]
+  },
+  "a2z-461": {
+    "description": "Given a list of words, return the longest word that can be built one character at a time such that every prefix of the word is also in the list; prefer the lexicographically smallest on ties. Insert everything into a trie and DFS only through nodes marked end-of-word, in O(total characters).",
+    "examples": [
+      { "input": "words = ['a', 'banana', 'app', 'appl', 'ap', 'apply', 'apple']", "output": "'apple'", "explanation": "'apple' has all prefixes 'a', 'ap', 'app', 'appl' present, beating 'apply' lexicographically." }
+    ]
+  },
+  "a2z-462": {
+    "description": "Given a string, count its distinct substrings (excluding the empty string unless the variant includes it). Insert every suffix into a trie; each new node created corresponds to exactly one distinct substring, giving O(n^2) time and space (or use a suffix automaton for O(n)).",
+    "examples": [
+      { "input": "s = 'abc'", "output": "6 non-empty substrings (a, b, c, ab, bc, abc); 7 if the empty string is counted" }
+    ]
+  },
+  "a2z-463": {
+    "description": "Learn the bit-level vocabulary needed for trie problems: store integers as fixed-width binary strings (MSB first, usually 31 or 32 bits), insert/query by walking bits, and note how a binary trie finds maximum-XOR partners by preferring the opposite bit at the highest differing position.",
+    "examples": [
+      { "input": "numbers 3 (011) and 10 (1010) stored as 31-bit paths", "output": "walking their paths diverges at bit 3, so XORing them yields a high-order 1 - the trie exploits exactly this" }
+    ]
+  },
+  "a2z-464": {
+    "description": "Given an array of non-negative integers, return the maximum result of nums[i] XOR nums[j] where i != j. Insert each number into a binary trie (MSB first); for each number greedily walk toward the opposite bit at every level to build the largest possible XOR partner, in O(n * 31).",
+    "examples": [
+      { "input": "nums = [3, 10, 5, 25, 2, 8]", "output": "28", "explanation": "5 XOR 25 = 28 is the largest pair XOR." }
+    ]
+  },
+  "a2z-465": {
+    "description": "Given an array of non-negative integers and queries [xi, mi], for each query return the maximum XOR of xi with any array element at most mi, or -1 when every element exceeds mi. Sort both numbers and queries by value, insert elements into a binary trie as they become eligible, and answer greedily, in O((n + q) log max).",
+    "examples": [
+      { "input": "nums = [0, 1, 2, 3, 4], queries = [[3, 1], [1, 3], [5, 6]]", "output": "[3, 3, 7]", "explanation": "For x=5, m=6 the element 2 gives 5 XOR 2 = 7." }
+    ]
+  }
+}

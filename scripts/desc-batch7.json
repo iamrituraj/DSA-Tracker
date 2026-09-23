@@ -1,0 +1,401 @@
+{
+  "a2z-336": {
+    "description": "Given the root of a binary search tree and a value, return the subtree rooted at the node with that value, or null if it is absent. Exploit BST ordering: go left when the value is smaller, right when larger, finishing in O(height).",
+    "examples": [
+      { "input": "root = [4, 2, 7, 1, 3], val = 2", "output": "subtree rooted at 2 (children 1 and 3)" },
+      { "input": "root = [4, 2, 7, 1, 3], val = 5", "output": "null" }
+    ]
+  },
+  "a2z-337": {
+    "description": "Given the root of a BST, find the node with the minimum value and the node with the maximum value. The minimum sits at the end of the leftmost path and the maximum at the end of the rightmost path; each is found in O(height).",
+    "examples": [
+      { "input": "root = [8, 5, 12, 4, 7, 10, 14]", "output": "min = 4, max = 14" }
+    ]
+  },
+  "a2z-338": {
+    "description": "Given the root of a BST and a key, find its floor (largest value <= key) and ceil (smallest value >= key); return -1 for either if it does not exist. Walk down the tree remembering the best candidate each time the search moves away from it.",
+    "examples": [
+      { "input": "root = [8, 5, 12, 4, 7, 10, 14], key = 6", "output": "floor = 5, ceil = 7" },
+      { "input": "root = [8, 5, 12, 4, 7, 10, 14], key = 9", "output": "floor = 8, ceil = 10" }
+    ]
+  },
+  "a2z-339": {
+    "description": "Given the root of a BST and a key, return the floor: the greatest value in the tree that is less than or equal to the key, or -1 when every value is larger. Descend the tree, updating the candidate floor whenever you branch right past a smaller value.",
+    "examples": [
+      { "input": "root = [10, 5, 15, 2, 6], key = 7", "output": "6" },
+      { "input": "root = [10, 5, 15, 2, 6], key = 1", "output": "-1" }
+    ]
+  },
+  "a2z-340": {
+    "description": "Given the root of a BST and a value, insert a new node with that value and return the root; duplicates are typically ignored. Attach the node at the null leaf where BST search terminates, in O(height).",
+    "examples": [
+      { "input": "root = [8, 5, 12, 4, 7, 10, 14], val = 6", "output": "BST with 6 attached as the left child of 7" }
+    ]
+  },
+  "a2z-341": {
+    "description": "Given the root of a BST and a key, delete the node with that key preserving the BST property. A leaf disappears directly; a one-child node is replaced by its child; a two-child node takes its inorder successor (or predecessor) in its place.",
+    "examples": [
+      { "input": "root = [5, 3, 6, 2, 4, null, 7], key = 3", "output": "[5, 4, 6, 2, null, null, 7]", "explanation": "The successor 4 replaces the deleted node 3." },
+      { "input": "root = [5, 3, 6, 2, 4, null, 7], key = 5", "output": "[6, 3, 7, 2, 4]" }
+    ]
+  },
+  "a2z-342": {
+    "description": "Given the root of a BST and an integer k, return the k-th smallest and (optionally) the k-th largest value in the tree. The inorder traversal of a BST is sorted, so counting nodes during an inorder walk (or doing a reverse walk for largest) yields the answer in O(n).",
+    "examples": [
+      { "input": "root = [5, 3, 6, 2, 4, null, null, 1], k = 3", "output": "kth smallest = 3", "explanation": "Inorder order is 1, 2, 3, 4, 5, 6 and the third is 3." }
+    ]
+  },
+  "a2z-343": {
+    "description": "Given the root of a binary tree, determine whether it is a valid BST: every node's value lies strictly within the range allowed by its ancestors. Recurse with (min, max) bounds, or check that an inorder traversal is strictly increasing.",
+    "examples": [
+      { "input": "root = [2, 1, 3]", "output": "true" },
+      { "input": "root = [5, 1, 4, null, null, 3, 6]", "output": "false", "explanation": "4 sits in the right subtree of 5 but is smaller than 5." }
+    ]
+  },
+  "a2z-344": {
+    "description": "Given the root of a BST and two nodes p and q, return their lowest common ancestor. Walk from the root: if both values are smaller go left, both larger go right, otherwise the current node splits them and is the LCA, in O(height).",
+    "examples": [
+      { "input": "root = [6, 2, 8, 0, 4, 7, 9, null, null, 3, 5], p = 2, q = 8", "output": "6" },
+      { "input": "root = [6, 2, 8, 0, 4, 7, 9, null, null, 3, 5], p = 2, q = 4", "output": "2" }
+    ]
+  },
+  "a2z-345": {
+    "description": "Given a preorder traversal of a BST (values distinct), reconstruct the unique tree. The first value is the root; elements smaller than it form the left subtree and the rest the right; a bound-based recursion or a stack of ancestors builds it in O(n).",
+    "examples": [
+      { "input": "preorder = [8, 5, 1, 7, 10, 12]", "output": "BST with root 8, left subtree 5 (children 1, 7), right subtree 10 (right child 12)" }
+    ]
+  },
+  "a2z-346": {
+    "description": "Given the root of a BST and a key, find its inorder successor (smallest value greater than key) and predecessor (largest value smaller than key); return -1 when absent. Track candidates while descending: go right past smaller values for the predecessor, left past larger values for the successor.",
+    "examples": [
+      { "input": "root = [8, 5, 12, 4, 7, 10, 14], key = 7", "output": "successor = 8, predecessor = 5" }
+    ]
+  },
+  "a2z-347": {
+    "description": "Given the roots of two BSTs, merge them into one balanced BST containing all values. Collect the two sorted inorder sequences, merge them like merge sort into one sorted array, then build a balanced BST recursively from the middle element, in O(m + n).",
+    "examples": [
+      { "input": "bst1 = [3, 1, 5], bst2 = [4, 2, 6]", "output": "a balanced BST over the sorted values [1, 2, 3, 4, 5, 6]" }
+    ]
+  },
+  "a2z-348": {
+    "description": "Given the root of a BST and an integer k, determine whether two nodes exist whose values sum to k. Use two iterators (min stack and max stack) converging like a two-pointer scan over the sorted inorder in O(n), or a hashset during one traversal.",
+    "examples": [
+      { "input": "root = [5, 3, 6, 2, 4, null, 7], k = 9", "output": "true", "explanation": "2 + 7 = 9 (also 3 + 6)." },
+      { "input": "root = [5, 3, 6, 2, 4, null, 7], k = 28", "output": "false" }
+    ]
+  },
+  "a2z-349": {
+    "description": "Given the root of a BST where exactly two nodes have been swapped by mistake, recover the tree without changing its structure. Do an inorder traversal, spot the two out-of-order values, and swap their node values back, in O(n) with O(h) space.",
+    "examples": [
+      { "input": "root = [1, 3, null, null, 2]", "output": "[3, 1, null, null, 2]", "explanation": "1 and 3 were swapped; restoring them repairs the BST." }
+    ]
+  },
+  "a2z-350": {
+    "description": "Given the root of a binary tree, return the size of the largest subtree that is itself a BST. Post-order recursion returns (isBST, size, min, max) per subtree; a node forms a BST only when both children are BSTs and its value sits between their bounds.",
+    "examples": [
+      { "input": "root = [10, 5, 15, 1, 8, null, 7]", "output": "3", "explanation": "The subtree 5 -> (1, 8) is the largest BST." }
+    ]
+  },
+  "a2z-354": {
+    "description": "Given the number of vertices and an edge list of an undirected graph, count the connected components: maximal groups of vertices reachable from one another. Iterate all vertices, launching BFS/DFS or a union-find merge from every unvisited vertex.",
+    "examples": [
+      { "input": "n = 5, edges = [[0, 1], [1, 2], [3, 4]]", "output": "2", "explanation": "{0, 1, 2} and {3, 4} are the two components." }
+    ]
+  },
+  "a2z-355": {
+    "description": "Implement the two core graph traversal techniques: BFS, which explores neighbours level by level using a queue, and DFS, which dives along one path using recursion or a stack. Given an adjacency list, produce the vertex order each technique visits from a source node.",
+    "examples": [
+      { "input": "graph with 5 vertices, adj = [[2, 3, 1], [0], [0, 4], [0], [2]], source = 0", "output": "BFS = [0, 2, 3, 1, 4], DFS = [0, 2, 4, 3, 1]" }
+    ]
+  },
+  "a2z-356": {
+    "description": "Given an undirected graph as an adjacency list and a source vertex, print the depth-first search order: visit a vertex, recurse into its first unvisited neighbour, backtrack when stuck. Maintain a visited array so each vertex and edge is processed once, in O(V + E).",
+    "examples": [
+      { "input": "adj = [[2, 3, 1], [0], [0, 4], [0], [2]], source = 0", "output": "[0, 2, 4, 3, 1]" }
+    ]
+  },
+  "a2z-357": {
+    "description": "Given an n x n adjacency matrix where isConnected[i][j] = 1 means direct friendship, return the number of provinces: connected components of friends (direct or transitive). Run DFS/BFS from every unvisited city or count union-find components, in O(n^2).",
+    "examples": [
+      { "input": "isConnected = [[1, 1, 0], [1, 1, 0], [0, 0, 1]]", "output": "2" }
+    ]
+  },
+  "a2z-358": {
+    "description": "Given a binary matrix, count the groups of connected 1s (4-directional adjacency), the matrix analog of connected components. Scan every cell and flood-fill each unvisited 1 with BFS or DFS, incrementing the component count once per fill.",
+    "examples": [
+      { "input": "grid = [[1, 1, 0], [0, 1, 0], [0, 0, 1]]", "output": "2", "explanation": "The three 1s in the top-left corner form one component and the lone 1 another." }
+    ]
+  },
+  "a2z-359": {
+    "description": "Given a grid where 0 is empty, 1 is a fresh orange and 2 is a rotten orange, every rotten orange spoils adjacent fresh oranges each minute; return the minimum time until no fresh orange remains, or -1 if some can never rot. Multi-source BFS from all rotten oranges simultaneously.",
+    "examples": [
+      { "input": "grid = [[2, 1, 1], [1, 1, 0], [0, 1, 1]]", "output": "4" },
+      { "input": "grid = [[2, 1, 1], [0, 1, 1], [1, 0, 1]]", "output": "-1", "explanation": "The orange at (2,0) is isolated by empty cells." }
+    ]
+  },
+  "a2z-360": {
+    "description": "Given an image as a color grid, a starting pixel (sr, sc) and a new color, flood-fill: recolor the starting pixel and every 4-directionally connected pixel of the same original color. BFS or DFS from the start, stopping at color changes, in O(m*n).",
+    "examples": [
+      { "input": "image = [[1, 1, 1], [1, 1, 0], [1, 0, 1]], sr = 1, sc = 1, color = 2", "output": "[[2, 2, 2], [2, 2, 0], [2, 0, 1]]" }
+    ]
+  },
+  "a2z-361": {
+    "description": "Given an undirected graph, detect whether it contains a cycle using BFS. Traverse from each unvisited vertex with a queue carrying (node, parent); encountering an already-visited neighbour that is not the current node's parent reveals a cycle, in O(V + E).",
+    "examples": [
+      { "input": "V = 4, edges = [[0, 1], [0, 2], [1, 2], [2, 3]]", "output": "true", "explanation": "The edges 0-1, 1-2 and 0-2 close a triangle." },
+      { "input": "V = 4, edges = [[0, 1], [1, 2], [2, 3]]", "output": "false" }
+    ]
+  },
+  "a2z-362": {
+    "description": "Given an undirected graph, detect whether it contains a cycle using DFS. Carry the parent through recursive calls; if any neighbour is already visited and is not the parent, a back edge closes a cycle, in O(V + E).",
+    "examples": [
+      { "input": "V = 4, edges = [[0, 1], [0, 2], [1, 2], [2, 3]]", "output": "true" },
+      { "input": "V = 3, edges = [[0, 1], [1, 2]]", "output": "false" }
+    ]
+  },
+  "a2z-363": {
+    "description": "Given a binary matrix, replace every 0 with the distance to its nearest 1 (4-directional), leaving 1s as 0 distance. Push all 1s into a queue as multi-source BFS roots and expand outward, updating each newly reached 0 with its distance.",
+    "examples": [
+      { "input": "grid = [[0, 1, 1, 0], [1, 1, 0, 0], [0, 0, 1, 1]]", "output": "[[1, 0, 0, 1], [0, 0, 1, 1], [1, 1, 0, 0]]" }
+    ]
+  },
+  "a2z-364": {
+    "description": "Given a 2D board of X and O, flip every region of O that is fully surrounded by X into X; O regions touching the border are untouched. First mark border-connected O regions via DFS/BFS, then flip every remaining O, in O(m*n).",
+    "examples": [
+      { "input": "board = [[X,X,X,X],[X,O,O,X],[X,X,O,X],[X,O,X,X]]", "output": "[[X,X,X,X],[X,X,X,X],[X,X,X,X],[X,O,X,X]]", "explanation": "The O at (3,1) touches the border and survives." }
+    ]
+  },
+  "a2z-365": {
+    "description": "Given a binary grid where 1 is land, count the land cells from which you cannot walk off the grid boundary moving 4-directionally over land. Remove every land region touching the border (flood fill), then count the surviving 1s.",
+    "examples": [
+      { "input": "grid = [[0, 0, 0, 0], [1, 0, 1, 0], [0, 1, 1, 0], [0, 0, 0, 0]]", "output": "3", "explanation": "The middle 1-region of three cells is enclosed." }
+    ]
+  },
+  "a2z-366": {
+    "description": "Given a beginWord, an endWord and a word list, transform beginWord into endWord one letter at a time with every intermediate word in the list; return the length of the shortest transformation sequence, or 0 if impossible. BFS over words with wildcard bucket neighbours.",
+    "examples": [
+      { "input": "beginWord = 'hit', endWord = 'cog', wordList = ['hot', 'dot', 'dog', 'lot', 'log', 'cog']", "output": "5", "explanation": "hit -> hot -> dot -> dog -> cog uses five words." }
+    ]
+  },
+  "a2z-367": {
+    "description": "Return all shortest transformation sequences from beginWord to endWord (word ladder II). Build a BFS level graph recording each word's parents, then backtrack every path from endWord to beginWord through those parents.",
+    "examples": [
+      { "input": "beginWord = 'hit', endWord = 'cog', wordList = ['hot', 'dot', 'dog', 'lot', 'log', 'cog']", "output": "[hit, hot, dot, dog, cog] and [hit, hot, lot, log, cog]" }
+    ]
+  },
+  "a2z-368": {
+    "description": "Given a 2D grid of 1s (land) and 0s (water), count the islands: groups of 1s connected horizontally or vertically, surrounded by water. Scan the grid and sink each unvisited island with DFS/BFS, counting one island per fill, in O(m*n).",
+    "examples": [
+      { "input": "grid = [[1, 1, 0, 0, 0], [1, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 1]]", "output": "3" }
+    ]
+  },
+  "a2z-369": {
+    "description": "Given an undirected graph as an adjacency list, determine whether it is bipartite: the vertices can be split into two sets with every edge crossing between sets, i.e. the graph is 2-colorable. DFS-color vertices alternately; a conflicting neighbour means not bipartite.",
+    "examples": [
+      { "input": "graph = [[1, 3], [0, 2], [1, 3], [0, 2]]", "output": "true" },
+      { "input": "graph = [[1, 2, 3], [0, 2], [0, 1, 3], [0, 2]]", "output": "false", "explanation": "The triangle 0-1-2 cannot be 2-colored." }
+    ]
+  },
+  "a2z-370": {
+    "description": "Given a directed graph, detect whether it contains a cycle using DFS with two state marks: visited and path-visited. Moving to a vertex already on the current recursion path finds a back edge and hence a cycle, in O(V + E).",
+    "examples": [
+      { "input": "V = 4, edges = [[0, 1], [1, 2], [2, 3], [3, 1]]", "output": "true", "explanation": "1 -> 2 -> 3 -> 1 is a directed cycle." },
+      { "input": "V = 4, edges = [[0, 1], [1, 2], [2, 3]]", "output": "false" }
+    ]
+  },
+  "a2z-371": {
+    "description": "Given a directed acyclic graph, produce a topological ordering: a linear order where every edge points forward. DFS from every unvisited vertex, pushing each vertex onto a stack as it finishes; the reversed stack is a valid topological order, in O(V + E).",
+    "examples": [
+      { "input": "V = 6, edges = [[5, 2], [5, 0], [4, 0], [4, 1], [2, 3], [3, 1]]", "output": "5, 4, 2, 3, 1, 0 (one valid order)" }
+    ]
+  },
+  "a2z-372": {
+    "description": "Compute a topological ordering of a DAG using Kahn's BFS algorithm. Repeatedly take a vertex with in-degree 0 into the order and decrement its neighbours' in-degrees; the queue empties exactly when the graph is acyclic, in O(V + E).",
+    "examples": [
+      { "input": "V = 6, edges = [[5, 2], [5, 0], [4, 0], [4, 1], [2, 3], [3, 1]]", "output": "4, 5, 2, 0, 3, 1 (one valid order)" }
+    ]
+  },
+  "a2z-373": {
+    "description": "Given a directed graph, detect a cycle using Kahn's algorithm: run the in-degree BFS and count how many vertices get processed. Fewer than V vertices processed means every remaining vertex is stuck in a cycle, in O(V + E).",
+    "examples": [
+      { "input": "V = 4, edges = [[0, 1], [1, 2], [2, 3], [3, 1]]", "output": "true" },
+      { "input": "V = 4, edges = [[0, 1], [1, 2], [2, 3]]", "output": "false" }
+    ]
+  },
+  "a2z-374": {
+    "description": "Given numCourses and prerequisite pairs [course, prereq], determine whether all courses can be finished: the prerequisite relations form a directed graph and finishing is possible exactly when it has no cycle. Detect the cycle with DFS states or Kahn's algorithm.",
+    "examples": [
+      { "input": "numCourses = 2, prerequisites = [[1, 0]]", "output": "true" },
+      { "input": "numCourses = 2, prerequisites = [[1, 0], [0, 1]]", "output": "false" }
+    ]
+  },
+  "a2z-375": {
+    "description": "Given numCourses and prerequisites, return any valid order to take all courses, or an empty array when impossible. The answer is a topological sort of the prerequisite graph, produced by Kahn's BFS or DFS with cycle detection.",
+    "examples": [
+      { "input": "numCourses = 4, prerequisites = [[1, 0], [2, 0], [3, 1], [3, 2]]", "output": "[0, 1, 2, 3] (or [0, 2, 1, 3])" }
+    ]
+  },
+  "a2z-376": {
+    "description": "Given a directed graph where a terminal node has no outgoing edges, a safe node leads only to terminal nodes along every path; return all safe nodes in ascending order. Reverse the graph and run Kahn's algorithm on out-degrees: nodes whose outgoing edges all resolve are safe.",
+    "examples": [
+      { "input": "graph = [[1, 2], [2, 3], [5], [0], [5], [], []]", "output": "[2, 4, 5, 6]" }
+    ]
+  },
+  "a2z-377": {
+    "description": "Given a sorted list of words from an alien language, derive the character order of its alphabet; return '' when the order is impossible (a contradiction like a longer prefix first, or a cycle). Build precedence edges from adjacent word pairs and topologically sort them.",
+    "examples": [
+      { "input": "words = ['wrt', 'wrf', 'er', 'ett', 'rftt']", "output": "'wertf'", "explanation": "t < f, w < e, r < t and e < r chain into the order w e r t f." }
+    ]
+  },
+  "a2z-378": {
+    "description": "Given an undirected unweighted graph and a source vertex, compute the shortest distance from the source to every other vertex, or -1 for unreachable ones. BFS explores level by level, so the first arrival at each vertex fixes its shortest distance, in O(V + E).",
+    "examples": [
+      { "input": "n = 9, edges = [[0,1],[0,3],[3,4],[4,5],[5,6],[1,2],[2,6],[6,7],[7,8],[6,8]], source = 0", "output": "[0, 1, 2, 1, 2, 3, 3, 4, 4]" }
+    ]
+  },
+  "a2z-379": {
+    "description": "Given a weighted directed acyclic graph and a source, find the shortest distance to every vertex. Topologically sort the DAG, then relax edges in that order so each vertex is finalized before being used - no priority queue is needed, in O(V + E).",
+    "examples": [
+      { "input": "n = 6, weighted edges = 0->1 (2), 0->4 (1), 1->2 (3), 4->2 (2), 4->5 (4), 2->3 (6), 5->3 (1), source = 0", "output": "[0, 2, 3, 6, 1, 5]", "explanation": "Vertex 2 is cheaper via 0->4->2 (3) than via 0->1->2 (5)." }
+    ]
+  },
+  "a2z-380": {
+    "description": "Given a weighted graph (directed or undirected, non-negative weights) and a source, compute the shortest distance to every vertex using Dijkstra's algorithm. A min-heap repeatedly extracts the closest unfinalized vertex and relaxes its edges, in O(E log V).",
+    "examples": [
+      { "input": "edges = [(0, 1, 1), (0, 2, 6), (1, 2, 2)], source = 0", "output": "dist = [0, 1, 3]", "explanation": "Reaching 2 through 1 costs 1 + 2 = 3, beating the direct edge 6." }
+    ]
+  },
+  "a2z-381": {
+    "description": "Explain why Dijkstra's algorithm uses a priority queue: the greedy invariant requires always finalizing the currently closest unfinalized vertex, and a min-heap extracts it in O(log V). A plain queue loses the invariant and a sorted array scan costs O(V) per extraction; the heap keeps the total at O(E log V).",
+    "examples": [
+      { "input": "edges = [(0, 1, 1), (0, 2, 6), (1, 2, 2)], source = 0", "output": "the heap pops 0 (dist 0), then 1 (dist 1), then 2 (dist 3), finalizing each vertex at its true distance" }
+    ]
+  },
+  "a2z-382": {
+    "description": "Given a binary maze where 1 is an open cell and 0 is blocked, find the shortest path length from the source cell to the destination moving in 4 directions. Plain BFS works when every step costs 1; for a 0/1 maze variant use 0-1 BFS with a deque.",
+    "examples": [
+      { "input": "grid = [[1, 1, 1, 1], [0, 1, 1, 0], [0, 0, 1, 1]], src = (0, 0), dest = (2, 3)", "output": "5", "explanation": "The path runs down column 2: (0,0) -> (0,1) -> (0,2) -> (1,2) -> (2,2) -> (2,3)." }
+    ]
+  },
+  "a2z-383": {
+    "description": "Given a grid of heights, a route's effort is the maximum absolute difference in heights between two consecutive cells of the route; find the minimum possible effort walking from the top-left to the bottom-right cell. Binary search the effort with BFS/DFS checks, or run Dijkstra on the effort metric.",
+    "examples": [
+      { "input": "heights = [[1, 2, 2], [3, 8, 2], [5, 3, 5]]", "output": "2", "explanation": "The route 1 -> 2 -> 2 -> 2 -> 5 never jumps by more than 2." }
+    ]
+  },
+  "a2z-384": {
+    "description": "Given n cities, priced flights (src, dst, price) and a limit of at most k stops (intermediate cities), find the cheapest price from src to dst or -1. Bellman-Ford limited to k+1 relaxation rounds, or a Dijkstra variant carrying remaining stops, solves it.",
+    "examples": [
+      { "input": "n = 4, flights = [[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]], src = 0, dst = 3, k = 1", "output": "700", "explanation": "0 -> 1 -> 3 costs 100 + 600; the two-hop route through 2 violates the stop limit." }
+    ]
+  },
+  "a2z-385": {
+    "description": "Given directed signal travel times times[i] = (u, v, w) from node u to v, return the time when all n nodes receive a signal sent from node k, or -1 if some node is unreachable. This is single-source Dijkstra over a directed graph; the answer is the maximum distance.",
+    "examples": [
+      { "input": "times = [[2,1,1],[2,3,1],[3,1,1]], n = 3, k = 2", "output": "2", "explanation": "Node 1 is reached last, via 2 -> 3 -> 1, taking 2 time units." }
+    ]
+  },
+  "a2z-386": {
+    "description": "Given a weighted undirected graph with the shortest distance between the source (node 0) and destination (node n-1) fixed, count the number of distinct shortest paths, modulo 10^9 + 7. Run Dijkstra storing both distance and ways: an equal-distance arrival adds the predecessor's count.",
+    "examples": [
+      { "input": "n = 5, roads = [(0,1,1), (1,4,1), (0,3,1), (3,4,1), (0,2,2), (2,4,2)]", "output": "shortest time = 2, number of ways = 2", "explanation": "0 -> 1 -> 4 and 0 -> 3 -> 4 are the two shortest routes." }
+    ]
+  },
+  "a2z-387": {
+    "description": "Given a start number, an end number and an array of multipliers, each move replaces the current number with (current * multiplier) mod 100000; find the minimum number of multiplications needed to reach the end. BFS over the value graph treats numbers as nodes and multiplications as edges.",
+    "examples": [
+      { "input": "start = 2, end = 100, multipliers = [2, 5, 10]", "output": "2", "explanation": "2 * 5 = 10, then 10 * 10 = 100." }
+    ]
+  },
+  "a2z-388": {
+    "description": "Given a directed weighted graph that may contain negative edges (no negative cycles) and a source, compute shortest distances using Bellman-Ford: relax every edge V-1 times. If a V-th relaxation still improves a distance, report a negative cycle, in O(V*E).",
+    "examples": [
+      { "input": "V = 4, edges = [[0,1,-1],[0,2,4],[1,2,3],[1,3,2],[3,1,1],[3,2,5]], src = 0", "output": "[0, -1, 2, 1]" }
+    ]
+  },
+  "a2z-389": {
+    "description": "Given the edge-weight matrix of a directed graph, compute all-pairs shortest paths with the Floyd-Warshall DP: dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]) for every intermediate k. Negative edges are fine; negative cycles show as negative diagonal entries, in O(V^3).",
+    "examples": [
+      { "input": "matrix = [[0, 5, INF, 10], [INF, 0, 3, INF], [INF, INF, 0, 1], [INF, INF, INF, 0]]", "output": "[[0, 5, 8, 9], [INF, 0, 3, 4], [INF, INF, 0, 1], [INF, INF, INF, 0]]" }
+    ]
+  },
+  "a2z-390": {
+    "description": "Given n cities and weighted edges, a city's reach is the number of other cities within the distanceThreshold; return the city with the smallest reach, preferring the larger city number on ties. Compute all-pairs distances with Floyd-Warshall and count reachable neighbours per city.",
+    "examples": [
+      { "input": "n = 4, edges = [[0,1,3],[1,2,1],[1,3,4],[2,3,1]], distanceThreshold = 4", "output": "3", "explanation": "City 3 reaches only city 2 within the threshold." }
+    ]
+  },
+  "a2z-392": {
+    "description": "Given a connected weighted undirected graph, build its minimum spanning tree with Prim's algorithm: grow the tree from a start vertex, always adding the cheapest edge that connects a tree vertex to an outside vertex, using a priority queue, in O(E log V).",
+    "examples": [
+      { "input": "V = 3, weighted edges = 0-1 (5), 1-2 (3), 0-2 (1)", "output": "MST edges 0-2 (1) and 1-2 (3), total weight 4" }
+    ]
+  },
+  "a2z-393": {
+    "description": "Implement a Disjoint Set Union (union-find) structure with find (with path compression) and union (by rank or size). Both operations run in nearly O(1) amortized, powering cycle detection and component queries in Kruskal's MST and dynamic connectivity problems.",
+    "examples": [
+      { "input": "union(1, 2), union(2, 3), find(1), find(4)", "output": "find(1) == find(3), while find(4) sits in a different set" }
+    ]
+  },
+  "a2z-394": {
+    "description": "Given a weighted undirected graph, return the total weight of its minimum spanning tree. Sort the edges by weight and add each edge that connects two different components (checked with union-find) until the tree spans all vertices - Kruskal's algorithm, in O(E log E).",
+    "examples": [
+      { "input": "V = 3, edges = [[0, 1, 5], [1, 2, 3], [0, 2, 1]]", "output": "4", "explanation": "The MST picks edges 0-2 (1) and 1-2 (3)." }
+    ]
+  },
+  "a2z-395": {
+    "description": "Given n computers and direct cable connections, return the minimum number of cables to move so every computer connects into one network, or -1 if there are too few cables. Count components with union-find; (components - 1) moves are needed when spare cables suffice.",
+    "examples": [
+      { "input": "n = 4, connections = [[0, 1], [0, 2], [1, 2]]", "output": "1", "explanation": "One redundant cable can be moved to connect computer 3." }
+    ]
+  },
+  "a2z-396": {
+    "description": "Stones sit on a 2D plane; a move removes a stone that shares its row or column with another stone. Return the maximum number of stones removable. Stones in the same row/column form connected components, and each component of size s yields s - 1 removals, solved with union-find.",
+    "examples": [
+      { "input": "stones = [[0,0],[0,1],[1,0],[1,2],[2,1],[2,2]]", "output": "5", "explanation": "Every stone except one anchor can be removed." }
+    ]
+  },
+  "a2z-397": {
+    "description": "Given accounts where each account is a name plus its emails, merge accounts that share any email (same person), returning merged accounts with emails sorted. Union-find (or DFS over an email graph) groups emails by person, in O(total emails * alpha).",
+    "examples": [
+      { "input": "accounts = [['John', 'a@mail.com', 'b@mail.com'], ['John', 'a@mail.com', 'c@mail.com'], ['Mary', 'm@mail.com'], ['John', 'd@mail.com']]", "output": "John: [a@mail.com, b@mail.com, c@mail.com]; Mary: [m@mail.com]; John: [d@mail.com]" }
+    ]
+  },
+  "a2z-398": {
+    "description": "Given an m x n water grid and a sequence of land-adding positions, report the number of islands after each addition (online island counting). Union-find merges each new land cell with its 4-directional neighbours, adjusting the component count as unions occur.",
+    "examples": [
+      { "input": "m = 3, n = 3, positions = [[0,0], [0,1], [1,2], [2,1]]", "output": "[1, 1, 2, 3]" }
+    ]
+  },
+  "a2z-399": {
+    "description": "Given a binary grid of 0s and 1s, you may change at most one 0 to 1; return the size of the largest island possible. Label each island with union-find or DFS, then for every 0 sum the distinct neighbouring island sizes plus one, in O(n^2).",
+    "examples": [
+      { "input": "grid = [[1, 0], [0, 1]]", "output": "3", "explanation": "Flipping either 0 connects the two islands into one of size 3." },
+      { "input": "grid = [[1, 1], [1, 1]]", "output": "4" }
+    ]
+  },
+  "a2z-400": {
+    "description": "Given an n x n elevation grid where you can move to a neighbouring cell only when its elevation is at most the current water level, find the minimum time (water level) at which you can travel from the top-left to the bottom-right cell. Binary search the level with BFS checks, or use a min-heap Dijkstra-style traversal.",
+    "examples": [
+      { "input": "grid = [[0, 2], [1, 3]]", "output": "3", "explanation": "You must wait until the level reaches 3 to enter the bottom-right cell." }
+    ]
+  },
+  "a2z-401": {
+    "description": "Given an undirected graph, find all its bridges: edges whose removal disconnects the graph. Use Tarjan's algorithm - DFS with discovery times and low-link values; an edge (u, v) is a bridge when low[v] > disc[u], in O(V + E).",
+    "examples": [
+      { "input": "V = 5, edges = [[1, 0], [0, 2], [2, 1], [0, 3], [3, 4]]", "output": "bridges (0, 3) and (3, 4)", "explanation": "Removing either edge separates vertices 3/4 from the rest." }
+    ]
+  },
+  "a2z-402": {
+    "description": "Given an undirected graph, find all articulation points: vertices whose removal (with their edges) disconnects the graph. DFS with discovery times and low-link values flags a vertex when a child subtree cannot reach above it (root case: two or more DFS children), in O(V + E).",
+    "examples": [
+      { "input": "V = 5, edges = [[1, 0], [0, 2], [2, 1], [0, 3], [3, 4]]", "output": "articulation points 0 and 3", "explanation": "Removing 0 isolates the 3-4 pair; removing 3 isolates 4." }
+    ]
+  },
+  "a2z-403": {
+    "description": "Given a directed graph, count its strongly connected components (SCCs) with Kosaraju's algorithm: order vertices by finishing time in a DFS, then DFS the reversed graph in that order; each DFS tree in the second pass is one SCC, in O(V + E).",
+    "examples": [
+      { "input": "V = 5, edges = [[1, 0], [0, 2], [2, 1], [0, 3], [3, 4]]", "output": "3", "explanation": "The SCCs are {0, 1, 2}, {3} and {4}." }
+    ]
+  }
+}

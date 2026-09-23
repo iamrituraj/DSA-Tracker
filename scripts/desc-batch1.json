@@ -1,0 +1,302 @@
+{
+  "a2z-055": {
+    "description": "Given an array of integers, sort it in ascending order using the selection sort algorithm. On each pass, select the minimum element from the unsorted suffix and swap it into its final position. The array is modified in place.",
+    "examples": [
+      { "input": "arr = [64, 25, 12, 22, 11]", "output": "[11, 12, 22, 25, 64]", "explanation": "Pass 1 swaps 11 with 64, pass 2 swaps 12 with 25, and so on until the array is sorted." },
+      { "input": "arr = [5, 4, 3, 2, 1]", "output": "[1, 2, 3, 4, 5]" }
+    ]
+  },
+  "a2z-056": {
+    "description": "Given an array of integers, sort it in ascending order using bubble sort. Repeatedly step through the array, swap adjacent elements that are out of order, and repeat until a full pass makes no swaps. The largest remaining element bubbles to the end of the array on every pass.",
+    "examples": [
+      { "input": "arr = [5, 1, 4, 2, 8]", "output": "[1, 2, 4, 5, 8]", "explanation": "8 bubbles to the end on the first pass, then 5, 4 and so on until no swaps remain." }
+    ]
+  },
+  "a2z-057": {
+    "description": "Given an array of integers, sort it in ascending order using insertion sort. Grow a sorted prefix one element at a time by shifting each new element left into its correct position, the way you would sort playing cards in your hand.",
+    "examples": [
+      { "input": "arr = [12, 11, 13, 5, 6]", "output": "[5, 6, 11, 12, 13]", "explanation": "11 shifts before 12, then 5 is inserted at the front, and finally 6 slots between 5 and 11." }
+    ]
+  },
+  "a2z-058": {
+    "description": "Given an array of integers, sort it in ascending order using merge sort. Recursively split the array into halves until single elements remain, then merge the sorted halves back together in linear time. The algorithm must run in O(n log n) time.",
+    "examples": [
+      { "input": "arr = [38, 27, 43, 10]", "output": "[10, 27, 38, 43]", "explanation": "Split into [38, 27] and [43, 10], recursively sort them to [27, 38] and [10, 43], then merge." }
+    ]
+  },
+  "a2z-059": {
+    "description": "Sort an array in ascending order with a recursive formulation of bubble sort. One recursion level performs a single bubbling pass that pushes the largest element of the current range to its end, then recurses on the remaining prefix. The base case is a range of length 0 or 1.",
+    "examples": [
+      { "input": "arr = [5, 1, 4, 2, 8]", "output": "[1, 2, 4, 5, 8]" }
+    ]
+  },
+  "a2z-060": {
+    "description": "Sort an array in ascending order with a recursive formulation of insertion sort. Recursively sort the first n-1 elements, then insert the last element into its correct position in that sorted prefix by shifting larger elements right. The base case is a range of length 0 or 1.",
+    "examples": [
+      { "input": "arr = [12, 11, 13, 5, 6]", "output": "[5, 6, 11, 12, 13]" }
+    ]
+  },
+  "a2z-061": {
+    "description": "Given an array of integers, sort it in ascending order using quick sort. Pick a pivot (commonly the last element or a random index), partition the range so smaller elements sit left of the pivot and larger ones right, then recursively sort the two partitions. Average time complexity is O(n log n).",
+    "examples": [
+      { "input": "arr = [4, 6, 2, 5, 7, 9, 1, 3]", "output": "[1, 2, 3, 4, 5, 6, 7, 9]", "explanation": "With 3 as the first pivot, everything smaller moves left and everything larger moves right, then each side is sorted recursively." }
+    ]
+  },
+  "a2z-062": {
+    "description": "Given an array of integers, find the largest element in it. Some variants ask for the index of the largest element instead of its value; if duplicates exist, the index of its last occurrence is usually expected. Aim for a single O(n) pass.",
+    "examples": [
+      { "input": "arr = [3, 3, 6, 1]", "output": "6" },
+      { "input": "arr = [1, 2, 3, 4, 5]", "output": "5" }
+    ]
+  },
+  "a2z-063": {
+    "description": "Given an array of integers, find the second largest distinct element. If it does not exist (all elements are equal or the array has fewer than two distinct values), return -1. Solve it in one pass without sorting the array.",
+    "examples": [
+      { "input": "arr = [1, 2, 4, 7, 7, 5]", "output": "5", "explanation": "The distinct elements in order are 1, 2, 4, 5, 7, so the second largest is 5." },
+      { "input": "arr = [10, 10, 10]", "output": "-1" }
+    ]
+  },
+  "a2z-064": {
+    "description": "Given an array of integers, determine whether it is sorted in non-decreasing order, i.e. every element is less than or equal to the one that follows it. Return true if sorted, otherwise false. A single pass with an early exit is enough.",
+    "examples": [
+      { "input": "arr = [1, 2, 3, 4, 5]", "output": "true" },
+      { "input": "arr = [1, 2, 3, 1, 4]", "output": "false", "explanation": "The drop from 3 to 1 violates the non-decreasing order." }
+    ]
+  },
+  "a2z-065": {
+    "description": "Given a sorted array, remove the duplicates in place so that each unique element appears exactly once in the first k positions. Return k, the count of unique elements. The elements beyond the first k positions do not matter, and no extra array may be used.",
+    "examples": [
+      { "input": "arr = [1, 1, 2, 2, 2, 3, 3]", "output": "3, arr = [1, 2, 3, _, _, _, _]", "explanation": "The unique elements 1, 2 and 3 occupy the first three positions." },
+      { "input": "arr = [1, 1, 1]", "output": "1, arr = [1, _, _]" }
+    ]
+  },
+  "a2z-066": {
+    "description": "Given an array, rotate it left by exactly one position in place. Every element shifts one index down, and the first element wraps around to the end. Aim for O(n) time and O(1) extra space.",
+    "examples": [
+      { "input": "arr = [1, 2, 3, 4, 5]", "output": "[2, 3, 4, 5, 1]" }
+    ]
+  },
+  "a2z-067": {
+    "description": "Given an array and an integer k, rotate the array left by k positions. For example, rotating [1,2,3,4,5,6,7] by 2 gives [3,4,5,6,7,1,2]. Handle k larger than n and do it in place with O(1) extra space using the reversal trick.",
+    "examples": [
+      { "input": "arr = [1, 2, 3, 4, 5, 6, 7], k = 2", "output": "[3, 4, 5, 6, 7, 1, 2]" },
+      { "input": "arr = [3, 7, 8, 9, 10, 11], k = 4", "output": "[10, 11, 3, 7, 8, 9]" }
+    ]
+  },
+  "a2z-068": {
+    "description": "Given an array of integers, move all zeros to the end while preserving the relative order of the non-zero elements. The rearrangement must be done in place, ideally in a single pass with O(1) extra space.",
+    "examples": [
+      { "input": "arr = [1, 0, 2, 3, 0, 4, 0, 1]", "output": "[1, 2, 3, 4, 1, 0, 0, 0]" },
+      { "input": "arr = [0, 0, 1]", "output": "[1, 0, 0]" }
+    ]
+  },
+  "a2z-069": {
+    "description": "Given an array of integers and a target value, return the index of the first occurrence of the target using linear search. If the target is not present, return -1. A left-to-right scan is the expected approach.",
+    "examples": [
+      { "input": "arr = [6, 7, 8, 4, 1], target = 4", "output": "3" },
+      { "input": "arr = [6, 7, 8, 4, 1], target = 5", "output": "-1" }
+    ]
+  },
+  "a2z-070": {
+    "description": "Given two sorted arrays, return their union as a sorted array containing every distinct element that appears in either array. If a value occurs in both arrays it must appear only once in the result. Use the two-pointer technique instead of a hash set.",
+    "examples": [
+      { "input": "arr1 = [1, 2, 3, 4, 5], arr2 = [2, 3, 6]", "output": "[1, 2, 3, 4, 5, 6]", "explanation": "Common values 2 and 3 are kept once, and 6 is appended after exhausting arr1." }
+    ]
+  },
+  "a2z-071": {
+    "description": "Given an array containing n distinct numbers taken from the range 0 to n, find the single missing number. The array is unsorted and exactly one value of the range is absent. The sum or XOR of 0..n gives an O(n) time, O(1) space solution.",
+    "examples": [
+      { "input": "arr = [3, 0, 1]", "output": "2", "explanation": "The range 0..3 is missing only 2." },
+      { "input": "arr = [0, 1]", "output": "2" }
+    ]
+  },
+  "a2z-072": {
+    "description": "Given a binary array (only 0s and 1s), return the maximum number of consecutive 1s. Count the current run of ones and record its maximum whenever a zero resets the count. A single O(n) pass suffices.",
+    "examples": [
+      { "input": "arr = [1, 1, 0, 1, 1, 1]", "output": "3", "explanation": "The longest run of consecutive ones has length 3 at the end." },
+      { "input": "arr = [0, 0, 0]", "output": "0" }
+    ]
+  },
+  "a2z-073": {
+    "description": "Given an array where every element appears exactly twice except one element that appears once, find that single element. Solve it in linear time and constant space by XORing all elements together, since x XOR x = 0 cancels the pairs.",
+    "examples": [
+      { "input": "arr = [4, 1, 2, 1, 2]", "output": "4", "explanation": "1 XOR 1 and 2 XOR 2 cancel out, leaving 4." }
+    ]
+  },
+  "a2z-074": {
+    "description": "Given an array of positive integers and a target sum k, find the length of the longest subarray whose elements sum to exactly k. Use a prefix-sum hashmap storing the first index at which each sum appears, so each element is processed once.",
+    "examples": [
+      { "input": "arr = [2, 3, 5, 1, 9], k = 10", "output": "3", "explanation": "The subarray [2, 3, 5] sums to 10 and is the longest such window." }
+    ]
+  },
+  "a2z-075": {
+    "description": "Given an array that may contain positive integers, negative integers and zeros, find the length of the longest subarray with sum exactly k. Sliding window does not work with negatives, so use a hashmap of prefix sums to their earliest index.",
+    "examples": [
+      { "input": "arr = [1, -1, 5, -2, 3], k = 3", "output": "4", "explanation": "The subarray [1, -1, 5, -2] sums to 3 and has length 4." },
+      { "input": "arr = [-2, -1, 2, 1], k = 1", "output": "2", "explanation": "The subarray [-1, 2] sums to 1." }
+    ]
+  },
+  "a2z-076": {
+    "description": "Given an array of integers and a target, return the indices of the two numbers that add up to the target. Exactly one valid answer exists and you may not use the same element twice. A hashmap of value to index finds the pair in O(n).",
+    "examples": [
+      { "input": "arr = [2, 6, 5, 8, 11], target = 14", "output": "[1, 3]", "explanation": "6 + 8 = 14, found at indices 1 and 3." }
+    ]
+  },
+  "a2z-077": {
+    "description": "Given an array containing only 0s, 1s and 2s, sort it in place without using any sorting algorithm. Use the Dutch National Flag algorithm with three pointers (low, mid, high) to arrange all 0s first, then 1s, then 2s in a single pass.",
+    "examples": [
+      { "input": "arr = [2, 0, 2, 1, 1, 0]", "output": "[0, 0, 1, 1, 2, 2]" },
+      { "input": "arr = [2, 0, 1]", "output": "[0, 1, 2]" }
+    ]
+  },
+  "a2z-078": {
+    "description": "Given an array of size n, find the majority element, the value that appears more than n/2 times. It is guaranteed to exist. Boyer-Moore voting finds it in O(n) time and O(1) space.",
+    "examples": [
+      { "input": "arr = [2, 2, 1, 1, 1, 2, 2]", "output": "2", "explanation": "2 appears 4 times out of 7, which is more than half." }
+    ]
+  },
+  "a2z-079": {
+    "description": "Given an array of integers (possibly negative), find the maximum sum of a contiguous subarray. Kadane's algorithm tracks the best subarray ending at the current index and a running global maximum in one O(n) pass.",
+    "examples": [
+      { "input": "arr = [-2, 1, -3, 4, -1, 2, 1, -5, 4]", "output": "6", "explanation": "The subarray [4, -1, 2, 1] has the largest sum 6." },
+      { "input": "arr = [-3, -1, -2]", "output": "-1", "explanation": "With all elements negative, the best subarray is the single element -1." }
+    ]
+  },
+  "a2z-080": {
+    "description": "Given an array of integers, print (or return) the subarray that has the maximum sum, extending Kadane's algorithm. Track the start index of the best run whenever a new maximum is found, so the winning subarray can be reconstructed.",
+    "examples": [
+      { "input": "arr = [-2, 1, -3, 4, -1, 2, 1, -5, 4]", "output": "[4, -1, 2, 1] (sum = 6)", "explanation": "The maximum-sum subarray starts at index 3 and ends at index 6." }
+    ]
+  },
+  "a2z-081": {
+    "description": "You are given daily prices of a stock; buy on one day and sell on a later day to maximize profit. Return the maximum profit, or 0 if no profitable transaction exists. Track the minimum price so far and the best profit achievable today in one pass.",
+    "examples": [
+      { "input": "prices = [7, 1, 5, 3, 6, 4]", "output": "5", "explanation": "Buy at 1 and sell at 6 for a profit of 5." },
+      { "input": "prices = [7, 6, 4, 3, 1]", "output": "0", "explanation": "Prices only fall, so no transaction is made." }
+    ]
+  },
+  "a2z-082": {
+    "description": "Given an array with an equal number of positive and negative integers, rearrange it so that positives and negatives alternate, starting with a positive, while keeping the relative order within each sign. For unequal counts, extras go to the end.",
+    "examples": [
+      { "input": "arr = [3, 1, -2, -5, 2, -4]", "output": "[3, -2, 1, -5, 2, -4]", "explanation": "Positives 3, 1, 2 and negatives -2, -5, -4 alternate in their original order." }
+    ]
+  },
+  "a2z-083": {
+    "description": "Given an array of digits representing a number, rearrange it into the next lexicographically greater permutation of those digits. If the arrangement is the largest possible, wrap around to the smallest. The replacement must be in place with constant extra memory.",
+    "examples": [
+      { "input": "arr = [2, 1, 5, 4, 3, 0, 0]", "output": "[2, 3, 0, 0, 1, 4, 5]", "explanation": "The pivot 1 is swapped with the next larger digit 3, then the suffix is reversed." },
+      { "input": "arr = [3, 2, 1]", "output": "[1, 2, 3]", "explanation": "Already the largest permutation, so it wraps to the smallest." }
+    ]
+  },
+  "a2z-084": {
+    "description": "Given an array, an element is a leader if it is greater than or equal to every element to its right; the rightmost element is always a leader. Return all leaders in left-to-right order. A right-to-left scan keeping the running maximum gives O(n) time.",
+    "examples": [
+      { "input": "arr = [10, 22, 12, 3, 0, 6]", "output": "[22, 12, 6]", "explanation": "22 dominates everything after it, as do 12 and 6; 10 does not because of 22." }
+    ]
+  },
+  "a2z-085": {
+    "description": "Given an unsorted array of integers, find the length of the longest sequence of consecutive elements (values differing by 1, regardless of position in the array). Solve it in O(n) by inserting everything into a hash set and starting counts only at sequence heads.",
+    "examples": [
+      { "input": "arr = [100, 200, 1, 2, 3, 4]", "output": "4", "explanation": "The consecutive run 1, 2, 3, 4 has length 4." },
+      { "input": "arr = [3, 8, 5, 7, 6]", "output": "4", "explanation": "The run 5, 6, 7, 8 has length 4." }
+    ]
+  },
+  "a2z-086": {
+    "description": "Given an m x n matrix of integers, if an element is 0 set its entire row and column to zeros. The transformation must be done in place, ideally using the first row and first column as markers to achieve O(1) extra space.",
+    "examples": [
+      { "input": "matrix = [[1, 1, 1], [1, 0, 1], [1, 1, 1]]", "output": "[[1, 0, 1], [0, 0, 0], [1, 0, 1]]", "explanation": "The single zero at (1,1) zeroes out row 1 and column 1." }
+    ]
+  },
+  "a2z-087": {
+    "description": "Given a square n x n matrix, rotate it by 90 degrees clockwise in place. The element at (i, j) moves to (j, n-1-i). The cleanest method is to transpose the matrix and then reverse every row.",
+    "examples": [
+      { "input": "matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]", "output": "[[7, 4, 1], [8, 5, 2], [9, 6, 3]]" }
+    ]
+  },
+  "a2z-088": {
+    "description": "Given an m x n matrix, return all its elements in spiral order: traverse the top row left to right, the right column top to bottom, the bottom row right to left, and the left column bottom to top, then repeat on the remaining inner matrix.",
+    "examples": [
+      { "input": "matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]", "output": "[1, 2, 3, 6, 9, 8, 7, 4, 5]" },
+      { "input": "matrix = [[1, 2], [3, 4]]", "output": "[1, 2, 4, 3]" }
+    ]
+  },
+  "a2z-089": {
+    "description": "Given an array of integers and a target sum k, count the number of contiguous subarrays whose elements add up to exactly k. Use prefix sums with a hashmap that remembers how often each prefix sum has occurred, giving an O(n) solution.",
+    "examples": [
+      { "input": "arr = [3, 1, 2, 4], k = 6", "output": "2", "explanation": "Subarrays [3, 1, 2] and [2, 4] both sum to 6." }
+    ]
+  },
+  "a2z-090": {
+    "description": "Given an integer numRows, return the first numRows rows of Pascal's triangle. Each row starts and ends with 1, and every interior entry is the sum of the two entries diagonally above it in the previous row.",
+    "examples": [
+      { "input": "numRows = 5", "output": "[[1], [1, 1], [1, 2, 1], [1, 3, 3, 1], [1, 4, 6, 4, 1]]" }
+    ]
+  },
+  "a2z-091": {
+    "description": "Given an array of size n, return all elements that appear more than n/3 times. At most two such elements can exist, and the Boyer-Moore voting extension finds the candidates in O(n) time and O(1) space before a final verification pass.",
+    "examples": [
+      { "input": "arr = [1, 1, 1, 3, 3, 2, 2, 2]", "output": "[1, 2]", "explanation": "Both 1 and 2 appear 3 times out of 8, which exceeds 8/3." }
+    ]
+  },
+  "a2z-092": {
+    "description": "Given an array of n integers, find all unique triplets that sum to zero. The result must not contain duplicate triplets. Sort the array, fix each first element, then use two pointers on the remainder; skip duplicates at every step. Aim for O(n^2).",
+    "examples": [
+      { "input": "arr = [-1, 0, 1, 2, -1, -4]", "output": "[[-1, -1, 2], [-1, 0, 1]]" }
+    ]
+  },
+  "a2z-093": {
+    "description": "Given an array of n integers and a target, return all unique quadruplets that sum to the target. Sort the array, fix the first two elements with nested loops, and finish each pair with two pointers, skipping duplicates throughout. Aim for O(n^3).",
+    "examples": [
+      { "input": "arr = [1, 0, -1, 0, -2, 2], target = 0", "output": "[[-2, -1, 1, 2], [-2, 0, 0, 2], [-1, 0, 0, 1]]" }
+    ]
+  },
+  "a2z-094": {
+    "description": "Given an array of integers that may be negative, find the length of the longest subarray whose sum is exactly 0. Track the earliest index of each prefix sum in a hashmap; a repeated prefix sum means the elements between form a zero-sum subarray.",
+    "examples": [
+      { "input": "arr = [15, -2, 2, -8, 1, 7, 10, 23]", "output": "5", "explanation": "The subarray [-2, 2, -8, 1, 7] sums to 0 and has length 5." }
+    ]
+  },
+  "a2z-095": {
+    "description": "Given an array of integers and a value k, count the subarrays whose XOR equals k. Use the prefix-XOR identity: a subarray (i, j] has XOR k exactly when prefixXor[j] XOR k equals prefixXor[i], so keep counts of seen prefix XORs in a hashmap.",
+    "examples": [
+      { "input": "arr = [4, 2, 2, 6, 4], k = 6", "output": "4", "explanation": "The subarrays [4, 2], [2, 2, 6], [6] and [4, 2, 2, 6, 4] all XOR to 6." }
+    ]
+  },
+  "a2z-096": {
+    "description": "Given a list of intervals that may overlap, merge all overlapping intervals and return the non-overlapping result sorted by start. Sort by start time, then extend the current interval whenever the next one starts before or at its end.",
+    "examples": [
+      { "input": "intervals = [[1, 3], [2, 6], [8, 10], [15, 18]]", "output": "[[1, 6], [8, 10], [15, 18]]", "explanation": "[1, 3] and [2, 6] overlap and merge into [1, 6]." }
+    ]
+  },
+  "a2z-097": {
+    "description": "Given two sorted arrays arr1 (size n) and arr2 (size m), merge them so that the first n positions of arr1 and the last m positions of arr2 hold the fully sorted data, without using extra space. The gap or shell-sort style method achieves O((n+m) log(n+m)) with O(1) space.",
+    "examples": [
+      { "input": "arr1 = [1, 4, 8, 10], arr2 = [2, 3, 9]", "output": "arr1 = [1, 2, 3, 4], arr2 = [8, 9, 10]" }
+    ]
+  },
+  "a2z-098": {
+    "description": "Given an unsorted array of n integers where each value from 1 to n appears exactly once except one number that repeats and one that is missing, find both the repeating and the missing number. Counting, math (sum and sum of squares) or XOR all work in O(n).",
+    "examples": [
+      { "input": "arr = [3, 1, 2, 5, 3]", "output": "repeating = 3, missing = 4", "explanation": "3 appears twice and 4 never appears among the values 1..5." }
+    ]
+  },
+  "a2z-099": {
+    "description": "Given an array, count the inversion pairs: pairs of indices (i, j) with i < j and arr[i] > arr[j]. Use a modified merge sort that counts cross inversions while merging, achieving O(n log n) instead of the brute-force O(n^2).",
+    "examples": [
+      { "input": "arr = [5, 3, 2, 1, 4]", "output": "7", "explanation": "The inversion pairs are (5,3), (5,2), (5,1), (5,4), (3,2), (3,1) and (2,1)." }
+    ]
+  },
+  "a2z-100": {
+    "description": "Given an array, count the reverse pairs: index pairs (i, j) with i < j and arr[i] > 2 * arr[j]. Count them during merge sort by binary-searching the right half for each left element before merging, giving an O(n log n) solution.",
+    "examples": [
+      { "input": "arr = [2, 4, 3, 5, 1]", "output": "3", "explanation": "Pairs (4,1), (3,1) and (5,1) each satisfy arr[i] > 2 * arr[j]." }
+    ]
+  },
+  "a2z-101": {
+    "description": "Given an array of integers, find the contiguous subarray with the largest product. Track both the maximum and minimum product ending at each index, because a negative number swaps them. Handle zeros by resetting the running products.",
+    "examples": [
+      { "input": "arr = [2, 3, -2, 4]", "output": "6", "explanation": "The subarray [2, 3] has the largest product 6." },
+      { "input": "arr = [-2, 0, -1]", "output": "0", "explanation": "Any product touching a negative number here is beaten by the single 0." }
+    ]
+  }
+}

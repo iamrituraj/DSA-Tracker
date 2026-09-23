@@ -1,0 +1,252 @@
+{
+  "a2z-134": {
+    "description": "Given a valid parentheses string, remove the outermost parentheses of every primitive substring and return the result. A primitive substring is a non-empty balanced piece that cannot be split further; track nesting depth with a counter instead of a stack.",
+    "examples": [
+      { "input": "s = '(()())(())'", "output": "'()()()'", "explanation": "The primitives are '(()())' and '(())'; stripping their outer layers leaves '()()' and '()'." }
+    ]
+  },
+  "a2z-135": {
+    "description": "Given a string of words separated by spaces, reverse the order of the words and return the new string, trimmed and joined by single spaces. The companion check asks whether a string reads the same after reversal; both can be solved in O(n).",
+    "examples": [
+      { "input": "s = 'the sky is blue'", "output": "'blue is the sky'" },
+      { "input": "s = '  hello world  '", "output": "'world hello'", "explanation": "Leading and trailing spaces are dropped." }
+    ]
+  },
+  "a2z-136": {
+    "description": "Given a string of digits representing a non-negative number, return the largest odd integer that is a contiguous leading substring (suffix-truncated) of it, or an empty string if no odd truncation exists. Since oddness depends only on the last digit, find the rightmost odd digit.",
+    "examples": [
+      { "input": "num = '52'", "output": "'5'", "explanation": "5 is odd while 52 is even, so truncate after the first digit." },
+      { "input": "num = '4206'", "output": "''" }
+    ]
+  },
+  "a2z-137": {
+    "description": "Given an array of strings, return the longest common prefix shared by all of them, or the empty string if none exists. Compare characters column by column, or sort and compare only the first and last strings, in O(sum of lengths).",
+    "examples": [
+      { "input": "strs = ['flower', 'flow', 'flight']", "output": "'fl'" },
+      { "input": "strs = ['dog', 'racecar', 'car']", "output": "''" }
+    ]
+  },
+  "a2z-138": {
+    "description": "Given two strings of equal length, check whether they are isomorphic: characters in the first string can be replaced to obtain the second, with each character mapping to exactly one character and preserving order. Maintain two-way mappings to catch conflicts like 'badc' vs 'baba'.",
+    "examples": [
+      { "input": "s = 'egg', t = 'add'", "output": "true", "explanation": "e -> a and g -> d consistently transform 'egg' into 'add'." },
+      { "input": "s = 'foo', t = 'bar'", "output": "false" }
+    ]
+  },
+  "a2z-139": {
+    "description": "Given two strings s and goal of equal length, determine whether goal can be obtained by rotating s by some number of positions. A rotation of s is always a substring of s + s, so the check reduces to one containment test.",
+    "examples": [
+      { "input": "s = 'abcde', goal = 'cdeab'", "output": "true", "explanation": "Rotating 'abcde' left by 2 gives 'cdeab'." },
+      { "input": "s = 'abcde', goal = 'abced'", "output": "false" }
+    ]
+  },
+  "a2z-140": {
+    "description": "Given two strings, check whether they are anagrams of each other: the same characters with exactly the same frequencies, order irrelevant. Compare sorted forms or count all 26 letter frequencies in O(n).",
+    "examples": [
+      { "input": "s = 'anagram', t = 'nagaram'", "output": "true" },
+      { "input": "s = 'rat', t = 'car'", "output": "false" }
+    ]
+  },
+  "a2z-141": {
+    "description": "Given a string, sort its characters in decreasing order of frequency; characters with equal frequency may appear in any relative order. Bucket the characters by count and rebuild the string from the fullest buckets.",
+    "examples": [
+      { "input": "s = 'tree'", "output": "'eert'", "explanation": "'e' appears twice, then 'r' and 't' once each." },
+      { "input": "s = 'Aabb'", "output": "'bbAa'" }
+    ]
+  },
+  "a2z-142": {
+    "description": "Given a balanced parentheses string possibly containing digits and operators, return its maximum nesting depth: the largest number of parentheses open at the same time. Scan once, increasing a counter on '(' and decreasing on ')'.",
+    "examples": [
+      { "input": "s = '(1+(2*3)+((8)/4))+1'", "output": "3", "explanation": "Three parentheses are open simultaneously around the 8." }
+    ]
+  },
+  "a2z-143": {
+    "description": "Given a Roman numeral string (letters I, V, X, L, C, D, M), convert it to its integer value. Walk left to right adding each symbol's value, but subtract the current value when a smaller symbol precedes a larger one, as in IV or XC.",
+    "examples": [
+      { "input": "s = 'III'", "output": "3" },
+      { "input": "s = 'LVIII'", "output": "58", "explanation": "L = 50, V = 5 and III = 3." },
+      { "input": "s = 'MCMXCIV'", "output": "1994" }
+    ]
+  },
+  "a2z-144": {
+    "description": "Implement atoi: parse a leading integer from a string after skipping whitespace and an optional sign, stopping at the first non-digit. Return 0 when no valid number exists and clamp the result to the 32-bit signed integer range [-2^31, 2^31 - 1].",
+    "examples": [
+      { "input": "s = ' -042'", "output": "-42" },
+      { "input": "s = '1337c0d3'", "output": "1337", "explanation": "Parsing stops at 'c'." },
+      { "input": "s = 'words and 987'", "output": "0" }
+    ]
+  },
+  "a2z-145": {
+    "description": "Given a string of lowercase letters and an integer k, count the substrings that contain exactly k distinct characters. Use the sliding-window identity exactly(k) = atMost(k) - atMost(k - 1) with a frequency map.",
+    "examples": [
+      { "input": "s = 'aba', k = 2", "output": "3", "explanation": "The substrings 'ab', 'ba' and 'aba' each contain exactly two distinct letters." }
+    ]
+  },
+  "a2z-146": {
+    "description": "Given a string, return the longest palindromic substring. Expand around every possible center (2n - 1 of them: each character and each gap) and keep the longest expansion, in O(n^2) time and O(1) space.",
+    "examples": [
+      { "input": "s = 'babad'", "output": "'bab'", "explanation": "'aba' is an equally long valid answer." },
+      { "input": "s = 'cbbd'", "output": "'bb'" }
+    ]
+  },
+  "a2z-147": {
+    "description": "The beauty of a string is the difference between the frequency of its most frequent and least frequent characters. Given a string, sum the beauty of every substring. Maintain per-substring frequency tables in O(n^2) since only 26 letters matter.",
+    "examples": [
+      { "input": "s = 'aabcb'", "output": "5", "explanation": "The beauties of all substrings sum to 5, e.g. 'aab' has beauty 1 and 'bcb' has beauty 1." }
+    ]
+  },
+  "a2z-148": {
+    "description": "Given a string of words, reverse the characters of every word in place while keeping the word order and spacing intact. Trim, split into words, reverse each with two pointers and rejoin, or do it fully in place with one reverse per segment.",
+    "examples": [
+      { "input": "s = 'I am a star'", "output": "'I ma a rats'" },
+      { "input": "s = 'hello world'", "output": "'olleh dlrow'" }
+    ]
+  },
+  "a2z-466": {
+    "description": "Given a string of '(' and ')' characters, find the minimum number of brackets you must reverse (flip between '(' and ')') to make the string balanced, or -1 if impossible (odd length). After cancelling matched pairs, ceil(remaining opens / 2) + ceil(remaining closes / 2) reversals suffice.",
+    "examples": [
+      { "input": "s = '}{{{{'", "output": "3" },
+      { "input": "s = '}{'", "output": "2", "explanation": "Reverse both characters to get '()', which is balanced." }
+    ]
+  },
+  "a2z-467": {
+    "description": "The count-and-say sequence reads the previous term aloud: '1' becomes 'one 1' = '11', which becomes 'two 1s' = '21', and so on. Given n, produce the n-th term of the sequence starting from '1' as term 1.",
+    "examples": [
+      { "input": "n = 4", "output": "'1211'", "explanation": "Term 3 is '21', read as 'one 2, one 1' giving '1211'." },
+      { "input": "n = 5", "output": "'111221'" }
+    ]
+  },
+  "a2z-469": {
+    "description": "Implement the Rabin-Karp string matching algorithm: find all occurrence indices of a pattern in a text using a rolling polynomial hash so each window hash is updated in O(1). Verify candidate matches character-by-character to rule out hash collisions.",
+    "examples": [
+      { "input": "text = 'abcabcdab', pattern = 'abcd'", "output": "[3]", "explanation": "The pattern's hash matches only the window starting at index 3, which verifies exactly." }
+    ]
+  },
+  "a2z-470": {
+    "description": "Given a string s, compute its Z-array where z[i] is the length of the longest substring starting at i that is also a prefix of s. Maintain the rightmost matching window [l, r] and copy previously computed values inside it, computing fresh values only outside, in O(n).",
+    "examples": [
+      { "input": "s = 'abacaba'", "output": "z = [-, 0, 1, 0, 3, 0, 1]", "explanation": "z[4] = 3 because the substring starting at index 4 is 'aba', matching the prefix." }
+    ]
+  },
+  "a2z-471": {
+    "description": "Implement the KMP string matching algorithm: build the LPS (longest proper prefix which is also suffix) array of the pattern, then scan the text skipping re-comparisons using the failure links. Matching runs in O(n + m) time.",
+    "examples": [
+      { "input": "text = 'ababcabababd', pattern = 'ababd'", "output": "found at index 5, LPS = [0, 0, 1, 2, 0]", "explanation": "The LPS array lets the scan jump back without re-examining text characters." }
+    ]
+  },
+  "a2z-472": {
+    "description": "Given a string s, you may prepend characters to it; return the shortest palindrome obtainable this way. Reverse the string, append it after a separator, and use the LPS/KMP failure function of the combined string to find the longest palindromic prefix of s.",
+    "examples": [
+      { "input": "s = 'abcd'", "output": "'dcbabcd'", "explanation": "Prepending 'dcb' makes the whole string a palindrome." },
+      { "input": "s = 'aacecaaa'", "output": "'aaacecaaa'" }
+    ]
+  },
+  "a2z-473": {
+    "description": "A happy prefix is a proper prefix that is also a suffix of the string. Given a string, return the longest happy prefix, or the empty string if none exists. Solve it with the KMP LPS array in O(n).",
+    "examples": [
+      { "input": "s = 'ababab'", "output": "'abab'", "explanation": "'abab' is both a proper prefix and a suffix." },
+      { "input": "s = 'level'", "output": "'l'" }
+    ]
+  },
+  "a2z-474": {
+    "description": "Given a string of lowercase letters, count all palindromic subsequences (subsequences need not be contiguous). Use interval DP: dp[i][j] = dp[i+1][j] + dp[i][j-1] - dp[i+1][j-1], adding the inner count once more when the end letters match, all modulo a large prime as required.",
+    "examples": [
+      { "input": "s = 'aab'", "output": "4", "explanation": "The palindromic subsequences are 'a' (twice), 'b' and 'aa'." }
+    ]
+  },
+  "a2z-282": {
+    "description": "Given greed factors of children and sizes of cookies, a child is content only when a cookie size is at least their greed; each child gets at most one cookie. Maximize the number of content children by greedily feeding the least greedy child with the smallest sufficient cookie.",
+    "examples": [
+      { "input": "g = [1, 2, 3], s = [1, 1]", "output": "1", "explanation": "Only one cookie is big enough for the least greedy child." },
+      { "input": "g = [1, 2], s = [1, 2, 3]", "output": "2" }
+    ]
+  },
+  "a2z-283": {
+    "description": "Given item values, item weights and a knapsack capacity where items can be broken into fractions, maximize the total value carried. Sort items by value-per-unit-weight descending and greedily fill the bag, taking fractions of the last item if needed.",
+    "examples": [
+      { "input": "values = [60, 100, 120], weights = [10, 20, 30], capacity = 50", "output": "240", "explanation": "Take the first two items fully (160) plus two-thirds of the third (80)." }
+    ]
+  },
+  "a2z-284": {
+    "description": "You sell lemonade at 5 a unit and customers pay with 5, 10 or 20 bills in order; you start with no change. Determine whether you can provide exact change to every customer, greedily preferring to give a 10 bill back for 20 payments.",
+    "examples": [
+      { "input": "bills = [5, 5, 5, 10, 20]", "output": "true", "explanation": "The third 20 is changed with one 10 and one 5." },
+      { "input": "bills = [5, 5, 10, 10, 20]", "output": "false" }
+    ]
+  },
+  "a2z-285": {
+    "description": "Given a string of '(', ')' and '*' where '*' may represent '(', ')' or empty, determine whether the string can be a valid parentheses sequence. Track the possible range of open-bracket counts in one pass, or use two counter passes.",
+    "examples": [
+      { "input": "s = '(*)'", "output": "true", "explanation": "The star can be treated as empty." },
+      { "input": "s = '(*))'", "output": "true", "explanation": "The star acts as an opening bracket." }
+    ]
+  },
+  "a2z-286": {
+    "description": "Given start and end times of n meetings in one room, schedule the maximum number of non-overlapping meetings (a meeting must finish before the next begins; start time of the next must be strictly greater). Sort by end time and greedily pick compatible meetings.",
+    "examples": [
+      { "input": "start = [1, 3, 0, 5, 8, 5], end = [2, 4, 6, 7, 9, 9]", "output": "4", "explanation": "Hold the meetings ending at 2, 4, 7 and 9." }
+    ]
+  },
+  "a2z-287": {
+    "description": "Given an array where each element is your maximum jump length from that position, determine whether you can reach the last index starting from the first. Keep one variable for the farthest reachable index and fail as soon as the current position passes it.",
+    "examples": [
+      { "input": "nums = [2, 3, 1, 1, 4]", "output": "true" },
+      { "input": "nums = [3, 2, 1, 0, 4]", "output": "false", "explanation": "Every path lands on the 0 at index 3." }
+    ]
+  },
+  "a2z-288": {
+    "description": "Given the same jump rules, return the minimum number of jumps needed to reach the last index (it is always reachable). Greedily track the end of the current jump's range and the farthest the next jump can reach, counting a jump each time you cross the range boundary.",
+    "examples": [
+      { "input": "nums = [2, 3, 1, 1, 4]", "output": "2", "explanation": "Jump from index 0 to 1, then from 1 straight to the end." }
+    ]
+  },
+  "a2z-289": {
+    "description": "Given arrival and departure times of trains at a station, find the minimum number of platforms needed so no train waits. Sort arrivals and departures independently and sweep both lists like a merge, counting the running overlap maximum.",
+    "examples": [
+      { "input": "arrivals = [900, 940, 950, 1100, 1500, 1800], departures = [910, 1200, 1120, 1130, 1900, 2000]", "output": "3", "explanation": "Around 11:00 three trains occupy the station at once." }
+    ]
+  },
+  "a2z-290": {
+    "description": "Given n jobs, each with a deadline (in time slots) and a profit earned when finished on or before the deadline, maximize total profit by scheduling at most one job per slot. Sort jobs by profit descending and place each into its latest free slot.",
+    "examples": [
+      { "input": "jobs = [(deadline 4, profit 20), (1, 10), (1, 40), (1, 30)]", "output": "60", "explanation": "Do the profit-40 job in slot 1 and the profit-20 job in slot 4." }
+    ]
+  },
+  "a2z-291": {
+    "description": "Children in a row each get at least one candy; a child with a higher rating than an adjacent child must receive more candies. Find the minimum total candies with two passes: left-to-right for rising ratings, then right-to-left taking the max.",
+    "examples": [
+      { "input": "ratings = [1, 0, 2]", "output": "5", "explanation": "The candy counts are [2, 1, 2]." },
+      { "input": "ratings = [1, 2, 2]", "output": "4", "explanation": "The candy counts are [1, 2, 1]." }
+    ]
+  },
+  "a2z-292": {
+    "description": "Given CPU burst times of processes scheduled with Shortest Job First (non-preemptive), compute the average waiting time. Sorting the processes by burst time minimizes the cumulative wait; waiting time of each process is the sum of bursts before it.",
+    "examples": [
+      { "input": "burstTimes = [4, 3, 7, 1, 2]", "output": "average waiting time = 4", "explanation": "Order 1, 2, 3, 4, 7 gives waits 0, 1, 3, 6, 10 totalling 20 over 5 processes." }
+    ]
+  },
+  "a2z-293": {
+    "description": "Simulate the LRU page replacement policy: given a reference string of page requests and a fixed number of frames, count the page faults (a request for a page not currently in a frame). Track recency and evict the least recently used page on overflow.",
+    "examples": [
+      { "input": "references = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2], frames = 3", "output": "9 page faults", "explanation": "Hits on 0 (step 5), 0 (step 7), 3 and 2 at the end keep the fault count at 9." }
+    ]
+  },
+  "a2z-294": {
+    "description": "Given a sorted list of non-overlapping intervals and one new interval, insert it so the result stays sorted and non-overlapping, merging any intervals it intersects. Collect intervals ending before the new one, merge all overlapping ones into it, then append the rest.",
+    "examples": [
+      { "input": "intervals = [[1, 3], [6, 9]], newInterval = [2, 5]", "output": "[[1, 5], [6, 9]]" }
+    ]
+  },
+  "a2z-295": {
+    "description": "Given a collection of intervals that may overlap, merge every overlapping pair and return the covering set of non-overlapping intervals sorted by start. Greedily sort by start and extend the current interval while the next one begins before it ends.",
+    "examples": [
+      { "input": "intervals = [[1, 3], [2, 6], [8, 10], [15, 18]]", "output": "[[1, 6], [8, 10], [15, 18]]" }
+    ]
+  },
+  "a2z-296": {
+    "description": "Given an array of intervals, return the minimum number of intervals you must remove so that the remaining intervals do not overlap (touching at endpoints is allowed). Sort by end time and greedily keep every compatible interval, counting the skips.",
+    "examples": [
+      { "input": "intervals = [[1, 2], [2, 3], [3, 4], [1, 3]]", "output": "1", "explanation": "Removing [1, 3] leaves three intervals that only touch at endpoints." }
+    ]
+  }
+}

@@ -1,0 +1,300 @@
+{
+  "a2z-206": {
+    "description": "Given an integer n and a bit position i (0-based from the least significant bit), determine whether the i-th bit of n is set to 1. Check it with a single AND against a mask: (n >> i) & 1, or n & (1 << i).",
+    "examples": [
+      { "input": "n = 13 (binary 1101), i = 2", "output": "true", "explanation": "Bit 2 of 1101 is 1." },
+      { "input": "n = 13 (binary 1101), i = 1", "output": "false" }
+    ]
+  },
+  "a2z-207": {
+    "description": "Given an integer n, determine whether it is odd or even using bit operations only. The least significant bit encodes parity directly: n & 1 is 1 exactly when n is odd.",
+    "examples": [
+      { "input": "n = 5", "output": "odd", "explanation": "5 in binary is 101 and its last bit is 1." },
+      { "input": "n = 10", "output": "even" }
+    ]
+  },
+  "a2z-208": {
+    "description": "Given an integer n, check whether it is a power of two (1, 2, 4, 8, ...). A positive power of two has exactly one set bit, so the check n > 0 && (n & (n - 1)) == 0 works in O(1).",
+    "examples": [
+      { "input": "n = 16", "output": "true", "explanation": "16 is 10000 in binary with a single set bit." },
+      { "input": "n = 18", "output": "false" }
+    ]
+  },
+  "a2z-209": {
+    "description": "Given an unsigned integer n, count the number of set bits (1s) in its binary representation. Brian Kernighan's trick n &= (n - 1) clears the lowest set bit each iteration, running once per set bit; a loop over all bits also works.",
+    "examples": [
+      { "input": "n = 13", "output": "3", "explanation": "13 is 1101 in binary, containing three 1s." },
+      { "input": "n = 7", "output": "3" }
+    ]
+  },
+  "a2z-210": {
+    "description": "Given an integer n, set its rightmost unset bit (the lowest 0 bit) to 1 and return the result; if every bit is set, return n unchanged. Setting the rightmost unset bit of n is equivalent to computing n | (n + 1).",
+    "examples": [
+      { "input": "n = 6 (binary 110)", "output": "7 (binary 111)", "explanation": "The rightmost unset bit is bit 0; setting it yields 111." },
+      { "input": "n = 13 (binary 1101)", "output": "15 (binary 1111)" }
+    ]
+  },
+  "a2z-211": {
+    "description": "Given two integers a and b, swap their values without using a temporary variable, using only the XOR operation. Apply the sequence a ^= b; b ^= a; a ^= b, exploiting the fact that x ^ x = 0 and XOR is self-inverse.",
+    "examples": [
+      { "input": "a = 5, b = 7", "output": "a = 7, b = 5" }
+    ]
+  },
+  "a2z-212": {
+    "description": "Given two integers dividend and divisor, compute the truncated quotient without using multiplication, division or the modulo operator. Repeatedly subtract the largest divisor << k that fits, accumulating 1 << k into the quotient; clamp results to the 32-bit signed range.",
+    "examples": [
+      { "input": "dividend = 10, divisor = 3", "output": "3" },
+      { "input": "dividend = 7, divisor = -2", "output": "-3", "explanation": "Truncation toward zero turns -3.5 into -3." }
+    ]
+  },
+  "a2z-213": {
+    "description": "Given two integers start and goal, return the minimum number of bit flips needed to convert start into goal. XOR the two numbers to mark every differing bit, then count the set bits of the result.",
+    "examples": [
+      { "input": "start = 10 (1010), goal = 7 (0111)", "output": "3", "explanation": "The XOR 1101 has three set bits." }
+    ]
+  },
+  "a2z-214": {
+    "description": "Given an array where every element appears exactly twice except one element that appears once, find that single number in linear time and constant space. XOR all elements: pairs cancel to 0 and the unique value survives.",
+    "examples": [
+      { "input": "arr = [4, 1, 2, 1, 2]", "output": "4" }
+    ]
+  },
+  "a2z-215": {
+    "description": "Given an array of integers, generate its power set using bit manipulation: iterate a mask from 0 to 2^n - 1 and include arr[i] in a subset whenever bit i of the mask is set. All 2^n subsets appear in mask order.",
+    "examples": [
+      { "input": "arr = [1, 2, 3]", "output": "[], [1], [2], [1,2], [3], [1,3], [2,3], [1,2,3]" }
+    ]
+  },
+  "a2z-216": {
+    "description": "Given an integer n, compute the XOR of all numbers from 0 to n (i.e. 0 ^ 1 ^ 2 ^ ... ^ n). The pattern repeats every four values: n % 4 == 0 gives n, 1 gives 1, 2 gives n + 1, and 3 gives 0, so the answer is O(1).",
+    "examples": [
+      { "input": "n = 5", "output": "1", "explanation": "0^1^2^3^4^5 = 1 because 5 % 4 == 1." },
+      { "input": "n = 4", "output": "4" }
+    ]
+  },
+  "a2z-217": {
+    "description": "Given an array where every element appears exactly twice except two elements that appear once each, find both unique numbers in linear time and constant space. XOR everything to get a ^ b, isolate the lowest set bit (a differing bit), and partition the array by that bit.",
+    "examples": [
+      { "input": "arr = [1, 2, 1, 3, 2, 5]", "output": "[3, 5]", "explanation": "3 and 5 appear once; all other values pair up." }
+    ]
+  },
+  "a2z-218": {
+    "description": "Given an integer n, print all of its prime factors with multiplicity in increasing order. Divide out each prime repeatedly starting from 2; a factor needs checking only up to sqrt(n), giving O(sqrt n) time.",
+    "examples": [
+      { "input": "n = 60", "output": "2, 2, 3, 5", "explanation": "60 = 2 * 2 * 3 * 5." },
+      { "input": "n = 13", "output": "13" }
+    ]
+  },
+  "a2z-219": {
+    "description": "Given an integer n, print all its divisors (factors) in increasing order. Iterate candidate divisors up to sqrt(n), recording both d and n / d when d divides n, then sort the collected pairs for increasing output.",
+    "examples": [
+      { "input": "n = 12", "output": "1, 2, 3, 4, 6, 12" },
+      { "input": "n = 25", "output": "1, 5, 25" }
+    ]
+  },
+  "a2z-220": {
+    "description": "Given a range [L, R], count how many primes lie in it (a prime is an integer greater than 1 divisible only by 1 and itself). Build a Sieve of Eratosthenes once up to R and answer queries by prefix-summing the sieve, or answer a single range directly.",
+    "examples": [
+      { "input": "L = 1, R = 10", "output": "4", "explanation": "The primes are 2, 3, 5 and 7." },
+      { "input": "L = 11, R = 20", "output": "4", "explanation": "The primes are 11, 13, 17 and 19." }
+    ]
+  },
+  "a2z-221": {
+    "description": "Given an integer n, express it as a product of prime powers, for example 60 = 2^2 * 3^1 * 5^1. Trial-divide by each prime factor, counting how many times it divides n, and print each prime with its exponent.",
+    "examples": [
+      { "input": "n = 60", "output": "2^2 * 3^1 * 5^1" },
+      { "input": "n = 100", "output": "2^2 * 5^2" }
+    ]
+  },
+  "a2z-222": {
+    "description": "Implement pow(x, n) using bit manipulation: process the exponent bit by bit, squaring the base for every bit and multiplying the answer when the bit is set. This binary exponentiation runs in O(log n) with no recursion.",
+    "examples": [
+      { "input": "x = 2, n = 10", "output": "1024", "explanation": "10 is 1010 in binary, so the answer multiplies in x^8 and x^2." },
+      { "input": "x = 3, n = 4", "output": "81" }
+    ]
+  },
+  "a2z-223": {
+    "description": "Implement a stack (LIFO) backed by a plain array with the operations push(x), pop(), top() and size(), each in O(1). Guard against popping or peeking an empty stack with an underflow message or exception.",
+    "examples": [
+      { "input": "push(2), push(3), push(4), pop(), push(5), top()", "output": "top = 5, size = 3" }
+    ]
+  },
+  "a2z-224": {
+    "description": "Implement a queue (FIFO) backed by a plain array with the operations push/enqueue(x), pop/dequeue(), front() and size(), each in O(1). Use a head index that advances on dequeue so elements need not be shifted; guard against underflow.",
+    "examples": [
+      { "input": "enqueue(2), enqueue(3), enqueue(4), dequeue(), enqueue(5), front()", "output": "front = 3, size = 3" }
+    ]
+  },
+  "a2z-225": {
+    "description": "Implement a stack using one or two queues so push, pop, top and size all behave like a LIFO stack. With a single queue, push rotates the queue after insertion; with two queues, push empties the main queue into a helper to bring the new element to the front.",
+    "examples": [
+      { "input": "push(2), push(3), pop(), push(4), top()", "output": "top = 2, popped value was 3" }
+    ]
+  },
+  "a2z-226": {
+    "description": "Implement a queue using two stacks so enqueue and dequeue follow FIFO order. Push onto an input stack for enqueue; for dequeue, pour the input stack into an output stack once when it is empty, then pop from the output stack (each element is moved at most once).",
+    "examples": [
+      { "input": "enqueue(2), enqueue(3), dequeue(), enqueue(4), front()", "output": "front = 3, dequeued value was 2" }
+    ]
+  },
+  "a2z-227": {
+    "description": "Implement a stack backed by a singly linked list with O(1) push, pop, top and size by operating at the head. Pushing inserts a new head node; popping removes the head and returns its value, with an underflow check for the empty stack.",
+    "examples": [
+      { "input": "push(1), push(2), push(3), pop(), top()", "output": "top = 2, size = 2" }
+    ]
+  },
+  "a2z-228": {
+    "description": "Implement a queue backed by a singly linked list with O(1) enqueue and dequeue by keeping both head and tail pointers. Enqueue appends at the tail; dequeue removes the head, handling the empty-queue and last-node cases.",
+    "examples": [
+      { "input": "enqueue(1), enqueue(2), dequeue(), enqueue(3), front()", "output": "front = 2, size = 2" }
+    ]
+  },
+  "a2z-229": {
+    "description": "Given a string containing only the characters '()', '[]' and '{}', determine whether the brackets are balanced: every opening bracket must close in the correct order with the matching type. Push openings onto a stack and match closings against the top in O(n).",
+    "examples": [
+      { "input": "s = '()[]{}'", "output": "true" },
+      { "input": "s = '([)]'", "output": "false", "explanation": "']' arrives before the pending '(' is closed." }
+    ]
+  },
+  "a2z-230": {
+    "description": "Design a stack that supports push, pop, top and retrieving the minimum element, every operation in O(1) time. Store the running minimum alongside each value (or keep a second min-stack updated on push and pop).",
+    "examples": [
+      { "input": "push(-2), push(0), push(-3), getMin(), pop(), top(), getMin()", "output": "-3, then top = 0, then min = -2" }
+    ]
+  },
+  "a2z-231": {
+    "description": "Given an infix expression containing letters, digits and the operators +, -, *, /, ^ and parentheses, convert it to postfix (Reverse Polish) notation using a stack. Higher-precedence operators (and left parentheses) stack up and pop when a lower-precedence operator or closing parenthesis arrives.",
+    "examples": [
+      { "input": "exp = 'a+b*c'", "output": "abc*+", "explanation": "Multiplication binds tighter, so it is emitted first." },
+      { "input": "exp = 'a+b*(c^d-e)^(f+g*h)-i'", "output": "abcd^e-fgh*+^*+i-" }
+    ]
+  },
+  "a2z-232": {
+    "description": "Given a prefix expression (operator before operands), convert it into a fully parenthesized infix expression by scanning right to left. Push operands on a stack; on an operator, pop two operands and push the string '(' + a + op + b + ')'.",
+    "examples": [
+      { "input": "exp = '*-A/BC-/AKL'", "output": "((A-(B/C))*((A/K)-L))" }
+    ]
+  },
+  "a2z-233": {
+    "description": "Given a prefix expression, convert it directly to postfix notation. Scan right to left with a stack: operands push, and an operator pops two strings and pushes a + b + operator.",
+    "examples": [
+      { "input": "exp = '*-A/BC-/AKL'", "output": "ABC/-AK/L-*" }
+    ]
+  },
+  "a2z-234": {
+    "description": "Given a postfix expression, convert it to prefix notation. Scan left to right with a stack: operands push, and an operator pops two strings and pushes operator + a + b.",
+    "examples": [
+      { "input": "exp = 'AB+CD-*'", "output": "*+AB-CD", "explanation": "(A+B) * (C-D) becomes '*' applied to '+AB' and '-CD'." }
+    ]
+  },
+  "a2z-235": {
+    "description": "Given a postfix expression, convert it to a fully parenthesized infix expression. Scan left to right with a stack: operands push, and an operator pops two strings and pushes '(' + a + operator + b + ')'.",
+    "examples": [
+      { "input": "exp = 'ab+ef*g*-'", "output": "((a+b)-((e*f)*g))" }
+    ]
+  },
+  "a2z-236": {
+    "description": "Given an infix expression, convert it to prefix notation. Reverse the string (swapping bracket directions), run the infix-to-postfix conversion with mirrored associativity, then reverse the result so every operator precedes its operands.",
+    "examples": [
+      { "input": "exp = 'x+y*z/w+u'", "output": "++x/*yzwu", "explanation": "y*z/w binds first, then the additions left to right." }
+    ]
+  },
+  "a2z-237": {
+    "description": "Given an array, find the next greater element to the right for every position: the nearest following element that is strictly larger, or -1 when none exists. Use a monotonic decreasing stack of indices, popping when a bigger value arrives, in O(n).",
+    "examples": [
+      { "input": "arr = [5, 7, 1, 2, 6, 0]", "output": "[7, -1, 2, 6, -1, -1]" }
+    ]
+  },
+  "a2z-238": {
+    "description": "Given a circular array, find each element's next greater element, wrapping around the end of the array to search the beginning; use -1 when no greater value exists. Iterate the doubled array with a monotonic stack of indices modulo n.",
+    "examples": [
+      { "input": "nums = [1, 2, 1]", "output": "[2, -1, 2]", "explanation": "The last 1 finds the greater 2 by wrapping to the start." }
+    ]
+  },
+  "a2z-239": {
+    "description": "Given an array, find the next smaller element to the right for every position: the nearest following element that is strictly smaller, or -1 when none exists. Use a monotonic increasing stack of indices, popping when a smaller value arrives, in O(n).",
+    "examples": [
+      { "input": "arr = [4, 5, 2, 10, 8]", "output": "[2, 2, -1, 8, -1]" }
+    ]
+  },
+  "a2z-240": {
+    "description": "Given an array, count for every element how many elements to its right are strictly greater. The brute force is O(n^2); smarter versions use a sorted container or merge-sort-style counting while scanning from the right.",
+    "examples": [
+      { "input": "arr = [1, 2, 3, 4]", "output": "[3, 2, 1, 0]", "explanation": "For 1, the elements 2, 3 and 4 all lie to its right and are greater." }
+    ]
+  },
+  "a2z-241": {
+    "description": "Given a non-negative elevation map where each bar has width 1, compute how much water it can trap after raining. Each position holds water up to min(max height to its left, max height to its right) minus its own height; two pointers compute it in O(n) with O(1) space.",
+    "examples": [
+      { "input": "height = [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]", "output": "6" }
+    ]
+  },
+  "a2z-242": {
+    "description": "Given an array of positive integers, sum the minimum of every contiguous subarray, modulo 10^9 + 7. For each element, count the subarrays in which it is the minimum (distance to the previous smaller and next smaller-or-equal elements) using a monotonic stack, in O(n).",
+    "examples": [
+      { "input": "arr = [3, 1, 2, 4]", "output": "17", "explanation": "Subarray minimums are 3+1+2+4+1+1+2+1+1+1 = 17." }
+    ]
+  },
+  "a2z-243": {
+    "description": "Given an array of asteroids with positive values moving right and negative values moving left at equal speed, simulate collisions: moving-apart asteroids never meet, while meeting ones destroy each other based on absolute size until stable. Return the final state using a stack.",
+    "examples": [
+      { "input": "asteroids = [5, 10, -5]", "output": "[5, 10]", "explanation": "10 destroys the smaller -5." },
+      { "input": "asteroids = [10, 2, -5]", "output": "[10]", "explanation": "-5 destroys 2, then explodes against 10." }
+    ]
+  },
+  "a2z-244": {
+    "description": "Given an integer array, sum the range (maximum minus minimum) of every contiguous subarray. Reuse the monotonic-stack technique: total = sum of all subarray maximums minus sum of all subarray minimums, each computed in O(n).",
+    "examples": [
+      { "input": "nums = [1, 2, 3]", "output": "4", "explanation": "The ranges are 0, 0, 0, 1, 1 and 2, summing to 4." }
+    ]
+  },
+  "a2z-245": {
+    "description": "Given a numeric string num and an integer k, remove k digits so the remaining number (with leading zeros stripped) is as small as possible; return the empty string if everything is removed. Greedily pop larger digits off a stack while removals remain.",
+    "examples": [
+      { "input": "num = '1432219', k = 3", "output": "'1219'", "explanation": "Removing 4, 3 and 2 leaves the smallest arrangement." },
+      { "input": "num = '10200', k = 1", "output": "'200'" }
+    ]
+  },
+  "a2z-246": {
+    "description": "Given an array of bar heights representing a histogram where each bar has width 1, find the area of the largest rectangle that fits entirely inside the histogram. Use a monotonic increasing stack of indices; on each pop, the popped height times the popped width bounds a candidate rectangle.",
+    "examples": [
+      { "input": "heights = [2, 1, 5, 6, 2, 3]", "output": "10", "explanation": "Bars 5 and 6 form a 2 x 5 rectangle of area 10." }
+    ]
+  },
+  "a2z-247": {
+    "description": "Given a binary matrix of 0s and 1s, find the area of the largest rectangle containing only 1s. Treat each row as the base of a histogram (heights = consecutive 1s above, resetting at 0s) and apply the largest-rectangle-in-histogram stack per row, in O(n*m).",
+    "examples": [
+      { "input": "matrix = [[1, 0, 1, 0, 0], [1, 0, 1, 1, 1], [1, 1, 1, 1, 1], [1, 0, 0, 1, 0]]", "output": "6", "explanation": "A 2 x 3 block of 1s sits in rows 1-2, columns 2-4." }
+    ]
+  },
+  "a2z-248": {
+    "description": "Given an array of integers and a window size k, return the maximum of every contiguous window of length k as the window slides from left to right. A deque of indices keeps candidates in decreasing order so each element enters and leaves once, giving O(n).",
+    "examples": [
+      { "input": "nums = [1, 3, -1, -3, 5, 3, 6, 7], k = 3", "output": "[3, 3, 5, 5, 6, 7]" }
+    ]
+  },
+  "a2z-249": {
+    "description": "The span of a stock's price on day i is the maximum number of consecutive days (ending today) over which the price has been less than or equal to today's price. Compute the span for every day using a stack of previous greater elements, in O(n).",
+    "examples": [
+      { "input": "prices = [100, 80, 60, 70, 60, 75, 85]", "output": "[1, 1, 1, 2, 1, 4, 6]", "explanation": "On the last day the prices 80, 60, 70, 60 and 75 are all <= 85, giving a span of six days." }
+    ]
+  },
+  "a2z-250": {
+    "description": "In a party of n people, a celebrity is known by everyone else but knows nobody; given the n x n 'knows' matrix, find the celebrity or return -1. A two-pointer elimination (or a stack) discards one non-celebrity per comparison, finishing with at most one candidate to verify in O(n).",
+    "examples": [
+      { "input": "knows = [[0, 1, 0], [0, 0, 0], [0, 1, 0]]", "output": "1", "explanation": "Everyone knows person 1, and person 1 knows nobody." }
+    ]
+  },
+  "a2z-251": {
+    "description": "Design a fixed-capacity LRU cache supporting get(key) and put(key, value) in O(1): evicting the least recently used entry when full. Combine a hashmap from key to node with a doubly linked list ordered by recency, moving nodes to the front on every access.",
+    "examples": [
+      { "input": "capacity = 2, put(1,1), put(2,2), get(1), put(3,3), get(2)", "output": "get(1) = 1, then get(2) = -1", "explanation": "Adding key 3 evicts key 2, the least recently used." }
+    ]
+  },
+  "a2z-252": {
+    "description": "Design a fixed-capacity LFU cache supporting get(key) and put(key, value) in O(1), evicting the least frequently used entry (most recent among ties) when full. Bucket keys by frequency with doubly linked lists plus a hashmap, promoting a key to the next bucket on every access.",
+    "examples": [
+      { "input": "capacity = 2, put(1,1), put(2,2), get(1), put(3,3), get(2)", "output": "get(1) = 1, then get(2) = -1", "explanation": "Key 1 was touched once so key 2 becomes the least frequently used and is evicted." }
+    ]
+  }
+}

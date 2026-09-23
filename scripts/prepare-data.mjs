@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 
 const SOURCE = 'data/problems.raw.json';
+const DESCRIPTIONS_SOURCE = 'data/descriptions.json';
 const OUTPUTS = ['data/problems.json', 'public/data/problems.json'];
 const TOPICS_OUT = ['data/topics.json', 'public/data/topics.json'];
 const PATTERNS_OUT = ['data/patterns.json', 'public/data/patterns.json'];
@@ -708,11 +709,21 @@ if (!Array.isArray(raw) || raw.length < 100) {
   throw new Error(`Expected local dataset at ${SOURCE}`);
 }
 
+// Descriptions/examples are curated separately and merged in by id; the file is
+// optional so the pipeline still runs before descriptions have been authored.
+let descriptions = {};
+try {
+  descriptions = JSON.parse(await readFile(DESCRIPTIONS_SOURCE, 'utf8'));
+} catch {
+  console.warn(`No descriptions at ${DESCRIPTIONS_SOURCE}; generating without them.`);
+}
+
 const problems = raw
   .filter((p) => !isTheoryProblem(p))
   .map((p) => {
     const topic = shortTopic(p.topic);
     const title = p.title;
+    const desc = descriptions[p.id];
     return {
       id: p.id,
       title,
@@ -722,6 +733,7 @@ const problems = raw
       status: 'Not Started',
       url: p.url || '',
       videoUrl: p.videoUrl || '',
+      ...(desc ? { description: desc.description, examples: desc.examples } : {}),
     };
   });
 
@@ -748,6 +760,7 @@ for (const output of PATTERNS_OUT) {
 }
 
 const unmatched = problems.filter((p) => p.pattern === 'General');
+const withoutDesc = problems.filter((p) => !p.description);
 const byTopic = {};
 problems.forEach((p) => {
   byTopic[p.topic] ??= {};
@@ -760,6 +773,10 @@ console.log(
 if (unmatched.length) {
   console.warn(`Unmatched patterns (${unmatched.length}):`);
   unmatched.forEach((p) => console.warn(`  [${p.topic}] ${p.title}`));
+}
+if (withoutDesc.length) {
+  console.warn(`Problems without descriptions (${withoutDesc.length}):`);
+  withoutDesc.forEach((p) => console.warn(`  ${p.id} [${p.topic}] ${p.title}`));
 }
 for (const [topic, pats] of Object.entries(byTopic)) {
   console.log(`\n${topic}`);

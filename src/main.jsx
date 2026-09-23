@@ -829,7 +829,7 @@ function CodeBlock({ code, language }) {
 }
 function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufUrl, setSolutions, back, backLabel, recordActivity, setToast }) {
   const supplied = solutions?.approaches?.length ? solutions : builtInSolutions;
-  const [tab, setTab] = useState("solutions");
+  const [tab, setTab] = useState("problem");
   const [localNotes, setLocalNotes] = useState(() => ({ ...emptyNotes(), ...notes }));
   const [editingNotes, setEditingNotes] = useState(() => !Object.values(notes || {}).some(v => String(v || "").trim()));
   const [localSol, setLocalSol] = useState(() => (supplied?.approaches?.length ? supplied.approaches : defaultApproaches()));
@@ -852,7 +852,7 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
     setLocalSol(supplied?.approaches?.length ? supplied.approaches : defaultApproaches());
     setEditingSol(false);
     setOpenApproach(0);
-    setTab("solutions");
+    setTab("problem");
     // Saved solutions are intentionally not a dependency: saving must not reset the tab or accordion.
   }, [p.id, builtInSolutions]);
 
@@ -978,10 +978,24 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
     </div>
 
     <div className="problem-tabs">
+      <button type="button" className={tab === "problem" ? "active" : ""} onClick={() => setTab("problem")}><BookOpen size={13} className="tab-icon" /> Problem <em>{p.examples?.length || 0} example{(p.examples?.length || 0) === 1 ? "" : "s"}</em></button>
       <button type="button" className={tab === "solutions" ? "active" : ""} onClick={() => setTab("solutions")}><Code2 size={13} className="tab-icon" /> Java & C# solutions <em>{filledApproaches}/{localSol.length}</em></button>
       <button type="button" className={tab === "notes" ? "active" : ""} onClick={() => setTab("notes")}>Learning notes <em>{filledNotes}/5</em></button>
       <button type="button" className={tab === "meta" ? "active" : ""} onClick={() => setTab("meta")}>Revision & meta</button>
     </div>
+
+    {tab === "problem" && <div className="panel desc-panel visible-block">
+      <div className="notes-head"><div><h3>Problem statement</h3><p>Curated description and worked examples — read the full statement before attempting.</p></div></div>
+      {p.description ? <div className="desc-body">
+        <p className="desc-text">{p.description}</p>
+        {p.examples?.length ? <><h4 className="desc-ex-label">Examples</h4><div className="desc-examples">{p.examples.map((ex, i) => <div className="desc-example" key={i}>
+          {p.examples.length > 1 && <b className="desc-ex-num">Example {i + 1}</b>}
+          <div className="desc-io"><span>Input</span><code>{ex.input}</code></div>
+          <div className="desc-io"><span>Output</span><code>{ex.output}</code></div>
+          {ex.explanation && <div className="desc-io"><span>Explanation</span><p>{ex.explanation}</p></div>}
+        </div>)}</div></> : null}
+      </div> : <Empty text="No description authored for this problem yet." />}
+    </div>}
 
     {tab === "notes" && <div className="panel notes-panel visible-block">
       <div className="notes-head">

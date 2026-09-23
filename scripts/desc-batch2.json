@@ -1,0 +1,284 @@
+{
+  "a2z-102": {
+    "description": "Given a sorted array of distinct integers and a target value, return the index of the target using binary search, or -1 if it is not present. Repeatedly halve the search range by comparing the target with the middle element, giving O(log n) time.",
+    "examples": [
+      { "input": "arr = [3, 4, 6, 7, 9, 12, 16, 17], target = 6", "output": "2" },
+      { "input": "arr = [3, 4, 6, 7, 9, 12, 16, 17], target = 8", "output": "-1" }
+    ]
+  },
+  "a2z-103": {
+    "description": "Given a sorted array and a value x, return the lower bound: the smallest index i such that arr[i] >= x. If every element is smaller than x, return n (the array length). Implement it with binary search in O(log n).",
+    "examples": [
+      { "input": "arr = [3, 5, 8, 15, 19], x = 9", "output": "3", "explanation": "arr[3] = 15 is the first element greater than or equal to 9." },
+      { "input": "arr = [3, 5, 8, 15, 19], x = 8", "output": "2" }
+    ]
+  },
+  "a2z-104": {
+    "description": "Given a sorted array and a value x, return the upper bound: the smallest index i such that arr[i] > x (strictly greater). If no such element exists, return n. Implement it with binary search in O(log n).",
+    "examples": [
+      { "input": "arr = [2, 4, 6, 7], x = 5", "output": "2", "explanation": "arr[2] = 6 is the first element strictly greater than 5." },
+      { "input": "arr = [2, 4, 6, 7], x = 7", "output": "4" }
+    ]
+  },
+  "a2z-105": {
+    "description": "Given a sorted array of distinct integers and a target, return the index where the target is found, or the index at which it would be inserted to keep the array sorted. This is exactly the lower bound of the target, solvable in O(log n).",
+    "examples": [
+      { "input": "arr = [1, 2, 4, 7], x = 6", "output": "3", "explanation": "6 is not present and would be inserted at index 3 between 4 and 7." },
+      { "input": "arr = [1, 2, 4, 7], x = 2", "output": "1" }
+    ]
+  },
+  "a2z-106": {
+    "description": "Given a sorted array and a value x, find the floor (the largest element <= x) and the ceil (the smallest element >= x) of x. Return -1 for either if it does not exist. Two binary searches solve this in O(log n).",
+    "examples": [
+      { "input": "arr = [3, 4, 4, 7, 8, 10], x = 5", "output": "floor = 4, ceil = 7" },
+      { "input": "arr = [3, 4, 4, 7, 8, 10], x = 8", "output": "floor = 8, ceil = 8" }
+    ]
+  },
+  "a2z-107": {
+    "description": "Given a sorted array that may contain duplicates and a target, find the first and the last index of the target. Return [-1, -1] if the target is absent. Use lower-bound and upper-bound binary searches instead of a linear scan.",
+    "examples": [
+      { "input": "arr = [2, 4, 10, 10, 10, 18, 20], target = 10", "output": "first = 2, last = 4" },
+      { "input": "arr = [2, 4, 10, 10, 10, 18, 20], target = 9", "output": "first = -1, last = -1" }
+    ]
+  },
+  "a2z-108": {
+    "description": "Given a sorted array with possible duplicates and a target, count how many times the target occurs. Find the first and last occurrence with binary search and take the difference, giving O(log n) time.",
+    "examples": [
+      { "input": "arr = [2, 4, 10, 10, 10, 18, 20], target = 10", "output": "3", "explanation": "10 occupies indices 2, 3 and 4." }
+    ]
+  },
+  "a2z-109": {
+    "description": "Given an ascending array of distinct values that has been rotated between 1 and n times, find the index of a target value in O(log n). At every step, at least one half of the current range is fully sorted; check which half contains the target before recursing into it.",
+    "examples": [
+      { "input": "arr = [4, 5, 6, 7, 0, 1, 2], target = 0", "output": "4" },
+      { "input": "arr = [4, 5, 6, 7, 0, 1, 2], target = 3", "output": "-1" }
+    ]
+  },
+  "a2z-110": {
+    "description": "Given a rotated sorted array that may contain duplicates, determine whether a target exists in it. Duplicates can make halves incomparable (arr[low] == arr[mid] == arr[high]); shrink the range by one in that case, giving O(log n) on average and O(n) worst case.",
+    "examples": [
+      { "input": "arr = [3, 1, 2, 3, 3, 3, 3], target = 1", "output": "true" },
+      { "input": "arr = [3, 1, 2, 3, 3, 3, 3], target = 0", "output": "false" }
+    ]
+  },
+  "a2z-111": {
+    "description": "Given an ascending array of distinct values rotated between 1 and n times, return the minimum element in O(log n). The minimum is the only element smaller than its predecessor; binary search by comparing the middle against the right end.",
+    "examples": [
+      { "input": "arr = [4, 5, 6, 7, 0, 1, 2]", "output": "0" },
+      { "input": "arr = [3, 4, 5, 1, 2]", "output": "1" }
+    ]
+  },
+  "a2z-112": {
+    "description": "Given a sorted array that has been rotated, find how many times it was rotated (right rotations). The answer is the index of the minimum element, which binary search locates in O(log n); an unrotated array gives 0.",
+    "examples": [
+      { "input": "arr = [3, 4, 5, 1, 2]", "output": "3", "explanation": "The minimum element 1 sits at index 3, so the array was rotated 3 times." },
+      { "input": "arr = [1, 2, 3, 4, 5]", "output": "0" }
+    ]
+  },
+  "a2z-113": {
+    "description": "Given a sorted array where every element appears exactly twice except one element that appears once, find the single element in O(log n). Before the single element, pairs start at even indices; after it, they start at odd indices; use this to guide the binary search.",
+    "examples": [
+      { "input": "arr = [1, 1, 2, 3, 3, 4, 4, 8, 8]", "output": "2" },
+      { "input": "arr = [3, 3, 7, 7, 10, 11, 11]", "output": "10" }
+    ]
+  },
+  "a2z-114": {
+    "description": "Given an array where no two adjacent elements are equal, find any peak element: an index whose value is strictly greater than both neighbours (imagine arr[-1] and arr[n] as negative infinity). Binary search toward the larger neighbour converges on a peak in O(log n).",
+    "examples": [
+      { "input": "arr = [1, 2, 3, 1]", "output": "2", "explanation": "3 at index 2 is greater than both neighbours 2 and 1." },
+      { "input": "arr = [1, 2, 1, 3, 5, 6, 4]", "output": "5" }
+    ]
+  },
+  "a2z-115": {
+    "description": "Given a non-negative integer n, return its integer square root, i.e. floor(sqrt(n)). Binary search the answer between 0 and n, or use the built-in power function; watch out for overflow when squaring mid.",
+    "examples": [
+      { "input": "n = 25", "output": "5" },
+      { "input": "n = 30", "output": "5", "explanation": "5 * 5 = 25 <= 30 while 6 * 6 = 36 > 30." }
+    ]
+  },
+  "a2z-116": {
+    "description": "Given two integers n and m, find the m-th root of n: an integer x such that x^m equals n. Return -1 if no integer root exists. Binary search x in [1, n] and compute powers with overflow-safe checks.",
+    "examples": [
+      { "input": "n = 27, m = 3", "output": "3", "explanation": "3^3 = 27." },
+      { "input": "n = 69, m = 4", "output": "-1", "explanation": "No integer raised to the 4th power equals 69." }
+    ]
+  },
+  "a2z-117": {
+    "description": "Koko can eat at most k bananas per hour from one pile. Given the pile sizes and h hours, find the minimum integer eating speed k that lets her finish every pile within h hours. Binary search the speed; the feasibility check sums ceil(pile / k) over piles.",
+    "examples": [
+      { "input": "piles = [3, 6, 7, 11], h = 8", "output": "4", "explanation": "At speed 4 the hours needed are 1 + 2 + 2 + 3 = 8, which fits." }
+    ]
+  },
+  "a2z-118": {
+    "description": "A garden has n flowers that bloom on given days; a bouquet needs k adjacent bloomed flowers. Find the minimum number of days needed to make m bouquets. Binary search the day and check feasibility by scanning for runs of k adjacent bloomed flowers.",
+    "examples": [
+      { "input": "bloomDay = [7, 7, 7, 7, 12, 7, 7], m = 2, k = 3", "output": "12", "explanation": "Only on day 12 do two disjoint groups of 3 adjacent flowers bloom (indices 0-2 and 3-5)." }
+    ]
+  },
+  "a2z-119": {
+    "description": "Given an array of positive integers and a threshold, choose the smallest positive divisor so that the sum of ceil(arr[i] / divisor) is at most the threshold. Binary search the divisor; the sum decreases as the divisor grows.",
+    "examples": [
+      { "input": "arr = [1, 2, 5, 9], threshold = 6", "output": "5", "explanation": "Divisor 5 gives 1 + 1 + 1 + 2 = 5 <= 6, while divisor 4 gives 7 which exceeds it." }
+    ]
+  },
+  "a2z-120": {
+    "description": "Packages must be shipped in order over at most d days; each day a conveyor with capacity w ships a contiguous prefix of the remaining packages. Find the minimum capacity that satisfies the deadline. Binary search the capacity between max(weights) and sum(weights).",
+    "examples": [
+      { "input": "weights = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], days = 5", "output": "15", "explanation": "Capacity 15 ships [1-5], [6-7], [8], [9], [10] in exactly 5 days; capacity 14 needs 6 days." }
+    ]
+  },
+  "a2z-121": {
+    "description": "Given a strictly increasing array of positive integers and an integer k, return the k-th positive integer missing from the array. Either count missing numbers while scanning, or derive it with binary search on the count of missing values before each index.",
+    "examples": [
+      { "input": "arr = [2, 3, 4, 7, 11], k = 5", "output": "9", "explanation": "The missing numbers are 1, 5, 6, 8, 9, ... and the 5th one is 9." }
+    ]
+  },
+  "a2z-122": {
+    "description": "Given positions of n stalls and k aggressive cows, place the cows in stalls so the minimum distance between any two cows is as large as possible, and return that distance. Binary search the answer distance and greedily verify placements from the leftmost stall.",
+    "examples": [
+      { "input": "stalls = [0, 3, 4, 7, 10, 9], k = 4", "output": "3", "explanation": "Placing cows at stalls 0, 4, 7 and 10 keeps every pair at least 3 apart, and 4 is impossible." }
+    ]
+  },
+  "a2z-123": {
+    "description": "Given pages of n books and m students, allocate a contiguous block of books to each student so the maximum pages any student reads is minimized; every student gets at least one book. Binary search the answer between the max single book and the total pages.",
+    "examples": [
+      { "input": "pages = [12, 34, 67, 90], m = 2", "output": "113", "explanation": "Student 1 reads [12, 34, 67] and student 2 reads [90]; no split lowers the heavier load." }
+    ]
+  },
+  "a2z-124": {
+    "description": "Split an array of non-negative integers into at most k contiguous subarrays so that the largest subarray sum is minimized, and return that sum. Binary search the candidate sum between max(nums) and sum(nums), greedily counting the pieces needed.",
+    "examples": [
+      { "input": "nums = [7, 2, 5, 10, 8], k = 2", "output": "18", "explanation": "The split [7, 2, 5] and [10, 8] has maximum sum 18." }
+    ]
+  },
+  "a2z-125": {
+    "description": "k painters take one unit of time per board and must each paint a contiguous set of boards. Given board lengths, find the minimum time in which the whole fence gets painted. It is the book allocation problem: binary search the maximum load per painter.",
+    "examples": [
+      { "input": "boards = [5, 10, 30, 20, 15], k = 3", "output": "35", "explanation": "Painter loads [5, 10], [30], [20, 15] cap the maximum at 35." }
+    ]
+  },
+  "a2z-126": {
+    "description": "Given positions of existing gas stations on a line and an integer k, add k new stations anywhere so the maximum distance between adjacent stations is minimized. Binary search the answer distance with a high-precision feasibility check on how many stations each gap needs.",
+    "examples": [
+      { "input": "stations = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], k = 9", "output": "0.5", "explanation": "Every unit gap receives one extra station, halving all gaps to 0.5." }
+    ]
+  },
+  "a2z-127": {
+    "description": "Given two sorted arrays of sizes n and m, return the median of all n + m elements in O(log(min(n, m))). Binary search the partition of the smaller array so the left halves contain exactly half the elements with every left value <= every right value.",
+    "examples": [
+      { "input": "a = [1, 3, 4, 7, 10, 12], b = [2, 3, 6, 15]", "output": "5.0", "explanation": "Merged order is [1, 2, 3, 3, 4, 6, 7, 10, 12, 15]; the middle elements 4 and 6 average to 5." }
+    ]
+  },
+  "a2z-128": {
+    "description": "Given two sorted arrays, find the k-th smallest element of their merged order without physically merging. Binary search how many elements to take from the smaller array, or run an O(k) two-pointer merge; the partition method gives O(log min(n, m)).",
+    "examples": [
+      { "input": "a = [2, 3, 6, 7, 9], b = [1, 4, 8, 10], k = 5", "output": "6", "explanation": "The merged array is [1, 2, 3, 4, 6, 7, 8, 9, 10] and its 5th element is 6." }
+    ]
+  },
+  "a2z-129": {
+    "description": "Given a boolean matrix where each row is sorted (all 0s before all 1s), find the row with the maximum number of 1s, returning the row index (or index and count). Count 1s per row in O(log n) by finding the first 1, or use the column index you are standing on.",
+    "examples": [
+      { "input": "mat = [[0, 1, 1, 1], [0, 0, 1, 1], [1, 1, 1, 1], [0, 0, 0, 0]]", "output": "row 2 (4 ones)" }
+    ]
+  },
+  "a2z-130": {
+    "description": "Given an m x n matrix where each row is sorted and the first integer of each row is greater than the last of the previous row, search for a target in O(log(m*n)). Treat the matrix as one flattened sorted array and binary search with index arithmetic (mid -> matrix[mid / n][mid % n]).",
+    "examples": [
+      { "input": "matrix = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]], target = 8", "output": "true" },
+      { "input": "matrix = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]], target = 13", "output": "false" }
+    ]
+  },
+  "a2z-131": {
+    "description": "Given a matrix where every row and every column is sorted in ascending order, determine whether a target exists. Start at the top-right corner: move left when the value is too big and down when it is too small, eliminating a row or column each step in O(m + n).",
+    "examples": [
+      { "input": "matrix = [[1, 4, 7, 11], [2, 5, 8, 12], [3, 6, 9, 16], [10, 13, 14, 17]], target = 5", "output": "true" },
+      { "input": "matrix = [[1, 4, 7, 11], [2, 5, 8, 12], [3, 6, 9, 16], [10, 13, 14, 17]], target = 15", "output": "false" }
+    ]
+  },
+  "a2z-132": {
+    "description": "A peak in a 2D matrix is a cell strictly greater than all four neighbours (out-of-bounds counts as -infinity); find the position of any peak. Binary search rows, take the column of the row maximum, and recurse into the larger vertical neighbour for O(m log n).",
+    "examples": [
+      { "input": "mat = [[10, 20, 15], [21, 30, 14], [7, 16, 32]]", "output": "[1, 1]", "explanation": "30 beats its neighbours 20, 14, 21 and 16." }
+    ]
+  },
+  "a2z-133": {
+    "description": "Given a matrix where each row is sorted, return the overall median of all n*m elements in less than O(n*m log(n*m)). Binary search the answer value using per-row upper-bound counts of elements <= mid.",
+    "examples": [
+      { "input": "mat = [[1, 3, 5], [2, 6, 9], [3, 6, 9]]", "output": "5", "explanation": "The 9 elements in order are [1, 2, 3, 3, 5, 6, 6, 9, 9] and the middle one is 5." }
+    ]
+  },
+  "a2z-253": {
+    "description": "Given a string, find the length of the longest substring without repeating characters. Slide a window with a hashmap of each character's last seen index, moving the left bound past duplicates, in O(n).",
+    "examples": [
+      { "input": "s = 'abcabcbb'", "output": "3", "explanation": "The longest substring without repeats is 'abc'." },
+      { "input": "s = 'bbbbb'", "output": "1" }
+    ]
+  },
+  "a2z-254": {
+    "description": "Given a binary array and an integer k, find the longest contiguous subarray of 1s achievable if you may flip at most k zeros. Slide a window that never holds more than k zeros, tracking the best length, in O(n).",
+    "examples": [
+      { "input": "nums = [1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0], k = 2", "output": "6", "explanation": "Flipping the two zeros next to the run of four 1s gives six consecutive 1s." }
+    ]
+  },
+  "a2z-255": {
+    "description": "Two baskets each hold one fruit type; walking a row of fruit trees you must pick one fruit from every tree starting at some tree until you hit a third type. Find the maximum number of trees you can pick from - the longest subarray with at most 2 distinct values.",
+    "examples": [
+      { "input": "fruits = [1, 2, 3, 2, 2]", "output": "4", "explanation": "Picking [2, 3, 2, 2] uses only fruit types 2 and 3." }
+    ]
+  },
+  "a2z-256": {
+    "description": "Given a string of uppercase letters and an integer k, find the length of the longest substring you can turn into a run of one repeating character by changing at most k characters. Slide a window that keeps (window length - count of the most frequent letter) <= k.",
+    "examples": [
+      { "input": "s = 'AABABBA', k = 1", "output": "4", "explanation": "Replacing one 'A' in 'ABBA' yields 'BBBB'." }
+    ]
+  },
+  "a2z-257": {
+    "description": "Given a binary array, count the subarrays that sum to exactly goal. Since zeros make prefix sums repeat, use a hashmap of prefix-sum counts (atMost(goal) - atMost(goal - 1) also works), giving O(n).",
+    "examples": [
+      { "input": "nums = [1, 0, 1, 0, 1], goal = 2", "output": "4", "explanation": "The subarrays [1,0,1], [1,0,1,0], [0,1,0,1] and [1,0,1] at the end sum to 2." }
+    ]
+  },
+  "a2z-258": {
+    "description": "Given an array of integers, count the number of 'nice' subarrays: subarrays containing exactly k odd numbers. Convert each element to its parity and count subarrays with exactly k ones, using prefix sums or the atMost(k) - atMost(k-1) trick.",
+    "examples": [
+      { "input": "nums = [1, 1, 2, 1, 1], k = 3", "output": "2", "explanation": "The subarrays [1, 1, 2, 1] and [1, 2, 1, 1] each contain exactly three odd numbers." }
+    ]
+  },
+  "a2z-259": {
+    "description": "Given a string consisting only of the characters a, b and c, count the substrings that contain at least one of each. For every right endpoint, find the smallest valid left bound and add its index + 1 to the answer, or use atMost(3) - atMost(2).",
+    "examples": [
+      { "input": "s = 'abcabc'", "output": "10", "explanation": "Every substring of length >= 3 except 'bca'-style misses contains all three; ten substrings qualify." },
+      { "input": "s = 'aaacb'", "output": "3" }
+    ]
+  },
+  "a2z-260": {
+    "description": "Cards are laid out in a row; you must take exactly k cards from the beginning or the end (in any order) to maximize the total points collected. Equivalently, drop a contiguous middle block of n - k cards with the minimum sum; try every split with prefix sums.",
+    "examples": [
+      { "input": "cardPoints = [1, 2, 3, 4, 5, 6, 1], k = 3", "output": "12", "explanation": "Taking cards 1, 6 and 5 from the ends collects 12 points." }
+    ]
+  },
+  "a2z-261": {
+    "description": "Given a string and an integer k, find the length of the longest substring containing at most k distinct characters. Slide a window with a frequency map, shrinking from the left whenever the distinct count exceeds k, in O(n).",
+    "examples": [
+      { "input": "s = 'aaabbccd', k = 2", "output": "6", "explanation": "The substring 'aaabbb' uses only two distinct characters and has length 6." }
+    ]
+  },
+  "a2z-262": {
+    "description": "Given an array of positive integers, count the subarrays with exactly k different values. Exactly-k equals (subarrays with at most k) minus (subarrays with at most k-1); each atMost count comes from a sliding window with a frequency map.",
+    "examples": [
+      { "input": "nums = [1, 2, 1, 2, 3], k = 2", "output": "7", "explanation": "Seven subarrays contain exactly two distinct values, such as [1,2], [2,1] and [1,2,1,2]." }
+    ]
+  },
+  "a2z-263": {
+    "description": "Given strings s and t, return the minimum window substring of s that contains every character of t (with multiplicity), or the empty string if none exists. Expand a window until it covers t, then contract from the left while it still covers, in O(n).",
+    "examples": [
+      { "input": "s = 'ADOBECODEBANC', t = 'ABC'", "output": "'BANC'", "explanation": "'BANC' is the shortest substring of s containing A, B and C." }
+    ]
+  },
+  "a2z-264": {
+    "description": "Given strings s1 and s2, find the minimum-length substring of s1 in which s2 appears as a subsequence; return the empty string if no such window exists. Slide a two-pointer subsequence match and walk the window back to find its smallest valid start.",
+    "examples": [
+      { "input": "s1 = 'abcdebdde', s2 = 'bde'", "output": "'bcde'", "explanation": "'bcde' contains b, then d, then e in order and is the shortest such window." }
+    ]
+  }
+}
