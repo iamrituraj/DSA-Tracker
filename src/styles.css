@@ -775,7 +775,11 @@
 .desc-io>span{font-size:11px;font-weight:700;color:#59667a;text-transform:uppercase;letter-spacing:.04em}
 .desc-io code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:#172033;background:#fff;border:1px solid #e5e8ee;border-radius:8px;padding:6px 10px;display:block;white-space:pre-wrap;word-break:break-word}
 .desc-io p{margin:0;font-size:13px;line-height:1.55;color:#42506b}
+.desc-examples+.desc-ex-label{margin-top:16px}
+.desc-constraints{margin:0 0 2px;padding-left:18px;display:grid;gap:6px}
+.desc-constraints li{font-size:13px;line-height:1.55;color:#42506b;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 @media(max-width:640px){.desc-io{grid-template-columns:1fr;gap:2px}}
+.theme-dark .desc-io p,.theme-dark .desc-constraints li{color:#a8b7cc}
 .theme-dark .desc-text{color:#c6d2e4}
 .theme-dark .desc-ex-label{color:#a8b7cc}
 .theme-dark .desc-example{background:#111c2e;border-color:#26354b}

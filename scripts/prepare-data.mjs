@@ -733,7 +733,15 @@ const problems = raw
       status: 'Not Started',
       url: p.url || '',
       videoUrl: p.videoUrl || '',
-      ...(desc ? { description: desc.description, examples: desc.examples } : {}),
+      ...(desc
+        ? {
+            description: desc.description,
+            examples: desc.examples,
+            ...(Array.isArray(desc.constraints) && desc.constraints.length
+              ? { constraints: desc.constraints }
+              : {}),
+          }
+        : {}),
     };
   });
 

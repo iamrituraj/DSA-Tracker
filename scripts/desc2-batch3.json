@@ -1,0 +1,500 @@
+{
+  "a2z-223": {
+    "description": "Design a stack data structure backed by a plain array: support push(x), pop(), top(), isEmpty() and size().\n\nKeep one index pointer to the current top position; push writes at the next free slot (growing the array or reporting overflow when capacity is fixed), pop returns the top and steps down, top peeks without removing. Every operation must be O(1). The exercise contrasts the array version — bounded or amortized-growth storage, index arithmetic — with the linked-list version that never needs resizing.",
+    "examples": [
+      {
+        "input": "push(5), push(3), pop(), top()",
+        "output": "5 (stack now [5])",
+        "explanation": "Pop removes 3; the new top is 5."
+      },
+      {
+        "input": "pop() on an empty stack",
+        "output": "-1 / underflow",
+        "explanation": "isEmpty guards reads on an empty structure."
+      }
+    ],
+    "constraints": [
+      "1 <= number of operations <= 10^5",
+      "All stack operations must run in O(1) worst or amortized time",
+      "Fixed-capacity variant must detect full/empty explicitly"
+    ]
+  },
+  "a2z-224": {
+    "description": "Implement a queue using an array, supporting enqueue(x), dequeue(), front(), rear() and size(), without ever shifting stored elements.\n\nA linear queue with head at index 0 wastes popped slots, so the required form is the circular queue: front and rear indices wrap with modulo capacity. Enqueue is full when (rear+1) % cap == front, dequeue advances front, and both run in O(1). A count field disambiguates the empty-vs-full collision when the ring is completely used.",
+    "examples": [
+      {
+        "input": "capacity 3: enqueue(1), enqueue(2), dequeue(), enqueue(3)",
+        "output": "front 2, rear 3",
+        "explanation": "rear wraps around the freed slot — no shifting occurred."
+      },
+      {
+        "input": "enqueue into a ring holding 3/3 live elements",
+        "output": "Queue Full",
+        "explanation": "The full predicate (rear+1)%cap == front fires."
+      }
+    ],
+    "constraints": [
+      "1 <= number of operations <= 10^5",
+      "O(1) per operation; elements must not be shifted",
+      "Report overflow/underflow for the fixed-capacity variant"
+    ]
+  },
+  "a2z-227": {
+    "description": "Implement a stack using a singly linked list: push, pop and top must be O(1) with no capacity limit.\n\nUse the head of the list as the top of the stack: push prepends a node, pop removes and returns the head node, top reads head.data. Inserting/removing at the head keeps everything constant time; appending at the tail would need a backward pointer for pop, which a singly linked list lacks.",
+    "examples": [
+      {
+        "input": "push(2), push(7), pop()",
+        "output": "7; remaining stack top = 2",
+        "explanation": "Head-slice removal mirrors LIFO."
+      },
+      {
+        "input": "top() on empty list",
+        "output": "-1",
+        "explanation": "Null head signals underflow."
+      }
+    ],
+    "constraints": [
+      "1 <= number of operations <= 10^5",
+      "O(1) for push and pop; memory grows with use"
+    ]
+  },
+  "a2z-228": {
+    "description": "Implement a queue using a singly linked list with O(1) enqueue and dequeue.\n\nKeep two pointers: enqueue appends at the tail, dequeue removes the head. When dequeue empties the list the tail pointer must also be nulled — the classic bug is leaving tail dangling at the deleted node. Maintaining only a head would force an O(n) walk to append, so two pointers are mandatory.",
+    "examples": [
+      {
+        "input": "enqueue(1), enqueue(2), dequeue(), dequeue()",
+        "output": "1, 2, then empty",
+        "explanation": "FIFO order; after the second dequeue head and tail are both null."
+      },
+      {
+        "input": "enqueue(9) into an empty queue",
+        "output": "head = tail = node(9)",
+        "explanation": "First insertion must set both pointers."
+      }
+    ],
+    "constraints": [
+      "1 <= number of operations <= 10^5",
+      "O(1) per operation via head and tail pointers"
+    ]
+  },
+  "a2z-231": {
+    "description": "Convert an infix expression (operators between operands, parentheses allowed, precedence ^ > * / > + -) into its postfix (RPN) equivalent.\n\nSingle left-to-right pass with an operator stack: emit operands immediately; push '(' after checking; on ')' pop until '(' is released; for any other operator pop (and emit) every stacked operator of precedence ≥ its own — for right-associative '^' only strictly greater — then push it. Flush the stack at the end. This is the shunting-yard core: O(n) time.",
+    "examples": [
+      {
+        "input": "infix = a+(b*c)",
+        "output": "abc*+",
+        "explanation": "'*' pops nothing (stack holds '('), ')' flushes '*' before vanishing; '+' emitted at end."
+      },
+      {
+        "input": "infix = (a+b)*(c-d)",
+        "output": "ab+cd-*",
+        "explanation": "Both parenthesised pairs flush before '*' is pushed."
+      }
+    ],
+    "constraints": [
+      "1 <= expression length <= 10^3",
+      "Operands are single letters/digits; operators + - * / ^",
+      "O(n); associativity rules must be honored"
+    ]
+  },
+  "a2z-232": {
+    "description": "Convert a prefix expression into its fully parenthesized infix form.\n\nScan the prefix string right to left with a stack of strings: push operands; when an operator appears, pop two partial expressions, build \"(op e1 e2)\" and push the result. The final stack entry is the answer (outermost parentheses can be stripped). Reading right-to-left is what makes operands arrive in the right order; the mirror problem (postfix) scans left-to-right.",
+    "examples": [
+      {
+        "input": "prefix = *+AB-CD",
+        "output": "((A+B)*(C-D))",
+        "explanation": "Scanned backwards: A, B, + → (A+B); C, D, - → (C-D); finally * joins them."
+      },
+      {
+        "input": "prefix = -/A*BCD",
+        "output": "((A/(B*C))-D)",
+        "explanation": "Nested operators unwind on the string stack."
+      }
+    ],
+    "constraints": [
+      "1 <= expression length <= 10^3",
+      "Valid prefix input with single-character operands",
+      "O(n) with a string stack"
+    ]
+  },
+  "a2z-233": {
+    "description": "Convert a prefix expression to postfix.\n\nTwo accepted methods: (1) scan right-to-left with a string stack, combining popped operands as \"e1e2op\" for each operator; (2) read left-to-right building a tree, then postorder it. The stack method is O(n) and shows the symmetry: prefix→infix and prefix→postfix differ only in how the fragment is assembled.",
+    "examples": [
+      {
+        "input": "prefix = *+AB-CD",
+        "output": "AB+CD-*",
+        "explanation": "Right-to-left walk forms the fragments AB+ and CD-, then the root operator appends *."
+      },
+      {
+        "input": "prefix = -A/BC",
+        "output": "ABC/-",
+        "explanation": "'/' combines B and C into BC/, then '-' puts A in front: ABC/-."
+      }
+    ],
+    "constraints": [
+      "1 <= expression length <= 10^3",
+      "Single-character operands, operators from + - * / ^",
+      "O(n)"
+    ]
+  },
+  "a2z-234": {
+    "description": "Convert a postfix expression to prefix.\n\nScan left-to-right with a string stack: push operands; on each operator pop two fragments (first pop is the right operand, second the left), push operator+left+right concatenated. One fragment remains — that is the prefix form. Contrast with postfix→infix, which just wraps the same combination in parentheses.",
+    "examples": [
+      {
+        "input": "postfix = AB+CD-*",
+        "output": "*+AB-CD",
+        "explanation": "Stack evolution: A, B, +→+AB, C, D, -→-CD, *→*+AB-CD."
+      },
+      {
+        "input": "postfix = ABC/-D-",
+        "output": "-/A-BCD",
+        "explanation": "Verify by re-converting: prefix -/A-BCD evaluates the same tree."
+      }
+    ],
+    "constraints": [
+      "1 <= expression length <= 10^3",
+      "Valid postfix input",
+      "O(n); operand order on pops is the subtlety"
+    ]
+  },
+  "a2z-235": {
+    "description": "Convert a postfix expression to infix.\n\nLeft-to-right single pass, stack of strings: operands push directly; for an operator, pop right then left and push \"(left op right)\". The surviving string is fully parenthesized infix. Extra parentheses are part of the expected answer; ambiguity removal (dropping redundant pairs) is the optional polish.",
+    "examples": [
+      {
+        "input": "postfix = ABC++",
+        "output": "((A+B)+C)",
+        "explanation": "First + joins A, B; second joins (A+B) with C."
+      },
+      {
+        "input": "postfix = AB+CD*-",
+        "output": "((A+B)-(C*D))",
+        "explanation": "C, D, * form (C*D) before the subtraction combines both fragments."
+      }
+    ],
+    "constraints": [
+      "1 <= expression length <= 10^3",
+      "Valid postfix with single-letter operands",
+      "O(n)"
+    ]
+  },
+  "a2z-236": {
+    "description": "Convert an infix expression to prefix.\n\nThe canonical recipe reuses the infix→postfix machinery: reverse the string (swapping '(' and ')' on the way), apply postfix-style conversion with mirrored associativity, then reverse the result. Alternatively parse into an expression tree with precedence climbing and emit preorder. Either way the output has operators before operands and needs no parentheses.",
+    "examples": [
+      {
+        "input": "infix = (a+b)*(c-d)",
+        "output": "*+ab-cd",
+        "explanation": "Tree root is '*', left subtree +ab, right subtree -cd — preorder emits them."
+      },
+      {
+        "input": "infix = a+b*c",
+        "output": "+a*bc",
+        "explanation": "'*' binds tighter, so it sits deeper in the tree."
+      }
+    ],
+    "constraints": [
+      "1 <= expression length <= 10^3",
+      "Precedence ^ > * / > + -, parentheses allowed",
+      "O(n)"
+    ]
+  },
+  "a2z-239": {
+    "description": "For each element of an array, find its next smaller element to the right — the first element strictly smaller than it; output -1 when none exists.\n\nMonotonic stack: traverse right-to-left (or left-to-right popping pending larger elements). Maintain a stack of candidates in increasing order: pop everything ≥ current (they can never be anyone's next smaller), the stack top (if any) is the answer for the current element, then push current. Each element is pushed and popped once → O(n). The left-to-right variant finalizes whole rows of answers at pop time.",
+    "examples": [
+      {
+        "input": "arr = [4, 8, 5, 4, 2, 9]",
+        "output": "[2, 5, 4, 2, -1, -1]",
+        "explanation": "Right-to-left: 4's answer 2 (first smaller to its right); 8's is 5; 9 and 2 have none."
+      },
+      {
+        "input": "arr = [1, 2]",
+        "output": "[-1, -1]",
+        "explanation": "Nothing is smaller to the right anywhere."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^6",
+      "-10^9 <= arr[i] <= 10^9",
+      "O(n) time via a monotonic stack"
+    ]
+  },
+  "a2z-240": {
+    "description": "Given an array, for every element count how many elements to its right are strictly greater. Return the counts array.\n\nThe brute-force double scan is O(n²). The efficient answer processes the array right-to-left while inserting each value into an order-statistics structure — a Fenwick/BIT over compressed values queries how many smaller… (mirror for greater) already seen, or a merge-sort that accumulates per-index contributions during the merge step. Both land at O(n log n).",
+    "examples": [
+      {
+        "input": "arr = [5, 2, 6, 1]",
+        "output": "[1, 1, 0, 0]",
+        "explanation": "Right of 5 only 6 is greater; right of 2 only 6; 6 and 1 see nothing greater."
+      },
+      {
+        "input": "arr = [3, 2, 1]",
+        "output": "[0, 0, 0]",
+        "explanation": "Descending array — no right-side element ever exceeds the current one."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "-10^9 <= arr[i] <= 10^9",
+      "O(n log n) for full marks; O(n²) passes small tests only"
+    ]
+  },
+  "a2z-265": {
+    "description": "Given an unsorted array of distinct elements and an integer K, find the K-th smallest element (K = 1 gives the minimum).\n\nThree expected solutions: (1) sort and index — O(n log n); (2) a max-heap of size K: keep the K smallest, the root is the answer — O(n log K); (3) quickselect with randomized pivots — O(n) average, O(n²) worst, which randomization and median-of-medians discussion address. Duplicates are excluded by the constraint to keep ranks well-defined.",
+    "examples": [
+      {
+        "input": "arr = [7, 10, 4, 3, 20, 15], K = 3",
+        "output": "7",
+        "explanation": "Sorted: 3, 4, 7, 10, 15, 20 — the 3rd is 7."
+      },
+      {
+        "input": "arr = [10, 20], K = 2",
+        "output": "20",
+        "explanation": "K can reach n."
+      }
+    ],
+    "constraints": [
+      "1 <= K <= arr.length <= 10^5",
+      "All elements distinct",
+      "O(n log K) or expected O(n) preferred"
+    ]
+  },
+  "a2z-267": {
+    "description": "Implement a min-heap backed by an array supporting insert(x), extractMin() and getMin().\n\nStore the tree level-order in a vector: parent i has children 2i+1 and 2i+2. Insert appends then bubbles up while smaller than the parent; extractMin swaps the root with the last element, pops, and sinks the new root by swapping with its smaller child while out of order. Both paths are O(log n); getMin peeks index 0 in O(1). Duplicates and equal keys must be handled without breaking the heap property.",
+    "examples": [
+      {
+        "input": "insert(30), insert(15), insert(10), extractMin(), getMin()",
+        "output": "extractMin → 10; getMin → 15",
+        "explanation": "After removing the root, 15 sinks in as the minimum."
+      },
+      {
+        "input": "insert(5), insert(5), extractMin()",
+        "output": "5",
+        "explanation": "Equal keys are legal."
+      }
+    ],
+    "constraints": [
+      "1 <= number of operations <= 10^5",
+      "O(log n) per insert/extract is required",
+      "Array-based; the standard library heap is the cheat you implement by hand"
+    ]
+  },
+  "a2z-268": {
+    "description": "Given an array, decide whether it is a valid representation of a min-heap stored level-order in that array.\n\nA min-heap requires every node ≤ both children: check a[i] ≤ a[2i+1] and a[i] ≤ a[2i+2] for all i with existing children — a single linear scan over internal nodes. The array's shape encodes a complete binary tree automatically, so only the order property needs validation. Example [3, 5, 9, 6, 12] passes: each parent beats its children.",
+    "examples": [
+      {
+        "input": "arr = [3, 5, 9, 6, 12]",
+        "output": "true",
+        "explanation": "3 ≤ 5, 9 and 5 ≤ 6, 12 — property holds everywhere."
+      },
+      {
+        "input": "arr = [10, 5, 6]",
+        "output": "false",
+        "explanation": "Root 10 exceeds both children."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "O(n) time, O(1) space",
+      "Only the heap-order property is checked; the layout is implicitly complete"
+    ]
+  },
+  "a2z-269": {
+    "description": "Convert an array representing a min-heap into one representing a max-heap of the same elements, in O(n) time — sorting the array is forbidden as it is O(n log n).\n\nIgnore the incoming min-heap structure entirely and heapify from scratch: run the sink-down pass for i = n/2 - 1 down to 0. Floyd's build-heap argument (deep nodes do little work) proves the total cost is O(n). Any valid max-heap arrangement of the multiset is accepted, not a specific one.",
+    "examples": [
+      {
+        "input": "min-heap [10, 15, 30, 40, 50]",
+        "output": "one valid answer: [50, 40, 30, 10, 15]",
+        "explanation": "Same multiset, parent ≥ children everywhere."
+      },
+      {
+        "input": "single element [7]",
+        "output": "[7]",
+        "explanation": "Trivially both heap types."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "O(n) build-heap; do not sort",
+      "In place"
+    ]
+  },
+  "a2z-270": {
+    "description": "Given an unsorted array and an integer K, find the K-th largest element (K = 1 is the maximum). Duplicates count separately, so [4, 4, 3] has 2nd largest 4.\n\nMirror of k-th smallest: sort (O(n log n)), maintain a min-heap of size K whose root is the answer after the sweep (O(n log K)), or run randomized quickselect on the descending rank (expected O(n)). The heap version also streams — the array need not fit in memory.",
+    "examples": [
+      {
+        "input": "arr = [7, 10, 4, 3, 20, 15], K = 3",
+        "output": "10",
+        "explanation": "Descending order 20, 15, 10 — the third is 10."
+      },
+      {
+        "input": "arr = [4, 4, 3], K = 2",
+        "output": "4",
+        "explanation": "Occurrences are counted individually."
+      }
+    ],
+    "constraints": [
+      "1 <= K <= arr.length <= 10^5",
+      "Elements may repeat",
+      "O(n log K) or expected O(n)"
+    ]
+  },
+  "a2z-271": {
+    "description": "Given a nearly-sorted array where every element sits at most K positions away from its index in the fully sorted array, sort the whole thing in better-than-general time.\n\nSlide a min-heap of capacity K+1 across the array: seed with the first K+1 elements, then repeatedly pop the minimum into the output (it must be the next sorted element, since its true position is within reach) and push the incoming element. Tail: drain the heap. Complexity O(n log K), which beats O(n log n) whenever K ≪ n.",
+    "examples": [
+      {
+        "input": "arr = [6, 5, 3, 2, 8, 10, 9], K = 3",
+        "output": "[2, 3, 5, 6, 8, 9, 10]",
+        "explanation": "Each element is ≤ 3 spots from home; the window heap settles them in order."
+      },
+      {
+        "input": "K = 0",
+        "output": "array unchanged (already sorted)",
+        "explanation": "The heap degenerates to a one-element peek."
+      }
+    ],
+    "constraints": [
+      "1 <= n <= 10^5, 0 <= K < n",
+      "Guarantee: |current index - sorted index| <= K",
+      "O(n log K) time, O(K) space"
+    ]
+  },
+  "a2z-273": {
+    "description": "Replace every element of an array by its rank — its position (starting from 1) in the sorted order of the array's distinct values, larger values getting larger ranks. Equal elements share a rank.\n\nDeduplicate, sort the unique values, map each value to its 1-based index (a hash map from value to rank makes lookups O(1)), then overwrite the array. O(n log n) dominated by the sort; comparing pairs by value in-place is the alternate pointer-sort technique and avoids a second map.",
+    "examples": [
+      {
+        "input": "arr = [10, 16, 80, 50, 80, 10, 50, 10]",
+        "output": "[1, 2, 4, 3, 4, 1, 3, 1]",
+        "explanation": "Distinct sorted values: 10 → 1, 16 → 2, 50 → 3, 80 → 4."
+      },
+      {
+        "input": "arr = [5, 5, 5]",
+        "output": "[1, 1, 1]",
+        "explanation": "One unique value — everyone ranks 1."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "-10^9 <= arr[i] <= 10^9",
+      "O(n log n); ranks start at 1"
+    ]
+  },
+  "a2z-279": {
+    "description": "Given two arrays A and B of N non-negative integers sorted descending (conceptually all N² pair sums) and a number K, return the K largest combinations of the form A[i] + B[j], in decreasing order.\n\nA max-heap seeded with (i, j) = (0, 0) — the largest possible sum — and a visited set does it: pop a pair, emit the sum, then push its two neighbors (i+1, j) and (i, j+1) if unseen. Each pop is O(log K), total O(K log K), versus O(N² log N) for materializing everything. The neighbors cover every reachable cell — a standard proof by grid reachability.",
+    "examples": [
+      {
+        "input": "A = [3, 5, 10], B = [1, 2, 15], K = 3",
+        "output": "25, 20, 18",
+        "explanation": "The three largest pair sums are 10+15, 5+15 and 3+15."
+      },
+      {
+        "input": "A = [8, 2], B = [10, 4], K = 4",
+        "output": "18, 12, 10, 6",
+        "explanation": "All four pairs in decreasing order."
+      }
+    ],
+    "constraints": [
+      "1 <= N <= 10^3, 1 <= K <= N",
+      "Non-negative arrays; duplicates allowed",
+      "O(K log K) extra-pair approach expected"
+    ]
+  },
+  "a2z-283": {
+    "description": "Given N items with values and weights and a knapsack capacity W, maximize the value carried when fractions of items may be taken (any real portion of an item's weight brings that same fraction of its value).\n\nGreedy by value-to-weight ratio: sort items by v/w descending, take each item fully while it fits, and take the first one that doesn't fit partially (remaining capacity × its ratio), then stop. Proof of optimality is the standard exchange argument. Unlike 0/1 knapsack, no DP is needed; the answer is a floating-point number.",
+    "examples": [
+      {
+        "input": "value = [60, 100, 120], weight = [10, 20, 30], W = 50",
+        "output": "240.0",
+        "explanation": "Ratios 6, 5, 4: take items 1 and 2 (weights 30), then 20/30 of item 3 adds 80 → 240."
+      },
+      {
+        "input": "W larger than total weight",
+        "output": "sum of all values",
+        "explanation": "Everything fits; no fractions needed."
+      }
+    ],
+    "constraints": [
+      "1 <= N <= 10^5, 1 <= W <= 10^5",
+      "1 <= values, weights ≤ 10^4; print with two-decimal precision",
+      "Fractions allowed — this is NOT 0/1 knapsack"
+    ]
+  },
+  "a2z-286": {
+    "description": "Given start[i] and finish[i] for N meetings (a meeting occupies [start, finish) — a new meeting may start exactly when another ends), select the maximum number of meetings a single room can host and print their original 1-based indices in increasing order.\n\nGreedy interval scheduling: sort meetings by finishing time and take each meeting whose start is ≥ the last accepted meeting's finish. Earliest-finish-first is provably optimal by exchange; ties in finish time resolved by smaller original index keep the printed indices minimal. Reconstructing the index list (not just the count) is part of the answer.",
+    "examples": [
+      {
+        "input": "start = [1, 3, 0, 5, 8, 5], finish = [2, 4, 6, 7, 9, 9]",
+        "output": "1 2 4 5",
+        "explanation": "Pick (1,2), (3,4), (5,7), (8,9) — meetings 3 and 6 clash."
+      },
+      {
+        "input": "two identical meetings [0,1] and [1,2]",
+        "output": "both",
+        "explanation": "Touching endpoints do not conflict under the half-open convention."
+      }
+    ],
+    "constraints": [
+      "1 <= N <= 10^5",
+      "0 <= start[i] < finish[i] <= 10^5",
+      "O(N log N) sorting; output is the maximum-size index set"
+    ]
+  },
+  "a2z-289": {
+    "description": "Given arrival and departure times of trains at a station, find the minimum number of platforms so that no train ever waits for a free one.\n\nSort arrivals and departures independently, then sweep like a merge: an arriving train opens a platform (counter++), a departed train closes one (counter--), tracking the maximum counter reached — that peak is the answer. The boundary rule matters: if a train departs at the same minute another arrives, the arriving one needs a new platform (count arrivals first), or vice versa depending on the statement's turn-around convention. O(N log N).",
+    "examples": [
+      {
+        "input": "arr = [0900, 0940, 0950, 1100, 1500, 1800], dep = [0910, 1200, 1120, 1130, 1900, 2000]",
+        "output": "3",
+        "explanation": "Peak overlap of three trains occurs around 0950–1100."
+      },
+      {
+        "input": "arr = [0900, 0900, 0900], dep = [0910, 0912, 0915]",
+        "output": "3",
+        "explanation": "Three trains coexist at 09:00."
+      }
+    ],
+    "constraints": [
+      "1 <= N <= 10^5",
+      "Times as HHMM integers or HH:MM strings; dep > arr per train",
+      "State your tie-breaking convention explicitly; O(N log N)"
+    ]
+  },
+  "a2z-290": {
+    "description": "Given N jobs with deadline[i] (a slot 1..deadline must be free) and profit[i], each job takes exactly one unit of time; schedule jobs to maximize total profit, and report how many jobs were done and the profit.\n\nGreedy with a slot table: sort jobs by profit descending; place each job in the latest free slot ≤ its deadline (a disjoint-set \"next free slot\" pointer makes this near O(N·α)). Skipping a job happens exactly when no such slot is free. The profit-order greedy is optimal for unit-length jobs; DP fails the complexity bar.",
+    "examples": [
+      {
+        "input": "deadline = [4, 1, 1, 3, 2, 1], profit = [100, 19, 27, 25, 15, 50]",
+        "output": "4 jobs, profit 190",
+        "explanation": "Profit descending: 100 → slot 4, 50 → slot 1, 25 → slot 3, 15 → slot 2; jobs 27 and 19 find no free slot."
+      },
+      {
+        "input": "all deadlines = 1",
+        "output": "single best job",
+        "explanation": "Only one slot exists; greedy keeps the maximum profit."
+      }
+    ],
+    "constraints": [
+      "1 <= N <= 10^5, 1 <= deadline ≤ N",
+      "1 <= profit ≤ 10^4",
+      "O(N log N) with sorting + slot search; 64-bit total"
+    ]
+  },
+  "a2z-292": {
+    "description": "Simulate the non-preemptive Shortest Job First scheduler: given burst (execution) times for N processes that all arrive at time 0, order them shortest-first and compute average waiting time and average turnaround time.\n\nSorting burst times ascending is SJF. Waiting time for a job is the sum of all earlier bursts; turnaround = waiting + its own burst. SJF is provably optimal for minimum average waiting among non-preemptive schedules (exchange argument on any adjacent longer-before-shorter pair). With arrival times involved, a min-heap by burst releases jobs as the clock advances.",
+    "examples": [
+      {
+        "input": "bursts = [4, 3, 7, 1, 2]",
+        "output": "average waiting = 4.00",
+        "explanation": "Order 1, 2, 3, 4, 7 → waits 0, 1, 3, 6, 10; mean 20/5 = 4."
+      },
+      {
+        "input": "single burst [6]",
+        "output": "waiting 0, turnaround 6",
+        "explanation": "One job never waits."
+      }
+    ],
+    "constraints": [
+      "1 <= N <= 10^5",
+      "1 <= burst ≤ 10^5",
+      "O(N log N) sort; print means to two decimals"
+    ]
+  }
+}

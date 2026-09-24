@@ -994,6 +994,7 @@ function Problem({ p, update, notes, setNotes, solutions, builtInSolutions, tufU
           <div className="desc-io"><span>Output</span><code>{ex.output}</code></div>
           {ex.explanation && <div className="desc-io"><span>Explanation</span><p>{ex.explanation}</p></div>}
         </div>)}</div></> : null}
+        {p.constraints?.length ? <><h4 className="desc-ex-label">Constraints</h4><ul className="desc-constraints">{p.constraints.map((c, i) => <li key={i}>{c}</li>)}</ul></> : null}
       </div> : <Empty text="No description authored for this problem yet." />}
     </div>}
 

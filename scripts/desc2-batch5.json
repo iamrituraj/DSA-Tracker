@@ -1,0 +1,442 @@
+{
+  "a2z-354": {
+    "description": "Given an undirected graph with V vertices (0..V-1) as an adjacency list, count its connected components — maximal sets of vertices mutually reachable by paths.\n\nFlood fill: keep a visited array; for each unvisited vertex launch a DFS/BFS that marks its whole component and increment a counter once per launch. Isolated vertices count as components of size 1. O(V + E) time, O(V) space — the same skeleton as number-of-islands but on a general graph.",
+    "examples": [
+      {
+        "input": "V = 5, adj: 0-1, 1-2, 3-4",
+        "output": "2",
+        "explanation": "Components {0,1,2} and {3,4}."
+      },
+      {
+        "input": "V = 3, no edges",
+        "output": "3",
+        "explanation": "Every isolated vertex is its own component."
+      }
+    ],
+    "constraints": [
+      "1 <= V <= 10^5",
+      "0 <= E <= 10^5; graph undirected, no self-loops required",
+      "O(V + E) time; iterative DFS or explicit queue to avoid stack overflow"
+    ]
+  },
+  "a2z-355": {
+    "description": "Given a connected undirected graph with V vertices and its adjacency list, produce both traversal orders: DFS (deep-first, backtracking) and BFS (level-by-level), each printed as the sequence of first visits starting from vertex 0 (neighbors visited in adjacency-list order).\n\nDFS: recurse (or use a stack) marking vertices visited on first touch, emitting before descending. BFS: seed a queue with 0, pop-then-push-unvisited-neighbours, emitting at enqueue time so order is by nondecreasing depth. Both run in O(V + E); the exercise contrasts the stack/queue that produce different orders on the same graph.",
+    "examples": [
+      {
+        "input": "V = 4, adj: 0:[1,2], 1:[0,3], 2:[0,3], 3:[1,2]",
+        "output": "DFS: 0 1 3 2 | BFS: 0 1 2 3",
+        "explanation": "DFS dives 0-1-3 and reaches 2 through 3; BFS takes 1 and 2 as direct neighbours of 0 first."
+      },
+      {
+        "input": "V = 1, adj: 0:[]",
+        "output": "both: 0",
+        "explanation": "Single vertex."
+      }
+    ],
+    "constraints": [
+      "1 <= V <= 10^3",
+      "Graph connected; undirected edges stored both ways",
+      "O(V + E); visit neighbours in listed order"
+    ]
+  },
+  "a2z-356": {
+    "description": "Given an undirected connected graph as an adjacency list and a starting vertex, print the depth-first search order — vertices in the order DFS first visits them.\n\nMark the start visited and emit it; recurse into each unvisited neighbour in list order. Iterative form: push the start on a stack, pop, and if unvisited emit + mark, then push neighbours in reverse list order so the smallest-listed neighbour pops first. O(V + E).",
+    "examples": [
+      {
+        "input": "V = 5, adj: 0:[1,2,3], 1:[0,4], 2:[0], 3:[0,4], 4:[1,3], start 0",
+        "output": "0 1 4 3 2",
+        "explanation": "From 0 go deep to 1, then 4, backtrack to 3 (via 4) or from 0's list after 1's subtree — order follows adjacency lists and visited marking."
+      },
+      {
+        "input": "start vertex 2 in the same graph",
+        "output": "2 0 1 4 3",
+        "explanation": "Same rule from a different seed."
+      }
+    ],
+    "constraints": [
+      "1 <= V <= 10^4",
+      "0 <= E <= 10^5; graph connected and undirected",
+      "O(V + E); each vertex printed exactly once"
+    ]
+  },
+  "a2z-358": {
+    "description": "Given an R × C grid of 0s (water) and 1s (land), count the connected components of land where cells connect in all 8 directions (horizontal, vertical and diagonal). A single island is any 8-connected group of 1-cells.\n\nClassic flood fill: for each unvisited land cell run DFS/BFS over its 8-neighbour component, marking visited (or sinking the island by zeroing cells), incrementing the count per launch. O(R·C) time. The 8-directional move list is the one detail separating this from Number of Islands (4-directional).",
+    "examples": [
+      {
+        "input": "grid = [[1,1,0,0,0],[0,1,0,0,1],[1,0,0,1,1],[0,0,0,0,0],[1,0,1,0,1]]",
+        "output": "3",
+        "explanation": "The diagonal touch at (0,0)-(1,1) and the cluster around (1,4),(2,3),(2,4) merge single-cell islands."
+      },
+      {
+        "input": "grid = [[1]]",
+        "output": "1",
+        "explanation": "One land cell is one island."
+      }
+    ],
+    "constraints": [
+      "1 <= R, C <= 500",
+      "Grid entries are 0 or 1",
+      "O(R·C·8) time; iterative DFS or bounded recursion"
+    ]
+  },
+  "a2z-361": {
+    "description": "Detect whether an undirected graph (V vertices, adjacency list, possibly disconnected) contains a cycle, using BFS.\n\nComponent-wise BFS carrying each vertex's parent: when reaching an already-visited neighbour that is not the parent, a cycle exists (the two BFS paths to that neighbour close a loop). Multi-source loop over unvisited starts handles disconnected graphs. O(V + E). The DFS analogue flags a back edge to a visited non-parent; parallel-edge inputs make the parent-value check insufficient — a parent-edge check is the strict form.",
+    "examples": [
+      {
+        "input": "adj: 0:[1,2], 1:[0,2], 2:[0,1]",
+        "output": "true",
+        "explanation": "Triangle 0-1-2-0; BFS from 0 reaches 2 from 1 while 2 is already visited and not 1's parent."
+      },
+      {
+        "input": "adj: 0:[1], 1:[2], 2:[] (path graph)",
+        "output": "false",
+        "explanation": "Every revisited neighbour is the parent — trees never trigger the condition."
+      }
+    ],
+    "constraints": [
+      "1 <= V <= 10^5",
+      "0 <= E <= 10^5; undirected, may be disconnected",
+      "O(V + E) BFS with parent tracking"
+    ]
+  },
+  "a2z-371": {
+    "description": "Given a directed acyclic graph with V vertices and M edges, output a topological ordering — a linear arrangement in which every edge u→v places u before v. Solve with DFS: run DFS over the graph, push each vertex onto a list when it finishes (postorder), then reverse the list.\n\nA finished vertex has all its successors already emitted, so reverse-postorder satisfies every edge. Any DAG can have many valid orders; any one is accepted. Visited marking makes each edge processed once: O(V + M). Running the same DFS on a graph with a cycle surfaces a back edge — the DFS method doubles as cycle detection.",
+    "examples": [
+      {
+        "input": "V = 4, edges: 3→2, 3→0, 2→0, 2→1",
+        "output": "3 2 1 0 (also valid: 3 2 0 1)",
+        "explanation": "Postorder finishes 0/1 first; reversed order starts at the source 3."
+      },
+      {
+        "input": "V = 3, edges: 0→1, 1→2",
+        "output": "0 1 2",
+        "explanation": "A chain has one topological order."
+      }
+    ],
+    "constraints": [
+      "1 <= V <= 10^5",
+      "0 <= M <= 10^5; graph guaranteed acyclic for this variant",
+      "O(V + M); recursion depth may need an iterative DFS"
+    ]
+  },
+  "a2z-372": {
+    "description": "Topologically sort a directed graph with V vertices and M edges using Kahn's algorithm (BFS on in-degrees), and report whether a valid order exists (the graph may contain cycles).\n\nCompute in-degree of every vertex; enqueue all with in-degree 0; repeatedly dequeue, append to the order, and decrement successors' in-degrees, enqueuing any that reach 0. If the order holds fewer than V vertices the remaining ones sit on cycles — report an empty order / cycle flag. Queue-pop order decides between multiple valid orders (a min-priority queue yields the lexicographically smallest). O(V + M).",
+    "examples": [
+      {
+        "input": "V = 6, edges: 5→0, 5→2, 4→0, 4→1, 2→3, 3→1",
+        "output": "4 5 0 2 3 1 (one valid BFS order)",
+        "explanation": "In-degrees: 0 for 4,5; 1 becomes last when 0 and 3 release it."
+      },
+      {
+        "input": "V = 3, edges: 0→1, 1→2, 2→0",
+        "output": "[] / cycle",
+        "explanation": "No in-degree-0 vertex; the queue starts empty."
+      }
+    ],
+    "constraints": [
+      "1 <= V <= 10^5",
+      "0 <= M <= 10^5; graph may be cyclic — detect it",
+      "O(V + M) time and space"
+    ]
+  },
+  "a2z-378": {
+    "description": "Given an undirected graph with unit-weight edges (adjacency list, V vertices) and a source vertex S, compute the shortest distance from S to every vertex; output -1 for unreachable vertices.\n\nPlain BFS from S: the first time a vertex is dequeued, its BFS depth is the shortest path length, because BFS processes vertices in nondecreasing depth and every edge costs 1. Distances start at -1, dist[S] = 0. O(V + E) — Dijkstra is unnecessary overhead here, and DFS gives no shortest-path guarantee.",
+    "examples": [
+      {
+        "input": "V = 5, edges: 0-1, 0-2, 1-3, 2-3, 3-4, source 0",
+        "output": "dist = [0, 1, 1, 2, 3]",
+        "explanation": "4 sits three hops away via 0-1-3-4 (or 0-2-3-4)."
+      },
+      {
+        "input": "V = 4, edges: 0-1, 2-3, source 0",
+        "output": "[0, 1, -1, -1]",
+        "explanation": "The second component is unreachable."
+      }
+    ],
+    "constraints": [
+      "1 <= V <= 10^5",
+      "0 <= E <= 10^5; undirected, unweighted",
+      "O(V + E) BFS; -1 for unreachable"
+    ]
+  },
+  "a2z-379": {
+    "description": "Given a weighted directed acyclic graph with V vertices (0..V-1) and adjacency list entries (node, weight), find the shortest distances from a source node S to every vertex; print -1e9 (or Infinity/-1 per the platform) for unreachable vertices.\n\nTwo-step linear algorithm: (1) topologically sort the DAG; (2) relax every edge in topological order — dist[v] = min(dist[v], dist[u] + w) while sweeping u from sources to sinks. Once a vertex is processed no later edge can improve it. O(V + E), and unlike Dijkstra it also handles negative weights; a cycle would invalidate the sweep, which is exactly why the DAG promise matters.",
+    "examples": [
+      {
+        "input": "V = 6, edges: 0→1 w5, 0→2 w3, 2→1 w2, 1→3 w6, 2→3 w6, 3→4 w-1, 3→5 w-1, source 0",
+        "output": "[0, 5, 3, 11, 10, 10]",
+        "explanation": "Topo order 0,2,1,3,4,5: dist[1] = min(5, 3+2) = 5; dist[3] = min(5+6, 3+6) = 11; dist[4] = dist[5] = 11-1 = 10."
+      },
+      {
+        "input": "V = 2, no edges, source 0",
+        "output": "[0, unreachable]",
+        "explanation": "Nothing to relax."
+      }
+    ],
+    "constraints": [
+      "1 <= V <= 10^5",
+      "Weights can be negative; graph guaranteed acyclic",
+      "O(V + E); no priority queue needed"
+    ]
+  },
+  "a2z-380": {
+    "description": "Given a weighted, undirected, connected graph with non-negative edge weights as an adjacency list (V vertices, source 0), compute the shortest distance from the source to every vertex — Dijkstra's algorithm.\n\nMaintain dist[] (∞ except dist[S]=0) and a min-priority queue keyed by distance: extract the closest settled vertex u, relax each edge (u,v,w) with dist[v] > dist[u]+w, pushing improved v. Lazy deletion (skip stale heap entries whose dist already improved) replaces decrease-key. Once popped with the current best distance, a vertex is final — non-negative weights mean no future path can beat it. O((V + E) log V).",
+    "examples": [
+      {
+        "input": "V = 4, edges: 0-1 w4, 0-2 w1, 2-1 w2, 1-3 w1",
+        "output": "[0, 3, 1, 4]",
+        "explanation": "Path 0-2-1 (1+2) beats the direct edge 4; then +1 to 3."
+      },
+      {
+        "input": "V = 1, source 0",
+        "output": "[0]",
+        "explanation": "Trivial."
+      }
+    ],
+    "constraints": [
+      "1 <= V <= 10^5",
+      "0 <= E <= 2·10^5; weights 1..10^4 (non-negative)",
+      "O((V+E) log V); distances may need 64-bit"
+    ]
+  },
+  "a2z-381": {
+    "description": "Explain (and demonstrate on a trace) why Dijkstra's algorithm uses a priority queue instead of a plain array scan or a FIFO queue: which operation must be fast, what the choice costs per vertex/edge, and what breaks without it.\n\nThe greedy step needs the *unvisited vertex with minimum tentative distance* — an array scan finds it in O(V), giving O(V²) total (fine for dense graphs); a min-heap (or std::set/priority_queue) extracts and inserts in O(log V) for O((V+E) log V), dominating on sparse graphs; an ordinary queue loses the ordering guarantee and can settle vertices prematurely. Without decrease-key support, push duplicates and skip stale pops — lazy deletion. The answer should also note the non-negative-weight precondition: Dijkstra itself, heap or not, fails on negative edges.",
+    "examples": [
+      {
+        "input": "sparse graph V=10^5, E=10^5",
+        "output": "heap version ~O(E log V) ≈ 1.7·10^6 ops vs array O(V²) = 10^10 — heap wins",
+        "explanation": "Extraction dominates and the heap avoids rescanning all distances."
+      },
+      {
+        "input": "dense graph V=1000, E≈V²",
+        "output": "array scan O(V²) matches or beats heap O(E log V)",
+        "explanation": "log V overhead on V² edges tips it back to the simple implementation."
+      }
+    ],
+    "constraints": [
+      "Conceptual exercise; include a worked graph trace where a FIFO queue settles a vertex too early",
+      "Cover: greedy min-extraction, lazy deletion vs decrease-key, complexity comparison",
+      "Mention why negative weights still break the greedy invariant"
+    ]
+  },
+  "a2z-387": {
+    "description": "Given a start value, a target (end) value, and an array of multipliers, transform start into end by repeatedly replacing the current value x with (x × a[i]) % 100000 for any i. Return the minimum number of multiplications needed, or -1 if end is unreachable. (Striver's 'Minimum Multiplications to reach End'.)\n\nEvery value 0..99999 is a node; each of the (≤9) multipliers defines an unweighted directed edge x → (x·a) mod 100000. Shortest path in an unweighted graph = BFS from start over the residue space, dist[] initialized to -1. Building the 10^5×9 edges explicitly is unnecessary — generate neighbours on the fly. O(100000 × k).",
+    "examples": [
+      {
+        "input": "start = 2, end = 28, d = [2, 5, 7]",
+        "output": "2",
+        "explanation": "2×2 = 4 then 4×7 = 28 (or 2×7 = 14, 14×2 = 28); one multiplication is not enough ({4, 10, 14} excludes 28)."
+      },
+      {
+        "input": "start = 9, end = 2, d = [2, 4]",
+        "output": "-1",
+        "explanation": "Every reachable residue is 9·2^k mod 100000 — the factor 9 can never vanish, so 2 is unreachable."
+      }
+    ],
+    "constraints": [
+      "0 <= start, end < 100000",
+      "1 <= multipliers <= 9, count ≤ 9",
+      "O(100000 × k) BFS over the residue graph"
+    ]
+  },
+  "a2z-388": {
+    "description": "Given a weighted directed graph with V vertices, M edges (u, v, w) where w may be negative, and source 0, find the shortest distances to all vertices; return {-1} if the graph contains a negative-weight cycle reachable in a way that improves paths. (GFG Bellman-Ford formulation.)\n\nRelax all M edges V-1 times: after i passes, every shortest path with ≤ i edges is finalized — a simple path uses at most V-1 edges, so V-1 rounds suffice whether or not negative edges exist. One extra pass: any edge that still relaxes proves a negative cycle. O(V·M) — slower than Dijkstra but strictly more expressive (negative edges), and it detects the cases where shortest paths are undefined.",
+    "examples": [
+      {
+        "input": "V = 5, edges: 0→1 5, 0→2 4, 1→2 -2, 2→4 3, 2→3 6, 4→3 2",
+        "output": "[0, 5, 3, 8, 6]",
+        "explanation": "dist[2] = min(4, 5-2) = 3 by pass 2; dist[4] = 6; dist[3] = min(3+6, 6+2) = 8. Negative edge 1→2 handled fine."
+      },
+      {
+        "input": "V = 3, edges: 0→1 4, 1→2 -2, 2→1 -3",
+        "output": "[-1]",
+        "explanation": "Cycle 1→2→1 costs -5: pass V still relaxes edge 2→1, proving a negative cycle."
+      }
+    ],
+    "constraints": [
+      "1 <= V <= 100",
+      "1 <= M <= V·(V-1); |w| <= 10^5, negatives allowed",
+      "O(V·M); report [-1] on any negative cycle found in pass V"
+    ]
+  },
+  "a2z-389": {
+    "description": "Given a weighted directed graph as an adjacency matrix (adj[i][j] = weight, or -1 for 'no edge', zero diagonal), compute the shortest distance between every ordered pair of vertices — the Floyd-Warshall all-pairs DP.\n\ndist[i][j] = min over all intermediate sets { paths using vertices 0..k as intermediates }, updated k-in-the-outer-loop: dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]). The k-major loop order is mandatory (it is the DP stage, not an interchangeable nesting). Initialize with edge weights and 0 diagonal; translate unreachable pairs to -1 on output (per GFG convention). O(V³) time, O(V²) space; detects negative cycles when dist[i][i] < 0 appears.",
+    "examples": [
+      {
+        "input": "adj = [[0, 1, 43], [5, 0, 7], [-1, -1, 0]]",
+        "output": "[[0, 1, 8], [5, 0, 7], [-1, -1, 0]]",
+        "explanation": "Via vertex 1: 0→1→2 costs 1+7 = 8, beating the direct 43; vertex 2 has no outgoing edges so its row keeps -1s."
+      },
+      {
+        "input": "adj = [[0, -1, 3], [2, 0, -1], [-1, -1, 0]]",
+        "output": "[[0, -1, 3], [2, 0, 5], [-1, -1, 0]]",
+        "explanation": "1→0→2 gives dist[1][2] = 2+3 = 5; the 2↔0 and 2→1 pairs stay unreachable."
+      }
+    ],
+    "constraints": [
+      "1 <= V <= 100",
+      "Weights 1..10^4 or -1 for absent edges",
+      "O(V³) triple loop, k outermost; print 0 on diagonal"
+    ]
+  },
+  "a2z-392": {
+    "description": "Given a weighted, connected, undirected graph as an adjacency list (V vertices, E edges), compute the total weight of its Minimum Spanning Tree using Prim's algorithm.\n\nGrow one tree from vertex 0: keep a min-heap of candidate edges crossing the cut; repeatedly pop the cheapest edge, and if it leads to an unvisited vertex, add its weight, mark that vertex, and push all its outgoing edges. Each vertex joins once → V-1 accepted edges. O((V + E) log V) with the heap (dense-graph O(V²) array variant scans min key). Correct by the cut property: the lightest edge across any cut is safe for the MST.",
+    "examples": [
+      {
+        "input": "V = 4, edges: 0-1 5, 0-2 8, 1-2 5, 1-3 3, 2-3 4",
+        "output": "MST weight 12",
+        "explanation": "Pick 0-1 (5), 1-3 (3), then 2-3 (4) beats 1-2 (5): total 12."
+      },
+      {
+        "input": "V = 2, one edge w 7",
+        "output": "7",
+        "explanation": "Single forced edge."
+      }
+    ],
+    "constraints": [
+      "1 <= V <= 10^5",
+      "Graph connected; weights 1..10^4",
+      "O((V+E) log V); skip stale heap entries for visited vertices"
+    ]
+  },
+  "a2z-393": {
+    "description": "Implement a Disjoint Set Union (union-find) structure over n elements 0..n-1 supporting find(x) (which component?), union(x, y) (merge components) and component count/size queries — with path compression and union by rank (or size) so operations run in effectively constant amortized time.\n\nEach component is a rooted tree: find walks parent[] up to the root; path compression re-points every visited node directly at the root. Union attaches the smaller-rank (or smaller-size) root under the larger — keeping trees shallow. α(n) inverse-Ackermann amortized bound. Application follow-ups: Kruskal MST, cycle detection in undirected graphs (union finds two endpoints already together), account-merge style grouping problems.",
+    "examples": [
+      {
+        "input": "union(0,1), union(2,3), union(1,2), find(3) then find(0)",
+        "output": "same root (one component {0,1,2,3})",
+        "explanation": "Second union merges the two pairs; ranks keep the tree depth ≤ 2."
+      },
+      {
+        "input": "union(4,5), then query find(4) == find(5)? find(4) == find(0)?",
+        "output": "true, false",
+        "explanation": "Two separate components remain."
+      }
+    ],
+    "constraints": [
+      "1 <= n <= 10^6",
+      "1 <= number of operations <= 10^6",
+      "Both find and union amortized O(α(n)); parent + rank/size arrays only"
+    ]
+  },
+  "a2z-394": {
+    "description": "Given a connected, weighted, undirected graph with V vertices and E edges (u, v, weight), return the total weight of its Minimum Spanning Tree — the acyclic edge subset connecting all vertices of minimum summed weight. Solve with Kruskal: sort edges by weight, then greedily accept an edge whenever its endpoints lie in different components (DSU), stopping at V-1 accepted edges.\n\nSorting dominates at O(E log E); each union/find is near O(1) via path compression + rank. Correct via the cut/cycle property: skipping an edge whose endpoints are already connected can never force a more expensive future choice. The Prim variant (heap over frontier edges, O((V+E) log V)) is the sibling solution.",
+    "examples": [
+      {
+        "input": "V = 4, edges: (0,1,10), (0,2,6), (0,3,5), (1,3,15), (2,3,4)",
+        "output": "MST weight 19",
+        "explanation": "Sorted: 4 (2-3), 5 (0-3), 6 (0-2 rejected — connected), 10 (0-1): 4+5+10 = 19."
+      },
+      {
+        "input": "V = 3, edges (0,1,1), (1,2,2), (0,2,3)",
+        "output": "3",
+        "explanation": "Cheapest two edges; the third closes a cycle."
+      }
+    ],
+    "constraints": [
+      "1 <= V <= 10^5",
+      "1 <= E <= 2·10^5; weights ≤ 10^4; graph connected",
+      "O(E log E) with DSU; result fits in 64-bit"
+    ]
+  },
+  "a2z-402": {
+    "description": "Find all articulation points (cut vertices) of a connected undirected graph — vertices whose removal increases the number of connected components. (GFG articulation-point formulation; print them sorted.)\n\nOne DFS computing disc[u] (discovery time) and low[u] (earliest discovery reachable from u's subtree using ≤ one back edge). u is an articulation point if: (a) u is the DFS root with ≥ 2 DFS children, or (b) u is non-root and has a child v with low[v] >= disc[u] — v's subtree cannot reach above u. Mark each u once despite multiple triggering children. O(V + E). Bridges use the stricter test low[v] > disc[u].",
+    "examples": [
+      {
+        "input": "V = 5, adj: 0-1, 1-2, 2-0, 1-3, 3-4",
+        "output": "1, 3",
+        "explanation": "Removing 1 or 3 disconnects the graph; the triangle 0-1-2 shields its other vertices (low values fall below discovery times)."
+      },
+      {
+        "input": "cycle graph on 4 vertices",
+        "output": "(none)",
+        "explanation": "Every vertex stays connected after one removal; no articulation points."
+      }
+    ],
+    "constraints": [
+      "1 <= V <= 10^5",
+      "0 <= E <= 10^5; undirected connected (run DFS per component if not)",
+      "O(V + E) single DFS; skip only the direct parent edge once"
+    ]
+  },
+  "a2z-460": {
+    "description": "Implement a Trie (prefix tree) over lowercase English letters supporting: insert(word), search(word) → does the exact word exist?, startsWith(prefix) → is it a prefix of any stored word?, and the advanced operations — delete(word) and countWords(prefix).\n\nEach node stores up to 26 child pointers and an endOfWord flag; insert walks/slots down one char per level; search must additionally check the terminal flag (a present path alone only proves prefixhood). Delete = walk down recording the last node with >1 child (or a terminal), then prune the unshared suffix. count(prefix) walks to the prefix node and sums terminals in its subtree — precompute a subtree word-count field per node to answer in O(|prefix|). Time is proportional to word length for every operation; space O(total inserted characters).",
+    "examples": [
+      {
+        "input": "insert(\"apple\"); search(\"app\"), search(\"apple\"), startsWith(\"app\")",
+        "output": "false, true, true",
+        "explanation": "'app' is a path but not terminal."
+      },
+      {
+        "input": "insert(\"cart\"); insert(\"car\"); delete(\"car\"); search(\"car\"), search(\"cart\")",
+        "output": "false, true",
+        "explanation": "Only the 'car' terminal flag clears — the 'cart' branch survives."
+      }
+    ],
+    "constraints": [
+      "1 <= word length <= 10^3",
+      "1 <= number of operations <= 10^5, total characters <= 10^6",
+      "O(L) per operation; 26-way node array or map"
+    ]
+  },
+  "a2z-463": {
+    "description": "Bit prerequisites for binary-Trie problems: work fluently with the fixed-width binary view of integers that maximum-XOR / minimum-XOR trie queries rest on — extract bit i of x as (x >> i) & 1, read numbers MSB-first (bit 31 down to 0 for 32-bit ints), and use XOR identities: x ^ x = 0, x ^ 0 = x, and a set bit in the xor result means the operands differ at that position.\n\nThe exercises: print the 32-bit representation of given integers, compute pairwise XORs, and reason why a greedy MSB-first walk maximizes a XOR against a stored set (at each level prefer the opposite bit — it sets a higher-order 1 which dominates all lower bits combined). This warm-up makes the binary trie (max-XOR query) mechanical: bits are just the alphabet {0,1}.",
+    "examples": [
+      {
+        "input": "x = 5",
+        "output": "bits (5-bit view): 101; set positions 0 and 2",
+        "explanation": "(5 >> i) & 1 for each i isolates bit i; for 32-bit ints run i = 31 down to 0."
+      },
+      {
+        "input": "maximize 5 ^ y over y ∈ {1, 4, 7}",
+        "output": "4, achieved at y = 1",
+        "explanation": "5^1 = 4, 5^4 = 1, 5^7 = 2. Greedily the top differing bit wins: 5 = 101, preferring y with bit-2 = 0 (y = 1) sets the 4's place, which outweighs everything below."
+      }
+    ],
+    "constraints": [
+      "0 <= values < 2^31",
+      "Bit indices 30 down to 0 are enough for non-negative ints",
+      "No trie required yet — pure bit manipulation drills"
+    ]
+  },
+  "a2z-470": {
+    "description": "Compute the Z-array of a string s of length n: Z[i] = length of the longest substring starting at i that matches a prefix of s (Z[0] is conventionally 0 or n). Use it for linear pattern search: build Z on pattern + '#' + text — any position with Z-value |pattern| is an occurrence.",
+    "examples": [
+      {
+        "input": "s = \"aaabaab\"",
+        "output": "Z = [0, 2, 1, 0, 2, 1, 0]",
+        "explanation": "i=1: \"aabaab\" shares \"aa\" with the prefix, breaks at b vs a; i=4: \"aab\" shares \"aa\"; single letters elsewhere."
+      },
+      {
+        "input": "s = \"ababcab\"",
+        "output": "Z = [0, 0, 2, 0, 0, 2, 0]",
+        "explanation": "i=2: \"abcab\" matches prefix \"ab\" then c ≠ a; i=5: \"ab\" matches to the end of string."
+      }
+    ],
+    "constraints": [
+      "1 <= n <= 10^6",
+      "Lowercase alphabet; separator '#' must not appear in pattern/text",
+      "O(n) two-pointer [L,R] window algorithm"
+    ]
+  },
+  "a2z-471": {
+    "description": "Implement KMP: precompute the LPS (longest proper prefix which is also suffix) array for a pattern, then search a text in linear time, never backtracking the text pointer.\n\nLPS construction: lps[i] = length of the longest proper prefix of pat[0..i] equal to its suffix, built by falling back j = lps[j-1] on mismatches. Search mirrors it: on mismatch between text[i] and pattern[j], retry with j = lps[j-1] (a matched border stays matched); emit a hit whenever j reaches |pattern| and continue with j = lps[j-1] to allow overlaps. O(n + m); the naive O(n·m) scan is what the automaton view eliminates.",
+    "examples": [
+      {
+        "input": "text = \"ABABDABACDABABCABAB\", pattern = \"ABABCABAB\"",
+        "output": "match at index 10 (0-based)",
+        "explanation": "LPS = [0,0,1,2,0,1,2,3,4]; after matching ABAB at text[10..13] a mismatch-free run completes the pattern at 18 — fallbacks at earlier D/C mismatches reuse the ABAB border instead of rewinding the text pointer."
+      },
+      {
+        "input": "pattern = \"aa\", text = \"aaa\"",
+        "output": "occurrences at 0 and 1",
+        "explanation": "Overlapping hits: after a match j resets to lps[1] = 1."
+      }
+    ],
+    "constraints": [
+      "1 <= |text| <= 10^6, 1 <= |pattern| <= 10^5",
+      "Any fixed alphabet",
+      "O(n + m) time, O(m) extra for LPS"
+    ]
+  }
+}

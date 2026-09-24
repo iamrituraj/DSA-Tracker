@@ -1,0 +1,651 @@
+{
+  "a2z-055": {
+    "description": "Given an array of integers, sort it in ascending order using the selection sort algorithm.\n\nIn each pass, the algorithm scans the unsorted suffix of the array, finds the index of its minimum element, and swaps that element into its final position at the current boundary. After i passes the first i positions are fixed and never touched again. The array must be modified in place — allocating a new output array is not allowed. A stable variant (rotating the minimum to the front instead of swapping) is sometimes asked as a follow-up.",
+    "examples": [
+      {
+        "input": "arr = [64, 25, 12, 22, 11]",
+        "output": "[11, 12, 22, 25, 64]",
+        "explanation": "Pass 1: minimum 11 (index 4) is swapped with 64 → [11, 25, 12, 22, 64].\nPass 2: minimum 12 of the suffix is swapped with 25 → [11, 12, 25, 22, 64].\nPass 3: 22 swaps with 25 → [11, 12, 22, 25, 64]. Remaining passes make no swaps."
+      },
+      {
+        "input": "arr = [5, 4, 3, 2, 1]",
+        "output": "[1, 2, 3, 4, 5]",
+        "explanation": "Every pass swaps a different pair — selection sort performs O(n) swaps even on a reversed array, which is its best trait."
+      },
+      {
+        "input": "arr = [1, 2]",
+        "output": "[1, 2]",
+        "explanation": "A single pass finds the minimum already in place; the array is unchanged."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "-10^9 <= arr[i] <= 10^9",
+      "Time: O(n^2) comparisons in every case; swaps at most O(n)"
+    ]
+  },
+  "a2z-056": {
+    "description": "Given an array of integers, sort it in ascending order using the bubble sort algorithm.\n\nRepeatedly walk through the array comparing each adjacent pair; if a pair is out of order, swap it. Each full pass carries (bubbles) the largest unsorted element to its final position at the end of the array, so pass i only needs to cover length - i positions. Sorting must be in place. The standard optimization — stopping early when a pass performs zero swaps — is expected, because it makes the best case (already sorted input) O(n).",
+    "examples": [
+      {
+        "input": "arr = [5, 1, 4, 2, 8]",
+        "output": "[1, 2, 4, 5, 8]",
+        "explanation": "Pass 1: swap (5,1), (5,4), (5,2) → 8 stops at the end. Pass 2: 5 bubbles to position 3. Pass 3: 4 settles. Pass 4 makes no swaps, so the algorithm terminates early."
+      },
+      {
+        "input": "arr = [1, 2, 3]",
+        "output": "[1, 2, 3]",
+        "explanation": "The first pass performs no swaps, so the early-exit flag stops the algorithm after O(n) work — the best case."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5 (O(n^2) worst case will not finish for the largest inputs without the early-exit)",
+      "-10^9 <= arr[i] <= 10^9",
+      "Adjacent swaps only; must be in place"
+    ]
+  },
+  "a2z-057": {
+    "description": "Given an array of integers, sort it in ascending order using the insertion sort algorithm.\n\nConceptually the array is split into a sorted prefix and an unsorted suffix. On each step, take the first element of the suffix (the key), shift every larger element of the prefix one position to the right, and insert the key into the vacated spot — exactly how you would slot a new playing card into a sorted hand. The array is modified in place. Insertion sort is the benchmark O(n^2) method that stays fast on small or nearly-sorted arrays, and it is stable.",
+    "examples": [
+      {
+        "input": "arr = [12, 11, 13, 5, 6]",
+        "output": "[5, 6, 11, 12, 13]",
+        "explanation": "key 11 shifts 12 right and slots in at index 0 → [11, 12, 13, 5, 6]. key 13 stays. key 5 shifts 11, 12, 13 and becomes the new first element. key 6 shifts 11, 12, 13 and slots after 5."
+      },
+      {
+        "input": "arr = [1, 2, 3]",
+        "output": "[1, 2, 3]",
+        "explanation": "No element needs to shift; each key is already in place — the best case runs in O(n)."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "-10^9 <= arr[i] <= 10^9",
+      "In place, stable sort; best case O(n), worst case O(n^2)"
+    ]
+  },
+  "a2z-058": {
+    "description": "Given an array of integers, sort it in ascending order using merge sort.\n\nDivide the array into two halves, recursively sort each half, then merge the two sorted halves in linear time using two pointers, copying the smaller front element each step. The merge step requires auxiliary space. The split stops when a segment has one element, which is trivially sorted. Merge sort is the guaranteed O(n log n) comparison sort and is the basis of the stable-sort and external-sort (divide large files) interview discussions.",
+    "examples": [
+      {
+        "input": "arr = [3, 1, 2]",
+        "output": "[1, 2, 3]",
+        "explanation": "Split into [3] and [1, 2]. [1, 2] splits into [1], [2] and merges to [1, 2]; then [3] merges with [1, 2] to produce [1, 2, 3]."
+      },
+      {
+        "input": "arr = [6, 3, 8, 5, 2, 7]",
+        "output": "[2, 3, 5, 6, 7, 8]",
+        "explanation": "Recursion tree: [6,3,8] → [2…]: halves sort to [3, 6, 8] and [2, 5, 7]; the merge walks both with two pointers."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "-10^9 <= arr[i] <= 10^9",
+      "Time O(n log n) in all cases; auxiliary space O(n) for merging"
+    ]
+  },
+  "a2z-059": {
+    "description": "Given an array of integers, sort it in ascending order with the recursive version of bubble sort.\n\nThe recursion mirrors the iterative algorithm: one pass through the array swaps adjacent out-of-order pairs, which bubbles the largest remaining element to index end. The function then recurses on the prefix [0, end-1]. The base case is a segment of size 0 or 1. The early-exit optimization can be added by returning early when a pass performs no swaps. No loops other than the single pass (or none, if you recurse element-by-element) should remain outside the recursion.",
+    "examples": [
+      {
+        "input": "arr = [5, 1, 4]",
+        "output": "[1, 4, 5]",
+        "explanation": "Pass 1 bubbles 5 to the end → [1, 4, 5]; recursion on [1, 4] performs one swap; recursion on [1] hits the base case."
+      },
+      {
+        "input": "arr = [2, 1]",
+        "output": "[1, 2]",
+        "explanation": "Single pass swaps (2, 1); recursion on a one-element prefix terminates."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^3 (recursion depth is O(n), so large inputs may overflow the call stack)",
+      "-10^9 <= arr[i] <= 10^9",
+      "Time O(n^2); space O(n) recursion stack"
+    ]
+  },
+  "a2z-060": {
+    "description": "Given an array of integers, sort it in ascending order with the recursive version of insertion sort.\n\nRecursively sort the prefix [0, n-2], then insert the last element into its correct place in the sorted prefix by shifting larger elements one position to the right until the hole is found. The base case is a prefix of length 0 or 1. The insert step is iterative or recursive; the outer sorting driver must not use loops.",
+    "examples": [
+      {
+        "input": "arr = [12, 11, 13, 5, 6]",
+        "output": "[5, 6, 11, 12, 13]",
+        "explanation": "The prefix [12, 11, 13, 5] sorts recursively to [5, 11, 12, 13]; inserting 6 shifts 11, 12, 13 right and lands at index 1."
+      },
+      {
+        "input": "arr = [3, 2, 1]",
+        "output": "[1, 2, 3]",
+        "explanation": "Inserts 3 into [] → [3]; inserts 2 → [2, 3]; inserts 1 → [1, 2, 3]."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^3 (recursion depth O(n))",
+      "-10^9 <= arr[i] <= 10^9",
+      "Time O(n^2) worst case, O(n) best case"
+    ]
+  },
+  "a2z-061": {
+    "description": "Given an array of integers, sort it in ascending order using quick sort.\n\nQuick sort picks a pivot element and partitions the array so that everything ≤ pivot lies to its left and everything > pivot to its right; the pivot ends at its final sorted index. The two sides are then sorted recursively. Classic partition schemes asked in interviews are Lomuto (pivot = last element, single walker) and Hoare (two converging pointers, fewer swaps). Choose the pivot strategy that matches what the problem statement specifies — a bad pivot on already-sorted input degenerates to O(n^2).",
+    "examples": [
+      {
+        "input": "arr = [4, 6, 2, 5, 7, 9, 1, 3]",
+        "output": "[1, 2, 3, 4, 5, 6, 7, 9]",
+        "explanation": "With pivot 4 the partition yields [2, 1, 3] | 4 | [6, 5, 7, 9]; both halves recurse, e.g. [2, 1, 3] with pivot 2 → [1] 2 [3]."
+      },
+      {
+        "input": "arr = [1, 3, 2]",
+        "output": "[1, 2, 3]",
+        "explanation": "Pivot 1 partitions everything else to the right; the right side [3, 2] re-partitions to [2] 3."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "-10^9 <= arr[i] <= 10^9",
+      "Average O(n log n), worst case O(n^2); in place with O(log n) stack"
+    ]
+  },
+  "a2z-062": {
+    "description": "Given an array of integers, find its largest element.\n\nTraverse the array once while maintaining the maximum seen so far: start from the first element (or Integer.MIN_VALUE) and update whenever a larger value is found. The array is not guaranteed sorted, so a full scan is necessary; ties require no special handling because the value is returned. Return the value itself, not its index.",
+    "examples": [
+      {
+        "input": "arr = [1, 8, 7, 6, -4, -2]",
+        "output": "8",
+        "explanation": "Running max evolves 1 → 8 (beats 1) → 8 (7 < 8) → … → 8."
+      },
+      {
+        "input": "arr = [-3, -1, -2]",
+        "output": "-1",
+        "explanation": "All values negative; the initial max must be arr[0], not 0, or the answer would wrongly be 0."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "-10^9 <= arr[i] <= 10^9",
+      "Time O(n), space O(1)"
+    ]
+  },
+  "a2z-063": {
+    "description": "Given an array of integers, find the second largest distinct element.\n\nDuplicate occurrences of the maximum count only once — [5, 5, 4] has second largest 4, not 5. Scan the array once maintaining the largest and second-largest values seen, updating both carefully when an element beats either, and skipping equals. If no second distinct value exists the expected result is -1 (or whatever sentinel the platform states).",
+    "examples": [
+      {
+        "input": "arr = [10, 5, 8, 20, 12]",
+        "output": "12",
+        "explanation": "Largest is 20; among the rest the maximum is 12."
+      },
+      {
+        "input": "arr = [5, 4, 3]",
+        "output": "4",
+        "explanation": "Strictly decreasing — the second element is already the answer."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "1 <= arr[i] <= 10^9",
+      "Time O(n), space O(1); return -1 if no second distinct maximum exists"
+    ]
+  },
+  "a2z-069": {
+    "description": "Given an array of integers and a target value k, determine whether k occurs in the array using linear search.\n\nInspect elements one by one from the start and stop as soon as a match is found. The array is unsorted, so no faster guaranteed-correct method exists. Return the index of the (first) occurrence, or -1 when the value is absent, per the platform's convention.",
+    "examples": [
+      {
+        "input": "arr = [1, 2, 3, 4, 5], k = 3",
+        "output": "true (index 2)",
+        "explanation": "The scan matches at the third position and stops."
+      },
+      {
+        "input": "arr = [1, 3, 5], k = 7",
+        "output": "false (-1)",
+        "explanation": "The whole array is scanned without a match."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "-10^9 <= arr[i], k <= 10^9",
+      "Time O(n), space O(1)"
+    ]
+  },
+  "a2z-070": {
+    "description": "Given two sorted arrays (possibly with duplicates inside each), print their union — every distinct value that occurs in either array, exactly once, in ascending order.\n\nUse two pointers walking both arrays in parallel: emit the smaller front value, and when both fronts are equal emit one copy. Skip consecutive duplicates from either side so no value is printed twice. The merge-based approach achieves this in O(n + m) time and O(1) extra space (printing as you go); hashing is the fallback when inputs are unsorted.",
+    "examples": [
+      {
+        "input": "a = [3, 2, 1, 2], b = [1, 5, 3, 3]",
+        "output": "1 2 3 5",
+        "explanation": "After each list is deduplicated to [1, 2, 3] and [1, 3, 5], the two-pointer merge emits 1 (tie), 2 (a behind), 3 (tie), 5 (b tail)."
+      },
+      {
+        "input": "a = [1, 1, 1], b = [1]",
+        "output": "1",
+        "explanation": "All elements coincide; the union is a single value."
+      }
+    ],
+    "constraints": [
+      "1 <= n, m <= 10^5",
+      "-10^9 <= elements <= 10^9",
+      "Each input may repeat values; output must be sorted and duplicate-free"
+    ]
+  },
+  "a2z-074": {
+    "description": "Given an array of non-negative integers and a target sum k, find the length of the longest contiguous subarray whose elements add up to exactly k.\n\nBecause all values are positive (no zeros is the classic constraint), the running sum strictly grows while extending the right end, so a two-pointer (sliding) window works: keep shrinking from the left while the window sum exceeds k, and record the window length whenever the sum equals k. This runs in O(n) time and O(1) space. The prefix-sum + hash-map version is the generalization that also handles negatives and zeros.",
+    "examples": [
+      {
+        "input": "arr = [10, 5, 2, 7, 1, 9], k = 15",
+        "output": "4",
+        "explanation": "The window [5, 2, 7, 1] sums to 15 with length 4; no longer contiguous block does."
+      },
+      {
+        "input": "arr = [1, 2, 3], k = 3",
+        "output": "2",
+        "explanation": "[1, 2] is the longest contiguous block with sum 3 ([3] alone has length 1)."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "1 <= arr[i], k <= 10^9",
+      "All elements positive; output 0 if no subarray sums to k"
+    ]
+  },
+  "a2z-075": {
+    "description": "Given an array of integers (which may include negative numbers and zeros) and a target sum k, find the length of the longest contiguous subarray whose sum equals k.\n\nThe sliding window breaks once negatives appear, so use prefix sums with a hash map: as you scan, store the earliest index at which each prefix sum first occurs; the subarray ending at i has sum k exactly when prefix[i] - k was seen at some earlier j, giving candidate length i - j. Looking up the earliest (not latest) occurrence maximizes length. Runs in O(n) time and O(n) space.",
+    "examples": [
+      {
+        "input": "arr = [-1, 1, 1], k = 1",
+        "output": "3",
+        "explanation": "The entire array sums to 1, so the answer is the full length."
+      },
+      {
+        "input": "arr = [1, -1, 5, -2, -3], k = 3",
+        "output": "4",
+        "explanation": "Subarray [1, -1, 5, -2] (indices 0..3) sums to 3."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "-10^9 <= arr[i], k <= 10^9",
+      "Output 0 when no subarray matches; O(n) expected"
+    ]
+  },
+  "a2z-080": {
+    "description": "Given an array of integers, find the maximum subarray sum (Kadane's algorithm) and print one subarray that achieves it.\n\nScan left to right maintaining the best sum ending at the current position: cur = max(arr[i], cur + arr[i]), restarting the candidate window when extending it is worse than starting fresh. Track the global maximum along with the start/end indices of the winning window (update the start when cur restarts, the end every index, and record the pair only when the global max improves). All-negative arrays return the largest single element.",
+    "examples": [
+      {
+        "input": "arr = [-2, 1, -3, 4, -1, 2, 1, -5, 4]",
+        "output": "6  (subarray [4, -1, 2, 1])",
+        "explanation": "cur restarts at 4, extends through -1, 2, 1 to reach 6 — the global maximum; indices 3..6 are printed."
+      },
+      {
+        "input": "arr = [-5, -2, -9]",
+        "output": "-2  (subarray [-2])",
+        "explanation": "Every extension lowers the sum, so the best window is the single largest element."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "-10^9 <= arr[i] <= 10^9",
+      "Time O(n), space O(1); any one optimal subarray is acceptable"
+    ]
+  },
+  "a2z-084": {
+    "description": "Given an array of integers, print all its leaders. A leader is an element that is strictly greater than every element to its right; the last element is always a leader.\n\nThe efficient method scans from right to left keeping the maximum seen so far: an element is a leader when it beats that running maximum (leaders are ≥ max-of-suffix is the equal-or-greater variant — read the platform wording). Collect in reverse-scan order and flip, or output in original left-to-right order as required. A naive per-element suffix scan is O(n^2); the suffix-maximum trick is O(n).",
+    "examples": [
+      {
+        "input": "arr = [1, 2, 3, 4, 0]",
+        "output": "4 0",
+        "explanation": "4 beats everything right of it; 0 is last. 3 fails because 4 > 3 sits to its right."
+      },
+      {
+        "input": "arr = [4, 3, 2, 1]",
+        "output": "4 3 2 1",
+        "explanation": "A decreasing array makes every element a leader."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "1 <= arr[i] <= 10^9",
+      "Time O(n); preserve original order in the output"
+    ]
+  },
+  "a2z-094": {
+    "description": "Given an array of integers (positive, negative, or zero), find the length of the largest contiguous subarray whose sum is exactly 0.\n\nUse prefix sums with a hash map storing the first index where each prefix value appears. A zero-sum subarray exists between two equal prefix sums, so when prefix p was last first-seen at j, the candidate length is i - j. If the running prefix is 0 at index i, the whole prefix 0..i qualifies (length i + 1). Only the first occurrence is stored — that is what maximizes length. O(n) time, O(n) space.",
+    "examples": [
+      {
+        "input": "arr = [1, -1, 3]",
+        "output": "2",
+        "explanation": "[1, -1] sums to 0; the prefix returns to 0 at index 1."
+      },
+      {
+        "input": "arr = [4, -4, 5, -5, 10]",
+        "output": "4",
+        "explanation": "[4, -4, 5, -5] is the longest zero-sum block (the 10 would break the sum)."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "-10^6 <= arr[i] <= 10^6",
+      "Output 0 when no zero-sum subarray exists"
+    ]
+  },
+  "a2z-095": {
+    "description": "Given an array of non-negative integers and a number k, count the number of contiguous subarrays whose bitwise XOR of elements equals k.\n\nMaintain the running prefix XOR px = a[0] ^ … ^ a[i]. For the subarray j+1..i, xor = px ^ prefix[j], so px ^ x == k means an earlier prefix x == px ^ k. A hash map counting occurrences of every prefix XOR seen so far (initialized with prefix 0 → count 1) answers each step in O(1). XOR prefix works because x ^ x = 0.",
+    "examples": [
+      {
+        "input": "arr = [4, 2, 2, 6, 4], k = 2",
+        "output": "4",
+        "explanation": "The matching subarrays are (0,3): 4^2^2^6 = 2, (1,1): 2, (2,4): 2^6^4 = 2, and (3,4): 6^4 = 2."
+      },
+      {
+        "input": "arr = [1, 1, 1], k = 0",
+        "output": "0",
+        "explanation": "Every non-empty subarray XORs to 1, so nothing equals 0."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "0 <= arr[i], k <= 10^6",
+      "Time O(n); answer may need 64-bit counting"
+    ]
+  },
+  "a2z-098": {
+    "description": "Given an array of size n containing numbers in the range 1..n where exactly one number appears twice and exactly one number is missing, find both the repeating and the missing number.\n\nMultiple solutions are expected to be discussed: (1) hashing/counting in O(n) time and space; (2) sum equations — using S = n(n+1)/2 and Q = n(n+1)(2n+1)/6, the pair (x repeating, y missing) solves x - y = S - Σa and x + y = (Q - Σa²)/(x - y); (3) XOR — XOR all elements with 1..n to get x ^ y, split by a set bit to isolate x and y, then identify which is which by a membership scan. All must run in O(n); watch for 64-bit overflow in the sum form.",
+    "examples": [
+      {
+        "input": "arr = [3, 1, 2, 5, 3]",
+        "output": "repeating = 3, missing = 4",
+        "explanation": "n = 5; 3 occurs twice and 4 never appears."
+      },
+      {
+        "input": "arr = [1, 3, 3]",
+        "output": "repeating = 3, missing = 2",
+        "explanation": "XOR route: 1^3^3 ^ 1^2^3 = 3^2 = 1|2 pattern separates the pair."
+      }
+    ],
+    "constraints": [
+      "3 <= n <= 10^5",
+      "All values lie in [1, n] with exactly one duplicate and one gap",
+      "O(n) time; O(1) space for the math/XOR solutions"
+    ]
+  },
+  "a2z-099": {
+    "description": "Given an array of integers, count its inversions — pairs (i, j) with i < j but arr[i] > arr[j] — which measure how far the array is from sorted.\n\nThe optimal approach modifies merge sort: while merging two sorted halves, whenever an element of the right half is taken before the left half is exhausted, all remaining left-half elements form inversions with it, so add (mid - i + 1). Counting during the merge keeps total time at O(n log n); the naive double loop is O(n^2). The count can exceed 32 bits for n = 10^5 (up to ~5·10^9), so use long.",
+    "examples": [
+      {
+        "input": "arr = [2, 4, 1, 3, 5]",
+        "output": "3",
+        "explanation": "The inversions are (2,1), (4,1) and (4,3)."
+      },
+      {
+        "input": "arr = [10, 10, 10]",
+        "output": "0",
+        "explanation": "Equal elements are not inversions — the strict comparison matters."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "1 <= arr[i] <= 10^7",
+      "Return the count as a 64-bit integer; O(n log n) expected"
+    ]
+  },
+  "a2z-103": {
+    "description": "Given a sorted (non-decreasing) array and a value x, find the lower bound of x — the index of the first element that is ≥ x. If every element is smaller, the answer is arr.length (the position just past the end), mirroring std::lower_bound.\n\nBinary search the smallest index i such that arr[i] ≥ x: keep searching left when a candidate matches, otherwise move right. The linear scan is acceptable but O(n); implement the O(log n) version. Duplicate equal values must resolve to their first occurrence.",
+    "examples": [
+      {
+        "input": "arr = [1, 2, 2, 3, 4], x = 2",
+        "output": "1",
+        "explanation": "First element ≥ 2 sits at index 1."
+      },
+      {
+        "input": "arr = [1, 3, 5, 6, 7, 10], x = 9",
+        "output": "5",
+        "explanation": "10 is the first value ≥ 9, at index 5; x larger than all would return 6."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "-10^9 <= x, arr[i] <= 10^9",
+      "Array sorted ascending with possible duplicates; O(log n)"
+    ]
+  },
+  "a2z-104": {
+    "description": "Given a sorted (non-decreasing) array and a value x, find the upper bound of x — the index of the first element strictly greater than x, or arr.length when none exists (std::upper_bound semantics).\n\nBinary search the smallest index i with arr[i] > x. The distinction from lower bound is the interview staple: with duplicates, upper bound lands after the whole block of x's, so (upper - lower) is exactly the count of x.",
+    "examples": [
+      {
+        "input": "arr = [1, 2, 2, 3, 4], x = 2",
+        "output": "3",
+        "explanation": "First element > 2 is 3 at index 3 — the two 2's are skipped."
+      },
+      {
+        "input": "arr = [1, 2, 3, 3], x = 3",
+        "output": "4",
+        "explanation": "Nothing exceeds 3, so the answer is past the end."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "-10^9 <= x, arr[i] <= 10^9",
+      "Sorted ascending with duplicates; O(log n)"
+    ]
+  },
+  "a2z-106": {
+    "description": "Given a sorted array and a value x, find the floor and ceiling of x. Floor = the largest array element ≤ x (or -1 if none); ceiling = the smallest array element ≥ x (or -1 if none). Duplicate values count once — the floor/ceil are values, not indices.\n\nBoth are binary-search cousins: ceiling is the first element ≥ x (upper-bound search), floor is the last element ≤ x. Implement them in O(log n) each, or in one combined search. The linear scan is O(n) and only a warm-up.",
+    "examples": [
+      {
+        "input": "arr = [3, 6, 7, 8, 9], x = 5",
+        "output": "floor = 3, ceil = 6",
+        "explanation": "3 is the greatest element ≤ 5; 6 is the smallest ≥ 5."
+      },
+      {
+        "input": "arr = [1, 2, 3, 4], x = 5",
+        "output": "floor = 4, ceil = -1",
+        "explanation": "No element ≥ 5 exists, so ceiling reports -1."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "-10^9 <= x, arr[i] <= 10^9",
+      "Sorted ascending, distinct or repeated; O(log n)"
+    ]
+  },
+  "a2z-108": {
+    "description": "Given a sorted array that may contain duplicates and a target k, count how many times k occurs, in O(log n) time.\n\nThe count equals (upper bound of k) - (lower bound of k): two binary searches locate the first ≥ k and the first > k, and the gap between those indices is the frequency of k. Returning 0 when k is absent must fall out of the same formula, and scanning linearly defeats the exercise.",
+    "examples": [
+      {
+        "input": "arr = [1, 1, 2, 2, 2, 3, 4], k = 2",
+        "output": "3",
+        "explanation": "Lower bound 2, upper bound 5 → 3 occurrences."
+      },
+      {
+        "input": "arr = [1, 2, 3], k = 4",
+        "output": "0",
+        "explanation": "Both bounds return 3; the difference is 0."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "-10^9 <= k, arr[i] <= 10^9",
+      "Sorted ascending; O(log n) via two binary searches"
+    ]
+  },
+  "a2z-112": {
+    "description": "Given a sorted array of distinct integers that was rotated right an unknown number of times (e.g. [7, 9, 1, 2, 3] from [1, 2, 3, 7, 9]), find how many times it was rotated — equivalently, the index of the minimum element.\n\nThe rotation count equals the number of elements before the array's break point. Binary search the minimum: if the middle element exceeds the rightmost, the break is in the right half, so move low up; otherwise the minimum is at or left of mid. A fully sorted (unrotated) array yields 0. Duplicates force linear fallback, so distinctness is assumed.",
+    "examples": [
+      {
+        "input": "arr = [7, 9, 1, 2, 3]",
+        "output": "2",
+        "explanation": "Minimum 1 sits at index 2, so the array was rotated twice."
+      },
+      {
+        "input": "arr = [1, 2, 3]",
+        "output": "0",
+        "explanation": "Already sorted — rotation count 0."
+      }
+    ],
+    "constraints": [
+      "1 <= arr.length <= 10^5",
+      "Elements are distinct; the rotation count lies in [0, n - 1]",
+      "Time O(log n)"
+    ]
+  },
+  "a2z-115": {
+    "description": "Given a non-negative number x, compute its integer square root — the largest integer r with r*r ≤ x (i.e. floor(sqrt(x))), without using built-in power or sqrt functions.\n\nBinary search the answer over [0, x]: for a mid, compare mid*mid with x, tightening the range and remembering the largest mid whose square never overshoots. Newton's method (y ← (y + x/y)/2 until stable) is the O(log log x) alternative. Multiplication can overflow for large x, so guard with 64-bit arithmetic or divide-based comparisons.",
+    "examples": [
+      {
+        "input": "x = 16",
+        "output": "4",
+        "explanation": "4² = 16 exactly."
+      },
+      {
+        "input": "x = 26",
+        "output": "5",
+        "explanation": "5² = 25 ≤ 26 < 36 = 6², so floor(sqrt(26)) = 5."
+      },
+      {
+        "input": "x = 0",
+        "output": "0",
+        "explanation": "Edge case: search range collapses to 0."
+      }
+    ],
+    "constraints": [
+      "0 <= x <= 2^31 - 1",
+      "Use 64-bit intermediate products",
+      "O(log x) binary search or ~O(log log x) Newton"
+    ]
+  },
+  "a2z-116": {
+    "description": "Given two positive integers n and m, find the largest integer k such that k^n ≤ m — the integer n-th root of m. If no such k ≥ 1 satisfies exactly (i.e. m is not a perfect n-th power) many variants ask for -1; the standard sheet expects floor of the real root.\n\nBinary search k over [1, m]: compute mid^n with overflow-safe early abort (stop multiplying once the accumulator exceeds m), and move the bound accordingly. For large n the root is small, so the search stays logarithmic; repeated-multiplication pow must be the checked version, not floating-point Math.pow, which loses precision on big values.",
+    "examples": [
+      {
+        "input": "n = 3, m = 27",
+        "output": "3",
+        "explanation": "3³ = 27 exactly — a perfect cube."
+      },
+      {
+        "input": "n = 2, m = 30",
+        "output": "5",
+        "explanation": "5² = 25 ≤ 30 < 36 = 6²."
+      }
+    ],
+    "constraints": [
+      "1 <= n <= 30, 1 <= m <= 10^15 (guard every multiplication against overflow)",
+      "Time O(m) is too slow; O(log m) expected"
+    ]
+  },
+  "a2z-122": {
+    "description": "Given a stable with n stalls at distinct positions and k cows, place all cows into stalls so that the minimum distance between any two cows is as large as possible; return that largest achievable minimum distance.\n\nBinary search the answer d over [1, max gap]: feasibility is greedy — sort the stalls, place the first cow at the leftmost stall, then each next cow in the first stall at least d further. Feasible with d implies feasible with any smaller value, so the predicate is monotone and standard lower-bound logic applies. The greedy check is O(n), total O(n log range).",
+    "examples": [
+      {
+        "input": "stalls = [1, 2, 3, 4, 7], k = 3",
+        "output": "3",
+        "explanation": "Place at 1, 4, 7 — the pair gaps are 3 and 3, and no arrangement has a larger minimum gap."
+      },
+      {
+        "input": "stalls = [10, 1], k = 2",
+        "output": "9",
+        "explanation": "Two cows, two stalls — the only gap is 9."
+      }
+    ],
+    "constraints": [
+      "2 <= n <= 10^5, 2 <= k <= n",
+      "0 <= stall positions ≤ 10^9, distinct",
+      "O(n log 10^9) time"
+    ]
+  },
+  "a2z-123": {
+    "description": "Given an array of book pages per book (books must be allocated in their given order) and M students, allocate all contiguous books so that the maximum number of pages assigned to any student is minimized; return that minimized maximum, or -1 when allocation is impossible.\n\nThis is the classic binary-search-on-answer: a candidate cap X is feasible when a greedy left-to-right pass never gives a student more than X pages and uses at most M students (a book larger than X is instantly infeasible). Feasibility grows monotonically with X, so search the smallest feasible X in [max(pages), sum(pages)].",
+    "examples": [
+      {
+        "input": "pages = [12, 34, 67, 90], M = 2",
+        "output": "113",
+        "explanation": "Split [12, 34, 67] | [90] gives loads 113 and 90 — max 113; any smaller cap forces 3 students."
+      },
+      {
+        "input": "pages = [10, 20, 30, 40], M = 2",
+        "output": "60",
+        "explanation": "[10, 20, 30] | [40] → max 60."
+      }
+    ],
+    "constraints": [
+      "1 <= number of books ≤ 10^5, 1 <= M ≤ 10^5",
+      "1 <= pages[i] ≤ 10^4",
+      "Return -1 if M > books; O(n log sum) expected"
+    ]
+  },
+  "a2z-125": {
+    "description": "Given an array of board lengths to be painted (in order) and K painters, assign each painter a contiguous set of boards so that the largest amount of time any painter spends (sum of their boards) is minimized; return that minimized maximum. Each unit of board takes one unit of time.\n\nIdentical structure to book allocation: binary search the cap C between max(board) and sum(boards); greedy check assigns boards to the current painter until adding one more would exceed C, then opens a new painter — feasible when painters used ≤ K. Impossible when K > number of boards in some variants, or handled by the same check.",
+    "examples": [
+      {
+        "input": "boards = [10, 20, 30, 40], K = 2",
+        "output": "60",
+        "explanation": "Painter 1 takes [10, 20, 30] = 60, painter 2 takes [40]; the peak 60 is optimal."
+      },
+      {
+        "input": "boards = [5, 5, 5, 5], K = 4",
+        "output": "5",
+        "explanation": "One board each — nobody exceeds 5."
+      }
+    ],
+    "constraints": [
+      "1 <= number of boards, K ≤ 10^5",
+      "1 <= boards[i] ≤ 10^7",
+      "O(n log sum) expected; monotone feasibility is the key argument"
+    ]
+  },
+  "a2z-128": {
+    "description": "Given two sorted arrays and an integer k, find the k-th smallest element of the merged (conceptual) union, counting duplicates as many times as they appear. Do not merge the arrays.\n\nThe optimal solution binary-searches the partition: cut array A at i and array B at k-i so that the left halves together hold exactly k elements, and require max(A[i-1], B[k-i-1]) ≤ min(A[i], B[k-i]) — the k-th smallest is that left-side maximum. Move the cut based on which side's border element is too large. O(log min(n, m)). A two-pointer walk that just counts k steps is O(k) and acceptable as the warm-up.",
+    "examples": [
+      {
+        "input": "a = [2, 3, 6, 7, 9], b = [1, 4, 8, 10], k = 5",
+        "output": "6",
+        "explanation": "Merged: 1, 2, 3, 4, 6, … — the 5th element is 6."
+      },
+      {
+        "input": "a = [10, 20, 30], b = [5, 15], k = 3",
+        "output": "15",
+        "explanation": "Sorted merge starts 5, 10, 15."
+      }
+    ],
+    "constraints": [
+      "1 <= n, m ≤ 10^5, 1 <= k <= n + m",
+      "Both arrays sorted non-decreasing",
+      "O(log min(n, m)) time, O(1) space"
+    ]
+  },
+  "a2z-129": {
+    "description": "Given a binary matrix (each row sorted non-decreasing), find the index of the row containing the maximum number of 1s. If several rows tie, return the smallest index.\n\nBecause rows are sorted, every row's 1-count is n - lowerBound(1): binary search each row's first 1 in O(log n) for a total of O(m log n). The linear trick walks a single column pointer from the right: since the best count never decreases as you descend rows, the pointer only moves left — O(m + n) total.",
+    "examples": [
+      {
+        "input": "mat = [[0, 1, 1], [1, 1, 1], [0, 0, 1]]",
+        "output": "1",
+        "explanation": "Row 1 holds three 1s — the maximum."
+      },
+      {
+        "input": "mat = [[1, 1], [1, 1]]",
+        "output": "0",
+        "explanation": "Tie resolved to the earliest row."
+      }
+    ],
+    "constraints": [
+      "1 <= m, n <= 10^3",
+      "Each row is sorted: all 0s before all 1s",
+      "O(m log n) or O(m + n)"
+    ]
+  },
+  "a2z-133": {
+    "description": "Given a matrix of r rows and c columns where every row is sorted, find its median — the ((r·c + 1) / 2)-th smallest element of all entries (equivalently the element that would sit at the middle of the flattened sorted list). Rows may be individually sorted only; columns need not be.\n\nBinary search the value V over the element range and count entries ≤ V by summing each row's upper_bound; the smallest V with count ≥ (r·c + 1)/2 is the median. O(r · c · log c) counting inside O(log range) search. Flattening and sorting is O(rc log rc) and only passes small tests.",
+    "examples": [
+      {
+        "input": "mat = [[1, 3, 5], [2, 6, 9], [3, 6, 9]]",
+        "output": "5",
+        "explanation": "The sorted multiset is 1, 2, 3, 3, 5, 6, 6, 9, 9 — the 5th of 9 is 5."
+      },
+      {
+        "input": "mat = [[1, 2], [3, 4]]",
+        "output": "2",
+        "explanation": "Middle of 1, 2, 3, 4 with (4+1)/2 = 2 → 2."
+      }
+    ],
+    "constraints": [
+      "1 <= r, c <= 500, values ≤ 10^9",
+      "Rows sorted non-decreasing",
+      "O(r log c log range) expected"
+    ]
+  }
+}

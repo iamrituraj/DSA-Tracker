@@ -1,0 +1,590 @@
+{
+  "a2z-145": {
+    "description": "Given a string s of length n consisting of lowercase letters, count the total number of its (not necessarily distinct) substrings.\n\nA substring is any contiguous slice s[i..j] with 0 ≤ i ≤ j < n. Counting by start index: position i begins n - i substrings, so the total is n + (n-1) + … + 1 = n·(n+1)/2. The task introduces the arithmetic trick that powers later substring problems; explicitly enumerating all substrings is the O(n²) warm-up and the closed formula is O(1).",
+    "examples": [
+      {
+        "input": "s = \"abc\"",
+        "output": "6",
+        "explanation": "a, b, c, ab, bc, abc — 3·4/2 = 6."
+      },
+      {
+        "input": "s = \"aaaa\"",
+        "output": "10",
+        "explanation": "Repeated characters still count every occurrence position: 4·5/2 = 10."
+      }
+    ],
+    "constraints": [
+      "1 <= n <= 10^5 (use 64-bit math: the count reaches ~5·10^9)",
+      "s contains lowercase English letters only"
+    ]
+  },
+  "a2z-150": {
+    "description": "Given the head of a singly linked list and an integer value, insert a new node containing that value at the front of the list and return the new head.\n\nCreate the node, point its next at the current head, then return the new node as head. When the list is empty the new node simply becomes the head. This is the O(1) primitive every other linked-list operation builds on; several variants wrap it in a function that must keep working for a null head.",
+    "examples": [
+      {
+        "input": "list: 1 -> 2, val = 3",
+        "output": "3 -> 1 -> 2",
+        "explanation": "The new node links to the old head and replaces it."
+      },
+      {
+        "input": "list: NULL, val = 7",
+        "output": "7 -> NULL",
+        "explanation": "Inserting into an empty list yields a single-node list."
+      }
+    ],
+    "constraints": [
+      "0 <= number of nodes <= 10^5",
+      "-10^9 <= val <= 10^9",
+      "Time O(1); do not traverse the list"
+    ]
+  },
+  "a2z-152": {
+    "description": "Given the head of a singly linked list, return the number of nodes it contains.\n\nWalk a counter from the head until the pointer reaches null. The empty list (head = null) has length 0 — that base case is the whole trick; a recursive version returns 1 + length(head.next) with 0 for null.",
+    "examples": [
+      {
+        "input": "list: 1 -> 2 -> 3",
+        "output": "3",
+        "explanation": "Three pointer steps before null."
+      },
+      {
+        "input": "list: NULL",
+        "output": "0",
+        "explanation": "Null head short-circuits the loop."
+      }
+    ],
+    "constraints": [
+      "0 <= number of nodes <= 10^5",
+      "Time O(n), space O(1) iterative (O(n) stack if recursive)"
+    ]
+  },
+  "a2z-153": {
+    "description": "Given the head of a singly linked list and a key, determine whether the key occurs in the list. Return true if present, false otherwise (some platforms want the 0-based position or -1 instead — read the signature).\n\nLinearly traverse comparing each node's data to the key; the list is unsorted, so no shortcut exists. Null-head and single-node lists are the boundary cases.",
+    "examples": [
+      {
+        "input": "list: 1 -> 2 -> 4, key = 4",
+        "output": "true",
+        "explanation": "Found on the third node."
+      },
+      {
+        "input": "list: 1 -> 2 -> 4, key = 3",
+        "output": "false",
+        "explanation": "Traversal ends at null without a match."
+      }
+    ],
+    "constraints": [
+      "0 <= number of nodes <= 10^5",
+      "-10^9 <= key, node values <= 10^9",
+      "Time O(n), space O(1)"
+    ]
+  },
+  "a2z-155": {
+    "description": "Given the head of a doubly linked list and a value, insert a new node with that value before the head — i.e. make it the new first node — and return the new head.\n\nSet the new node's next to the old head and its prev to null; then the old head's prev must be repointed to the new node (skip that step when the list was empty). Forgetting to fix the old head's prev is the classic bug that breaks backward traversal.",
+    "examples": [
+      {
+        "input": "list: 4 <-> 2, val = 3",
+        "output": "3 <-> 4 <-> 2",
+        "explanation": "New node precedes the old head, whose prev now points back to it."
+      },
+      {
+        "input": "list: NULL, val = 1",
+        "output": "1",
+        "explanation": "Single node with both links null."
+      }
+    ],
+    "constraints": [
+      "0 <= number of nodes <= 10^5",
+      "-10^9 <= val <= 10^9",
+      "Time O(1); both prev and next links must stay consistent"
+    ]
+  },
+  "a2z-156": {
+    "description": "Given the head of a doubly linked list, delete its first node and return the new head.\n\nMove the head to head.next and set the new head's prev to null; the detached node is then unreachable. An empty list (head = null) stays empty and a one-node list becomes null — both edges must not dereference a null pointer.",
+    "examples": [
+      {
+        "input": "list: 4 <-> 2 <-> 3",
+        "output": "2 <-> 3",
+        "explanation": "New head 2 has prev cleared."
+      },
+      {
+        "input": "list: 7",
+        "output": "NULL",
+        "explanation": "Deleting the only node empties the list."
+      }
+    ],
+    "constraints": [
+      "0 <= number of nodes <= 10^5",
+      "Time O(1); the returned list must be traversable in both directions"
+    ]
+  },
+  "a2z-157": {
+    "description": "Given the head of a doubly linked list, reverse it in place so that the former tail becomes the head, and return the new head.\n\nTwo equivalent methods: (1) walk the list swapping every node's prev and next pointers, then return the last node visited; (2) recurse to the tail and relink backwards. Because every node keeps both links, swapping prev/next per node is sufficient — no extra pass to repair neighbors is needed. The iterative pointer-swap version is the expected O(n)/O(1) solution.",
+    "examples": [
+      {
+        "input": "list: 1 <-> 2 <-> 3",
+        "output": "3 <-> 2 <-> 1",
+        "explanation": "Each node's prev and next are exchanged; head moves from 1 to 3."
+      },
+      {
+        "input": "list: 5",
+        "output": "5",
+        "explanation": "A single node reverses to itself."
+      }
+    ],
+    "constraints": [
+      "0 <= number of nodes <= 10^5",
+      "In place: no new nodes or auxiliary arrays",
+      "Time O(n), space O(1)"
+    ]
+  },
+  "a2z-163": {
+    "description": "Given a linked list that may contain a loop, detect the loop and return the number of nodes in it (0 when there is no loop).\n\nFloyd's cycle detection: advance slow by 1 and fast by 2; if they meet, a loop exists. To measure it, keep a walker moving from the meeting point until it returns to that node, counting steps. A sharper variant also finds the loop's start: reset one pointer to the head and advance both by 1 — they meet at the entry, which also bounds the loop length. All in O(n) time, O(1) space.",
+    "examples": [
+      {
+        "input": "1 -> 2 -> 3 -> 4 -> 5 -> 6, with 6 pointing back to 3",
+        "output": "4",
+        "explanation": "The loop is 3 -> 4 -> 5 -> 6 -> (3): four distinct nodes."
+      },
+      {
+        "input": "1 -> 2 -> 3 -> NULL",
+        "output": "0",
+        "explanation": "Fast reaches null; no cycle."
+      }
+    ],
+    "constraints": [
+      "0 <= number of nodes <= 10^5",
+      "The list may or may not contain a loop",
+      "O(n) time and O(1) space — marking nodes or hashing is the rejected approach"
+    ]
+  },
+  "a2z-169": {
+    "description": "Given a singly linked list whose nodes contain only 0, 1 or 2, sort it so all 0s precede all 1s which precede all 2s. Do it in a single pass without re-linking node values.\n\nThe linear method splits the list into three chains (zero, one, two) as it walks, then stitches the chains back together, fixing each chain's tail next pointer and null-terminating the result. Rewriting node data in two counting passes is the simpler accepted variant; comparisons must never sort with a general algorithm — the value domain is fixed to three symbols.",
+    "examples": [
+      {
+        "input": "list: 1 -> 2 -> 2 -> 1 -> 0",
+        "output": "0 -> 1 -> 1 -> 2 -> 2",
+        "explanation": "Chains [0], [1, 1], [2, 2] concatenate."
+      },
+      {
+        "input": "list: 0 -> 0 -> 0",
+        "output": "0 -> 0 -> 0",
+        "explanation": "Already sorted; empty chains are skipped."
+      }
+    ],
+    "constraints": [
+      "1 <= number of nodes <= 10^5",
+      "Node values ∈ {0, 1, 2}",
+      "Time O(n), space O(1)"
+    ]
+  },
+  "a2z-171": {
+    "description": "Given a non-empty singly linked list representing a non-negative integer digit by digit (most significant digit first, e.g. 1->2->3 encodes 123), add one to the number and return the new head.\n\nThe intended solution reverses the list, adds from the (new) head with a carry walking forward, then reverses back — O(n) time, O(1) space. If a carry ripples past the most significant digit, a new leading node 1 is prepended (9->9->9 becomes 1->0->0->0). Converting to an integer overflows for long lists and is disallowed.",
+    "examples": [
+      {
+        "input": "list: 9 -> 9 -> 9",
+        "output": "1 -> 0 -> 0 -> 0",
+        "explanation": "999 + 1 = 1000; every digit carries."
+      },
+      {
+        "input": "list: 1 -> 2 -> 3",
+        "output": "1 -> 2 -> 4",
+        "explanation": "No carry beyond the last digit."
+      }
+    ],
+    "constraints": [
+      "1 <= number of nodes ≤ 10^5",
+      "Digits 0..9, no leading zeros (except the number 0 itself)",
+      "Two reversals or recursion; O(n) time"
+    ]
+  },
+  "a2z-173": {
+    "description": "Given the head of a doubly linked list and a key, remove every node whose data equals the key, and return the (possibly new) head.\n\nWalk with a temporary pointer; whenever the current node matches, relink its prev and next around it (null prev means the next node becomes head; null next means the walk ends at the new tail), then delete. The classic pitfall is advancing the iterator before saving the successor of a deleted node. Multiple consecutive matches must all vanish in one pass.",
+    "examples": [
+      {
+        "input": "list: 10 <-> 4 <-> 4 <-> 6 <-> 4 <-> 4, key = 4",
+        "output": "10 <-> 6",
+        "explanation": "Four occurrences removed; remaining order preserved."
+      },
+      {
+        "input": "list: 2 <-> 2, key = 2",
+        "output": "NULL",
+        "explanation": "Every node deleted — head becomes null."
+      }
+    ],
+    "constraints": [
+      "0 <= number of nodes <= 10^5",
+      "-10^9 <= key, node values <= 10^9",
+      "Single O(n) pass; fix both prev and next links"
+    ]
+  },
+  "a2z-174": {
+    "description": "Given a sorted doubly linked list of distinct integers and a value x, find all pairs (as value pairs) whose sum equals x. Output each pair once, typically in increasing order of the first element.\n\nBecause the list is sorted, run two pointers from both ends — left starts at head, right at tail: on an exact match record the pair and step both inward; move right leftwards when the sum overshoots and left rightwards when it falls short. O(n) time, O(1) space, versus O(n²) nested walks or O(n) hashing.",
+    "examples": [
+      {
+        "input": "list: 1 <-> 2 <-> 4 <-> 5 <-> 7, x = 6",
+        "output": "(1, 5), (2, 4)",
+        "explanation": "1 + 5 and 2 + 4 hit; the walk terminates when the pointers cross."
+      },
+      {
+        "input": "list: 1 <-> 2 <-> 3, x = 10",
+        "output": "none",
+        "explanation": "Sum never reaches 10 before pointers cross."
+      }
+    ],
+    "constraints": [
+      "1 <= number of nodes <= 10^5",
+      "List sorted ascending, values distinct",
+      "O(n) time, O(1) extra space"
+    ]
+  },
+  "a2z-175": {
+    "description": "Given a doubly linked list sorted non-decreasingly, remove duplicates so that every value occurs exactly once, keeping the list properly linked, and return the head.\n\nWith a single walker: compare each node to its successor; when equal, unlink the successor (bridging the successor's next back) and delete it, otherwise advance. Because the input is sorted, duplicates are adjacent and one pass suffices — no frequency table needed. Handle runs of three or more copies (successive removals without advancing) and a null head.",
+    "examples": [
+      {
+        "input": "list: 1 <-> 1 <-> 2 <-> 3 <-> 3",
+        "output": "1 <-> 2 <-> 3",
+        "explanation": "One extra copy of 1 and of 3 unlinked."
+      },
+      {
+        "input": "list: 2 <-> 2 <-> 2",
+        "output": "2",
+        "explanation": "Two successors removed back-to-back."
+      }
+    ],
+    "constraints": [
+      "0 <= number of nodes <= 10^5",
+      "List sorted ascending",
+      "In place, O(n) time"
+    ]
+  },
+  "a2z-178": {
+    "description": "Given a linked list where every node has a next pointer and an additional child pointer that may point to a separate sorted singly linked list, flatten the structure into one sorted list using only the next pointers (child must end up null everywhere).\n\nTreat each level as a sorted list and repeatedly merge the head list with the next child list in place (merge-two-sorted-lists as the unit of work), or collect via a min-heap; merging level by level keeps the classic recursive definition flatten(head.next) merged with head's child. Output must be a single chain with no branches, in ascending order.",
+    "examples": [
+      {
+        "input": "5 -> 7 -> 8 -> 30, 5.child = 20 -> 21 -> 22, 7.child = 24 -> 25",
+        "output": "5 -> 7 -> 8 -> 20 -> 21 -> 22 -> 24 -> 25 -> 30",
+        "explanation": "Children merged into the main chain at the right positions."
+      },
+      {
+        "input": "10 -> 4 -> 6 -> 12 (children: 4.child = 7, 6.child = 8)",
+        "output": "4 -> 6 -> 7 -> 8 -> 10 -> 12",
+        "explanation": "Head order is not sorted; the merge rebuilds global order."
+      }
+    ],
+    "constraints": [
+      "1 <= total nodes <= 10^5",
+      "Each level list is sorted; every child list's values exceed its parent node",
+      "O(N log N)-ish via merges; pointers only, no value shuffling"
+    ]
+  },
+  "a2z-183": {
+    "description": "Sort a stack of integers in ascending order (top-first) using recursion only — no loops, no auxiliary data structures.\n\nTwo cooperating recursions: insertSorted(stack, x) places x into an already-sorted stack by popping larger tops aside recursively, then pushing x when it fits; sortStack pops the top, recursively sorts the remainder, then inserts the saved value into its sorted position. Recursion depth is O(n²) in the worst case, and only the call stack may hold state.",
+    "examples": [
+      {
+        "input": "stack (top first): -3, 14, 18, -5, 30",
+        "output": "top first: 30, 18, 14, -5, -3 (ascending order with max on top per the sheet's convention)",
+        "explanation": "Sorts the smaller part recursively, then inserts each popped value at its place."
+      },
+      {
+        "input": "stack: 1",
+        "output": "1",
+        "explanation": "Base case for a single element."
+      }
+    ],
+    "constraints": [
+      "1 <= stack size <= 10^3 (recursion budget)",
+      "-10^9 <= elements <= 10^9",
+      "No loops, no extra collections"
+    ]
+  },
+  "a2z-184": {
+    "description": "Reverse a stack using recursion — you may not use loops, another stack, list or any extra collection; only the call stack and single variables are permitted.\n\nThe recipe: pop() removes and returns the bottom element by recursively holding one frame per element until the last; reverse(stack) pops the top, recursively reverses what remains, then inserts the saved value at the bottom by re-pushing after recursive pops. Both helpers recurse; the visible API is a single reverse call.",
+    "examples": [
+      {
+        "input": "stack (top first): 1, 2, 3, 4, 5",
+        "output": "top first: 5, 4, 3, 2, 1",
+        "explanation": "Bottom 1 ends on top after reversing."
+      },
+      {
+        "input": "stack: 9, 8",
+        "output": "8, 9",
+        "explanation": "pop() surfaces 8's predecessor; insert-at-bottom re-lands 9 beneath."
+      }
+    ],
+    "constraints": [
+      "1 <= stack size <= 10^3",
+      "Recursion only — any loop or extra container is an automatic fail",
+      "O(n²) recursion steps are acceptable"
+    ]
+  },
+  "a2z-185": {
+    "description": "Generate all binary strings of length n that contain no two consecutive 1s.\n\nBacktrack position by position carrying the previous bit: 0 is always appendable, 1 only when the previous placed bit was 0. At length n the built string is emitted. The count follows Fibonacci numbers — f(n) = f(n-1) + f(n-2) — which is also the analysis the interview wants; iterative construction from the previous two lists is the non-recursive view.",
+    "examples": [
+      {
+        "input": "n = 2",
+        "output": "00, 01, 10",
+        "explanation": "11 is excluded for consecutive ones."
+      },
+      {
+        "input": "n = 3",
+        "output": "000, 001, 010, 100, 101",
+        "explanation": "Five strings = Fibonacci F(5)."
+      }
+    ],
+    "constraints": [
+      "1 <= n <= 20 (output size grows exponentially)",
+      "Print/return each string once, lexicographic order customary"
+    ]
+  },
+  "a2z-189": {
+    "description": "Given an array of positive integers and a target sum, count how many subsequences (order-preserving, possibly non-contiguous selections) add up exactly to the target, using recursion that explores take / not-take at each index.\n\nAt index i branch twice: include arr[i] and subtract it from the target, or skip it. When the target hits 0 the count is 1 only if every remaining element is 0 (each trailing zero doubles the ways); with strictly positive input the base case is simply target == 0 → 1 and running out → 0. The O(2ⁿ) tree collapses to O(n·target) with memoization, which the sheet mentions as the DP bridge.",
+    "examples": [
+      {
+        "input": "arr = [1, 2, 1], target = 3",
+        "output": "2",
+        "explanation": "Subsequences {1(st), 2} and {2, 1(nd)}."
+      },
+      {
+        "input": "arr = [5, 2, 1], target = 0",
+        "output": "1",
+        "explanation": "Only the empty subsequence; with positive numbers the count is 1."
+      }
+    ],
+    "constraints": [
+      "1 <= n <= 20 for plain recursion (target ≤ 10³ with memo)",
+      "1 <= arr[i], target <= 10³",
+      "Count fits in int for the given bounds"
+    ]
+  },
+  "a2z-190": {
+    "description": "Given an array of positive integers and a target sum, decide whether at least one subsequence sums exactly to the target, via the take / not-take recursion.\n\nRecursion over index i with remaining target: either arr[i] is taken (recurse with target - arr[i]) or skipped; true when a branch reaches target 0 with input consumed consistently, false at the end of the array. Short-circuit when the remaining target goes negative — the values are positive, making the prune correct.",
+    "examples": [
+      {
+        "input": "arr = [5, 3, 8, 1], target = 12",
+        "output": "true",
+        "explanation": "5 + 3 + 1 or 3 + 8 + 1 hit 12."
+      },
+      {
+        "input": "arr = [1, 4], target = 3",
+        "output": "false",
+        "explanation": "Neither branch can land on 3."
+      }
+    ],
+    "constraints": [
+      "1 <= n <= 20",
+      "1 <= arr[i], target <= 10³",
+      "Return a boolean; O(2ⁿ) worst case"
+    ]
+  },
+  "a2z-200": {
+    "description": "Given an n × n binary maze where 1 marks walkable cells and 0 blocks, a rat starts at (0, 0) and must reach (n-1, n-1), moving one cell down or right per step. Print every path it can take, in lexicographic order using the direction strings \"D\" (down) and \"R\" (right).\n\nBacktrack with a visited (or blocked-in-place) grid: at each cell try Down then Right — that order yields sorted output for free; mark, recurse, unmark. A cell sequence reaching the goal emits its direction string. Start or goal blocked means no paths at all.",
+    "examples": [
+      {
+        "input": "maze = [[1, 0], [1, 1]]",
+        "output": "DR",
+        "explanation": "Right is blocked at the start; down then right works."
+      },
+      {
+        "input": "maze = [[1, 1, 0], [1, 1, 0], [1, 1, 1]]",
+        "output": "DDRR, DRDR, RDDR",
+        "explanation": "Three corridors reach (2,2); column 2 of rows 0-1 is blocked, so no path can go right twice early."
+      }
+    ],
+    "constraints": [
+      "2 <= n <= 8 (output is exponential)",
+      "maze[i][j] ∈ {0, 1}",
+      "Paths in lexicographic order; if none, print \"Empty\""
+    ]
+  },
+  "a2z-202": {
+    "description": "Given an undirected graph as an adjacency matrix of size n and m colors, determine whether the vertices can be colored so that no two adjacent vertices share a color; print true/1 for the first solvable assignment (or all assignments, per variant) using backtracking.\n\nAssign colors to vertices in order: a color is safe for vertex v when no already-colored neighbor shares it; recurse and un-trial on failure. Try colors 1..m consistently for the canonical output order. Worst case O(mⁿ·n) checking — the small bounds (n ≤ ~10, m ≤ ~5 or so) make it fine.",
+    "examples": [
+      {
+        "input": "matrix = [[0,1,1,1],[1,0,1,0],[1,1,0,1],[1,0,1,0]], m = 3",
+        "output": "true",
+        "explanation": "A 3-coloring exists for this 4-vertex graph."
+      },
+      {
+        "input": "complete graph K4, m = 3",
+        "output": "false",
+        "explanation": "Four mutually adjacent vertices need four colors."
+      }
+    ],
+    "constraints": [
+      "1 <= n <= 10ish, 1 <= m <= 5 (per the sheet's tests)",
+      "Adjacency matrix symmetric, diagonal 0",
+      "Backtracking with safety check per vertex"
+    ]
+  },
+  "a2z-206": {
+    "description": "Given an integer N and a position i (1-based from the least significant bit), determine whether the i-th bit of N is set.\n\nBit tests: check (N >> (i - 1)) & 1, or AND with a mask N & (1 << (i - 1)) and compare to 0. Shifting the number down by i-1 exposes the queried bit in the units place; this primitive underpins set-bit counting, odd/even, and the swap trick that follow.",
+    "examples": [
+      {
+        "input": "N = 10, i = 2",
+        "output": "true",
+        "explanation": "10 = 1010₂; bit 2 (value 2) is set."
+      },
+      {
+        "input": "N = 10, i = 3",
+        "output": "false",
+        "explanation": "Bit 3 of 1010₂ is 0."
+      }
+    ],
+    "constraints": [
+      "0 <= N <= 10^9",
+      "1 <= i <= 31",
+      "No converting the number to a binary string"
+    ]
+  },
+  "a2z-207": {
+    "description": "Check whether an integer is odd or even using only bitwise operations.\n\nThe least significant bit is exactly the parity bit: n & 1 == 1 means odd, 0 means even. This works unchanged for negative numbers under two's complement and beats n % 2 (whose sign handling differs by language). No arithmetic division or modulo may appear.",
+    "examples": [
+      {
+        "input": "n = 7",
+        "output": "Odd",
+        "explanation": "111₂ ends in 1."
+      },
+      {
+        "input": "n = 4",
+        "output": "Even",
+        "explanation": "100₂ ends in 0."
+      }
+    ],
+    "constraints": [
+      "-10^9 <= n <= 10^9",
+      "Must use (n & 1); % and / are banned"
+    ]
+  },
+  "a2z-209": {
+    "description": "Count the number of set bits (1-bits) in the binary representation of a non-negative integer — its population count.\n\nStandard loop: while n > 0, add n & 1 and right-shift. The better trick is Brian Kernighan's: n & (n - 1) clears the lowest set bit, so iterating it until zero runs exactly popcount times. For 64-bit words the divide-and-conquer mask method or hardware intrinsics count in O(1); all three are fair interview answers.",
+    "examples": [
+      {
+        "input": "n = 9",
+        "output": "2",
+        "explanation": "1001₂ has two 1s."
+      },
+      {
+        "input": "n = 15",
+        "output": "4",
+        "explanation": "1111₂; Kernighan clears one bit per step."
+      }
+    ],
+    "constraints": [
+      "0 <= n <= 10^9",
+      "O(number of set bits) with Kernighan's trick"
+    ]
+  },
+  "a2z-210": {
+    "description": "Given a positive integer, work with its rightmost unset (0) bit: SET it (turn that 0 into 1, leaving other bits untouched) and, as the second part, UNSET it (make sure it stays 0 / clear the rightmost set bit variants as phrased by the sheet). Return the modified numbers.\n\nKey masks: the rightmost unset bit of n is found via x = ~n & (n + 1) (equivalently invert, add one, AND back). Set it with n | x; to flip the rightmost set bit use n ^ (n & -n). Understanding two's complement (n & -n isolates the lowest set bit) is the point of the exercise.",
+    "examples": [
+      {
+        "input": "n = 5 (101₂)",
+        "output": "set → 7 (111₂), unset(rightmost set) → 4 (100₂)",
+        "explanation": "Lowest 0 is bit 2 (value 2); OR-ing 2 gives 7; clearing the lowest set bit subtracts 1."
+      },
+      {
+        "input": "n = 4 (100₂)",
+        "output": "set → 5",
+        "explanation": "Rightmost unset bit is bit 1 (value 1)."
+      }
+    ],
+    "constraints": [
+      "1 <= n <= 10^9",
+      "Constant number of bitwise operations, no string conversion"
+    ]
+  },
+  "a2z-211": {
+    "description": "Swap the values of two integers without a third (temporary) variable.\n\nXOR swap: a ^= b; b ^= a; a ^= b — each variable ends holding the other's original value because x ^ x = 0 and 0 ^ x = x. Addition/subtraction (a = a + b; b = a - b; a = a - b) also works but can overflow. The interview follow-up: both tricks break when a and b alias the same memory location, which XOR-swap in C pointers exposes.",
+    "examples": [
+      {
+        "input": "a = 9, b = 5",
+        "output": "a = 5, b = 9",
+        "explanation": "9^5 = 12; 5^12 = 9→a holds… final pair is exchanged after three xors."
+      },
+      {
+        "input": "a = 0, b = 7",
+        "output": "a = 7, b = 0",
+        "explanation": "XOR with 0 is the identity — steps stay valid."
+      }
+    ],
+    "constraints": [
+      "-10^9 <= a, b <= 10^9",
+      "No temp variable; prefer XOR over +/- to avoid overflow"
+    ]
+  },
+  "a2z-216": {
+    "description": "Given two integers L and R, compute the XOR of every integer in the closed range [L, R].\n\nDefine f(n) = 1 ^ 2 ^ … ^ n, which cycles on n mod 4: n, 1, n+1, 0 for remainders 0, 1, 2, 3. Then L ^ (L+1) ^ … ^ R = f(R) ^ f(L-1) because the prefix below L cancels (x ^ x = 0). O(1) after deriving the cycle pattern; iterating the range is O(R − L) and too slow for 10^9 bounds.",
+    "examples": [
+      {
+        "input": "L = 1, R = 4",
+        "output": "4",
+        "explanation": "1^2^3^4 = 4; f(4) = 4, f(0) = 0."
+      },
+      {
+        "input": "L = 2, R = 3",
+        "output": "1",
+        "explanation": "2 ^ 3 = 1."
+      }
+    ],
+    "constraints": [
+      "0 <= L <= R <= 10^9",
+      "O(1) time expected"
+    ]
+  },
+  "a2z-218": {
+    "description": "Print the distinct prime factors of a number N in increasing order.\n\nTrial-divide by d from 2 upward while d·d ≤ N: whenever d divides N, print d once and strip all copies of it; a leftover N > 1 at the end is itself a prime factor. The d² ≤ N cutoff keeps the loop O(√N); iterating to N is the slow baseline. Precomputing smallest-prime-factor spf arrays answers many queries fast — the natural follow-up.",
+    "examples": [
+      {
+        "input": "N = 60",
+        "output": "2 3 5",
+        "explanation": "60 = 2²·3·5."
+      },
+      {
+        "input": "N = 97",
+        "output": "97",
+        "explanation": "Prime: the loop finds nothing below √97 ≈ 9.8 and the remainder prints."
+      }
+    ],
+    "constraints": [
+      "2 <= N <= 10^9",
+      "O(√N) trial division; factors printed once each"
+    ]
+  },
+  "a2z-219": {
+    "description": "Given an integer N, report how many divisors it has (and optionally list them).\n\nCount pairs symmetrically around √N: loop d while d·d ≤ N, add 2 for the pair (d, N/d), but only 1 when d·d == N so the square root is not double-counted. O(√N) replaces the O(N) full scan; printing requires collecting both partners.",
+    "examples": [
+      {
+        "input": "N = 28",
+        "output": "6",
+        "explanation": "Divisors 1, 2, 4, 7, 14, 28 — pairs (1,28), (2,14), (4,7)."
+      },
+      {
+        "input": "N = 16",
+        "output": "5",
+        "explanation": "1, 2, 4, 8, 16; the root 4 counted once."
+      }
+    ],
+    "constraints": [
+      "1 <= N <= 10^9",
+      "O(√N) time, O(1) extra (O(√N) output if listing)"
+    ]
+  },
+  "a2z-221": {
+    "description": "Print the complete prime factorization of N — every prime factor repeated with its multiplicity, in non-decreasing order.\n\nSame trial division as distinct factors but emit d on every successful division (do not skip repeats), then recurse or loop on the quotient; a leftover quotient > 1 is a prime factor. Correctness rests on unique factorization, and the d² ≤ remaining N bound means after stripping small factors at most one large prime survives — keeping the loop O(√N).",
+    "examples": [
+      {
+        "input": "N = 360",
+        "output": "2 2 2 3 3 5",
+        "explanation": "360 = 2³·3²·5."
+      },
+      {
+        "input": "N = 13",
+        "output": "13",
+        "explanation": "Prime input prints itself."
+      }
+    ],
+    "constraints": [
+      "2 <= N <= 10^9",
+      "Multiplicities included; non-decreasing order"
+    ]
+  }
+}

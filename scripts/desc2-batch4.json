@@ -1,0 +1,446 @@
+{
+  "a2z-299": {
+    "description": "Print the preorder, inorder and postorder traversals of a binary tree in a single traversal visit per node — one DFS that emits each node's value three times, guided by a state marker.\n\nIterative version: push (root, 1) on a stack; when popping a node with state 1 print it (preorder) and re-push it as state 2 with its right child; on state 2 re-push as state 3 with its left child; state 3 nodes print for the last time (postorder). The three printed sequences are the answer. Recursive variant: one function taking an order parameter. O(n) time, O(n) stack.",
+    "examples": [
+      {
+        "input": "tree: 1 with left 2, right 3",
+        "output": "preorder 1 2 3 | inorder 2 1 3 | postorder 2 3 1",
+        "explanation": "Each node visited three times — before children, between, after."
+      },
+      {
+        "input": "single node 5",
+        "output": "all three traversals are 5",
+        "explanation": "Leaf emissions coincide."
+      }
+    ],
+    "constraints": [
+      "1 <= number of nodes <= 10^5",
+      "Node values are integers",
+      "One traversal routine must produce all three orders"
+    ]
+  },
+  "a2z-308": {
+    "description": "Given a binary tree, output its preorder, inorder and postorder sequences using one combined traversal instead of three separate functions.\n\nSame state-machine trick as the previous exercise (push node with visit-number 1/2/3, printing at the appropriate passes) or a recursive dfs(node, order) called thrice from one walk. The point of the problem is understanding *when* in the recursion each order emits: pre = on entry, in = after the left subtree, post = after both children.",
+    "examples": [
+      {
+        "input": "tree: 1 -> (2, 3); 2 -> (4, null)",
+        "output": "pre 1 2 4 3 | in 4 2 1 3 | post 4 2 3 1",
+        "explanation": "Node 2 emits early/middle/late around its left child 4."
+      },
+      {
+        "input": "empty tree",
+        "output": "three empty sequences",
+        "explanation": "Null root short-circuits."
+      }
+    ],
+    "constraints": [
+      "0 <= number of nodes <= 10^5",
+      "O(n) time per order; single stack or recursion skeleton",
+      "Print nodes space-separated per order"
+    ]
+  },
+  "a2z-315": {
+    "description": "Print the boundary (perimeter) of a binary tree anticlockwise: the root, then the left boundary top-down excluding leaves, then all leaves left-to-right, then the right boundary bottom-up excluding leaves. A node with no children is a leaf and must not be duplicated across the three parts.\n\nCollect left boundary by walking left (dropping to right children when left is null), leaves by any in-order traversal, right boundary by walking right and reversing. The classic traps: single-node trees print the node once, and a left/right child that is a leaf belongs only to the leaves list.",
+    "examples": [
+      {
+        "input": "tree: 1(2,3); 2(4,5); 3(6,7); 5(8,9); 6(10,11)",
+        "output": "1 2 4 8 9 10 11 7 3",
+        "explanation": "Left boundary top-down: 2 (the walk stops before leaf 4). Leaves left-to-right: 4, 8, 9, 10, 11. Right boundary bottom-up: 7, 3 (6 is excluded — the walk from 3 goes to its right child 7, which is a leaf). Root printed once at the front."
+      },
+      {
+        "input": "single node 1",
+        "output": "1",
+        "explanation": "Root = leaf = boundary, printed once."
+      }
+    ],
+    "constraints": [
+      "1 <= number of nodes <= 10^5",
+      "Anti-clockwise order starting from the root",
+      "Leaves excluded from side boundaries"
+    ]
+  },
+  "a2z-317": {
+    "description": "Print the top view of a binary tree — the nodes visible when the tree is looked at from above. Assign each node a horizontal distance from the root (left child hd-1, right child hd+1); for every hd column the visible node is the one seen first in level order.\n\nBFS with (node, hd) pairs and a map hd → first value: because BFS visits shallowest-first and left-to-right, the first insertion per hd is exactly the top-view node. Finally print columns in increasing hd. O(n) time.",
+    "examples": [
+      {
+        "input": "tree: 1(2,3); 2(4,5); 3(6,7)",
+        "output": "4 2 1 3 7",
+        "explanation": "Columns hd = -2, -1, 0, 1, 2; first nodes per column in BFS order."
+      },
+      {
+        "input": "root only",
+        "output": "the root",
+        "explanation": "Single column."
+      }
+    ],
+    "constraints": [
+      "1 <= number of nodes <= 10^5",
+      "hd range within [-n, n]; use an ordered map or offset array",
+      "Left-to-right output by column"
+    ]
+  },
+  "a2z-318": {
+    "description": "Print the bottom view of a binary tree: for each horizontal-distance column the node seen last from level order (deepest, rightmost wins on ties within a level handled by BFS visit order).\n\nIdentical skeleton to top view — BFS with hd tracking — but the map overwrites: the last node reaching each hd is printed. Print hd columns sorted ascending.",
+    "examples": [
+      {
+        "input": "tree: 1(2,3); 2(4,5); 3(6,7); 5(8,9); 6(10,11)",
+        "output": "4 10 6 11 7",
+        "explanation": "hd -2: only 4; hd -1: 2 then 8 then 10 → 10; hd 0: 1, 5 then 6 → 6; hd 1: 3, 9 then 11 → 11; hd 2: 7."
+      },
+      {
+        "input": "left chain 1(2,null); 2(3,null)",
+        "output": "3 2 1",
+        "explanation": "Columns -2, -1, 0 each single-node."
+      }
+    ],
+    "constraints": [
+      "1 <= number of nodes <= 10^5",
+      "Overwrite semantics: last BFS visitor per hd wins",
+      "Sorted hd output"
+    ]
+  },
+  "a2z-321": {
+    "description": "Print every root-to-leaf path of a binary tree, values separated by spaces, one path per line.\n\nClassic backtracking: carry a path vector, push the node on entry, recurse into existing children, pop on exit; when a node has no children emit the accumulated path. Order convention: left subtree's paths before right's. The path buffer makes it O(total output) with no re-walking.",
+    "examples": [
+      {
+        "input": "tree: 1(2,3); 2(4,null)",
+        "output": "1 2 4 / 1 3",
+        "explanation": "Two leaves: 4 and 3."
+      },
+      {
+        "input": "tree: 1(2,null); 2(3,null)",
+        "output": "1 2 3",
+        "explanation": "A single chain has one path."
+      }
+    ],
+    "constraints": [
+      "1 <= number of nodes <= 10^5",
+      "Leaf = both children null",
+      "Any inter-path order accepted if consistent (left before right)"
+    ]
+  },
+  "a2z-324": {
+    "description": "Enforce the children-sum property on a binary tree — every internal node's value must equal the sum of its existing children's values — using only increment operations on node values (each +1 counts as one change). Report the minimum number of changes, or transform the tree in place.\n\nProcess bottom-up (postorder): fix both subtrees first. If child-sum exceeds the node, raise the node to the sum; if the node is larger than the child-sum, raise the larger child by the deficit (propagating the increase down that subtree so its own property is restored). One postorder pass is optimal because decrements are forbidden.",
+    "examples": [
+      {
+        "input": "tree: 3(1,2)",
+        "output": "0 changes",
+        "explanation": "Property already holds: 1 + 2 = 3."
+      },
+      {
+        "input": "tree: 6(3,2)",
+        "output": "transform to 6(4,2), 1 change",
+        "explanation": "Children sum to 5 < 6: add the deficit 1 to the larger child (3 -> 4). Root and children now agree; no root bump is needed."
+      },
+      {
+        "input": "tree: 1(3,2)",
+        "output": "transform to 5(3,2), 1 change",
+        "explanation": "Children sum to 5 > 1: raise the root to the children-sum — the only allowed direction."
+      }
+    ],
+    "constraints": [
+      "1 <= number of nodes <= 10^5",
+      "Only +1 increments allowed; leaves may be bumped to propagate",
+      "Postorder repair; final tree must satisfy the property exactly"
+    ]
+  },
+  "a2z-326": {
+    "description": "A binary tree catches fire at a given target node; every second the fire spreads from every burning node to its adjacent nodes (parent and children). Find the minimum number of seconds until the whole tree is burned.\n\nThe tree is an undirected graph in disguise: build a child → parent map (BFS/DFS), then multi-source BFS from the target counting layers. The answer is the number of BFS layers after the first — the eccentricity of the target in the undirected tree. O(n).",
+    "examples": [
+      {
+        "input": "tree: 1(2,3); 2(4,5); 3(null,6); 5(7,8); 6(null,9), target = 5",
+        "output": "5",
+        "explanation": "Burn order 5(0) → 2,7,8(1) → 1,4(2) → 3(3) → 6(4) → 9(5)."
+      },
+      {
+        "input": "tree: 1(2,3), target = 1",
+        "output": "1",
+        "explanation": "Children ignite at second 1; the whole 3-node tree burns in 1 second."
+      }
+    ],
+    "constraints": [
+      "1 <= number of nodes <= 10^5",
+      "Node values unique so the parent map is well-defined",
+      "O(n) BFS with parent pointers"
+    ]
+  },
+  "a2z-328": {
+    "description": "Decide which pairs of traversals uniquely reconstruct a binary tree (all node values distinct), and justify: inorder + preorder, inorder + postorder, and inorder + level-order each pin a single tree; preorder + postorder does not. For full binary trees (every node has 0 or 2 children) even preorder + postorder is unique.\n\nThe constructive view: inorder splits the sequence at each root found from the other traversal — recursion is forced, hence uniqueness. Without inorder there is no way to decide how a preorder's next run of nodes divides between the left and right subtree (the ambiguous case is any node with exactly one child).",
+    "examples": [
+      {
+        "input": "pre = [1,2,3], in = [2,1,3]",
+        "output": "unique: 1(2,3)",
+        "explanation": "Root 1 splits inorder into left [2] and right [3]."
+      },
+      {
+        "input": "pre = [1,2], post = [2,1]",
+        "output": "ambiguous",
+        "explanation": "2 can be the left or the right child — two trees fit."
+      }
+    ],
+    "constraints": [
+      "All node values distinct",
+      "Answer as the pair classification plus the reconstruction procedure",
+      "Tree size up to 10^5 for the algorithmic follow-ups"
+    ]
+  },
+  "a2z-337": {
+    "description": "Find the minimum and maximum values stored in a binary search tree.\n\nBST ordering makes it pointer-chasing: the minimum is the leftmost node (keep going left while a left child exists), the maximum the rightmost. O(h) time, O(1) space — a full scan would ignore the search-tree property the exercise is testing. On unbalanced trees h can reach n, motivating the self-balancing discussion.",
+    "examples": [
+      {
+        "input": "BST: 50(30(10,40), 70(60,80))",
+        "output": "min 10, max 80",
+        "explanation": "Left spine ends at 10; right spine at 80."
+      },
+      {
+        "input": "single node 7",
+        "output": "min 7, max 7",
+        "explanation": "Degenerate root is both extremes."
+      }
+    ],
+    "constraints": [
+      "1 <= number of nodes <= 10^5",
+      "Valid BST with distinct keys",
+      "O(h) time, no recursion needed"
+    ]
+  },
+  "a2z-338": {
+    "description": "Given a BST and a key X, find its floor (greatest node value ≤ X, or null/-1) and ceiling (smallest node value ≥ X, or null/-1) in a single root-down walk.\n\nIterative descent with two candidate variables: at each node equal → both answers are the node; going right (key larger) updates floor since the node still qualifies as ≤; going left updates ceiling symmetrically. O(h) time O(1) space; each pointer step moves strictly down.",
+    "examples": [
+      {
+        "input": "BST keys [8, 1, 9, 4, 7, 10, 2], X = 3",
+        "output": "floor 2, ceiling 4",
+        "explanation": "Walk 8→left (ceil 8), 1→right (floor 1), 4→left (ceil 4), 2→right ends at null: floor updates to 2."
+      },
+      {
+        "input": "X = 0",
+        "output": "floor null, ceiling 1",
+        "explanation": "No key ≤ 0 exists."
+      }
+    ],
+    "constraints": [
+      "1 <= number of nodes <= 10^5",
+      "Keys distinct; -10^9 <= X <= 10^9",
+      "O(h); report -1/null when a side is unbounded"
+    ]
+  },
+  "a2z-339": {
+    "description": "Find the floor of a key in a BST — the node holding the largest value that is ≤ the given key (return null / -1 when every key exceeds it). Single descent: move right when a node's value is ≤ the key (remembering it as the best floor so far), left otherwise, stopping at null.",
+    "examples": [
+      {
+        "input": "BST: 10(5,13); 13(11,14); key 12",
+        "output": "11",
+        "explanation": "10 ≤ 12 keeps it and goes right; 13 > 12 goes left; 11 ≤ 12 is the last qualifying node."
+      },
+      {
+        "input": "key = 4 on the same tree",
+        "output": "-1",
+        "explanation": "Smallest stored key is 5."
+      }
+    ],
+    "constraints": [
+      "1 <= number of nodes <= 10^5",
+      "Distinct integer keys",
+      "O(h) time, O(1) space; recursion only if stated"
+    ]
+  },
+  "a2z-346": {
+    "description": "Find the inorder successor (and predecessor) of a given node in a binary search tree — the next (previous) key in sorted order; return null when the node is the maximum (minimum).\n\nSuccessor: if the node has a right subtree, the answer is that subtree's leftmost node; otherwise climb upward (parent links or a recorded search path) to the last node from which the search went left. Symmetric rule for the predecessor. Iterative search from the root updating a candidate while descending gives O(h) without parent pointers.",
+    "examples": [
+      {
+        "input": "BST: 20(9, 25(22, 30)); query node 22",
+        "output": "successor 25, predecessor 20",
+        "explanation": "22 has no right subtree — the successor is the last ancestor where the search turned left (25); the predecessor is the last ancestor where it turned right (20)."
+      },
+      {
+        "input": "query 30 (the maximum)",
+        "output": "successor null, predecessor 25",
+        "explanation": "Right spine ends at the max; the predecessor is 25 — 30 has no left subtree, so climb to the last right-turn ancestor."
+      }
+    ],
+    "constraints": [
+      "1 <= number of nodes <= 10^5",
+      "Keys unique; the queried node exists in the tree",
+      "O(h) time; no inorder array allowed"
+    ]
+  },
+  "a2z-126": {
+    "description": "Given the positions of gas stations on a number line (sorted, distinct) and an integer k — the number of new stations you may add anywhere — place the new stations so that the maximum distance between any two adjacent stations after the addition is as small as possible. Return that minimized maximum distance as a float.",
+    "examples": [
+      {
+        "input": "stations = [1, 2, 3, 6], k = 2",
+        "output": "1.00",
+        "explanation": "Add stations at 4 and 5: all gaps become 1 — max 1.0; no better is possible with 2 additions."
+      },
+      {
+        "input": "stations = [1, 2, 3, 4, 5], k = 1",
+        "output": "0.50",
+        "explanation": "Splitting any unit gap evenly gives 0.5."
+      }
+    ],
+    "constraints": [
+      "2 <= stations.length <= 10^5, 0 <= k <= 10^6",
+      "1 <= positions <= 10^7",
+      "Binary search the real-valued answer: a gap d needs ceil(d/x) - 1 stations to cap it at x"
+    ]
+  },
+  "a2z-250": {
+    "description": "In a party of n people, a celebrity is someone everybody else knows but who knows nobody else. Given an n×n boolean matrix knows[i][j] (diagonal entries are false by convention), identify the celebrity's index, or return -1. Optimal solution uses O(1) extra space and O(n) queries.\n\nCandidate elimination: keep a single candidate and scan i = 1..n-1 comparing candidate with i. If the candidate knows i, the candidate is disqualified (a celebrity knows nobody) so candidate = i. If the candidate does not know i, then i is disqualified (a celebrity must be known by everyone, and the candidate does not know i) so the candidate stays. After the scan, a verification pass checks the survivor: their row must be all zeros and their column all ones (ignoring the diagonal). The stack version pops pairs with the same discard rule; verification is mandatory because elimination only narrows to one candidate — it never proves that candidate is the celebrity.",
+    "examples": [
+      {
+        "input": "n = 3, M = [[0,1,0],[0,0,0],[0,1,0]]",
+        "output": "1",
+        "explanation": "Everyone (0 and 2) knows 1; 1's row is empty."
+      },
+      {
+        "input": "n = 2, M = [[0,0],[0,0]]",
+        "output": "-1",
+        "explanation": "No one is known by everybody — the candidate check fails."
+      }
+    ],
+    "constraints": [
+      "1 <= n <= 500",
+      "knows queries only through the matrix (or an oracle)",
+      "O(n) time, O(1) space expected; diagonal convention: self-knowledge false"
+    ]
+  },
+  "a2z-261": {
+    "description": "Given a string s and an integer k, find the length of the longest substring containing at most k distinct characters.\n\nSliding window with a frequency map: extend the right end, and while the window holds more than k distinct characters shrink from the left (dropping zero-count entries). Track the best window length. Characters may repeat freely; 'at most k distinct' also admits shorter-than-k solutions; k = 0 yields 0.",
+    "examples": [
+      {
+        "input": "s = \"eceba\", k = 2",
+        "output": "3",
+        "explanation": "\"ece\" uses two distinct letters; adding 'b' breaks it."
+      },
+      {
+        "input": "s = \"aa\", k = 1",
+        "output": "2",
+        "explanation": "One distinct character spans the whole string."
+      }
+    ],
+    "constraints": [
+      "1 <= s.length <= 10^5, 0 <= k <= 26 (lowercase/ASCII)",
+      "O(n) time; substring must be contiguous"
+    ]
+  },
+  "a2z-264": {
+    "description": "Given strings s and t, return the minimum (shortest) window substring of s such that t is a subsequence of the window — characters of t in order, not necessarily contiguous. If several windows share the minimum length return the one starting earliest; if none exists return \"\".\n\nThe tidy method walks s with a forward pass matching t greedily, then on a complete match walks backward to tighten the start, records the window, and restarts from start+1 — O(|s|·|t|) worst case. DP or a next-occurrence automaton improves this to near-linear; the sheet expects the two-pointer expand-then-shrink pattern.",
+    "examples": [
+      {
+        "input": "s = \"abcdebdde\", t = \"bde\"",
+        "output": "\"bcde\"",
+        "explanation": "First match ends at index 4 (b1, d3, e4); the backward pass tightens the start to 1 — window \"bcde\" (length 4). The second match b5, d6, e8 tightens to \"bdde\" (length 4) but starts later, so \"bcde\" wins the earliest-start tie-break."
+      },
+      {
+        "input": "s = \"abc\", t = \"d\"",
+        "output": "\"\"",
+        "explanation": "Character missing entirely."
+      }
+    ],
+    "constraints": [
+      "1 <= |s| <= 10^5, 1 <= |t| <= 100",
+      "Lowercase English letters",
+      "Return earliest minimal window; O(|s|) amortized with the automaton variant"
+    ]
+  },
+  "a2z-277": {
+    "description": "Given sticks of various lengths, connect them all into one stick. Connecting two sticks of lengths x and y costs x + y. Find the minimum total cost of all connections.\n\nThis is Huffman coding arithmetic: repeatedly join the two shortest sticks. A min-heap gives each pickup in O(log n); every intermediate stick re-enters the pool. Proof sketch: any optimal schedule joins the two smallest first (exchange argument). Total O(n log n).",
+    "examples": [
+      {
+        "input": "sticks = [2, 4, 3]",
+        "output": "14",
+        "explanation": "Join 2+3 = 5 (cost 5), then 5+4 = 9; 5 + 9 = 14."
+      },
+      {
+        "input": "sticks = [1, 8, 3, 5]",
+        "output": "30",
+        "explanation": "1+3 = 4 (cost 4), then 4+5 = 9 (cost 9), finally 8+9 = 17 (cost 17); total 4 + 9 + 17 = 30."
+      }
+    ],
+    "constraints": [
+      "1 <= sticks.length <= 10^5",
+      "1 <= length <= 10^4; answer needs 64-bit accumulation",
+      "O(n log n) via priority queue; single stick costs 0"
+    ]
+  },
+  "a2z-377": {
+    "description": "Given a sorted (lexicographically) dictionary of words in an unknown alien alphabet, recover the letter order. Build a graph where each adjacent word pair contributes an edge at the first differing position (letter_a before letter_b); a topological order of that graph is the answer; return \"\" when the constraints are contradictory (a cycle) — and note the prefix rule: a word like \"abc\" followed by \"ab\" is invalid input.\n\nKahn's algorithm over the ≤26-letter graph yields the order; multiple valid orders exist when letters are unconstrained relative to each other — any is accepted.",
+    "examples": [
+      {
+        "input": "words = [\"baa\", \"abcd\", \"abca\", \"cab\", \"cad\"]",
+        "output": "\"bdac\"",
+        "explanation": "Pair (baa, abcd) gives b→a; (abca, cab) gives a→c; (cab, cad) gives b→d. Topological order over {a,b,c,d}: b, d, a, c."
+      },
+      {
+        "input": "words = [\"abc\", \"ab\"]",
+        "output": "\"\"",
+        "explanation": "Prefix violation — the ordering cannot exist."
+      }
+    ],
+    "constraints": [
+      "1 <= words.length <= 10^3, total characters <= 10^4",
+      "Alphabet of 26 lowercase letters",
+      "O(total chars + edges); cycle ⇒ empty string"
+    ]
+  },
+  "a2z-398": {
+    "description": "Start with an empty m × n grid of water; each query adds land at one cell. After every addition, report the number of islands (4-connected groups of land cells). Queries are online — islands may merge when a bridge cell arrives.\n\nDisjoint-set union over land cells: a new cell starts as its own component (count += 1), then union with each of its four land neighbors, decrementing the count on every successful merge. Path compression + union by rank makes it O(q α(mn)). Re-BFS per query is the slow baseline.",
+    "examples": [
+      {
+        "input": "m = 3, n = 3, positions = [(0,0), (0,2), (1,1), (2,0), (2,2)]",
+        "output": "[1, 2, 1, 2, 3]",
+        "explanation": "(1,1) is adjacent to both (0,0) and (0,2): it joins a new component (+1) then merges two (−2), dropping the count from 3 to 1. (2,0) and (2,2) each start a fresh island (not 4-adjacent to anything)."
+      },
+      {
+        "input": "m = 2, n = 2, positions = [(0,0), (1,1)]",
+        "output": "[1, 2]",
+        "explanation": "Diagonal cells are not 4-adjacent — no merge."
+      }
+    ],
+    "constraints": [
+      "1 <= m, n <= 1000 (up to 10^6 cells)",
+      "1 <= number of queries <= 10^5",
+      "O(m·n + q α) expected; report after each query, not just the end"
+    ]
+  },
+  "a2z-461": {
+    "description": "Given a list of dictionary words, find the longest word such that every one of its prefixes also occurs in the list (e.g. \"apple\" needs \"a\", \"ap\", \"app\", \"appl\"). Ties break by lexicographically smallest word; return \"-1\" (or empty) when none qualifies. Words must be matched case-sensitively as given.\n\nInsert all words into a trie marking terminal nodes, then walk each candidate verifying every node along its path is terminal — or sort candidates by length descending / lexicographic ascending and check prefixes against a hash set in O(L²) total.",
+    "examples": [
+      {
+        "input": "[\"a\", \"banana\", \"app\", \"appl\", \"ap\", \"apply\", \"apple\"]",
+        "output": "apple",
+        "explanation": "apple's prefixes a, ap, app, appl are all present; apply fails because its proper prefixes include appl (present) but apple-vs-apply tie goes to the lexicographically smaller — and banana fails (no 'b')."
+      },
+      {
+        "input": "[\"cat\", \"catt\", \"bat\", \"ba\"]",
+        "output": "catt",
+        "explanation": "c → ca → cat → catt all present; \"ba\" and \"bat\" lack the prefix \"b\"."
+      }
+    ],
+    "constraints": [
+      "1 <= number of words <= 10^5, total length <= 10^6",
+      "Lowercase letters",
+      "O(total length) trie; tie-break = lexicographically smallest among longest"
+    ]
+  },
+  "a2z-462": {
+    "description": "Count the number of distinct substrings of a string (two substrings count once even if they occur at different positions).\n\nTrie route: for each suffix, insert into a trie and count how many nodes had to be newly created — the running total is the answer, O(n²) nodes/time. Suffix-array route: total substrings n(n+1)/2 minus the sum of LCP values between consecutive sorted suffixes, O(n log n) or O(n). Both are expected answers; the suffix array one scales past 10^4.",
+    "examples": [
+      {
+        "input": "s = \"ababa\"",
+        "output": "9",
+        "explanation": "Distinct classes: a, b, ab, ba, aba, bab, abab, baba, ababa."
+      },
+      {
+        "input": "s = \"aaa\"",
+        "output": "3",
+        "explanation": "a, aa, aaa — repeats collapse."
+      }
+    ],
+    "constraints": [
+      "1 <= |s| <= 10^4 (trie) / 10^5 (suffix array)",
+      "Lowercase alphabet",
+      "Exclude the empty substring from the count"
+    ]
+  }
+}
