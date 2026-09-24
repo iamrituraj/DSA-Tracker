@@ -445,7 +445,7 @@ function RowExtLinks({ p, tufLinks, solutions }) {
     {video && <a className="row-ext-btn" href={video} target="_blank" rel="noreferrer" title="Watch explanation video"><Play size={14} /></a>}
   </span>;
 }
-function ProblemRow({ p, open, tag, tufLinks, solutions }) { return <button className="problem-row" onClick={() => open(p)}><div className={`status-dot ${String(p.status || "Not Started").toLowerCase().replace(/\s+/g, "-")}`}></div><div className="row-main"><b>{p.title}{p.favorite && <Star size={12} fill="currentColor" />}</b><span>{p.topic} · {p.pattern}</span></div><RowExtLinks p={p} tufLinks={tufLinks} solutions={solutions} /><span className={`diff ${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>{tag && <span className="due">{tag}</span>}<ChevronRight size={17} /></button> }
+function ProblemRow({ p, open, tag, tufLinks, solutions }) { const st = String(p.status || "Not Started").toLowerCase().replace(/\s+/g, "-"); const done = st === "solved" || st === "mastered"; return <button className="problem-row" onClick={() => open(p)}><div className={`status-dot ${st}`}>{done && <Check size={12} strokeWidth={3.5} />}</div><div className="row-main"><b>{p.title}{p.favorite && <Star size={12} fill="currentColor" />}</b><span>{p.topic} · {p.pattern}</span></div><RowExtLinks p={p} tufLinks={tufLinks} solutions={solutions} /><span className={`diff ${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>{tag && <span className="due">{tag}</span>}<ChevronRight size={17} /></button> }
 
 function groupByTopicPattern(list) {
   const topics = {};

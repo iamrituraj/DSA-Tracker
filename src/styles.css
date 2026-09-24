@@ -787,3 +787,12 @@
 .theme-dark .desc-io>span{color:#7d90ab}
 .theme-dark .desc-io code{background:#0d1728;border-color:#26354b;color:#e2e8f0}
 .theme-dark .desc-io p{color:#a8b7cc}
+/* Solved/mastered rows must scan at a glance: badge-style dot with a check glyph plus a green tint on the row */
+.status-dot{width:18px;height:18px;display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+.status-dot.solved,.status-dot.mastered{background:#2e8b62;box-shadow:0 0 0 3px #2e8b6222}
+.status-dot.attempted{background:#c58a26}
+.status-dot.not-started{background:transparent;border:2px solid #b9c3d1;box-sizing:border-box}
+.problem-row:has(.status-dot.solved),.problem-row:has(.status-dot.mastered){background:#eef8f2;border-radius:8px}
+.theme-dark .status-dot.not-started{border-color:#4a5a74}
+.theme-dark .status-dot.solved,.theme-dark .status-dot.mastered{background:#37a374;box-shadow:0 0 0 3px #37a37433}
+.theme-dark .problem-row:has(.status-dot.solved),.theme-dark .problem-row:has(.status-dot.mastered){background:#12281e}

@@ -3,6 +3,7 @@
 <cite>
 **Referenced Files in This Document**
 - [main.jsx](file://src/main.jsx)
+- [hld.jsx](file://src/hld.jsx)
 - [lld.jsx](file://src/lld.jsx)
 - [lld-data.js](file://src/lld-data.js)
 - [_session.js](file://api/_session.js)
@@ -15,10 +16,11 @@
 
 ## Update Summary
 **Changes Made**
-- Added comprehensive LLD Lab integration with new navigation menu option and routing support
-- Enhanced main application entry point with LLD page component import and rendering
-- Integrated LLD content management system with chapters, diagrams, and interactive code examples
-- Updated navigation structure to include "LLD Lab" alongside existing DSA tracking features
+- Added comprehensive HLD Lab integration with new navigation menu option and routing support
+- Enhanced main application entry point with HLD page component import and rendering
+- Integrated HLD content management system with three revision-grade system design sheets
+- Updated navigation structure to include "HLD Lab" alongside existing DSA tracking features
+- Added iframe-based content viewer for standalone HLD revision sheets
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -27,16 +29,17 @@
 4. [Architecture Overview](#architecture-overview)
 5. [Detailed Component Analysis](#detailed-component-analysis)
 6. [LLD Lab Integration](#lld-lab-integration)
-7. [Dependency Analysis](#dependency-analysis)
-8. [Performance Considerations](#performance-considered)
-9. [Troubleshooting Guide](#troubleshooting-guide)
-10. [Conclusion](#conclusion)
+7. [HLD Lab Integration](#hld-lab-integration)
+8. [Dependency Analysis](#dependency-analysis)
+9. [Performance Considerations](#performance-considered)
+10. [Troubleshooting Guide](#troubleshooting-guide)
+11. [Conclusion](#conclusion)
 
 ## Introduction
-This document explains the React application architecture for a local-first DSA (Data Structures and Algorithms) tracker with integrated Low-Level Design (LLD) lab capabilities. It covers the main App component structure, state management with React hooks, local persistence using localStorage, routing via page state, data flow between components, and integration with cloud APIs for optional multi-device sync. The application now includes comprehensive LLD interview preparation content covering classic design problems like LRU Cache, Vending Machine, Parking Lot, and Elevator System.
+This document explains the React application architecture for a local-first DSA (Data Structures and Algorithms) tracker with integrated Low-Level Design (LLD) and High-Level Design (HLD) lab capabilities. It covers the main App component structure, state management with React hooks, local persistence using localStorage, routing via page state, data flow between components, and integration with cloud APIs for optional multi-device sync. The application now includes comprehensive interview preparation content covering both low-level design problems and high-level system design scenarios.
 
 ## Project Structure
-The project is a Vite-based React app with a single-page interface that combines DSA problem tracking with LLD interview preparation. The core UI logic lives in one large component file that renders multiple views based on page state. Cloud synchronization is implemented through serverless API routes deployed as Vercel Functions. Static problem datasets are bundled under public/data and loaded at runtime. The LLD Lab provides structured learning content with interactive diagrams and complete C# implementations.
+The project is a Vite-based React app with a single-page interface that combines DSA problem tracking with LLD and HLD interview preparation. The core UI logic lives in one large component file that renders multiple views based on page state. Cloud synchronization is implemented through serverless API routes deployed as Vercel Functions. Static problem datasets are bundled under public/data and loaded at runtime. The LLD Lab provides structured learning content with interactive diagrams and complete C# implementations, while the HLD Lab offers production-scale system design revision sheets embedded via iframes.
 
 ```mermaid
 graph TB
@@ -44,12 +47,14 @@ Client["Browser (React App)"]
 Vite["Vite Dev/Build"]
 Problems["public/data/problems.json"]
 LLDContent["src/lld-data.js"]
+HLDContent["public/hld/*.html"]
 API_Auth["API /api/auth"]
 API_State["API /api/state"]
 DB["Neon Postgres"]
 Client --> Vite
 Vite --> Problems
 Vite --> LLDContent
+Vite --> HLDContent
 Client --> API_Auth
 Client --> API_State
 API_State --> DB
@@ -57,6 +62,7 @@ API_State --> DB
 
 **Diagram sources**
 - [main.jsx:1-10](file://src/main.jsx#L1-L10)
+- [hld.jsx:1-10](file://src/hld.jsx#L1-L10)
 - [lld.jsx:1-5](file://src/lld.jsx#L1-L5)
 - [lld-data.js:1-10](file://src/lld-data.js#L1-L10)
 - [problems.json:1-20](file://public/data/problems.json#L1-L20)
@@ -69,14 +75,15 @@ API_State --> DB
 - [package.json:1-21](file://package.json#L1-L21)
 
 ## Core Components
-The application is composed of a central App component that manages global state and delegates rendering to view-specific components: Dashboard, Roadmap, Revision, **LLD Lab**, Patterns, Analytics, Settings, and Problem. All user progress, notes, solutions, activity logs, and settings are persisted locally by default and optionally synced to a cloud database when authenticated.
+The application is composed of a central App component that manages global state and delegates rendering to view-specific components: Dashboard, Roadmap, Revision, LLD Lab, HLD Lab, Patterns, Analytics, Settings, and Problem. All user progress, notes, solutions, activity logs, and settings are persisted locally by default and optionally synced to a cloud database when authenticated.
 
 Key responsibilities:
 - App: orchestrates state, routing, data loading, filtering, stats computation, and cloud sync lifecycle.
 - Dashboard: high-level overview, daily goal, due revisions, next problems, weak problems, study loop guidance.
 - Roadmap: grouped topic/pattern listing with filters and sorting.
 - Revision: spaced repetition queue and upcoming schedule.
-- **LLD Lab**: structured interview preparation content with interactive diagrams and complete implementations.
+- LLD Lab: structured interview preparation content with interactive diagrams and complete implementations.
+- HLD Lab: production-scale system design revision sheets with embedded HTML content.
 - Patterns: pattern-level completion metrics and links to external resources.
 - Analytics: charts and breakdowns across status, confidence, difficulty, topics, and activity.
 - Settings: export/import/reset, theme, daily goal, and cloud sync connection.
@@ -93,7 +100,7 @@ Key responsibilities:
 - [main.jsx:586-606](file://src/main.jsx#L586-L606)
 
 ## Architecture Overview
-The app follows a unidirectional data flow with a single source of truth in the App component. Local state is persisted to localStorage via a custom hook. Optional cloud sync uses an HTTP-only session cookie and a JSONB store in Neon Postgres. The LLD Lab operates independently from the DSA tracking system, providing educational content without affecting user progress data.
+The app follows a unidirectional data flow with a single source of truth in the App component. Local state is persisted to localStorage via a custom hook. Optional cloud sync uses an HTTP-only session cookie and a JSONB store in Neon Postgres. Both LLD and HLD labs operate independently from the DSA tracking system, providing educational content without affecting user progress data.
 
 ```mermaid
 sequenceDiagram
@@ -103,6 +110,7 @@ participant LS as "localStorage"
 participant API as "Serverless API"
 participant DB as "Neon Postgres"
 participant LLD as "LLD Content"
+participant HLD as "HLD Content"
 U->>A : Interact (update progress/notes/activity)
 A->>LS : Persist via useLocalState
 Note over A,LS : Immediate offline availability
@@ -123,11 +131,14 @@ DB-->>API : saved
 API-->>A : {saved}
 U->>LLD : Access LLD Lab content
 LLD-->>U : Interactive diagrams & code
+U->>HLD : Access HLD Lab content
+HLD-->>U : Embedded revision sheets
 ```
 
 **Diagram sources**
 - [main.jsx:29-33](file://src/main.jsx#L29-L33)
 - [main.jsx:64-113](file://src/main.jsx#L64-L113)
+- [hld.jsx:41-51](file://src/hld.jsx#L41-L51)
 - [lld.jsx:257-298](file://src/lld.jsx#L257-L298)
 - [auth.js:1-24](file://api/auth.js#L1-L24)
 - [state.js:1-51](file://api/state.js#L1-L51)
@@ -140,8 +151,8 @@ LLD-->>U : Interactive diagrams & code
   - Uses a custom useLocalState hook for persistent keys: progress, notes, solutions, activity, settings.
   - Computes derived data with useMemo: enriched problems list, statistics, filtered roadmap items.
 - Routing mechanism:
-  - Page state drives conditional rendering of Dashboard, Roadmap, Revision, **LLD Lab**, Patterns, Analytics, Settings, and Problem views.
-  - Navigation includes "LLD Lab" alongside existing DSA tracking features.
+  - Page state drives conditional rendering of Dashboard, Roadmap, Revision, LLD Lab, HLD Lab, Patterns, Analytics, Settings, and Problem views.
+  - Navigation includes both "LLD Lab" and "HLD Lab" alongside existing DSA tracking features.
 - Data loading:
   - Fetches static problem dataset from bundled JSON.
   - Loads built-in solutions and TUF links if available.
@@ -164,9 +175,11 @@ LocalOnly --> Render
 Render --> UserAction{"User action?"}
 UserAction --> |Update| UpdateLocal["Update local state + persist"]
 UserAction --> |LLD| ShowLLD["Show LLD Lab content"]
+UserAction --> |HLD| ShowHLD["Show HLD Lab content"]
 UpdateLocal --> DebounceSave["Debounced POST /api/state"]
 DebounceSave --> Render
 ShowLLD --> Render
+ShowHLD --> Render
 ```
 
 **Diagram sources**
@@ -229,11 +242,11 @@ SetState --> Effect["useEffect: write v to localStorage on change"]
 - [main.jsx:247-249](file://src/main.jsx#L247-L249)
 
 ### LLD Lab
-- **New Feature**: Comprehensive low-level design interview preparation module.
-- **Structure**: Four main chapters covering LRU Cache, Vending Machine, Parking Lot, and Elevator System.
-- **Interactive Elements**: SVG diagrams illustrating architectural concepts, complete C# implementations, and follow-up questions.
-- **Learning Approach**: Each chapter includes requirements, complexity contracts, design ideas, and interview Q&A.
-- **Navigation**: Accessible via main navigation menu with dedicated "LLD Lab" button.
+- Comprehensive low-level design interview preparation module.
+- Structure: Four main chapters covering LRU Cache, Vending Machine, Parking Lot, and Elevator System.
+- Interactive Elements: SVG diagrams illustrating architectural concepts, complete C# implementations, and follow-up questions.
+- Learning Approach: Each chapter includes requirements, complexity contracts, design ideas, and interview Q&A.
+- Navigation: Accessible via main navigation menu with dedicated "LLD Lab" button.
 
 ```mermaid
 flowchart TD
@@ -255,6 +268,34 @@ LLR --> FollowUps["Follow-up Scenarios"]
 **Section sources**
 - [lld.jsx:1-298](file://src/lld.jsx#L1-L298)
 - [lld-data.js:1-1049](file://src/lld-data.js#L1-L1049)
+
+### HLD Lab
+- **New Feature**: Production-scale system design revision sheets with embedded HTML content.
+- **Structure**: Three comprehensive revision sheets covering Rider Matching, Notification System, and Job Scheduler.
+- **Content Format**: Standalone HTML sheets embedded via iframes with theme support.
+- **Learning Approach**: Each sheet includes architecture diagrams, capacity planning, consistency trade-offs, and interview playbooks.
+- **Navigation**: Accessible via main navigation menu with dedicated "HLD Lab" button.
+
+```mermaid
+flowchart TD
+HLDPage["HLD Page"] --> Sheets["Revision Sheets"]
+Sheets --> Rider["H3 + Redis Rider Matching"]
+Sheets --> Notification["Multi-Channel Notification System"]
+Sheets --> JobScheduler["Distributed Job Scheduler"]
+Rider --> Architecture["Architecture & Capacity Plan"]
+Rider --> Algorithm["Match Algorithm & Consistency"]
+Notification --> Reliability["Reliability & Scaling"]
+Notification --> DataModel["Data Models & Rate Limits"]
+JobScheduler --> Timing["Timing Wheel & Lease"]
+JobScheduler --> Sharding["Sharding & Partitioning"]
+```
+
+**Diagram sources**
+- [hld.jsx:9-37](file://src/hld.jsx#L9-L37)
+- [hld.jsx:41-51](file://src/hld.jsx#L41-L51)
+
+**Section sources**
+- [hld.jsx:1-87](file://src/hld.jsx#L1-L87)
 
 ### Patterns
 - Aggregates problems by topic and pattern.
@@ -317,16 +358,16 @@ The LLD Lab has been seamlessly integrated into the main navigation system:
 
 ### Content Management
 The LLD Lab uses a structured data approach:
-- **Chapter-based organization**: Four comprehensive chapters covering classic interview problems
-- **Interactive diagrams**: SVG-based visualizations explaining architectural concepts
-- **Complete implementations**: Full C# code examples with syntax highlighting
-- **Educational structure**: Requirements, complexity analysis, design rationale, and interview preparation
+- Chapter-based organization: Four comprehensive chapters covering classic interview problems
+- Interactive diagrams: SVG-based visualizations explaining architectural concepts
+- Complete implementations: Full C# code examples with syntax highlighting
+- Educational structure: Requirements, complexity analysis, design rationale, and interview preparation
 
 ### Technical Implementation
-- **Component Architecture**: Modular LLDPage component with collapsible chapter sections
-- **Data Separation**: LLD content isolated in lld-data.js for maintainability
-- **Code Highlighting**: Shared syntax highlighting utility with DSA tracking features
-- **Responsive Design**: Mobile-friendly layout with collapsible sections
+- Component Architecture: Modular LLDPage component with collapsible chapter sections
+- Data Separation: LLD content isolated in lld-data.js for maintainability
+- Code Highlighting: Shared syntax highlighting utility with DSA tracking features
+- Responsive Design: Mobile-friendly layout with collapsible sections
 
 **Section sources**
 - [main.jsx:7](file://src/main.jsx#L7)
@@ -336,6 +377,55 @@ The LLD Lab uses a structured data approach:
 - [lld.jsx:257-298](file://src/lld.jsx#L257-L298)
 - [lld-data.js:1-1049](file://src/lld-data.js#L1-L1049)
 
+## HLD Lab Integration
+
+### Navigation Integration
+The HLD Lab has been integrated into the main navigation system:
+- New navigation button labeled "HLD Lab" with Layers3 icon
+- Route support via page state management with "hld" page identifier
+- Consistent styling with other navigation items
+- Hash-based routing for direct access
+
+### Content Management
+The HLD Lab uses an iframe-based content approach:
+- Sheet-based organization: Three production-scale system design revision sheets
+- Embedded HTML content: Standalone HTML files served from public/hld directory
+- Theme support: Dynamic theme switching via URL parameters (?theme=light/dark)
+- External linking: Direct access to full-screen revision sheets in new tabs
+
+### Technical Implementation
+- Component Architecture: Modular HLDPage component with sheet cards and viewer
+- Content Isolation: HLD content separated from DSA tracking data
+- Iframe Integration: Secure embedding of standalone HTML revision sheets
+- Responsive Design: Mobile-friendly layout with tabbed navigation
+
+```mermaid
+flowchart TD
+HLDIntegration["HLD Integration"] --> NavButton["Navigation Button"]
+HLDIntegration --> RouteSupport["Route Support (#/hld)"]
+HLDIntegration --> ContentViewer["Content Viewer"]
+NavButton --> MainNav["Main Navigation Menu"]
+RouteSupport --> PageState["Page State Management"]
+ContentViewer --> SheetCards["Sheet Cards"]
+ContentViewer --> IframeEmbedding["Iframe Embedding"]
+SheetCards --> SheetSelection["Sheet Selection"]
+IframeEmbedding --> ThemeSupport["Theme Support"]
+IframeEmbedding --> ExternalLink["External Link Support"]
+```
+
+**Diagram sources**
+- [main.jsx:74-75](file://src/main.jsx#L74-L75)
+- [main.jsx:319](file://src/main.jsx#L319)
+- [main.jsx:328](file://src/main.jsx#L328)
+- [hld.jsx:41-51](file://src/hld.jsx#L41-L51)
+- [hld.jsx:70-87](file://src/hld.jsx#L70-L87)
+
+**Section sources**
+- [main.jsx:74-75](file://src/main.jsx#L74-L75)
+- [main.jsx:319](file://src/main.jsx#L319)
+- [main.jsx:328](file://src/main.jsx#L328)
+- [hld.jsx:1-87](file://src/hld.jsx#L1-L87)
+
 ## Dependency Analysis
 - Frontend dependencies:
   - React and ReactDOM for UI.
@@ -344,9 +434,12 @@ The LLD Lab uses a structured data approach:
 - Backend dependencies:
   - Neon serverless client for Postgres access.
   - Node crypto for secure session signing and validation.
-- **New LLD Dependencies**:
+- LLD Dependencies:
   - Shared highlight.js utility for code syntax highlighting
   - Structured data exports for LLD content management
+- HLD Dependencies:
+  - Static HTML content serving from public/hld directory
+  - Iframe-based content embedding with theme support
 
 ```mermaid
 graph LR
@@ -365,6 +458,7 @@ Build["Build/Dev"] --> Vite
 API["API Routes"] --> Neon
 API --> Crypto
 LLD["LLD Components"] --> Highlight
+HLD["HLD Components"] --> StaticHTML["Static HTML Files"]
 ```
 
 **Diagram sources**
@@ -372,7 +466,7 @@ LLD["LLD Components"] --> Highlight
 - [state.js:1-5](file://api/state.js#L1-L5)
 - [_session.js:1-14](file://api/_session.js#L1-L14)
 - [main.jsx:6](file://src/main.jsx#L6)
-- [lld.jsx:3](file://src/lld.jsx#L3)
+- [hld.jsx:1-10](file://src/hld.jsx#L1-L10)
 
 **Section sources**
 - [package.json:12-19](file://package.json#L12-L19)
@@ -388,10 +482,14 @@ LLD["LLD Components"] --> Highlight
   - Debounced saves reduce network overhead during rapid edits.
 - Rendering:
   - Conditional rendering of pages reduces DOM size; collapsible sections in Roadmap improve scanability.
-- **LLD Lab Optimization**:
+- LLD Lab Optimization:
   - Chapter-based lazy loading with collapsible sections
   - Memoized code highlighting for performance
   - Efficient SVG diagram rendering with minimal re-renders
+- HLD Lab Optimization:
+  - Iframe-based content isolation prevents main thread blocking
+  - Lazy loading of revision sheets improves initial page load
+  - Static HTML content serves efficiently from CDN
 
 ## Troubleshooting Guide
 - Cloud sync not connecting:
@@ -407,10 +505,14 @@ LLD["LLD Components"] --> Highlight
 - Common errors:
   - Incorrect password returns 401; re-enter correct APP_ACCESS_PASSWORD.
   - Missing DATABASE_URL returns 500; configure environment variable.
-- **LLD Lab Issues**:
+- LLD Lab Issues:
   - If LLD content doesn't load, check browser console for JavaScript errors.
   - Verify that lld-data.js is properly imported and exported.
   - Ensure syntax highlighting is working correctly for code examples.
+- HLD Lab Issues:
+  - If HLD revision sheets don't display, check that public/hld/*.html files are accessible.
+  - Verify iframe security policies allow embedding of local HTML files.
+  - Ensure theme parameter is correctly passed to revision sheets.
 
 **Section sources**
 - [auth.js:16-22](file://api/auth.js#L16-L22)
@@ -419,4 +521,4 @@ LLD["LLD Components"] --> Highlight
 - [main.jsx:586-606](file://src/main.jsx#L586-L606)
 
 ## Conclusion
-The application implements a robust local-first architecture with optional cloud synchronization and comprehensive LLD interview preparation capabilities. The App component centralizes state and routing, while child components provide focused functionality for tracking, revising, analyzing DSA progress, and preparing for low-level design interviews. The custom useLocalState hook ensures immediate offline persistence, and the cloud layer provides multi-device continuity with secure session management. The LLD Lab integration adds significant value for interview preparation with structured content, interactive diagrams, and complete implementations. Memoization and debounced saves optimize performance, and comprehensive error handling improves resilience across all features.
+The application implements a robust local-first architecture with optional cloud synchronization and comprehensive interview preparation capabilities spanning both low-level and high-level design. The App component centralizes state and routing, while child components provide focused functionality for tracking, revising, analyzing DSA progress, preparing for low-level design interviews, and studying production-scale system designs. The custom useLocalState hook ensures immediate offline persistence, and the cloud layer provides multi-device continuity with secure session management. The LLD Lab adds structured content for algorithmic problem-solving, while the HLD Lab provides revision-grade system design materials. Memoization and debounced saves optimize performance, and comprehensive error handling improves resilience across all features. The dual-lab approach creates a complete interview preparation platform covering both coding challenges and system design scenarios.
