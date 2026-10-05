@@ -18,6 +18,20 @@ Problem data stays bundled with the app. Progress, notes, revisions, favorites, 
 
 Problems are grouped by TakeUForward A2Z **topics** and official **subcategory patterns** (e.g. Graphs → BFS/DFS, Topo Sort, Shortest Path, MST).
 
+## Backend Prep notes
+
+The **Backend Prep** page (`#backend`) serves the personal "Backend Interview Preparation" notes, mirrored from their public Notion site into `public/data/backend-prep.json` (plus diagram assets in `public/backend-prep/img/`).
+
+The mirror is generated on demand and committed like every other dataset, so `npm run dev` / `npm run build` stay offline. To refresh it after editing the Notion pages:
+
+```bash
+npm run fetch-backend-prep
+```
+
+`scripts/fetch-backend-prep.mjs` walks the public page tree through Notion's anonymous `loadCachedPageChunkV2` endpoint (following each page's cursor so long pages are not truncated), converts blocks into a plain `{ type, text, children }` node tree, flattens Notion's id-keyed tables into real grids, and localizes image attachments.
+
+After a refresh, `npm run verify-backend-prep` renders the whole dataset headlessly through the real React renderer and asserts that every text run, code block, table, and list item from the JSON reaches the produced HTML.
+
 ## Run locally
 
 ```bash

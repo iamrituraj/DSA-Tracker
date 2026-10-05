@@ -7,6 +7,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "prepare-data": "node scripts/prepare-data.mjs",
+    "fetch-backend-prep": "node scripts/fetch-backend-prep.mjs",
+    "verify-backend-prep": "node scripts/verify-backend-prep.mjs",
     "extract-tuf-links": "node scripts/extract-tuf-links.mjs"
   },
   "dependencies": {

@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hotel Booking System — Revision Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try{var t=new URLSearchParams(location.search).get('theme');if(t==='dark'){document.documentElement.setAttribute('data-theme','dark')}else if(t==='light'){document.documentElement.setAttribute('data-theme','light')}}catch(e){}</script><style>
+  :root[data-theme="light"]{ --bg: #F1F2F0; --panel: #FFFFFF; --panel-2: #FAFBF9; --line: #DEE1DC; --text: #1A1F27; --muted: #5B6472; }
+  :root {
+    --bg: #0D1420; --panel: #131C2B; --panel-2: #17202F; --line: #253247; --text: #E6ECF5; --muted: #8A99AE;
+    --azure: #5BA9E0; --azure-dim: #2C4B6B; --amber: #E0A94F; --amber-dim: #6E5730;
+    --teal: #4FB5A8; --teal-dim: #2A5750; --rust: #DB6E56; --rust-dim: #6E392A;
+    --radius-panel: 10px; --radius-tag: 6px;
+    box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) { --bg: #F1F2F0; --panel: #FFFFFF; --panel-2: #FAFBF9; --line: #DEE1DC; --text: #1A1F27; --muted: #5B6472; }
+  }
+  :root[data-theme="dark"] { --bg: #0D1420; --panel: #131C2B; --panel-2: #17202F; --line: #253247; --text: #E6ECF5; --muted: #8A99AE; }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1;
+    background-image: radial-gradient(circle at 12% 15%, rgba(91,169,224,0.07), transparent 40%), radial-gradient(circle at 88% 80%, rgba(224,169,79,0.05), transparent 40%);
+    pointer-events: none;
+  }
+  h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin: 0 0 0.5em 0; letter-spacing: -0.01em; }
+  a { color: var(--teal); }
+  code, .mono { font-family: 'JetBrains Mono', monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px 100px; }
+
+  .hero { padding: 72px 0 48px; border-bottom: 1px solid var(--line); margin-bottom: 56px; }
+  .hero .kicker { font-size: 14px; color: var(--azure); font-family: 'JetBrains Mono', monospace; margin-bottom: 14px; }
+  .hero h1 { font-size: clamp(32px, 5vw, 48px); line-height: 1.08; max-width: 17ch; }
+  .hero p.sub { color: var(--muted); font-size: 17px; max-width: 62ch; margin-top: 16px; }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 36px; }
+  .stat { min-width: 120px; }
+  .stat .num { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 600; color: var(--teal); }
+  .stat .label { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  section { margin-bottom: 64px; scroll-margin-top: 20px; }
+  .section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 22px; }
+  .section-num { font-family: 'JetBrains Mono', monospace; color: var(--azure); font-size: 14px; }
+  .section-head h2 { font-size: 24px; }
+  .section-intro { color: var(--muted); max-width: 68ch; margin-bottom: 24px; font-size: 15px; }
+
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-panel); padding: 24px; }
+  .panel + .panel { margin-top: 18px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  @media (max-width: 720px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  svg { max-width: 100%; height: auto; display: block; }
+  .diagram-caption { color: var(--muted); font-size: 13px; margin-top: 10px; text-align: center; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 14px; font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-family: 'JetBrains Mono', monospace; font-size: 12px; white-space: nowrap; }
+  td.mono, th.mono { font-family: 'JetBrains Mono', monospace; }
+
+  .tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 2px 8px; border-radius: var(--radius-tag); border: 1px solid var(--line); color: var(--muted); }
+  .tag.azure { color: var(--azure); border-color: var(--azure-dim); }
+  .tag.amber { color: var(--amber); border-color: var(--amber-dim); }
+  .tag.teal { color: var(--teal); border-color: var(--teal-dim); }
+  .tag.rust { color: var(--rust); border-color: var(--rust-dim); }
+
+  pre { background: #0A0F18; border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 14px 0 0; }
+  :root:not([data-theme="dark"]) pre { background: #F3F2EE; }
+  pre code { color: var(--text); }
+  .comment { color: var(--muted); }
+  .kw { color: var(--teal); }
+  .str { color: var(--amber); }
+  .fn { color: var(--azure); }
+
+  .edge-card { border-left: 3px solid var(--rust); padding-left: 18px; }
+  .edge-card h3 { display: flex; align-items: center; gap: 10px; font-size: 17px; }
+  .edge-card .sev { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--rust); border: 1px solid var(--rust-dim); padding: 2px 7px; border-radius: 5px; }
+
+  .flow-step { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .flow-step:last-child { border-bottom: none; }
+  .flow-step .idx { font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--azure); font-size: 15px; min-width: 22px; }
+  .flow-step .body h4 { font-size: 15.5px; margin-bottom: 4px; }
+  .flow-step .body p { color: var(--muted); font-size: 14px; margin: 0; }
+
+  .qa { border-bottom: 1px solid var(--line); padding: 16px 0; }
+  .qa:last-child { border-bottom: none; }
+  .qa .q { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+  .qa .a { color: var(--muted); font-size: 14.5px; }
+
+  .calc-line { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 14px; }
+  .calc-line:last-child { border-bottom: none; }
+  .calc-line .k { color: var(--muted); }
+  .calc-line .v { font-family: 'JetBrains Mono', monospace; color: var(--text); text-align: right; }
+  .calc-result { margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-weight: 600; }
+  .calc-result .v { color: var(--teal); font-family: 'JetBrains Mono', monospace; }
+
+  .toc { position: sticky; top: 20px; display: none; }
+  @media (min-width: 1180px) {
+    .page { display: flex; gap: 40px; max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+    .wrap { padding: 0; max-width: none; flex: 1; }
+    .toc { display: block; width: 200px; padding-top: 90px; }
+    .toc a { display: block; color: var(--muted); text-decoration: none; font-size: 12.5px; padding: 5px 0; border-left: 2px solid transparent; padding-left: 12px; }
+    .toc a:hover { color: var(--text); border-left-color: var(--azure); }
+  }
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 40px 0 20px; border-top: 1px solid var(--line); margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <nav class="toc">
+    <a href="#reqs">01 · Requirements</a>
+    <a href="#flow">02 · Architecture</a>
+    <a href="#data">03 · Data Model</a>
+    <a href="#concurrency">04 · Availability &amp; Concurrency</a>
+    <a href="#lifecycle">05 · Booking Lifecycle</a>
+    <a href="#search">06 · Search &amp; Read Path</a>
+    <a href="#ota">07 · Distribution &amp; OTA</a>
+    <a href="#sharding">08 · Sharding Strategy</a>
+    <a href="#capacity">09 · Capacity Plan</a>
+    <a href="#faults">10 · Fault Tolerance</a>
+    <a href="#alternatives">11 · Alternatives</a>
+    <a href="#playbook">12 · Interview Playbook</a>
+  </nav>
+
+  <div class="wrap">
+    <div class="hero">
+      <div class="kicker">SYSTEM DESIGN REVISION · SDE-2 DEPTH</div>
+      <h1>Hotel Booking System</h1>
+      <p class="sub">Search millions of date-range queries a day, but the design lives or dies on one hard invariant — never sell the same room-night twice. Date-range inventory, hold-then-pay flows with TTL leases, a read path that never trusts itself, and a channel manager that keeps Booking.com honest.</p>
+      <div class="stat-row">
+        <div class="stat"><div class="num">10⁷/s</div><div class="label">search QPS at peak (read)</div></div>
+        <div class="stat"><div class="num">~10³/s</div><div class="label">booking writes at peak</div></div>
+        <div class="stat"><div class="num">0</div><div class="label">tolerated oversells</div></div>
+        <div class="stat"><div class="num">15 min</div><div class="label">payment hold TTL</div></div>
+      </div>
+    </div>
+
+    <!-- 01 REQUIREMENTS -->
+    <section id="reqs">
+      <div class="section-head"><span class="section-num">01</span><h2>Requirements</h2></div>
+      <p class="section-intro">Say these before drawing anything. The asymmetry is the story: reads are astronomically more frequent than writes, but the write path carries an invariant that reads never will — <em>sum(sold) &lt;= total</em> for every room-night.</p>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Functional</h3>
+          <table>
+            <tr><td>Search</td><td>Find hotels by city/dates/guests, filter by price, amenities, free cancellation</td></tr>
+            <tr><td>Book</td><td>Reserve a room type for a date range at a specific rate plan</td></tr>
+            <tr><td>Pay</td><td>Hold the room, take payment, confirm; or pay-at-property</td></tr>
+            <tr><td>Manage</td><td>Cancel with policy-aware refunds, modify dates, view upcoming trips</td></tr>
+            <tr><td>Distribute</td><td>Sell the same inventory on OTAs (Booking, Expedia) without double-selling</td></tr>
+          </table>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Non-functional</h3>
+          <table>
+            <tr><td>Scale</td><td>10⁷ searches/s peak, ~10³ bookings/s, ~500K hotels</td></tr>
+            <tr><td>Correctness</td><td>No oversells — the one non-negotiable</td></tr>
+            <tr><td>Latency</td><td>Search &lt; 300ms p99; hold &lt; 150ms p99</td></tr>
+            <tr><td>Availability</td><td>99.9%; a failed booking is recoverable, a double-sell is not</td></tr>
+            <tr><td>Consistency</td><td>Inventory strongly consistent at book time; search may lag by seconds</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">The tension to name up front:</strong> this is two systems wearing one name. The <em>read</em> system (search, browse, price) wants caches, denormalization and eventual consistency everywhere; the <em>write</em> system (hold → confirm) wants a strongly consistent, serialized count on a single row per room-night. Every interesting decision follows from letting each side have what it wants, with the DB as the tiebreaker neither is allowed to skip.</p>
+      </div>
+    </section>
+
+    <!-- 02 ARCHITECTURE -->
+    <section id="flow">
+      <div class="section-head"><span class="section-num">02</span><h2>End-to-End Architecture</h2></div>
+      <p class="section-intro">Three lanes, deliberately separated by consistency requirement: <span class="tag azure">search</span> (eventual, cache-heavy), <span class="tag amber">booking &amp; inventory</span> (strongly consistent, tiny blast radius), <span class="tag teal">fulfillment &amp; distribution</span> (async, saga-driven).</p>
+
+      <div class="panel">
+        <svg viewBox="0 0 940 400" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="hArrA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5BA9E0"/></marker>
+            <marker id="hArrB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#E0A94F"/></marker>
+            <marker id="hArrC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4FB5A8"/></marker>
+            <marker id="hArrM" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8A99AE"/></marker>
+          </defs>
+          <text x="8" y="24" font-family="JetBrains Mono, monospace" font-size="11" fill="#5BA9E0">SEARCH — eventual, read-optimized</text>
+          <line x1="0" y1="34" x2="940" y2="34" stroke="#253247" stroke-dasharray="2 4"/>
+          <text x="8" y="170" font-family="JetBrains Mono, monospace" font-size="11" fill="#E0A94F">BOOKING &amp; INVENTORY — strongly consistent</text>
+          <line x1="0" y1="180" x2="940" y2="180" stroke="#253247" stroke-dasharray="2 4"/>
+          <text x="8" y="300" font-family="JetBrains Mono, monospace" font-size="11" fill="#4FB5A8">FULFILLMENT &amp; DISTRIBUTION — async</text>
+          <line x1="0" y1="310" x2="940" y2="310" stroke="#253247" stroke-dasharray="2 4"/>
+
+          <g font-family="Inter, sans-serif" font-size="12" fill="#E6ECF5">
+            <rect x="10" y="50" width="105" height="58" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="62" y="74" text-anchor="middle" font-weight="600" font-size="12">Client / UI</text>
+            <text x="62" y="90" text-anchor="middle" fill="#8A99AE" font-size="10">search &amp; book</text>
+
+            <rect x="150" y="50" width="105" height="58" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="202" y="74" text-anchor="middle" font-weight="600" font-size="12">API Gateway</text>
+            <text x="202" y="90" text-anchor="middle" fill="#8A99AE" font-size="10">auth, ratelimit</text>
+
+            <rect x="290" y="50" width="125" height="58" rx="8" fill="#17202F" stroke="#5BA9E0"/>
+            <text x="352" y="74" text-anchor="middle" font-weight="600" fill="#5BA9E0" font-size="12">Search Service</text>
+            <text x="352" y="90" text-anchor="middle" fill="#8A99AE" font-size="10">stateless, CDN-fronted</text>
+
+            <rect x="450" y="50" width="140" height="58" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="520" y="72" text-anchor="middle" font-weight="600" font-size="12">Search Index</text>
+            <text x="520" y="88" text-anchor="middle" fill="#8A99AE" font-size="10">Elastic — hotels, rates</text>
+            <text x="520" y="101" text-anchor="middle" fill="#8A99AE" font-size="9.5">eventually consistent</text>
+
+            <rect x="625" y="50" width="140" height="58" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="695" y="72" text-anchor="middle" font-weight="600" font-size="12">Redis result cache</text>
+            <text x="695" y="88" text-anchor="middle" fill="#8A99AE" font-size="10">fingerprinted queries</text>
+            <text x="695" y="101" text-anchor="middle" fill="#8A99AE" font-size="9.5">TTL 60s</text>
+
+            <rect x="800" y="50" width="130" height="58" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="865" y="74" text-anchor="middle" font-weight="600" font-size="11.5">Availability cache</text>
+            <text x="865" y="90" text-anchor="middle" fill="#8A99AE" font-size="9.5">per hotel+room, ms lag</text>
+
+            <rect x="290" y="196" width="130" height="58" rx="8" fill="#17202F" stroke="#E0A94F"/>
+            <text x="355" y="220" text-anchor="middle" font-weight="600" fill="#E0A94F" font-size="12">Booking Service</text>
+            <text x="355" y="236" text-anchor="middle" fill="#8A99AE" font-size="10">hold → confirm saga</text>
+
+            <rect x="455" y="196" width="140" height="58" rx="8" fill="#17202F" stroke="#E0A94F"/>
+            <text x="525" y="218" text-anchor="middle" font-weight="600" fill="#E0A94F" font-size="12">Redis holds</text>
+            <text x="525" y="234" text-anchor="middle" fill="#8A99AE" font-size="10">TTL leases, key per room-night</text>
+            <text x="525" y="247" text-anchor="middle" fill="#8A99AE" font-size="9.5">soft reserve only</text>
+
+            <rect x="630" y="196" width="150" height="58" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="705" y="218" text-anchor="middle" font-weight="600" font-size="12">Inventory DB</text>
+            <text x="705" y="234" text-anchor="middle" fill="#8A99AE" font-size="10">Postgres, hotel-sharded</text>
+            <text x="705" y="247" text-anchor="middle" fill="#DB6E56" font-size="9.5">source of truth · CHECK invariant</text>
+
+            <rect x="150" y="196" width="105" height="58" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="202" y="220" text-anchor="middle" font-weight="600" font-size="12">Pricing</text>
+            <text x="202" y="236" text-anchor="middle" fill="#8A99AE" font-size="10">rate plans, promos</text>
+
+            <rect x="10" y="196" width="105" height="58" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="62" y="220" text-anchor="middle" font-weight="600" font-size="11.5">Checkout UI</text>
+            <text x="62" y="236" text-anchor="middle" fill="#8A99AE" font-size="10">re-validates at hold</text>
+
+            <rect x="290" y="326" width="130" height="52" rx="8" fill="#17202F" stroke="#4FB5A8"/>
+            <text x="355" y="347" text-anchor="middle" font-weight="600" fill="#4FB5A8" font-size="12">Kafka</text>
+            <text x="355" y="363" text-anchor="middle" fill="#8A99AE" font-size="10">booking events</text>
+
+            <rect x="455" y="326" width="140" height="52" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="525" y="347" text-anchor="middle" font-weight="600" font-size="11.5">Payment Service</text>
+            <text x="525" y="363" text-anchor="middle" fill="#8A99AE" font-size="9.5">async, idempotency keys</text>
+
+            <rect x="630" y="326" width="150" height="52" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="705" y="347" text-anchor="middle" font-weight="600" font-size="11.5">Notifications / PMS</text>
+            <text x="705" y="363" text-anchor="middle" fill="#8A99AE" font-size="9.5">property gets the reservation</text>
+
+            <rect x="800" y="326" width="130" height="52" rx="8" fill="#17202F" stroke="#4FB5A8"/>
+            <text x="865" y="347" text-anchor="middle" font-weight="600" fill="#4FB5A8" font-size="11">Channel Manager</text>
+            <text x="865" y="363" text-anchor="middle" fill="#8A99AE" font-size="9">ARI out, VCR in</text>
+          </g>
+
+          <path d="M115,79 H148" stroke="#5BA9E0" stroke-width="1.4" marker-end="url(#hArrA)" fill="none"/>
+          <path d="M255,79 H288" stroke="#5BA9E0" stroke-width="1.4" marker-end="url(#hArrA)" fill="none"/>
+          <path d="M415,79 H448" stroke="#5BA9E0" stroke-width="1.4" marker-end="url(#hArrA)" fill="none"/>
+          <path d="M590,79 H623" stroke="#8A99AE" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#hArrM)" fill="none"/>
+          <path d="M765,79 H798" stroke="#8A99AE" stroke-width="1.2" marker-end="url(#hArrM)" fill="none"/>
+          <path d="M352,108 Q352,150 355,193" stroke="#E0A94F" stroke-width="1.3" stroke-dasharray="3 3" marker-end="url(#hArrB)" fill="none"/>
+          <text x="365" y="155" fill="#8A99AE" font-size="9.5" font-family="JetBrains Mono, monospace">"book" hand-off</text>
+
+          <path d="M62,196 Q62,140 355,120 Q520,108 695,193" stroke="#E0A94F" stroke-width="1.3" marker-end="url(#hArrB)" fill="none"/>
+          <path d="M420,225 H452" stroke="#E0A94F" stroke-width="1.4" marker-end="url(#hArrB)" fill="none"/>
+          <path d="M595,225 H627" stroke="#E0A94F" stroke-width="1.4" marker-end="url(#hArrB)" fill="none"/>
+          <text x="611" y="216" text-anchor="middle" fill="#E0A94F" font-size="9" font-family="JetBrains Mono, monospace">CAS</text>
+          <path d="M255,225 H287" stroke="#E0A94F" stroke-width="1.3" marker-end="url(#hArrB)" fill="none"/>
+
+          <path d="M355,254 V323" stroke="#4FB5A8" stroke-width="1.3" marker-end="url(#hArrC)" fill="none"/>
+          <path d="M420,352 H452" stroke="#4FB5A8" stroke-width="1.3" marker-end="url(#hArrC)" fill="none"/>
+          <path d="M595,352 H627" stroke="#8A99AE" stroke-width="1.2" marker-end="url(#hArrM)" fill="none"/>
+          <path d="M780,352 H797" stroke="#8A99AE" stroke-width="1.2" marker-end="url(#hArrM)" fill="none"/>
+          <path d="M865,326 Q865,270 740,257" stroke="#4FB5A8" stroke-width="1.3" stroke-dasharray="3 3" marker-end="url(#hArrC)" fill="none"/>
+          <text x="830" y="280" fill="#4FB5A8" font-size="9.5" font-family="JetBrains Mono, monospace">VCR pull-back</text>
+          <path d="M705,193 Q705,130 865,111" stroke="#8A99AE" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#hArrM)" fill="none"/>
+          <text x="760" y="130" fill="#8A99AE" font-size="9.5" font-family="JetBrains Mono, monospace">CDC → caches &amp; index</text>
+        </svg>
+        <div class="legend">
+          <span><span class="swatch" style="background:#5BA9E0;"></span>search path (eventual)</span>
+          <span><span class="swatch" style="background:#E0A94F;"></span>booking / inventory (strong)</span>
+          <span><span class="swatch" style="background:#4FB5A8;"></span>fulfillment &amp; channels</span>
+          <span><span class="swatch" style="background:#8A99AE;"></span>async / replication</span>
+        </div>
+        <div class="diagram-caption">Two rules make this diagram safe: (1) every read that leads to money — the checkout re-validation — lands on the DB, never a cache; (2) the only component allowed to decrement inventory is the Booking Service against its own shard. Redis holds and the channel manager both ask permission; neither takes it.</div>
+      </div>
+
+      <div class="panel">
+        <div class="flow-step"><div class="idx">1</div><div class="body"><h4>Search</h4><p>Stateless Search Service answers from the Elastic index + fingerprinted Redis result cache. Availability shown here is explicitly best-effort — possibly seconds stale. Search never locks anything and never touches the inventory shards' write path.</p></div></div>
+        <div class="flow-step"><div class="idx">2</div><div class="body"><h4>Hold</h4><p>Checkout re-validates against the authoritative per-room-night counts, then creates a TTL'd hold (15 min): a soft reservation that blocks others from overshooting the last rooms but is disposable — if the user vanishes, it evaporates and inventory snaps back.</p></div></div>
+        <div class="flow-step"><div class="idx">3</div><div class="body"><h4>Confirm</h4><p>Payment succeeds (idempotency key = hold token), then a single atomic compare-and-swap on the DB converts the hold into a real booking row and permanent decrement — <code>sold + 1 &lt;= total</code> enforced as a CHECK constraint. If the invariant fails, the user is told politely; the room was sold by someone else a millisecond earlier.</p></div></div>
+        <div class="flow-step"><div class="idx">4</div><div class="body"><h4>Fulfill</h4><p>Booking events on Kafka fan out: notifications, the property's PMS, and the channel manager push updated availability to every OTA — each consumer idempotent, each retryable, none on the user's critical path.</p></div></div>
+      </div>
+    </section>
+
+    <!-- 03 DATA MODEL -->
+    <section id="data">
+      <div class="section-head"><span class="section-num">03</span><h2>Data Model</h2></div>
+      <p class="section-intro">Everything hangs off one small fact table: <code>room_type_inventory</code> — one row per (room type × calendar date). The invariant lives in that table and nowhere else.</p>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Catalog side</h3>
+          <table>
+            <tr><th>Table</th><th class="mono">Key columns</th></tr>
+            <tr><td>hotels</td><td class="mono">hotel_id PK, city, geo, amenities</td></tr>
+            <tr><td>room_types</td><td class="mono">room_type_id PK, hotel_id FK, capacity</td></tr>
+            <tr><td>rate_plans</td><td class="mono">rate_plan_id PK, room_type_id FK, refund policy, promo flags</td></tr>
+          </table>
+          <p style="color:var(--muted); font-size:13.5px; margin-top:10px;">A room <em>type</em> (Deluxe King) is sold in <em>units</em> (5 exist). Never model individual rooms for booking — you sell capacity counts, not keys; room assignment is a check-in-time concern for the property.</p>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Inventory &amp; transactions</h3>
+          <table>
+            <tr><th>Table</th><th class="mono">Key columns</th></tr>
+            <tr><td>room_type_inventory</td><td class="mono">(room_type_id, date) PK, total, sold, version</td></tr>
+            <tr><td>reservations</td><td class="mono">reservation_id PK, user_id, hotel_id, room_type_id, rate_plan_id, check_in, check_out, status</td></tr>
+            <tr><td>booking_holds</td><td class="mono">hold_id (TTL'd, Redis + durable journal)</td></tr>
+          </table>
+          <p style="color:var(--muted); font-size:13.5px; margin-top:10px;">A 3-night stay decrements <code>sold</code> on exactly 3 inventory rows — one per night — in a single shard-local transaction.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">The invariant, declared in the schema</h3>
+        <pre><code><span class="kw">CREATE TABLE</span> room_type_inventory (
+  room_type_id <span class="kw">BIGINT</span>       <span class="kw">NOT NULL</span>,
+  stay_date    <span class="kw">DATE</span>         <span class="kw">NOT NULL</span>,
+  total_rooms  <span class="kw">INT</span>          <span class="kw">NOT NULL</span>,
+  sold_rooms   <span class="kw">INT</span>          <span class="kw">NOT NULL DEFAULT</span> 0,
+  version      <span class="kw">BIGINT</span>       <span class="kw">NOT NULL DEFAULT</span> 0,
+  <span class="kw">PRIMARY KEY</span> (room_type_id, stay_date),
+  <span class="kw">CONSTRAINT</span> no_oversell <span class="kw">CHECK</span> (sold_rooms &lt;= total_rooms)  <span class="comment">-- the last line of defense</span>
+);</code></pre>
+        <p style="color:var(--muted); font-size:14px; margin-top:10px;">Versioning the three-table core (<code>reservations</code> ↔ <code>room_type_inventory</code> ↔ <code>booking_holds</code>) in one transaction is cheap <em>because</em> they all carry <code>room_type_id</code>-derived keys and co-locate on the same shard (section 08). Rate plans and prices are intentionally absent from the transactional path — a reservation snapshots the price it was booked at, so pricing changes never mutate history.</p>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">Why a per-night row and not one row per room-type:</strong> a single <code>rooms_available</code> counter can't answer "is tomorrow free?" once someone books only next month — availability is per-date, so the atomic unit must be per-date too. The flip side is that a stay spans N rows, which is exactly why shard-locality by room type (and never across hotels) is a design requirement rather than an optimization.</p>
+      </div>
+    </section>
+
+    <!-- 04 AVAILABILITY & CONCURRENCY -->
+    <section id="concurrency">
+      <div class="section-head"><span class="section-num">04</span><h2>Availability &amp; Concurrency — The Hard Part</h2></div>
+      <p class="section-intro">Two users, one last room, same millisecond. Three credible patterns exist; the interview win is knowing the ordering between them and why the DB stays the final arbiter.</p>
+
+      <div class="panel">
+        <h3 style="font-size:15px;">The date-range problem first</h3>
+        <svg viewBox="0 0 900 210" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="JetBrains Mono, monospace" font-size="10" fill="#8A99AE">
+            <text x="150" y="24">Mon</text><text x="230" y="24">Tue</text><text x="310" y="24">Wed</text><text x="390" y="24">Thu</text><text x="470" y="24">Fri</text><text x="550" y="24">Sat</text><text x="630" y="24">Sun</text>
+          </g>
+          <g stroke="#253247" stroke-width="1">
+            <line x1="145" y1="32" x2="145" y2="150"/><line x1="225" y1="32" x2="225" y2="150"/><line x1="305" y1="32" x2="305" y2="150"/><line x1="385" y1="32" x2="385" y2="150"/><line x1="465" y1="32" x2="465" y2="150"/><line x1="545" y1="32" x2="545" y2="150"/><line x1="625" y1="32" x2="625" y2="150"/><line x1="705" y1="32" x2="705" y2="150"/>
+          </g>
+          <rect x="228" y="42" width="157" height="26" rx="5" fill="#2A5750" stroke="#4FB5A8"/>
+          <text x="306" y="59" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#E6ECF5">Reservation A · Tue→Thu (nights: Tue, Wed)</text>
+          <rect x="390" y="80" width="157" height="26" rx="5" fill="#6E5730" stroke="#E0A94F"/>
+          <text x="468" y="97" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#E6ECF5">Reservation B · Thu→Sat (no conflict)</text>
+          <rect x="470" y="118" width="155" height="26" rx="5" fill="#6E392A" stroke="#DB6E56"/>
+          <text x="547" y="135" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#E6ECF5">Reservation C · Fri→Sun (conflicts w/ A? No — w/ B? Yes: Fri)</text>
+          <rect x="470" y="152" width="2" height="-40" fill="none"/>
+          <line x1="468" y1="106" x2="468" y2="118" stroke="#DB6E56" stroke-width="1.6" stroke-dasharray="3 2"/>
+          <text x="490" y="168" font-family="JetBrains Mono, monospace" font-size="10" fill="#DB6E56">nightly decrement hits exactly the crossed columns</text>
+        </svg>
+        <div class="diagram-caption">Half-open intervals <code>[check_in, check_out)</code> — a Tue→Thu stay occupies the Tue and Wed nights only. Modeling stays as date <em>ranges</em> invites off-by-one double-booking on turnover days; modeling them as sets of per-night rows makes overlap a point query on shared keys.</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Pattern 1 — Pessimistic row lock</h3>
+          <pre style="margin-top:6px;"><code><span class="kw">BEGIN</span>;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> room_type_inventory
+  <span class="kw">WHERE</span> room_type_id = <span class="str">$1</span>
+    <span class="kw">AND</span> stay_date <span class="kw">BETWEEN</span> <span class="str">$2</span> <span class="kw">AND</span> <span class="str">$3</span>
+  <span class="kw">ORDER BY</span> stay_date      <span class="comment">-- fixed lock order:</span>
+  <span class="kw">FOR UPDATE</span>              <span class="comment">-- prevents deadlocks</span>
+<span class="comment">-- app checks sold+1 &lt;= total per row, then UPDATE … sold = sold + 1</span>
+<span class="kw">COMMIT</span>;</code></pre>
+          <p style="color:var(--muted); font-size:13.5px; margin-top:8px;">Simple, strictly correct, serializes all bookings of a room type through one row. Fine at hundreds of bookings/s per hotel — which is almost every hotel, almost always.</p>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Pattern 2 — Optimistic version check (CAS)</h3>
+          <pre style="margin-top:6px;"><code><span class="kw">UPDATE</span> room_type_inventory
+   <span class="kw">SET</span> sold_rooms = sold_rooms + <span class="str">1</span>,
+       version    = version + <span class="str">1</span>
+ <span class="kw">WHERE</span> room_type_id = <span class="str">$1</span> <span class="kw">AND</span> stay_date = <span class="str">$2</span>
+   <span class="kw">AND</span> sold_rooms &lt; total_rooms          <span class="comment">-- guard, not check</span>
+   <span class="kw">AND</span> version = <span class="str">$3</span>;                     <span class="comment">-- optional: retry signal</span>
+<span class="comment">-- 0 rows affected ⇒ someone else won ⇒ re-read &amp; retry or 409</span></code></pre>
+          <p style="color:var(--muted); font-size:13.5px; margin-top:8px;">No lock held across app round-trips; the <code>sold &lt; total</code> guard plus the schema CHECK make oversell structurally impossible even if every other layer lies. Under high contention retries burn cycles — contention here means a hot hotel, which pattern 3 handles better.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3 style="font-size:15px;">Pattern 3 — Redis TTL holds in front of the DB (the two-phase answer)</h3>
+        <p style="color:var(--muted); font-size:14px;">The realistic failure mode isn't two concurrent updates — it's one user holding checkout for 8 minutes while a payment gateway hangs, blocking nobody but making the DB's "available" count a lie for everyone else. So the soft reservation moves to a store built for expiry:</p>
+        <pre><code><span class="comment">-- Lua, atomic: count holds for room-type+night, refuse if it would exceed capacity</span>
+<span class="fn">ZREMRANGEBYSCORE</span> holds:{room_type_id}:{date} 0 now   <span class="comment">-- sweep expired</span>
+<span class="kw">local</span> held = <span class="fn">ZCARD</span> holds:{room_type_id}:{date}
+<span class="kw">if</span> held + (sold_from_db) &lt; total <span class="kw">then</span>
+  <span class="fn">ZADD</span> holds:{room_type_id}:{date} now+900 {hold_id}   <span class="comment">-- score = expiry</span>
+  <span class="kw">return</span> OK  <span class="kw">else</span> <span class="kw">return</span> FULL</code></pre>
+        <table style="margin-top:14px;">
+          <tr><th>Property</th><th>Behavior</th></tr>
+          <tr><td>What Redis guarantees</td><td>A <em>soft</em> reservation with a TTL — abandoned holds evaporate in ≤15 min with no sweeper logic to write</td></tr>
+          <tr><td>What Redis does NOT guarantee</td><td>Durability — a restart can forget holds. That's acceptable precisely because holds are not bookings; the truth is always the DB count</td></tr>
+          <tr><td>Confirm path</td><td>Still CASes <code>sold_rooms</code> in Postgres. Redis can over-reserve (crash + stale score); the DB can never oversell</td></tr>
+        </table>
+      </div>
+
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">Say the layering out loud:</strong> Redis decides <em>who gets to try</em> (fairness, queue-shaping, TTL expiry of abandoned checkouts); Postgres decides <em>who actually gets the room</em> (single-digit invariant). Losing Redis degrades UX — everyone falls through to CAS-and-retry — but never correctness. That is the same "disposable accelerators, authoritative ledger" split as the scheduler's Redis ZSET or the rider matcher's GeoSET, and naming that parallel scores points.</p>
+      </div>
+    </section>
+
+    <!-- 05 BOOKING LIFECYCLE -->
+    <section id="lifecycle">
+      <div class="section-head"><span class="section-num">05</span><h2>Booking Lifecycle — Hold → Pay → Confirm</h2></div>
+      <p class="section-intro">The saga that makes "the user paid but has no room" and "the room is booked but nobody paid" both impossible.</p>
+      <div class="panel">
+        <svg viewBox="0 0 900 250" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="12">
+            <rect x="20" y="95" width="130" height="52" rx="8" fill="#17202F" stroke="#8A99AE"/>
+            <text x="85" y="117" text-anchor="middle" fill="#E6ECF5" font-weight="600">BROWSING</text>
+            <text x="85" y="133" text-anchor="middle" fill="#8A99AE" font-size="9.5">cache-only, no state</text>
+
+            <rect x="215" y="95" width="130" height="52" rx="8" fill="#17202F" stroke="#E0A94F"/>
+            <text x="280" y="117" text-anchor="middle" fill="#E0A94F" font-weight="600">HELD</text>
+            <text x="280" y="133" text-anchor="middle" fill="#8A99AE" font-size="9.5">TTL 15 min · revalidated</text>
+
+            <rect x="410" y="95" width="130" height="52" rx="8" fill="#17202F" stroke="#E0A94F"/>
+            <text x="475" y="117" text-anchor="middle" fill="#E0A94F" font-weight="600">PAYING</text>
+            <text x="475" y="133" text-anchor="middle" fill="#8A99AE" font-size="9.5">gateway round-trip</text>
+
+            <rect x="605" y="95" width="150" height="52" rx="8" fill="#17202F" stroke="#4FB5A8"/>
+            <text x="680" y="117" text-anchor="middle" fill="#4FB5A8" font-weight="600">CONFIRMED</text>
+            <text x="680" y="133" text-anchor="middle" fill="#8A99AE" font-size="9.5">DB CAS + reservation row, 1 txn</text>
+
+            <rect x="605" y="190" width="150" height="46" rx="8" fill="#17202F" stroke="#DB6E56"/>
+            <text x="680" y="210" text-anchor="middle" fill="#DB6E56" font-weight="600">FAILED / CANCELLED</text>
+            <text x="680" y="226" text-anchor="middle" fill="#8A99AE" font-size="9.5">refund + decrement sold</text>
+
+            <rect x="215" y="10" width="130" height="40" rx="8" fill="#17202F" stroke="#8A99AE"/>
+            <text x="280" y="28" text-anchor="middle" fill="#8A99AE" font-weight="600" font-size="11">EXPIRED</text>
+            <text x="280" y="42" text-anchor="middle" fill="#8A99AE" font-size="9">hold TTL lapsed, no sweeper needed</text>
+          </g>
+          <path d="M150,121 H212" stroke="#8A99AE" stroke-width="1.4" marker-end="url(#hArrM)" fill="none"/>
+          <path d="M345,121 H407" stroke="#E0A94F" stroke-width="1.4" marker-end="url(#hArrB)" fill="none"/>
+          <text x="376" y="112" text-anchor="middle" fill="#E0A94F" font-size="9" font-family="JetBrains Mono, monospace">quote accepted</text>
+          <path d="M540,121 H602" stroke="#4FB5A8" stroke-width="1.4" marker-end="url(#hArrC)" fill="none"/>
+          <text x="571" y="112" text-anchor="middle" fill="#4FB5A8" font-size="9" font-family="JetBrains Mono, monospace">auth ok</text>
+          <path d="M280,95 V53" stroke="#8A99AE" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#hArrM)" fill="none"/>
+          <path d="M475,95 Q475,60 300,40 " stroke="#8A99AE" stroke-width="1.2" stroke-dasharray="3 3" fill="none"/>
+          <path d="M680,147 V187" stroke="#DB6E56" stroke-width="1.4" marker-end="url(#hArrC)" fill="none"/>
+          <text x="745" y="172" fill="#DB6E56" font-size="9" font-family="JetBrains Mono, monospace">user cancel / no-show</text>
+          <path d="M475,147 Q475,190 602,205" stroke="#DB6E56" stroke-width="1.3" stroke-dasharray="3 3" marker-end="url(#hArrB)" fill="none"/>
+          <text x="470" y="180" fill="#DB6E56" font-size="9" font-family="JetBrains Mono, monospace">pay failed / hold lost</text>
+        </svg>
+        <div class="diagram-caption">Every arrow that crosses money has exactly one DB transaction behind it; every arrow that doesn't is allowed to be flaky and retried.</div>
+      </div>
+      <div class="panel">
+        <div class="flow-step"><div class="idx">1</div><div class="body"><h4>Hold (idempotent by design)</h4><p>Checkout POST carries an <code>Idempotency-Key</code>. The service re-validates live DB counts, creates the Redis hold, and returns a signed hold token embedding (room_type, dates, price, expiry). Re-submitting the same key returns the same hold — double-clicks cannot double-hold.</p></div></div>
+        <div class="flow-step"><div class="idx">2</div><div class="body"><h4>Pay (money moves first, records follow)</h4><p>Payment is captured against the gateway with the hold token as the idempotency key. A charge without a booking is a refundable anomaly; a booking without a charge is real lost revenue. So the order is always: auth succeeds → then confirm.</p></div></div>
+        <div class="flow-step"><div class="idx">3</div><div class="body"><h4>Confirm (the one true transaction)</h4><p>One shard-local txn: CAS <code>sold_rooms</code> for every night, insert <code>reservations</code> row, mark hold consumed. If the CAS affects 0 rows — inventory vanished between hold and confirm (channel sold it, or a bug) — the txn aborts, gateway refund is queued as an event, user sees "just sold out, here's a comparable hotel." Rare, and graceful.</p></div></div>
+        <div class="flow-step"><div class="idx">4</div><div class="body"><h4>Reconcile the tails</h4><p>A background reconciler sweeps the two scary corners: confirmed payments with no reservation (re-drive confirm, idempotent) and reservations whose hold token was never paid (shouldn't exist — alert). Event sourcing the saga states is overkill here; a status column plus these two sweeper queries covers it.</p></div></div>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">Pay-at-property is the same lifecycle minus step 2:</strong> confirm happens directly on hold+revalidate, and a no-show/cancellation fee is a separate later saga against a stored card token. Worth mentioning — interviewers like when a candidate notices that "guarantee with card" changes fulfillment, not the inventory protocol.</p>
+      </div>
+    </section>
+
+    <!-- 06 SEARCH & READ PATH -->
+    <section id="search">
+      <div class="section-head"><span class="section-num">06</span><h2>Search &amp; Read Path</h2></div>
+      <p class="section-intro">Reads outnumber writes by four orders of magnitude, so the read path is allowed to be wrong for seconds — with exactly one point where it must not be.</p>
+      <div class="panel">
+        <svg viewBox="0 0 900 190" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="11.5" fill="#E6ECF5">
+            <rect x="15" y="60" width="145" height="58" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="87" y="84" text-anchor="middle" font-weight="600">Query normalize</text>
+            <text x="87" y="100" text-anchor="middle" fill="#8A99AE" font-size="9.5">city id, dates, guests, filters</text>
+
+            <rect x="195" y="60" width="145" height="58" rx="8" fill="#17202F" stroke="#5BA9E0"/>
+            <text x="267" y="84" text-anchor="middle" font-weight="600" fill="#5BA9E0">Result cache hit?</text>
+            <text x="267" y="100" text-anchor="middle" fill="#8A99AE" font-size="9.5">key = fingerprint(query) · TTL 60s</text>
+
+            <rect x="380" y="60" width="150" height="58" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="455" y="84" text-anchor="middle" font-weight="600">Elastic search</text>
+            <text x="455" y="100" text-anchor="middle" fill="#8A99AE" font-size="9.5">geo + facets + rank, ~10ms</text>
+
+            <rect x="565" y="60" width="155" height="58" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="642" y="84" text-anchor="middle" font-weight="600">Availability hydrate</text>
+            <text x="642" y="100" text-anchor="middle" fill="#8A99AE" font-size="9.5">per-hotel room-count cache</text>
+
+            <rect x="755" y="60" width="130" height="58" rx="8" fill="#17202F" stroke="#4FB5A8"/>
+            <text x="820" y="84" text-anchor="middle" font-weight="600" fill="#4FB5A8">Render list</text>
+            <text x="820" y="100" text-anchor="middle" fill="#8A99AE" font-size="9.5">"only 2 rooms left"</text>
+          </g>
+          <path d="M160,89 H192" stroke="#5BA9E0" stroke-width="1.4" marker-end="url(#hArrA)" fill="none"/>
+          <path d="M340,89 H377" stroke="#5BA9E0" stroke-width="1.4" marker-end="url(#hArrA)" fill="none"/>
+          <text x="358" y="80" text-anchor="middle" fill="#8A99AE" font-size="9" font-family="JetBrains Mono, monospace">miss</text>
+          <path d="M530,89 H562" stroke="#8A99AE" stroke-width="1.4" marker-end="url(#hArrM)" fill="none"/>
+          <path d="M720,89 H752" stroke="#8A99AE" stroke-width="1.4" marker-end="url(#hArrM)" fill="none"/>
+          <path d="M267,60 Q267,25 640,25 Q820,25 820,57" stroke="#4FB5A8" stroke-width="1.3" stroke-dasharray="3 3" marker-end="url(#hArrC)" fill="none"/>
+          <text x="540" y="18" text-anchor="middle" fill="#4FB5A8" font-size="9.5" font-family="JetBrains Mono, monospace">hit ⇒ straight to render (&lt;5ms)</text>
+          <text x="267" y="140" text-anchor="middle" fill="#8A99AE" font-size="9.5" font-family="JetBrains Mono, monospace">~70-80% of popular queries die here</text>
+        </svg>
+        <div class="diagram-caption">Fingerprint = hash of the fully normalized query (city, dates, guests, filters, page, currency, promo code). Same search, same answer — until TTL. The rank lives in Elastic; live per-night counts are appended from a short-TTL availability cache.</div>
+      </div>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Why the index is not the truth, and that's fine</h3>
+          <p style="color:var(--muted); font-size:14px;">Elastic is fed by CDC from the catalog and inventory shards, so a sold-out hotel can appear available for a few seconds. The cost of that staleness is one disappointed user at hold time — the moment checkout begins, every displayed number is re-validated against the DB (section 05 step 1). "Eventual in the window shop, strong at the register" is the sentence to say.</p>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">The query shape that bites candidates</h3>
+          <p style="color:var(--muted); font-size:14px;">"Available for Tue–Thu" is a join across 3 date-partitioned keys — too expensive to compute per document at query time, so availability is <em>precomputed per (room_type, date) into denormalized per-hotel calendar blobs</em> refreshed by the CDC stream. At search time the service intersects the stay's dates against the candidate's blob — an in-memory filter over already-ranked top hits, not a DB join. Document staleness is bounded by the stream lag you monitor (<code>_ingest_lag</code>).</p>
+        </div>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">Pagination &amp; de-dup:</strong> deep pagination over a changing result set is the classic trap — use search-after (tiebreaker on score + hotel_id) rather than <code>from/size</code>, and rank with a booking-value-aware score (conversion, margin, commission) — worth one sentence, interviewers rarely push past "why is this hotel first?".</p>
+      </div>
+    </section>
+
+    <!-- 07 DISTRIBUTION & OTA -->
+    <section id="ota">
+      <div class="section-head"><span class="section-num">07</span><h2>Distribution &amp; the Channel Manager</h2></div>
+      <p class="section-intro">The same 5 Deluxe Kings are sold on your app, Booking.com, and Expedia. Each OTA has its own refresh cycle — which means <em>your</em> inventory count is a race with someone else's cache. This is where real-world overbooking actually comes from.</p>
+      <div class="panel">
+        <svg viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="11.5" fill="#E6ECF5">
+            <rect x="330" y="15" width="240" height="64" rx="8" fill="#17202F" stroke="#E0A94F"/>
+            <text x="450" y="40" text-anchor="middle" font-weight="600" fill="#E0A94F" font-size="12">Channel Manager</text>
+            <text x="450" y="58" text-anchor="middle" fill="#8A99AE" font-size="9.5">single writer to inventory · ARI out / VCR in</text>
+
+            <rect x="330" y="110" width="240" height="50" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="450" y="132" text-anchor="middle" font-weight="600">Inventory DB (source of truth)</text>
+            <text x="450" y="148" text-anchor="middle" fill="#8A99AE" font-size="9.5">sold &lt;= total enforced here, always</text>
+
+            <rect x="30" y="195" width="170" height="52" rx="8" fill="#17202F" stroke="#4FB5A8"/>
+            <text x="115" y="217" text-anchor="middle" font-weight="600" fill="#4FB5A8">Booking.com</text>
+            <text x="115" y="233" text-anchor="middle" fill="#8A99AE" font-size="9.5">ARI cached · VCR pulled</text>
+
+            <rect x="255" y="195" width="170" height="52" rx="8" fill="#17202F" stroke="#4FB5A8"/>
+            <text x="340" y="217" text-anchor="middle" font-weight="600" fill="#4FB5A8">Expedia</text>
+            <text x="340" y="233" text-anchor="middle" fill="#8A99AE" font-size="9.5">ARI cached · VCR pulled</text>
+
+            <rect x="480" y="195" width="170" height="52" rx="8" fill="#17202F" stroke="#4FB5A8"/>
+            <text x="565" y="217" text-anchor="middle" font-weight="600" fill="#4FB5A8">GDS / meta</text>
+            <text x="565" y="233" text-anchor="middle" fill="#8A99AE" font-size="9.5">cache-bust push on change</text>
+
+            <rect x="705" y="195" width="170" height="52" rx="8" fill="#17202F" stroke="#253247"/>
+            <text x="790" y="217" text-anchor="middle" font-weight="600">Direct (own app)</text>
+            <text x="790" y="233" text-anchor="middle" fill="#8A99AE" font-size="9.5">bypasses all of this</text>
+          </g>
+          <path d="M450,79 V107" stroke="#E0A94F" stroke-width="1.5" marker-end="url(#hArrB)" fill="none"/>
+          <text x="497" y="97" fill="#E0A94F" font-size="9" font-family="JetBrains Mono, monospace">all writes route through</text>
+          <path d="M368,160 Q240,175 128,192" stroke="#4FB5A8" stroke-width="1.3" marker-end="url(#hArrC)" fill="none"/>
+          <path d="M420,160 Q360,175 344,192" stroke="#4FB5A8" stroke-width="1.3" marker-end="url(#hArrC)" fill="none"/>
+          <path d="M490,160 Q540,175 562,192" stroke="#4FB5A8" stroke-width="1.3" marker-end="url(#hArrC)" fill="none"/>
+          <text x="230" y="172" fill="#4FB5A8" font-size="9" font-family="JetBrains Mono, monospace">ARI push (A=avail R=rates I=inventory)</text>
+          <path d="M160,195 Q260,120 328,150" stroke="#8A99AE" stroke-width="1.1" stroke-dasharray="3 3" fill="none"/>
+          <text x="175" y="150" fill="#8A99AE" font-size="9" font-family="JetBrains Mono, monospace">VCR pull-back (reservation re-check)</text>
+        </svg>
+        <div class="diagram-caption">ARI = Availability/Rates/Inventory feed <em>out</em>; VCR = Room Variety/Reservation/Cashback protocol <em>in</em>. The channel manager is the only component permitted to mutate <code>total_rooms</code> allocations — OTAs never write inventory directly.</div>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">Allocation — the pattern that prevents OTA oversells</h3>
+        <p style="color:var(--muted); font-size:14px;">Instead of every channel selling against one raw count (and racing each other's caches), inventory is <em>partitioned by channel</em>: 5 Deluxe Kings ⇒ 2 direct, 2 Booking, 1 Expedia. A channel can only oversell its own allocation, and the allocation is re-balanced by the manager as VCR reservations land. Trade-off to name: allocations strand rooms (Booking is full while direct sits on 2 unused), so real systems pair allocation with a short <em>buffer</em> the manager re-alllocates every few minutes, and last-room sales go direct-only.</p>
+      </div>
+      <div class="panel">
+        <table>
+          <tr><th>Mitigation</th><th>Detail</th></tr>
+          <tr><td>Push on change, not on schedule</td><td>Every confirm/cancel emits an ARI update within seconds; scheduled full-refresh is the backstop, not the mechanism</td></tr>
+          <tr><td>VCR re-check before accept</td><td>When an OTA reservation arrives, validate against live DB counts <em>before</em> accepting; reject-with-sorry beats double-sell</td></tr>
+          <tr><td>Oversell policy, not just tech</td><td>If a double-sell slips through anyway: "walk" the guest — rebook a same-or-better hotel nearby, pay the difference. The system should flag the conflict the instant it's detected; humans handle the guest</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- 08 SHARDING -->
+    <section id="sharding">
+      <div class="section-head"><span class="section-num">08</span><h2>Sharding Strategy</h2></div>
+      <p class="section-intro">One rule drives everything: <strong style="color:var(--text);">a stay's N nightly rows and its reservation row must live on one shard</strong>, so the confirm transaction never spans shards.</p>
+      <div class="panel">
+        <table>
+          <tr><th>Data</th><th>Shard key</th><th>Why</th></tr>
+          <tr><td class="mono">room_type_inventory</td><td class="mono">hash(room_type_id)</td><td>Every transactional query for a stay touches only its own room types; co-locates with the reservation's inventory rows. A hotel's room types spread across shards — fine, hotel-level ops are catalog, not transactions</td></tr>
+          <tr><td class="mono">reservations</td><td class="mono">hash(user_id)</td><td>"My trips" is the dominant read; shard-local. Hotel-side lookups (front-desk manifest) go through an async secondary index, not cross-shard scans</td></tr>
+          <tr><td class="mono">hotels / room_types / rate_plans</td><td class="mono">unsharded or geo-replicated</td><td>Small (10⁵–10⁶ rows), read-heavy, rarely mutated — replicate wholesale; the search index is already the read path</td></tr>
+        </table>
+      </div>
+      <div class="panel edge-card" style="border-left-color: var(--amber);">
+        <h3 style="color:var(--text);">The hole to admit out loud</h3>
+        <p style="color:var(--muted); font-size:14.5px;">Sharding inventory by <code>room_type_id</code> and reservations by <code>user_id</code> means a booking's inventory rows and its reservation row can land on <em>different</em> shards — so either the confirm is a two-shard transaction (2PC or saga), or you give up one of the two colocatedities. The clean interview answer: store per-reservation nightly keys <code>(room_type_id, date)</code> denormalized onto the inventory shard with the reservation ID, and treat the reservation row's <code>status</code> as the user-facing truth written second, with the reconciler (section 05 step 4) closing any gap. Alternatives — shard both tables by <code>hash(hotel_id)</code> and index by user_id async — trade the hot-hotel problem back in; either is defensible if the cross-shard consequence is stated.</p>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">Hotels, not users, are the hot shard risk</h3>
+        <p style="color:var(--muted); font-size:14px;">A 1,500-room convention hotel on a concert weekend concentrates write load the way a hot tenant does in a scheduler — but within a <em>single</em> inventory shard. Because contention is per (room_type, date) row, the same CAS-and-retry that serves every other hotel degrades gracefully here; if it isn't enough, sub-partition that hotel's busiest room types across two logical shards with a routing table — same two-tier trick as the scheduler's hot-tenant mitigation.</p>
+      </div>
+    </section>
+
+    <!-- 09 CAPACITY -->
+    <section id="capacity">
+      <div class="section-head"><span class="section-num">09</span><h2>Capacity Estimation</h2></div>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Read path</h3>
+          <div class="calc-line"><span class="k">DAU booking searches</span><span class="v">20M/day</span></div>
+          <div class="calc-line"><span class="k">Avg QPS (24h) → peak ×5</span><span class="v">~230 → ~1.2K QPS</span></div>
+          <div class="calc-line"><span class="k">Cache hit on fingerprints</span><span class="v">~75%</span></div>
+          <div class="calc-line"><span class="k">Elastic QPS after cache</span><span class="v">~300</span></div>
+          <div class="calc-result"><span>Search nodes (3 shards × 2 replicas)</span><span class="v">comfortable 10× headroom</span></div>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Write path</h3>
+          <div class="calc-line"><span class="k">Bookings/day</span><span class="v">500K</span></div>
+          <div class="calc-line"><span class="k">Avg / peak (×10, eventy)</span><span class="v">~6 / ~60 per second</span></div>
+          <div class="calc-line"><span class="k">Nightly row updates per booking (avg 2.5 nights)</span><span class="v">~150 txn-rows/s</span></div>
+          <div class="calc-line"><span class="k">Holds:confirms ratio (abandonment ~70%)</span><span class="v">~200 Redis ops/s</span></div>
+          <div class="calc-result"><span>Inventory DB load</span><span class="v">trivial for Postgres</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">Storage</h3>
+        <div class="calc-line"><span class="k">Inventory rows: 500K hotels × 8 room types × 730 days</span><span class="v">~3 × 10⁹ rows</span></div>
+        <div class="calc-line"><span class="k">Row ≈ 50 B + index ≈ 100 B</span><span class="v">~450 GB</span></div>
+        <div class="calc-line"><span class="k">Reservations: 500K/day × 5 yr, ~500 B</span><span class="v">~450 GB</span></div>
+        <div class="calc-result"><span>Per shard (64 shards, both tables)</span><span class="v">~15 GB — comfortable</span></div>
+        <p style="color:var(--muted); font-size:13px; margin-top:10px;">The number that shapes the design: <strong style="color:var(--text);">inventory rows dwarf booking volume</strong>. 3B mostly-empty future rows is why the inventory table only materializes (room_type, date) rows that have been priced/sold, why reservations snapshot price rather than join to mutable rate data, and why the write numbers — not the read numbers — are what stress-test the sharding choice.</p>
+      </div>
+    </section>
+
+    <!-- 10 FAULT TOLERANCE -->
+    <section id="faults">
+      <div class="section-head"><span class="section-num">10</span><h2>Fault Tolerance &amp; Edge Cases</h2></div>
+      <div class="panel edge-card">
+        <h3>Hold expires mid-payment <span class="sev">TTL RACE</span></h3>
+        <p style="color:var(--muted); font-size:14.5px;">User's card authorizes at minute 15:04; their hold died at 15:00 and the last room was sold to someone else at 15:02.</p>
+        <table style="margin-top:10px;">
+          <tr><th>Mitigation</th><td>Confirm's CAS is the arbiter: if it fails, auto-refund event fires, user gets a "sold out" page with rebooking options and the search for a comparable hotel prefilled. The hold TTL is a UX promise ("we'll try to keep it"), never a contract.</td></tr>
+        </table>
+      </div>
+      <div class="panel edge-card" style="margin-top:18px;">
+        <h3>Double-sell from a channel cache <span class="sev">INVARIANT BREACH</span></h3>
+        <p style="color:var(--muted); font-size:14.5px;">Booking.com's 5-minute-stale ARI let a guest book a room your app sold a minute ago — the CHECK constraint stops your DB, but their reservation still exists in the world.</p>
+        <table style="margin-top:10px;">
+          <tr><th>Mitigation</th><td>Allocation (section 07) shrinks the blast radius to one channel's quota; VCR accept-time re-check stops most of the rest; the residual is an operational flow, not a code path — flag conflict, human "walks" one guest with rebooking + compensation. Design answer + policy answer together.</td></tr>
+        </table>
+      </div>
+      <div class="panel edge-card" style="margin-top:18px;">
+        <h3>Confirm txn succeeds, response lost <span class="sev">GHOST STATE</span></h3>
+        <p style="color:var(--muted); font-size:14.5px;">App retries the confirm POST — does the user get two bookings?</p>
+        <table style="margin-top:10px;">
+          <tr><th>Mitigation</th><td>No — confirm is keyed by the hold token; the retry replays the stored result of the first execution. Same idempotency machinery as the payment call, one layer up.</td></tr>
+        </table>
+      </div>
+      <div class="panel edge-card" style="margin-top:18px;">
+        <h3>Timezone and turnover-day edge cases <span class="sev">OFF-BY-ONE</span></h3>
+        <p style="color:var(--muted); font-size:14.5px;">"Tue→Thu" in a hotel that starts its night at 3am local vs a user booking from UTC. And cancellations at 23:59 in one timezone are next-day in another.</p>
+        <table style="margin-top:10px;">
+          <tr><th>Mitigation</th><td><code>stay_date</code> is always the <em>property-local</em> calendar night — the hotel's timezone is part of the key's meaning, set once at catalog time. All TTLs and policy cutoffs computed in property-local time with the offset snapshotted on the reservation. Half-open <code>[check_in, check_out)</code> makes turnover-day (check-out morning) a non-event.</td></tr>
+        </table>
+      </div>
+      <div class="panel edge-card" style="margin-top:18px;">
+        <h3>Redis failover wipes active holds <span class="sev">SOFT-STATE LOSS</span></h3>
+        <table style="margin-top:10px;">
+          <tr><th>Mitigation</th><td>Holds are journaled to a durable append log (or Kafka) before being acknowledged, so a Redis rebuild replays live holds; even without that, users simply re-hold at next action — DB counts are untouched. Degraded UX, zero correctness impact: the point the whole holds-are-disposable design exists for.</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- 11 ALTERNATIVES -->
+    <section id="alternatives">
+      <div class="section-head"><span class="section-num">11</span><h2>Alternatives Considered</h2></div>
+      <div class="panel">
+        <table>
+          <tr><th>Alternative</th><th>Rejected because</th></tr>
+          <tr><td>One row per physical room, assign at book time</td><td>Guests book <em>capacity</em> ("a deluxe king"), not a specific room; per-room rows multiply inventory volume 100× and push room-assignment (a front-desk concern) into the booking hot path</td></tr>
+          <tr><td>Book date ranges as rows in a <code>reservations</code>-only design (no nightly inventory)</td><td>Availability then requires range-overlap scans at checkout — the one moment you want an O(1) row check, not a scan whose correctness depends on index tricks</td></tr>
+          <tr><td>Redis as the authoritative inventory counter</td><td>Redis persistence is best-effort; a failover that drops confirms loses money and trust. Redis holds, DB sells</td></tr>
+          <tr><td>All channels sell from one shared count, no allocation</td><td>Converts every OTA's cache staleness into your oversell rate; allocation bounds the damage per channel</td></tr>
+          <tr><td>Search computes live availability via DB joins</td><td>Turns a 1.2K QPS read storm into join storms on the transactional shards; caches + precomputed calendars exist precisely to prevent this</td></tr>
+          <tr><td>2PC across inventory and reservations on every confirm</td><td>Availability anchor — a coordinator failure blocks all bookings; the reconciler pattern gets the same end state with async tolerance</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- 12 PLAYBOOK -->
+    <section id="playbook">
+      <div class="section-head"><span class="section-num">12</span><h2>Interview Playbook</h2></div>
+      <div class="panel">
+        <div class="qa">
+          <div class="q">Where exactly is the no-oversell guarantee enforced?</div>
+          <div class="a">In one place: the Postgres UPDATE that increments <code>sold_rooms</code> with a <code>sold_rooms &lt; total_rooms</code> WHERE-guard, backstopped by a table-level <code>CHECK (sold_rooms &lt;= total_rooms)</code>. Everything upstream — caches, holds, OTA feeds — is allowed to be wrong; if the DB says no, the answer is no. Naming the single enforcement point is more impressive than any amount of locking cleverness around it.</div>
+        </div>
+        <div class="qa">
+          <div class="q">Why hold in Redis at all if the DB is the arbiter?</div>
+          <div class="a">Because the DB's atomicity doesn't manage <em>time</em>: without holds, 70% of checkouts that stall on payment either block inventory behind a long transaction (pessimistic) or let sold-out hotels stay bookable for minutes (optimistic retry-storm). Redis holds shape the queue and expire themselves — the DB still decides. Say "holds are advisory, the CAS is authoritative" and the follow-up usually evaporates.</div>
+        </div>
+        <div class="qa">
+          <div class="q">A user books 3 nights but one night's row fails the CAS — what happens?</div>
+          <div class="a">Nothing, because the three nightly updates are one transaction: partial failure rolls the whole thing back and the user sees the sold-out flow. This is exactly why the sharding key must colocate a stay's nightly rows — cross-shard would turn an ordinary failure mode into a distributed-transaction question. The interviewer is testing whether you noticed that connection.</div>
+        </div>
+        <div class="qa">
+          <div class="q">How does cancellation put inventory back?</div>
+          <div class="a">The mirror transaction: decrement <code>sold_rooms</code> for each stay-night (guarded by <code>sold_rooms &gt; 0</code>, same CHECK keeps it honest), flip the reservation status with a CAS so a concurrent no-show job can't double-release, and emit the same Kafka events so caches and ARI feeds refresh. Free-cancellation deadlines are policy evaluated against the property-local calendar, not the user's clock.</div>
+        </div>
+        <div class="qa">
+          <div class="q">Search shows a hotel available, hold says sold out — how do you make that rare without killing throughput?</div>
+          <div class="a">Tune staleness budget, not consistency: the availability hydrate cache gets a short TTL plus pub/sub invalidation on sell-out events, so most list pages are seconds-fresh; the fingerprint cache entry is dropped when its city's inventory churns. The honest framing: at 75% cache-hit and 1.2K QPS you cannot be perfectly fresh, so you make the <em>known</em>-sold-out cases vanish from search and push every residual lie to hold time, where it costs one apology, not a double-sell.</div>
+        </div>
+        <div class="qa">
+          <div class="q">Why not model one row per room instead of capacity counts?</div>
+          <div class="a">Guests buy a room type for a date range; which physical room fulfills it is decided at check-in by the property, and housekeeping/ maintenance/ room-assignment logic would all leak into your booking hot path. Capacity counts keep the invariant a single integer comparison; per-room rows multiply inventory volume, add a scarce-assignment step mid-checkout, and don't actually prevent oversells any better.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>Hotel Booking System — revision sheet</footer>
+  </div>
+</div>
+</body>
+</html>

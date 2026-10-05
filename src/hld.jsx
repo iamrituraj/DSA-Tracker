@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowLeft, BellRing, CalendarClock, ExternalLink, Radar } from "lucide-react";
+import { ArrowLeft, BellRing, CalendarClock, ExternalLink, Hotel, Radar, Workflow } from "lucide-react";
 
 /* ---------------------------------- sheet data ----------------------------------
    Each entry mirrors a standalone revision sheet built from /hld into /public/hld
@@ -33,6 +33,24 @@ const HLD_SHEETS = [
     tagline: "Cron jobs and billions of executions a day — timing wheels, distributed leases, SKIP LOCKED vs CDC, sharding and tiered storage.",
     sections: ["Requirements", "Architecture", "Data Model", "Timing Wheel & Lease", "Due-Job Queries", "Sharding", "Partitioning", "Tiered Storage", "Fault Tolerance", "Capacity Plan", "Alternatives", "Playbook"],
     chips: ["timing wheel", "lease", "SKIP LOCKED", "CDC", "partitioning", "tiered storage"],
+  },
+  {
+    id: "hotel-booking",
+    file: "/hld/hotel-booking.html",
+    icon: Hotel,
+    title: "Hotel Booking System",
+    tagline: "Never sell the same room-night twice — date-range inventory, Redis TTL holds over a CAS-enforced DB, hold-pay-confirm saga, search read path and OTA channel management.",
+    sections: ["Requirements", "Architecture", "Data Model", "Availability & Concurrency", "Booking Lifecycle", "Search & Read Path", "Distribution & OTA", "Sharding", "Capacity Plan", "Fault Tolerance", "Alternatives", "Playbook"],
+    chips: ["oversell prevention", "TTL hold", "CHECK invariant", "ARI/VCR", "idempotency", "shard locality"],
+  },
+  {
+    id: "kafka",
+    file: "/hld/kafka.html",
+    icon: Workflow,
+    title: "Apache Kafka",
+    tagline: "The distributed event streaming platform end to end — append-only log, zero-copy I/O, partitions and key routing, offset commits, rebalancing, exactly-once transactions, ISR replication, KRaft and production tuning.",
+    sections: ["What Kafka Is", "Core Architecture", "Log-Centric File System", "Partitions", "Producers & Consumers", "Consumer Groups", "Offsets & Commits", "Exactly-Once", "Replication & ISR", "Priority Messages", "Retention & Tiered Storage", "Streams/Schema/DLQ", "KRaft", "Production Deployment", "Tuning Matrix", "Playbook", "Recap"],
+    chips: ["partitions", "__consumer_offsets", "EOS", "ISR", "KRaft", "zero-copy"],
   },
 ];
 

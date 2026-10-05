@@ -6,7 +6,8 @@
 //   behind a frame-runtime <script> block, with assets/links pointing at the
 //   remote frame origin. We strip the runtime, restore the Google Fonts link
 //   and localize every frame URL.
-// - job-scheduler.html is already self-contained and is copied as-is.
+// - job-scheduler.html, hotel-booking.html and kafka.html are already
+//   self-contained and are copied as-is.
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 
@@ -30,6 +31,16 @@ const SHEETS = [
   {
     out: "job-scheduler.html",
     src: path.join(ROOT, "hld", "job-scheduler.html"),
+    frame: false,
+  },
+  {
+    out: "hotel-booking.html",
+    src: path.join(ROOT, "hld", "hotel-booking.html"),
+    frame: false,
+  },
+  {
+    out: "kafka.html",
+    src: path.join(ROOT, "hld", "kafka.html"),
     frame: false,
   },
 ];
