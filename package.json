@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/build-hld.mjs && vite build",
+    "build:hld": "node scripts/build-hld.mjs",
     "preview": "vite preview",
     "prepare-data": "node scripts/prepare-data.mjs",
     "fetch-backend-prep": "node scripts/fetch-backend-prep.mjs",

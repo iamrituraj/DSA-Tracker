@@ -18,6 +18,18 @@ Problem data stays bundled with the app. Progress, notes, revisions, favorites, 
 
 Problems are grouped by TakeUForward A2Z **topics** and official **subcategory patterns** (e.g. Graphs → BFS/DFS, Topo Sort, Shortest Path, MST).
 
+## HLD Lab (High-Level Design)
+
+The **HLD Lab** page (`#hld`) integrates **45 production-grade high-level system designs**:
+- **39 SystemCraft HLD Offline Deep Dives**: Complete end-to-end architectures saved and bundled offline under `public/hld/systemcraft/` (including BookMyShow, Uber, ChatGPT, Netflix, Stripe Payments, Distributed Cache, Kafka, Rate Limiter, and more) with embedded vector Mermaid diagrams, scale estimation, data models, and trade-offs.
+- **6 Standalone Revision Sheets**: Interactive interview playbooks under `public/hld/` (H3 + Redis Rider Matching, Notification System, Job Scheduler, Hotel Booking, Apache Kafka, Payment System).
+
+All pages work 100% offline, support automatic dark/light theme switching matching the app, and can be rebuilt at any time via:
+
+```bash
+npm run build:hld
+```
+
 ## Backend Prep notes
 
 The **Backend Prep** page (`#backend`) serves the personal "Backend Interview Preparation" notes, mirrored from their public Notion site into `public/data/backend-prep.json` (plus diagram assets in `public/backend-prep/img/`).

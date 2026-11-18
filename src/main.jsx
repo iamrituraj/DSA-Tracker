@@ -1,13 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Search, LayoutDashboard, BookOpen, RefreshCw, Brain, BarChart3, Settings, CheckCircle2, Clock3, Download, Upload, ChevronRight, ChevronDown, Flame, Star, Filter, CalendarDays, Target, RotateCcw, Trash2, Timer, Lightbulb, BookmarkCheck, Lock, Unlock, Pencil, Plus, Code2, Moon, Sun, Copy, Check, Play, Layers, Layers3, List, LayoutGrid, AlertCircle, FileText, PenLine, Server } from "lucide-react";
+import { Search, LayoutDashboard, BookOpen, RefreshCw, Brain, BarChart3, Settings, CheckCircle2, Clock3, Download, Upload, ChevronRight, ChevronDown, Flame, Star, Filter, CalendarDays, Target, RotateCcw, Trash2, Timer, Lightbulb, BookmarkCheck, Lock, Unlock, Pencil, Plus, Code2, Moon, Sun, Copy, Check, Play, Layers, Layers3, List, LayoutGrid, AlertCircle, FileText, PenLine, Server, Sliders, ExternalLink } from "lucide-react";
 import "./styles.css";
 import "./cloud-sync.css";
 import { highlightCode } from "./highlight.js";
 import { LLDPage } from "./lld.jsx";
 import { HLDPage } from "./hld.jsx";
 import { BackendPrepPage } from "./backend-prep.jsx";
+import { SystemSimulatorPage } from "./simulator.jsx";
 import { LLD_CHAPTERS } from "./lld-data.js";
+import { HLD_SHEETS } from "./hld-data.js";
 
 const SEED = "/data/problems.json";
 const SOLUTION_SEED = "/data/solutions.json";
@@ -72,10 +74,30 @@ function leetCodeLink(p) {
   if (isHttp(p.url) && /leetcode\.com/i.test(p.url)) return { href: p.url, label: "Open on LeetCode" };
   return null;
 }
-const VALID_PAGES = ["dashboard", "roadmap", "revision", "lld", "hld", "backend", "patterns", "analytics", "settings"];
-const pageLabels = { dashboard: "Dashboard", roadmap: "A2Z Roadmap", revision: "Revision", lld: "LLD Lab", hld: "HLD Lab", backend: "Backend Prep", patterns: "Patterns", analytics: "Analytics", settings: "Settings" };
+const VALID_PAGES = ["dashboard", "roadmap", "revision", "lld", "hld", "simulator", "backend", "patterns", "analytics", "settings"];
+const pageLabels = { dashboard: "Dashboard", roadmap: "A2Z Roadmap", revision: "Revision", lld: "LLD Lab", hld: "HLD Lab", simulator: "System Simulator", backend: "Backend Prep", patterns: "Patterns", analytics: "Analytics", settings: "Settings" };
 function parseHash() {
   try { return decodeURIComponent(window.location.hash.replace(/^#\/?/, "")); } catch { return ""; }
+}
+function parseHashState() {
+  if (typeof window !== "undefined" && window.location.pathname.startsWith("/simulator")) {
+    window.location.replace("/simulator/index.html" + window.location.search + window.location.hash);
+    return { page: "simulator", simulatorSlug: "sandbox" };
+  }
+  const hash = parseHash();
+  if (hash.startsWith("problem/")) {
+    return { page: "problem", problemId: hash.replace(/^problem\//, "") };
+  }
+  if (hash.startsWith("simulator")) {
+    const qIdx = hash.indexOf("?");
+    let slug = "sandbox";
+    if (qIdx !== -1) {
+      const sp = new URLSearchParams(hash.slice(qIdx));
+      slug = sp.get("c") || "sandbox";
+    }
+    return { page: "simulator", simulatorSlug: slug };
+  }
+  return { page: VALID_PAGES.includes(hash) ? hash : "dashboard" };
 }
 const defaultFilters = { topic: "All", status: "All", difficulty: "All", pattern: "All", confidence: "All", favorites: false, sort: "Order" };
 const CONF_RANK = { "🔴 Weak": 0, "🟡 Learning": 1, "🟢 Strong": 2, "🔵 Interview Ready": 3 };
@@ -127,13 +149,25 @@ function App() {
   const [settings, setSettings] = useLocalState("dsa-settings", { dailyGoal: 3, theme: "light" });
   const [builtInSolutions, setBuiltInSolutions] = useState({});
   const [tufLinks, setTufLinks] = useState({});
-  const [page, setPage] = useState(() => { const hash = parseHash(); if (hash.startsWith("problem/")) return "problem"; return VALID_PAGES.includes(hash) ? hash : "dashboard"; });
-  const [selected, setSelected] = useState(() => { const hash = parseHash(); return hash.startsWith("problem/") ? hash.slice("problem/".length) : null; });
+  const [simulatorSlug, setSimulatorSlug] = useState(() => {
+    const st = parseHashState();
+    return st.simulatorSlug || "sandbox";
+  });
+  const [page, setPage] = useState(() => {
+    const st = parseHashState();
+    return st.page;
+  });
+  const [selected, setSelected] = useState(() => {
+    const st = parseHashState();
+    return st.problemId || null;
+  });
   const [originPage, setOriginPage] = useState("roadmap");
   const [query, setQuery] = useState("");
   const [lldFocus, setLldFocus] = useState(null);
+  const [hldFocus, setHldFocus] = useState(null);
   // Drop the deep-link once the lab is left, so returning to it later starts from the top.
   useEffect(() => { if (page !== "lld") setLldFocus(null); }, [page]);
+  useEffect(() => { if (page !== "hld") setHldFocus(null); }, [page]);
   const [roadmapFilters, setRoadmapFilters] = useLocalState("dsa-filters", defaultFilters);
   const [collapse, setCollapse] = useLocalState("dsa-collapse", { topics: {}, patterns: {}, cards: {} });
   const [toast, setToastValue] = useState(null);
@@ -277,9 +311,25 @@ function App() {
   const open = (p) => { if (page !== "problem") setOriginPage(page); setSelected(p.id); setPage("problem") };
   const selectedProblem = useMemo(() => enriched.find(p => p.id === selected) || null, [enriched, selected]);
   useEffect(() => {
-    const target = page === "problem" && selected ? `#problem/${encodeURIComponent(selected)}` : `#${page}`;
+    const target = page === "problem" && selected
+      ? `#problem/${encodeURIComponent(selected)}`
+      : page === "simulator"
+      ? (simulatorSlug && simulatorSlug !== "sandbox" ? `#simulator?c=${encodeURIComponent(simulatorSlug)}` : "#simulator")
+      : `#${page}`;
     if (window.location.hash !== target) window.history.replaceState(null, "", target);
-  }, [page, selected]);
+  }, [page, selected, simulatorSlug]);
+
+  useEffect(() => {
+    const handleHash = () => {
+      const st = parseHashState();
+      setPage(st.page);
+      if (st.problemId) setSelected(st.problemId);
+      if (st.simulatorSlug) setSimulatorSlug(st.simulatorSlug);
+    };
+    window.addEventListener("hashchange", handleHash);
+    return () => window.removeEventListener("hashchange", handleHash);
+  }, []);
+
   useEffect(() => {
     if (page === "problem" && problems.length && !selectedProblem) setPage(originPage);
   }, [page, problems.length, selectedProblem, originPage]);
@@ -301,6 +351,10 @@ function App() {
   }, [enriched]);
   const goPattern = (g) => { setRoadmapFilters({ ...defaultFilters, topic: g.topic, pattern: g.pattern }); setPage("roadmap") };
   const goChapter = (id) => { setLldFocus(id); setPage("lld") };
+  const goHld = (id) => { setHldFocus(id); setPage("hld"); setQuery(""); };
+  const goSimulator = (slug = "sandbox") => {
+    window.open(`/simulator/index.html?c=${encodeURIComponent(slug)}`, "_blank");
+  };
   const hasLocalData = [progress, notes, solutions, activity].some(x => Object.keys(x).length > 0);
   const topics = ["All", ...new Set(problems.map(p => p.topic))];
   const patterns = ["All", ...new Set(
@@ -315,18 +369,160 @@ function App() {
       setRoadmapFilters(f => ({ ...f, pattern: "All" }));
     }
   }, [roadmapFilters.topic, roadmapFilters.pattern, patterns, topics]);
+
+  useEffect(() => {
+    const t = settings.theme === "dark" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", t);
+    document.documentElement.className = t === "dark" ? "theme-dark" : "theme-light";
+    document.body.className = t === "dark" ? "theme-dark" : "theme-light";
+    try {
+      localStorage.setItem("theme", t);
+    } catch (e) {}
+  }, [settings.theme]);
+
+  useEffect(() => {
+    const onStorage = (e) => {
+      if (e.key === "theme" && (e.newValue === "dark" || e.newValue === "light")) {
+        setSettings(s => (s.theme === e.newValue ? s : { ...s, theme: e.newValue }));
+      }
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
   return <div className={`app theme-${settings.theme || "light"}`}>
     <aside><div className="brand"><div className="logo">DS</div><div><b>DSA Tracker</b><small>A2Z Learning System</small></div></div>
-      <nav>{[["dashboard", "Dashboard", LayoutDashboard], ["roadmap", "A2Z Roadmap", BookOpen], ["revision", "Revision", RefreshCw], ["lld", "LLD Lab", Layers], ["hld", "HLD Lab", Layers3], ["backend", "Backend Prep", Server], ["patterns", "Patterns", Brain], ["analytics", "Analytics", BarChart3], ["settings", "Settings", Settings]].map(([id, label, I]) => <button className={page === id ? "active" : ""} onClick={() => setPage(id)} key={id}><I size={18} /><span>{label}</span></button>)}</nav>
+      <nav>{[["dashboard", "Dashboard", LayoutDashboard], ["roadmap", "A2Z Roadmap", BookOpen], ["revision", "Revision", RefreshCw], ["lld", "LLD Lab", Layers], ["hld", "HLD Lab", Layers3], ["simulator", "Simulator", Sliders], ["backend", "Backend Prep", Server], ["patterns", "Patterns", Brain], ["analytics", "Analytics", BarChart3], ["settings", "Settings", Settings]].map(([id, label, I]) => (
+        id === "simulator" ? (
+          <a
+            key={id}
+            href="/simulator/index.html?c=sandbox"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`nav-btn-link ${page === id ? "active" : ""}`}
+            title="Open SystemCraft Simulator in a new window"
+            onClick={(e) => {
+              e.preventDefault();
+              window.open('/simulator/index.html?c=sandbox', '_blank');
+            }}
+          >
+            <I size={18} />
+            <span>{label}</span>
+            <ExternalLink size={12} style={{ marginLeft: "auto", opacity: 0.6 }} />
+          </a>
+        ) : (
+          <button className={page === id ? "active" : ""} onClick={() => setPage(id)} key={id}>
+            <I size={18} />
+            <span>{label}</span>
+          </button>
+        )
+      ))}</nav>
       <div className="sidebar-foot"><Flame size={16} /> {syncStatus === "synced" ? "Cloud sync on" : syncStatus === "syncing" ? "Saving changes…" : "Local data"}</div>
       <button className="theme-toggle" type="button" onClick={() => setSettings(s => ({ ...s, theme: s.theme === "dark" ? "light" : "dark" }))} aria-label="Toggle dark mode">{settings.theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}<span>{settings.theme === "dark" ? "Light mode" : "Dark mode"}</span></button>
     </aside>
-    <main><header><div><h1>{page === "problem" ? "Problem" : pageLabels[page]}</h1><p>Practice, track, revise, master.</p></div><GlobalSearch query={query} setQuery={setQuery} problems={enriched} patternGroups={patternGroups} chapters={LLD_CHAPTERS} open={open} onPattern={goPattern} onChapter={goChapter} /></header>
+    <main>
+      <header><div><h1>{page === "problem" ? "Problem" : pageLabels[page]}</h1><p>Practice, track, revise, master.</p></div><GlobalSearch query={query} setQuery={setQuery} problems={enriched} patternGroups={patternGroups} chapters={LLD_CHAPTERS} hldSheets={HLD_SHEETS} open={open} onPattern={goPattern} onChapter={goChapter} onHld={goHld} /></header>
       {page === "dashboard" && <Dashboard stats={stats} problems={enriched} open={open} setPage={setPage} settings={settings} viewWeak={viewWeak} tufLinks={tufLinks} solutions={solutions} />}
       {page === "roadmap" && <Roadmap problems={enriched} topics={topics} patterns={patterns} open={open} filters={roadmapFilters} setFilters={setRoadmapFilters} filtered={filtered} collapse={collapse} setCollapse={setCollapse} query={query} clearQuery={() => setQuery("")} tufLinks={tufLinks} solutions={solutions} />}
       {page === "revision" && <Revision problems={enriched} open={open} update={update} recordActivity={recordActivity} query={query} />}
       {page === "lld" && <LLDPage focus={lldFocus} />}
-      {page === "hld" && <HLDPage theme={settings.theme === "dark" ? "dark" : "light"} />}
+      {page === "hld" && <HLDPage theme={settings.theme === "dark" ? "dark" : "light"} focus={hldFocus} onOpenSimulator={goSimulator} />}
+      {page === "simulator" && (
+        <section className="panel" style={{ maxWidth: "860px", margin: "20px auto", padding: "36px", textAlign: "center" }}>
+          <div style={{ display: "inline-flex", padding: "14px", background: "rgba(99, 102, 241, 0.12)", borderRadius: "16px", color: "var(--accent, #6366f1)", marginBottom: "16px" }}>
+            <Sliders size={36} />
+          </div>
+          <h2 style={{ fontSize: "28px", margin: "0 0 10px 0" }}>SystemCraft Architecture Simulator</h2>
+          <p style={{ color: settings.theme === "dark" ? "#a8b7cc" : "#64748b", fontSize: "15px", maxWidth: "600px", margin: "0 auto 26px", lineHeight: 1.55 }}>
+            Interactive distributed systems playground: drag components, wire topologies, inject real traffic loads, trigger chaos engineering faults, and evaluate architectures against FAANG standards.
+          </p>
+          <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap", marginBottom: "30px" }}>
+            <a
+              href="/simulator/index.html?c=sandbox&mode=simulate"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "12px 24px",
+                fontSize: "15px",
+                fontWeight: 600,
+                borderRadius: "10px",
+                background: "#4f46e5",
+                color: "#fff",
+                textDecoration: "none"
+              }}
+            >
+              <Play size={18} />
+              <span>Interactive Simulator</span>
+              <ExternalLink size={14} />
+            </a>
+            <a
+              href="/simulator/index.html?c=sandbox&mode=draw"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "12px 20px",
+                fontSize: "15px",
+                fontWeight: 600,
+                borderRadius: "10px",
+                background: settings.theme === "dark" ? "#1e293b" : "#f1f5f9",
+                color: settings.theme === "dark" ? "#e2e8f0" : "#1e293b",
+                border: settings.theme === "dark" ? "1px solid #334155" : "1px solid #cbd5e1",
+                textDecoration: "none"
+              }}
+            >
+              <PenLine size={18} />
+              <span>Draw Diagram Mode</span>
+              <ExternalLink size={14} />
+            </a>
+            <a
+              href="/simulator/index.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "12px 20px",
+                fontSize: "15px",
+                fontWeight: 600,
+                borderRadius: "10px",
+                background: settings.theme === "dark" ? "#1e293b" : "#f1f5f9",
+                color: settings.theme === "dark" ? "#e2e8f0" : "#1e293b",
+                border: settings.theme === "dark" ? "1px solid #334155" : "1px solid #cbd5e1",
+                textDecoration: "none"
+              }}
+            >
+              <Layers size={18} />
+              <span>Browse All Challenges</span>
+              <ExternalLink size={14} />
+            </a>
+          </div>
+
+          <div style={{ borderTop: settings.theme === "dark" ? "1px solid #26354b" : "1px solid #e2e8f0", paddingTop: "24px", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px", textAlign: "left" }}>
+            <div style={{ background: settings.theme === "dark" ? "#152238" : "#f8fafc", padding: "16px", borderRadius: "10px", border: settings.theme === "dark" ? "1px solid #26354b" : "1px solid #e2e8f0" }}>
+              <b style={{ display: "block", fontSize: "14px", marginBottom: "6px", color: settings.theme === "dark" ? "#e2e8f0" : "#1e293b" }}>25+ Components</b>
+              <span style={{ fontSize: "12px", color: settings.theme === "dark" ? "#94a3b8" : "#64748b" }}>CDN, Load Balancers, WebSockets, Kafka, Redis, Sharded DBs, Replicas & S3.</span>
+            </div>
+            <div style={{ background: settings.theme === "dark" ? "#152238" : "#f8fafc", padding: "16px", borderRadius: "10px", border: settings.theme === "dark" ? "1px solid #26354b" : "1px solid #e2e8f0" }}>
+              <b style={{ display: "block", fontSize: "14px", marginBottom: "6px", color: settings.theme === "dark" ? "#e2e8f0" : "#1e293b" }}>M/M/c Queuing Math</b>
+              <span style={{ fontSize: "12px", color: settings.theme === "dark" ? "#94a3b8" : "#64748b" }}>Monte-Carlo latency sampling with Sakasegawa queuing delays and tail stalls.</span>
+            </div>
+            <div style={{ background: settings.theme === "dark" ? "#152238" : "#f8fafc", padding: "16px", borderRadius: "10px", border: settings.theme === "dark" ? "1px solid #26354b" : "1px solid #e2e8f0" }}>
+              <b style={{ display: "block", fontSize: "14px", marginBottom: "6px", color: settings.theme === "dark" ? "#e2e8f0" : "#1e293b" }}>Chaos & Sizing</b>
+              <span style={{ fontSize: "12px", color: settings.theme === "dark" ? "#94a3b8" : "#64748b" }}>Kill instances, flush caches, simulate slow dependencies, and auto-score 100-pt rubrics.</span>
+            </div>
+          </div>
+        </section>
+      )}
       {page === "backend" && <BackendPrepPage query={query} />}
       {page === "patterns" && <Patterns problems={enriched} tufLinks={tufLinks} open={open} collapse={collapse} setCollapse={setCollapse} />}
       {page === "analytics" && <Analytics stats={stats} problems={enriched} activity={activity} notes={notes} solutions={solutions} builtInSolutions={builtInSolutions} settings={settings} />}
@@ -352,7 +548,7 @@ function Dashboard({ stats, problems, open, setPage, settings, viewWeak, tufLink
 function DashboardPanel({ title, subtitle, action, onClick, children }) { return <div className="panel"><div className="panel-head"><div><h3>{title}</h3><p>{subtitle}</p></div><button className="text-btn" onClick={onClick}>{action}<ChevronRight size={15} /></button></div>{children}</div> }
 // The header search is global: it works on every page by offering results rather than only
 // re-filtering the roadmap, which is why typing elsewhere used to look like a dead input.
-function GlobalSearch({ query, setQuery, problems, patternGroups, chapters, open, onPattern, onChapter }) {
+function GlobalSearch({ query, setQuery, problems, patternGroups, chapters, hldSheets = [], open, onPattern, onChapter, onHld }) {
   const [ui, setUi] = useState({ focused: false, active: 0 });
   const box = useRef(null);
   const input = useRef(null);
@@ -388,16 +584,19 @@ function GlobalSearch({ query, setQuery, problems, patternGroups, chapters, open
       .forEach(g => out.push({ kind: "Pattern", group: "Patterns", icon: Brain, title: g.pattern, meta: g.topic, g }));
     chapters.filter(c => hit(`${c.title} ${c.tagline} ${c.pattern}`)).slice(0, 3)
       .forEach(c => out.push({ kind: "LLD", group: "LLD Lab", icon: Layers, title: c.title, meta: c.pattern, c }));
+    hldSheets.filter(s => hit(`${s.title} ${s.fullTitle} ${s.tagline} ${s.chips.join(" ")} ${s.category}`)).slice(0, 3)
+      .forEach(s => out.push({ kind: "HLD", group: "HLD Lab", icon: Layers3, title: s.title, meta: `${s.source} · ${s.category}`, s }));
     // Flag the first row of each group so the section label renders without mutating during map().
     return out.map((r, i) => ({ ...r, firstOfGroup: i === 0 || out[i - 1].group !== r.group }));
-  }, [q, problems, patternGroups, chapters]);
+  }, [q, problems, patternGroups, chapters, hldSheets]);
   const show = ui.focused && query.trim() !== "";
   const hint = ui.focused && query.trim() === "";
   // Results carry data, not callbacks, so the memo above stays stable across App re-renders.
   const activate = (r) => {
     if (r.kind === "Problem") open(r.p);
     else if (r.kind === "Pattern") onPattern(r.g);
-    else onChapter(r.c.id);
+    else if (r.kind === "LLD") onChapter(r.c.id);
+    else if (r.kind === "HLD") onHld(r.s.id);
     setUi({ focused: false, active: 0 });
   };
   const onKeyDown = (e) => {
@@ -413,8 +612,8 @@ function GlobalSearch({ query, setQuery, problems, patternGroups, chapters, open
   return <div className="search global-search" ref={box}>
     <Search size={17} />
     <input ref={input} value={query} onChange={e => { setQuery(e.target.value); setUi(x => ({ focused: true, active: 0 })) }} onKeyDown={onKeyDown}
-      onFocus={() => setUi(x => ({ ...x, focused: true }))} placeholder="Search problems, patterns, LLD…   /"
-      role="combobox" aria-expanded={show} aria-label="Search problems, patterns and LLD chapters" aria-controls="global-search-results" />
+      onFocus={() => setUi(x => ({ ...x, focused: true }))} placeholder="Search problems, patterns, LLD, HLD…   /"
+      role="combobox" aria-expanded={show} aria-label="Search problems, patterns, LLD chapters, and HLD designs" aria-controls="global-search-results" />
     {hint && <div className="gs-results" role="listbox" aria-label="Search help">
       <div className="gs-hint">Search across problems, pattern groups and LLD chapters. ↑↓ to move, Enter to open, Esc to clear.</div>
     </div>}

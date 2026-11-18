@@ -1,0 +1,2114 @@
+/* ==========================================================================
+   SystemCraft core stylesheet
+   Single source of truth for design tokens and site chrome (header, nav,
+   footer, scrollbars, shared primitives). Page-specific styles live with
+   their page; anything that appears on more than one page belongs here.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Tokens
+   -------------------------------------------------------------------------- */
+/* Two first-class themes on one ramp set. Both are built to the same gates:
+   every text pair >= 4.5:1, every control boundary and focus ring >= 3:1,
+   measured against the real values below rather than against a mood board.
+
+   Surfaces are flat. There is no glass, no blur, no accent glow and no
+   gradient on a content surface; depth is a 1px border plus a shallow shadow,
+   in both themes. The tokens that used to carry the frosted treatment
+   (--card-glass, --card-blur, --card-sheen, --glow-accent) are all still here
+   under their old names, because six other stylesheets and several includes
+   read them — they now resolve to flat surfaces and neutral shadows, so the
+   whole site flattens from this one file. Nothing was retired.
+
+   Dark is the default (_includes/site-head.html seeds data-theme from
+   localStorage with 'dark' as the fallback). */
+:root, [data-theme="dark"] {
+    /* Surfaces — deep desaturated slate. The ramp is deliberately shallow:
+       five steps inside 0.01-0.03 relative luminance, so a card reads as a
+       card because of its border, not because of a dramatic fill change. */
+    --bg: #0d1117;
+    --bg-subtle: #11161e;
+    --surface: #141a22;
+    --surface-2: #1b222b;
+    --surface-3: #232b35;
+
+    /* Semantic aliases onto the ramp above, for consumers that want to say
+       "the card ground" or "the modal ground" rather than pick a step.
+
+       THESE TWO WERE READ BEFORE THEY EXISTED. Three call sites consumed them
+       against a fallback — _includes/pro-launch-notice.html took
+       `var(--bg-elev, var(--bg))`, so the Pro launch MODAL painted at page
+       background and had no elevation over the page behind it at all, and
+       _includes/ai-chat.html took `var(--bg-surface, #111118)` dark and
+       `#ffffff` light, two hardcoded values off the ramp entirely.
+
+       Defined as aliases rather than as new colours, so light theme needs no
+       override: both point at tokens that are already themed and the flip is
+       automatic. That is the whole reason elevation is expressed as a ramp
+       step. --text on --bg-elev measures 13.71:1 dark and 17.70:1 light. */
+    --bg-surface: var(--surface);
+    --bg-elev: var(--surface-2);
+
+    /* Dot-grid tint for the decorative hero backdrop in _includes/comp-hero.html.
+       It was the one genuinely LIVE colour-literal fallback left on the site —
+       `var(--dot, rgba(129,140,248,0.09))` against an undefined token, so the
+       literal actually painted, and it was a 9% tint of #818cf8, an indigo from
+       the palette that preceded the current ramp. Expressed as a mix of
+       --accent so it tracks the ramp and both themes get a sensible value. */
+    --dot: color-mix(in srgb, var(--accent) 9%, transparent);
+
+    /* Borders — thin and low contrast on containers (--border is 1.35:1 on
+       --surface and must never be a control boundary). --border-strong is for
+       dividers and the scrollbar thumb.
+
+       --control-border is the control-boundary token: the 1px edge of anything
+       operable — a text input, a segmented control, a facet chip, a secondary
+       button. Its floor is the 3:1 non-text floor, not 4.5:1, because a border
+       is a graphical object rather than text.
+
+       IT USED TO BE --text-dim, AND THAT WAS ONE TOKEN DOING TWO JOBS WITH TWO
+       DIFFERENT FLOORS. Measured across the whole repo, --text-dim had 295
+       `color:` call sites against 18 `border:` ones, so the text role is the
+       overwhelming majority and is the role that keeps the name. The boundary
+       role moved here, SEEDED TO THE EXACT VALUE --text-dim HELD (#71818f), so
+       every repointed call site is a pixel-for-pixel no-op and the catalogue's
+       visual weight did not need re-reviewing. Do not "simplify" this back to
+       one token: raising --text-dim to clear 4.5:1 as text would have pushed
+       every control border on the site from 4.00:1 to 5.22:1 on --surface-2 and
+       silently made the whole catalogue heavier.
+
+       As a boundary #71818f measures 4.72 / 4.53 / 4.36 / 4.00 / 3.57:1 across
+       --bg, --bg-subtle, --surface, --surface-2 and --surface-3. Worst case is
+       3.57:1 against the 3:1 floor, so it clears everywhere it can land. */
+    /* --border was #283240, which is 1.35:1 on --surface. That is not a quiet
+       border, it is an absent one: a card held apart from the page by 1.35:1
+       does not read as a card, which is why the surfaces looked flat even
+       though the ramp underneath them is fine. Raised to 1.94:1 — 44% more
+       separation, still well short of anything that reads as a wireframe.
+
+       FLATNESS IS NOT THE SAME CLAIM AS INVISIBILITY. The decision recorded at
+       the top of this file is to reject glass, blur, gradient and glow, and
+       that decision stands — depth here is still a 1px border plus a shallow
+       shadow, with no treatment on the surface itself. What changed is that
+       the border is now actually visible doing that job.
+
+       --border-strong moves with it, to keep the hierarchy ordered and because
+       at 3.20:1 it now clears the 3:1 non-text floor, so a divider or a
+       scrollbar thumb is a legible graphical object rather than a suggestion.
+       It was 1.82:1, which is below the raised --border and would have
+       inverted the pair. */
+    --border: #3d4a5b;
+    --border-strong: #5a6b7f;
+    --border-accent: rgba(165, 180, 252, 0.35);
+    --control-border: #71818f;
+
+    /* Text — 3 steps is enough; more invites inconsistency.
+
+       --text-dim was #71818f, which the light-theme note below described as
+       "already 4.72:1 on --bg and 4.53:1 on --bg-subtle, so it passes and stays
+       as it is." Both figures were right and both were beside the point: they
+       are two of the five surfaces this token is painted on, and they are the
+       two darkest. On the other three it measured 4.36:1 (--surface), 4.00:1
+       (--surface-2) and 3.57:1 (--surface-3), all under the 4.5:1 floor this
+       file claims every text pair clears, at call sites running 11px to 12.8px.
+
+       #8695a3 clears all five: 6.17 / 5.91 / 5.70 / 5.22 / 4.66:1. Worst case
+       is --surface-3 at 4.66:1.
+
+       THE COST IS REAL AND IT IS WORTH PAYING. The gap from --text-muted to
+       --text-dim compresses from 1.75:1 to 1.34:1 in dark theme, so the three
+       steps read as a shallower hierarchy than before. A step that is legible
+       as a step but not legible as text is not a hierarchy, it is decoration.
+       Light theme is untouched — #666c7d already cleared all five. */
+    --text: #e8eef4;
+    --text-muted: #9fadba;
+    --text-dim: #8695a3;
+
+    /* Brand — teal. Dark takes teal-400 so the accent clears 4.5:1 as text on
+       every surface (9.40:1 on --surface); light takes teal-800, which is the
+       mirror-image problem. Because dark's accent is a *light* teal, white can
+       no longer be the ink on an accent fill — it measures 1.9:1 — so
+       --accent-contrast is teal-950 here and white in light. Every consumer
+       pairs --accent-contrast with an --accent fill, so the flip is safe. */
+    --accent: #a5b4fc;
+    --accent-hover: #c7d2fe;
+    --accent-contrast: #1e1b4b;
+    --accent-subtle: rgba(165, 180, 252, 0.12);
+    --accent-subtle-hover: rgba(165, 180, 252, 0.18);
+
+    /* Pro chip — the ONE source for every "PRO" badge on the site.
+       Before these existed the badge was indigo in the rails, the catalogue
+       and the syllabus (via `.pro-tag`, which read --accent) and a hardcoded
+       orange gradient, `linear-gradient(135deg,#d97706,#f59e0b)` with #fff
+       ink, in ten other files — the AI buttons, the SensAI toggle, the
+       celebration modal, the profile tier and the avatar badge. Same word,
+       two unrelated palettes, neither theme-aware on the orange side.
+
+       PURPLE, AND ITS OWN HUE RATHER THAN --accent. Pro is a different fact
+       from "this is interactive", and reusing the accent for it meant the
+       badge disappeared into every link, chip and button around it. It is
+       purple-300/800 rather than anything else because the rest of the ramp
+       is already spoken for and a PRO chip shares a row with all of it:
+       emerald is --easy, amber is --medium AND --warning, red is --hard, and
+       indigo is --accent. Amber is the conventional "premium" colour and was
+       measured and rejected — it lands 2.7 degrees from --medium, so a PRO
+       chip beside a "Medium" badge on a catalogue row reads as one token.
+       Purple is the only free hue that also clears the contrast floor on all
+       three grounds below. Measured dE from --accent is 16.7 dark / 26.1
+       light, i.e. legibly a different colour rather than a near-miss.
+
+       A DEDICATED HUE NEEDS A LIGHT-THEME TWIN, which the --accent-derived
+       version did not: see [data-theme="light"] below, which overrides the
+       three values that are not computed from --pro-chip.
+
+       THREE PAIRS, NOT ONE, because a badge has to be legible on its ground
+       and the site has three grounds. The hue never changes, so all three
+       read as the same badge. Worst case across all six measurements is
+       5.92:1, against the 4.5 floor --fs-xs/800 text carries — and against
+       the 4.37 the old --accent wash actually measured in light theme, which
+       the comment it replaced claimed was above 4.5:
+         chip  — on a plain surface. A --pro-chip wash with --pro-chip ink,
+                 low key by design: the rail renders one per gated entry down
+                 258 pages and a saturated chip there is noise.
+                 Measures 5.94 dark / 5.92 light.
+         solid — on a surface or a faint wash where the badge has to carry,
+                 e.g. the judge's AI buttons, which are themselves
+                 --accent-subtle, so a wash chip on them has nothing to sit
+                 against. This is the slot the orange gradient used to fill.
+                 Measures 9.04 / 8.72.
+         fill  — on a ground already painted --accent (the SensAI toggle, the
+                 celebration button, the draw-review button) or another strong
+                 colour (the red "Why did this fail?" button). Inverted, so it
+                 reads against the fill rather than dissolving into it.
+                 Measures 9.04 / 8.72.
+
+       The wash is the reason the chip is a PASTEL in dark theme and a deep
+       tone in light, rather than one mid purple in both. A 14% tint is thin,
+       so a mid-tone ink on a tint of itself over a dark page does not
+       separate: violet-400 and purple-400 measure 4.20 and 4.32 there and
+       fail. Do not "fix" the dark value by saturating it. */
+    --pro-chip: #d8b4fe;
+    --pro-chip-bg: color-mix(in srgb, var(--pro-chip) 14%, transparent);
+    --pro-chip-fg: var(--pro-chip);
+    --pro-chip-solid-bg: var(--pro-chip);
+    --pro-chip-solid-fg: #1e1b4b;
+    --pro-chip-fill-bg: #1e1b4b;
+    --pro-chip-fill-fg: var(--pro-chip);
+
+    /* Focus ring — one definition, audited once, instead of per surface.
+       Two steps lighter than --accent on the same teal ramp (teal-200), which
+       clears 3:1 against every colour the ring can actually abut: --bg,
+       --bg-subtle, --surface through --surface-3, the --accent-subtle fills
+       the facet chips sit on, the 12% and 14% difficulty-badge fills and the
+       30% badge boundaries. Worst measured case is 5.65:1, on the --medium 30%
+       boundary over --surface-3; best is 15.01:1 on --bg.
+
+       The offset is load-bearing, not decoration. Where the ring would abut a
+       solid --accent fill (.btn-primary, .skip-link, a selected chip) no
+       opaque colour can reach 3:1 and also clear 3:1 against --bg: clearing
+       --bg needs relative luminance >= 0.108, clearing the fill needs <= 0.067
+       (or >= 1.006, past white). The constraints are incompatible, so the fix
+       is geometric — 2px of offset means the ring abuts the page, never the
+       fill. Do not set --focus-ring-offset to 0. On teal the direct measurement
+       is 1.48:1 on the fill against 15.01:1 on --bg, so the offset still does
+       the whole job. */
+    --focus-ring-color: #e0e7ff;
+    --focus-ring: 2px solid var(--focus-ring-color);
+    --focus-ring-offset: 2px;
+
+    /* Semantic */
+    --success: #34d399;
+    --warning: #fbbf24;
+    --danger: #f87171;
+    --info: #60a5fa;
+
+    /* Ink for a SOLID semantic fill, the same idea as --accent-contrast and
+       for the same reason. In dark theme these three are light tints, so white
+       ink on them does not clear AA and the failures were real:
+
+         .lc-submit     #fff on --success   1.92:1 dark, 3.77:1 light
+         .mk-mic.on     #fff on --success   1.92:1 dark, 3.77:1 light
+         .nd-badge x2   #fff on --danger    2.77:1 dark
+
+       .lc-submit is the judge's primary Submit control and it failed in BOTH
+       themes. The rule above it carried a comment asserting "--success is dark
+       enough to carry white ink", which was never measured and is wrong by a
+       factor of two.
+
+       --success-contrast needs no light override: one deep emerald-black
+       clears both grounds (9.86:1 on dark's #34d399, 5.03:1 on light's
+       #059669). --danger and --warning do need the pair, because light theme
+       darkens them far enough that white becomes the better ink -- the same
+       flip --accent-contrast makes. Measured:
+         --success-contrast  9.86 dark / 5.03 light
+         --danger-contrast   7.11 dark / 4.83 light
+         --warning-contrast 11.11 dark / 5.02 light
+
+       These are for a solid fill only. A semantic token used as TEXT on a
+       surface, or as ink over a 12-14% tint of itself, is a different pairing
+       and is measured separately beside the difficulty tokens below. */
+    --success-contrast: #01140f;
+    --danger-contrast: #1a0505;
+    --warning-contrast: #1a1205;
+
+    /* Difficulty (DSA + HLD) — unchanged values, re-verified against the new
+       surfaces. A difficulty token is never painted on a bare surface: every
+       consumer pairs it as text over a 12% (badges, .diff-badge,
+       .tag-difficulty-*) or 14% (.qd, .lc-diff) tint of itself, so contrast is
+       measured against the tint. Worst case over the surfaces a badge can
+       actually sit on (--bg, --bg-subtle, --surface, --surface-2) is --hard at
+       4.73:1 on its own 14% over --surface-2. --surface-3 is excluded on
+       purpose: its only consumers are progress-bar tracks (.progress-bar-track,
+       .db-track, .pat-bar, .list-progress-track), so no badge can land there. */
+    --easy: #34d399;
+    --medium: #fbbf24;
+    --hard: #f87171;
+
+    /* Elevation — shallow and soft. A card is a border plus a whisper; nothing
+       here casts more than 16px. No shadow carries the accent hue, so there is
+       no glow anywhere on the site, including --shadow-accent, which exists
+       only because .btn-primary:hover and five other call sites read it. */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30);
+    --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.26);
+    --shadow-lg: 0 6px 16px rgba(0, 0, 0, 0.32);
+    --shadow-accent: 0 2px 8px rgba(0, 0, 0, 0.34);
+
+    /* Radii */
+    --r-xs: 5px;
+    --r-sm: 7px;
+    --r-md: 10px;
+    --r-lg: 14px;
+    --r-xl: 20px;
+    --r-full: 999px;
+
+    /* Type scale — fluid, tuned for long-form reading */
+    --fs-xs: 0.75rem;
+    --fs-sm: 0.8125rem;
+    --fs-base: 0.9375rem;
+    --fs-md: 1rem;
+    --fs-lg: 1.125rem;
+    --fs-xl: clamp(1.15rem, 0.9rem + 1.1vw, 1.4rem);
+    --fs-2xl: clamp(1.4rem, 1rem + 1.9vw, 1.9rem);
+    --fs-3xl: clamp(1.75rem, 1.1rem + 3.1vw, 2.9rem);
+    /* Editorial display size — homepage hero only, and now actually consumed
+       by it (home.css `.hm-title`).
+
+       THIS TOKEN WAS DEAD FOR ITS WHOLE LIFE. about.css and legal.css both
+       carry comments reserving it for the homepage hero, and the hero never
+       read it: `.hm-title` hardcoded its own clamp. So the hero did not lack a
+       display size, it duplicated the token meant to hold one.
+
+       The value below is the hero's SHIPPED curve, not the one this token used
+       to carry. The two had the same 4.1rem ceiling and nothing else:
+       `clamp(1.75rem, 1rem + 4.6vw, 4.1rem)` against the hero's
+       `clamp(2.3rem, 1.2rem + 3.4vw, 4.1rem)`. Wiring the hero to the old
+       token value would have resized the headline on every viewport but the
+       widest — -16.5% at 320px, -7.8% at 390px, +13.3% at 768px, +16.8% at
+       1024px. The token's own comment claimed it "floors at the old --fs-3xl
+       minimum so narrow phones are unaffected", which is exactly backwards for
+       this consumer: the hero's floor is higher, so adopting 1.75rem would
+       have shrunk the phone headline by a sixth.
+
+       The shipped curve is the one that has been looked at on real screens, so
+       it wins and the token adopts it. The result is one definition and zero
+       visual change. */
+    --fs-4xl: clamp(2.3rem, 1.2rem + 3.4vw, 4.1rem);
+
+    /* Spacing */
+    --sp-1: 0.25rem;
+    --sp-2: 0.5rem;
+    --sp-3: 0.75rem;
+    --sp-4: 1rem;
+    --sp-5: 1.5rem;
+    --sp-6: 2rem;
+    --sp-7: 3rem;
+    --sp-8: 4rem;
+
+    /* Layout
+       WIDTHS (2026-10-27). The header is full-bleed, and at 1160px every page
+       body was a narrow island under it: 77% of a 1440px screen and 58% of a
+       1920px one, with dashboards (/profile, /revision, /pro) a single 900px
+       column. --measure is the page frame (catalogs, listings, dashboards,
+       footer); --measure-doc is the two-column article (content + outline);
+       --measure-3 is the three-column article (rail + content + outline).
+       Prose inside any of them is still capped by --prose, so a paragraph
+       never runs past a comfortable line length; what the extra width buys is
+       room for tables, diagrams, code and card grids. */
+    --measure: 1440px;
+    --measure-doc: 1320px;
+    --measure-narrow: 780px;
+    /* Wider sibling of --measure, used only by the three-column shell. */
+    --measure-3: 1600px;
+    /* Longest line of body prose. 80ch at --fs-base is ~760px. */
+    --prose: 80ch;
+    --header-h: 56px;
+
+    /* Three-column shell: section rail, content, page outline. Fluid rather
+       than fixed because both rails have to coexist at exactly 1024px, where
+       two fixed 232px rails plus two --sp-7 gaps would leave the content
+       column 448px. These clamps leave it around 600px there — roughly 70
+       characters at --fs-base, still inside a comfortable measure. */
+    --rail-w: clamp(176px, 15vw, 248px);
+    --outline-w: clamp(168px, 14vw, 232px);
+
+    /* Mobile nav bar: 56px of bar — an icon over a label in a --target-touch
+       cell — plus the home-indicator inset. This is the bar's *total* occupied
+       height, so the floating controls' bottom offsets, the body's bottom
+       padding and scroll-margin-bottom can all derive from it directly. The
+       bar itself pairs height: var(--nav-mobile-h) with
+       padding-bottom: env(safe-area-inset-bottom), leaving 56px of content.
+
+       56px is what the controls already imply: #back-to-top and
+       .mobile-toc-btn sit at bottom: 68px, which is this plus --sp-3. The
+       controls at bottom: 20px (.sensei-toggle, .fb-trigger, .pwa-banner) are
+       the ones a 56px bar would cover, and they are what task 23 re-offsets. */
+    --nav-mobile-h: calc(56px + env(safe-area-inset-bottom, 0px));
+
+    /* Minimum target sizes, so they are applied by rule rather than by eye.
+       --target-min is the floor for any control; --target-touch is the floor
+       for the primary touch destinations. */
+    --target-min: 24px;
+    --target-touch: 44px;
+
+    /* Catalog density. Stated rather than emergent so the result container can
+       reserve its height from the entry count in the server response instead
+       of discovering it once the rows have rendered. --cat-card-h is the card
+       body; a --sp-3 grid gap sits on top of it. */
+    --cat-row-h: 44px;
+    /* Rendered width of .cat-row-lock, measured at 1440px: the "PRO" tag is
+       33px. It is a token because catalog.css reserves this width on rows that
+       have no lock, so the difficulty badge lands in the same column whether
+       an entry is gated or not. Before that, a non-PRO badge sat 45px further
+       right than a PRO one (33px of tag plus the row's 12px gap), which down
+       39 rows left the one column that is supposed to line up visibly ragged. */
+    --cat-lock-w: 33px;
+    /* Widest difficulty label at --fs-xs, measured: "Intermediate" is 95.1px
+       against "Advanced" 78.1 and "Beginner" 72.5. The row badge is pinned to
+       this so the reading-time cell beside it stops drifting. */
+    --cat-badge-w: 96px;
+    /* Sized to the card's actual content rather than to a scroll budget. At
+       168px the measured contents came to 134px of chrome -- badge 26, title
+       24, tags 28, companies 28, gaps 16 -- inside 136px of content box, which
+       left 2px for the description and collapsed it to 11.6px, under one line.
+       244px holds a two-line title, a guaranteed two-line description, the
+       topic chips, the company chips and the action row, each on its own line.
+       Raising it costs entries per screen: four columns at this height fit 8 in
+       the first 1000px against 12 at 168px, which is why compact rather than
+       comfortable is the default density -- compact fits 15 and is the density
+       that answers "find one of 39", while comfortable is the detail view. */
+    --cat-card-h: 244px;
+
+    /* Stacking order — named layers in place of bare numbers. Today's stack,
+       bottom to top, with the owner of each value:
+
+         1      body > footer, #comments-section, .design-nav, .section
+         50     #back-to-top, .mobile-toc-btn
+         99     .early-banner (early-access strip, site-header.html)
+         100    header (sticky)                      -> --z-header
+         120    .nav-panel-menu (nav panels, mobile sheet)  -> --z-nav
+         200    .mobile-toc-drawer, auth + notif popovers  -> --z-sheet
+         1000   .skip-link
+         1001   #progress-bar (scroll progress)
+         3000   #sc-search-overlay (command palette) -> --z-overlay
+
+       Each token carries the value its layer already uses, so repointing a
+       call site at the token is a no-op. The mobile nav bar joins --z-nav:
+       above the floating controls at 50, below an open sheet at 200. The four
+       tokens cover the header, nav, sheet and overlay layers only — 1, 1000
+       and 1001 have no token and keep their numbers. */
+    --z-header: 100;
+    --z-nav: 120;
+    --z-sheet: 200;
+    --z-overlay: 3000;
+
+    /* Motion */
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    /* Two curves for things that ARRIVE, as opposed to things that change.
+       --ease is symmetric and correct for a hover or a colour change, but an
+       overlay animated on it reads as mechanical: it decelerates at the same
+       rate it accelerated, so a panel appears to be placed rather than to
+       settle.
+
+       --ease-out is a strong deceleration — fast off the mark, long settle —
+       for anything that TRANSLATES into place: sheets, drawers, dropdowns. It
+       has no overshoot, which matters because a sheet that overshoots travels
+       past its own edge and clips.
+
+       --ease-spring overshoots slightly (the 1.56 control point) and is for
+       things that SCALE into place: modals and popovers, where a 0.95 -> 1
+       entrance passing ~1.02 before settling is what makes it feel physical
+       rather than faded in. Do not use it on a translate for the clipping
+       reason above, and do not use it on anything that loops. */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --dur-fast: 0.15s;
+    --dur: 0.22s;
+
+    /* Fonts */
+    --font-sans: 'Inter', 'Inter Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    /* ---- Compatibility aliases (older inline CSS still references these) ---- */
+    --bg-card: var(--surface);
+    --card-bg: var(--surface);
+    /* Opaque, not a translucent wash: the sticky header is a flat band with a
+       hairline rule under it, so nothing shows through and the blur it used to
+       pair with has nothing left to blur. */
+    --bg-header: var(--bg);
+    /* --header-bg is only consumed by the auth popovers in auth-styles.html.
+       They float over page content, so it must be opaque. */
+    --header-bg: var(--surface);
+    --code-bg: var(--bg-subtle);
+    /* Was a translucent white wash; now the flat lifted surface. Consumed by
+       _layouts/default.html (progress strip, comment rows, design-nav),
+       content.css and two pages. */
+    --glass: var(--surface-2);
+    --glass-border: var(--border);
+    --tag-bg: var(--accent-subtle);
+    --tag-border: var(--border-accent);
+    /* Judge/IDE panes need opaque fills — the app shell has no page background
+       showing through, so translucent surfaces would stack visibly. */
+    --panel: #10161d;
+    --panel-2: #171e26;
+
+    /* ---- Card surface tokens ----
+       These four used to carry the frosted treatment: a translucent wash over
+       the page mesh, a 12px backdrop blur and a lit top edge. All four keep
+       their names because catalog.css, home.css, listing.css and
+       dsa-index.css read them, and are now flat:
+
+         --card-glass        the card fill, a solid surface
+         --card-glass-hover  the hover fill, one surface step up
+         --card-blur         0px, so every `backdrop-filter: blur(var(--card-blur))`
+                             in the other stylesheets becomes a no-op
+         --card-sheen        transparent, so every top-edge sheen paints nothing
+
+       --glow-accent was an accent-coloured glow; it is now a neutral shallow
+       shadow, so `box-shadow: var(--shadow-lg), var(--glow-accent)` in the
+       other stylesheets stays shallow instead of halo-ing. It has 6 consumers
+       and stays.
+
+       --glow-accent-strong was its deeper twin and had none, so it is gone
+       rather than kept flat — along with --accent-light, --border-hover and
+       --glow, which were also defined and never read. A token with no
+       consumers is not an alias, it is vocabulary that lies about what the
+       system offers. --ring-accent also has no consumers but is kept as a
+       hairline. */
+    --card-glass: var(--surface);
+    --card-glass-hover: var(--surface-2);
+    --card-blur: 0px;
+    --card-sheen: transparent;
+    --glow-accent: 0 1px 3px rgba(0, 0, 0, 0.30);
+    --ring-accent: 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="light"] {
+    --bg: #ffffff;
+    --bg-subtle: #f7f8fa;
+    --surface: #ffffff;
+    --surface-2: #f4f5f8;
+    --surface-3: #eceef2;
+
+    /* Same move as dark, scaled to a white ground: 1.26:1 -> 1.55:1 for
+       --border and 1.51:1 -> 2.18:1 for --border-strong. Light cannot reach
+       dark's 3.20 on a 1px line without the border reading as a hard rule, and
+       it does not need to — the control boundary in this theme is
+       --control-border at 5.24:1, and that is the token with the 3:1
+       obligation. */
+    --border: #cbd0d9;
+    --border-strong: #a9b0bd;
+    --border-accent: rgba(76, 85, 199, 0.22);
+    /* Light's control boundary is the value --text-dim already held here, so
+       the 18 repointed call sites are a no-op in this theme too. Measured as a
+       non-text boundary: 5.24 / 4.93 / 5.24 / 4.81 / 4.51:1 across --bg,
+       --bg-subtle, --surface, --surface-2 and --surface-3, against a 3:1
+       floor. */
+    --control-border: #666c7d;
+
+    --text: #0c0e14;
+    --text-muted: #52586a;
+    /* --text-dim was #7b8194, which measured 3.88:1 on --bg, 3.65:1 on
+       --bg-subtle and 3.56:1 on --surface-2 — under 4.5:1 on every surface it
+       is painted on, in the theme most readers get by default. It is not a
+       chrome-only token either: judge.css uses it for input placeholders and
+       simulator.css for the library and menu metadata, so this was body text
+       failing AA, not a decorative tint.
+
+       #666c7d clears it everywhere (5.24 / 4.93 / 5.24 / 4.81 / 4.51 across
+       the five surfaces) rather than only on white. The nearer candidates do
+       not: #6b7280 is 4.83 on --bg but falls to 4.43 on --surface-2, which is
+       exactly where simulator.css puts it. The three-step hierarchy still reads
+       as three steps — 20.1 / 7.1 / 5.2 against --bg.
+
+       This block used to close by saying dark's #71818f "is already 4.72:1 on
+       --bg and 4.53:1 on --bg-subtle, so it passes and stays as it is." That
+       was the same mistake this block had just finished fixing for light,
+       made for dark: two surfaces measured out of five, and the three
+       unmeasured ones were the failing ones. Dark is now #8695a3 — see the note
+       beside it. */
+    --text-dim: #666c7d;
+
+    --accent: #4c55c7;
+    --accent-hover: #3f47b0;
+    --accent-contrast: #ffffff;
+
+    /* Light darkens --danger and --warning far enough that white is the better
+       ink on them, the same flip --accent-contrast makes. --success-contrast is
+       absent on purpose: one value clears both themes, so it stays in :root. */
+    --danger-contrast: #ffffff;
+    --warning-contrast: #ffffff;
+    --accent-subtle: rgba(76, 85, 199, 0.06);
+    --accent-subtle-hover: rgba(76, 85, 199, 0.10);
+
+    /* Pro chip — purple-800, the mirror of :root's purple-300. Only these
+       three values differ by theme: --pro-chip-bg, --pro-chip-fg,
+       --pro-chip-solid-bg and --pro-chip-fill-fg are all computed from
+       --pro-chip, so redefining it here carries them. The ink flips to white
+       for the same reason --accent-contrast does — light theme's chip is a
+       DARK purple, so a dark ink on it would measure 1.1:1.
+
+       Deep rather than pale, and the inverse of the dark theme's choice, for
+       the reason the :root comment ends on: the chip's main form is ink on a
+       14% tint of itself, so it has to be far from the surface it tints. Over
+       white that means dark; over #0d1117 it means light. purple-300 here
+       measures 1.49 and purple-800 in :root measures 1.76 — each is correct
+       only in its own theme. */
+    --pro-chip: #6b21a8;
+    --pro-chip-solid-fg: #ffffff;
+    --pro-chip-fill-bg: #ffffff;
+
+    /* The ring inverts: two steps darker than --accent on the same ramp.
+       Worst case 9.47:1 on --accent-subtle over --surface-2, against --accent's
+       5.21:1 there. --focus-ring and --focus-ring-offset do not differ by
+       theme, so they stay on :root — [data-theme="light"] is set on <html>, so
+       --focus-ring resolves this value rather than the dark one. */
+    --focus-ring-color: #312e81;
+
+    --success: #059669;
+    --warning: #b45309;
+    --danger: #dc2626;
+    --info: #2563eb;
+
+    /* Darker than the --success/--warning/--danger they used to mirror, and
+       deliberately no longer equal to them, because a difficulty token is
+       never painted on bare --surface: every consumer pairs it as text with a
+       12% (badges, .diff-badge, .tag-difficulty-*) or 14% (.qd, .lc-diff) tint
+       of itself. That tint lifts the backdrop off white, so contrast has to be
+       measured against the tint, not against --surface. At
+       emerald-600/amber-700/red-600 the three measured 3.26 / 4.26 / 4.01 on
+       their own 12% fill — all under the 4.5 floor that --fs-xs/600 text
+       carries (Req 14 AC 6, Req 15).
+
+       Lightening or dropping the tint cannot fix this: with no tint at all the
+       backdrop is --surface itself, and emerald-600 reaches only 3.77 there.
+       Darkening the token is the only lever. These clear 4.5 at both tint
+       strengths over white, worst case 5.09. --easy takes two ramp steps
+       rather than one because emerald-700 lands on 4.49 at 14%. */
+    --easy: #065f46;
+    --medium: #92400e;
+    --hard: #b91c1c;
+
+    --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
+    --shadow-md: 0 4px 12px rgba(16, 24, 40, 0.07);
+    --shadow-lg: 0 12px 32px rgba(16, 24, 40, 0.1);
+    --shadow-accent: 0 6px 20px rgba(76, 85, 199, 0.18);
+
+    /* Was rgba(255, 255, 255, 0.78), the last translucent surface on the site
+       and the reason the header blur was still doing something in this theme.
+       Opaque now, matching dark, so the flat-surface invariant holds in both
+       themes rather than one. This IS a visible change in light theme: content
+       scrolling under the header no longer shows through it. */
+    --bg-header: var(--bg);
+    --header-bg: #ffffff;   /* opaque: see the dark-theme note above */
+    --glass: rgba(255, 255, 255, 0.7);
+
+    --panel: #ffffff;
+    --panel-2: #f4f5f8;
+
+    /* Light theme inverts the depth trick: a white wash is invisible on white,
+       so cards sit slightly *above* the page as opaque white with a soft
+       shadow, and the sheen darkens instead of lightening. */
+    --card-glass: linear-gradient(180deg, #ffffff, #fcfcfe);
+    --card-glass-hover: linear-gradient(180deg, #ffffff, #f7f8fc);
+    --card-blur: 0px;
+    --card-sheen: linear-gradient(90deg, transparent, rgba(76, 85, 199, 0.18), transparent);
+    --glow-accent: 0 8px 28px -8px rgba(76, 85, 199, 0.20);
+    --ring-accent: 0 0 0 1px rgba(76, 85, 199, 0.22);
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset & base
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+* { margin: 0; padding: 0; }
+
+html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    font-size: var(--fs-base);
+    line-height: 1.65;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "cv11", "ss01";
+    font-variant-numeric: tabular-nums;
+}
+
+img, svg, video { max-width: 100%; height: auto; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { background: none; border: none; cursor: pointer; }
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: var(--r-xs);
+}
+
+::selection { background: var(--accent-subtle-hover); color: var(--text); }
+
+/* Respect reduced-motion: kill transitions and entrance animations outright */
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Motion primitives
+   --------------------------------------------------------------------------
+   Two keyframes and one class, shared by every page, because the alternative
+   was measured: 63 distinct @keyframes across the stylesheets, of which SIX
+   were byte-identical rotations — aic-spin, lc-spin, mk-spin, plan-spin,
+   rz-spin and sim-spin, each `to { transform: rotate(360deg) }` at 0.7s to 1s
+   linear. Every page that needed a loading state wrote its own, and only two
+   of them got as far as a skeleton.
+
+   scc-spin in _includes/pay-celebration.html is deliberately NOT folded in
+   here. Despite the name it is a scale-and-rotate entrance, not a loop, so it
+   belongs with the overlay entrances rather than with these.
+
+   Reduced motion is already handled by the block above, which zeroes every
+   animation globally. These definitions do not need their own guard. */
+@keyframes sc-spin { to { transform: rotate(360deg); } }
+@keyframes sc-shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+/* A skeleton shows the SHAPE of what is arriving; a spinner only says "wait".
+   Where the shape is known before the content lands, this is the better
+   affordance, and it is why the site should not be reaching for a rotation by
+   default.
+
+   The sweep highlight is --border-accent, not --accent-subtle. plan.css
+   recorded why when it hit this: --accent-subtle is 12% alpha in dark and 6%
+   in light, and over a card surface that is a lift of a shade or two, so the
+   bar reads as flat grey and the shimmer is invisible in light theme.
+   --border-accent is 35% and 22%, which carries in both. */
+   --skeleton-base lets a caller sit the sweep on a different ground without
+   restating the gradient: a placeholder card uses --surface, a bar inside a
+   real card uses --surface-3. */
+.skeleton {
+    --skeleton-base: var(--surface);
+    background: linear-gradient(100deg, var(--skeleton-base) 30%, var(--border-accent) 50%, var(--skeleton-base) 70%);
+    background-size: 200% 100%;
+    animation: sc-shimmer 1.4s linear infinite;
+    border-radius: var(--r-sm);
+}
+/* Text-line skeletons, so a caller can rough out a paragraph without inventing
+   its own heights. .skeleton-line is one line of body copy at --fs-base's line
+   box; the modifiers are the usual ragged last line and a heading. */
+.skeleton-line { height: 0.9375rem; }
+.skeleton-line.is-short { width: 55%; }
+.skeleton-line.is-title { height: 1.25rem; border-radius: var(--r-xs); }
+.skeleton-block { height: 100%; border-radius: var(--r-md); }
+
+/* Skip link — keyboard users shouldn't tab the whole nav on every page */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: var(--sp-4);
+    z-index: 1000;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    padding: var(--sp-2) var(--sp-4);
+    border-radius: var(--r-sm);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    text-decoration: none;
+    transition: top var(--dur) var(--ease);
+}
+.skip-link:focus { top: var(--sp-3); }
+
+/* --------------------------------------------------------------------------
+   3. Ambient background
+   Removed. The top-of-page gradient wash (`.bg-gradient`) used to sit behind
+   every `default`, `catalog` and `/dsa/` page. The homepage dropped it in
+   89a42aaa when the surfaces were flattened, and the rest of the site now
+   matches: pages start flat on `--bg` with no accent wash behind the header.
+   The three emitting divs are gone from _layouts/default.html,
+   _layouts/catalog.html and pages/dsa.html, so nothing claims z-index 0.
+   -------------------------------------------------------------------------- */
+
+/* --------------------------------------------------------------------------
+   Frosted card surface — shared by every card-like element site-wide, so the
+   depth treatment stays consistent instead of being re-tuned per page.
+   -------------------------------------------------------------------------- */
+.surface-card {
+    position: relative;
+    background: var(--card-glass);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-md);
+    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease),
+                transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+/* Top-edge sheen. Inset by the radius so it doesn't overhang the rounded corners. */
+.surface-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: var(--r-lg);
+    right: var(--r-lg);
+    height: 1px;
+    background: var(--card-sheen);
+    opacity: 0.7;
+    pointer-events: none;
+}
+.surface-card:hover {
+    background: var(--card-glass-hover);
+    border-color: var(--border-accent);
+    box-shadow: var(--shadow-lg), var(--glow-accent);
+}
+
+/* --------------------------------------------------------------------------
+   Staggered card cascade
+   Cards inside a revealed grid ripple in rather than appearing all at once.
+   This hangs off the existing .reveal → .visible scroll machinery: while a
+   section still carries .reveal its grid cards sit offset and transparent, and
+   the moment the IntersectionObserver adds .visible they animate in, each one
+   a beat behind the last. nth-child is scoped to the grid, so the count always
+   restarts per grid rather than running across the whole section.
+
+   Two safeguards come for free. If IntersectionObserver is unavailable the
+   page script never adds .reveal, so cards render fully visible at rest — the
+   rules below only bite once .reveal is present. And the global
+   prefers-reduced-motion block above zeroes the transition-duration, so the
+   offset collapses instantly with no motion. Delays are capped at the 6th
+   child so a long grid never feels like it's loading in slow motion.
+
+   Grids opted in (kept explicit rather than a blanket "grid > *" so tables,
+   filter bars, and other row layouts inside a section are never caught):
+   .paths, .popular (home) · .problems-grid (HLD/LLD) ·
+   .pattern-grid, .start-grid, .lists-grid (DSA).
+   -------------------------------------------------------------------------- */
+.reveal .paths > *,
+.reveal .popular > *,
+.reveal .problems-grid > *,
+.reveal .pattern-grid > *,
+.reveal .start-grid > *,
+.reveal .lists-grid > * {
+    /* Hidden until the section flips to .visible. A keyframe animation — not a
+       transition — drives the entrance so the cards' own transition property
+       (which powers the hover lift) is left untouched and stays snappy. */
+    opacity: 0;
+}
+.reveal.visible .paths > *,
+.reveal.visible .popular > *,
+.reveal.visible .problems-grid > *,
+.reveal.visible .pattern-grid > *,
+.reveal.visible .start-grid > *,
+.reveal.visible .lists-grid > * {
+    animation: card-rise var(--dur) var(--ease) both;
+}
+@keyframes card-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.reveal.visible .paths > :nth-child(1),
+.reveal.visible .popular > :nth-child(1),
+.reveal.visible .problems-grid > :nth-child(1),
+.reveal.visible .pattern-grid > :nth-child(1),
+.reveal.visible .start-grid > :nth-child(1),
+.reveal.visible .lists-grid > :nth-child(1) { animation-delay: 0.04s; }
+.reveal.visible .paths > :nth-child(2),
+.reveal.visible .popular > :nth-child(2),
+.reveal.visible .problems-grid > :nth-child(2),
+.reveal.visible .pattern-grid > :nth-child(2),
+.reveal.visible .start-grid > :nth-child(2),
+.reveal.visible .lists-grid > :nth-child(2) { animation-delay: 0.10s; }
+.reveal.visible .paths > :nth-child(3),
+.reveal.visible .popular > :nth-child(3),
+.reveal.visible .problems-grid > :nth-child(3),
+.reveal.visible .pattern-grid > :nth-child(3),
+.reveal.visible .start-grid > :nth-child(3),
+.reveal.visible .lists-grid > :nth-child(3) { animation-delay: 0.16s; }
+.reveal.visible .paths > :nth-child(4),
+.reveal.visible .popular > :nth-child(4),
+.reveal.visible .problems-grid > :nth-child(4),
+.reveal.visible .pattern-grid > :nth-child(4),
+.reveal.visible .start-grid > :nth-child(4),
+.reveal.visible .lists-grid > :nth-child(4) { animation-delay: 0.22s; }
+.reveal.visible .paths > :nth-child(5),
+.reveal.visible .popular > :nth-child(5),
+.reveal.visible .problems-grid > :nth-child(5),
+.reveal.visible .pattern-grid > :nth-child(5),
+.reveal.visible .start-grid > :nth-child(5),
+.reveal.visible .lists-grid > :nth-child(5) { animation-delay: 0.28s; }
+.reveal.visible .paths > :nth-child(n+6),
+.reveal.visible .popular > :nth-child(n+6),
+.reveal.visible .problems-grid > :nth-child(n+6),
+.reveal.visible .pattern-grid > :nth-child(n+6),
+.reveal.visible .start-grid > :nth-child(n+6),
+.reveal.visible .lists-grid > :nth-child(n+6) { animation-delay: 0.34s; }
+
+/* --------------------------------------------------------------------------
+   4. Header & navigation
+   -------------------------------------------------------------------------- */
+#progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background: var(--accent);
+    z-index: 1001;
+    transition: width 0.1s linear;
+}
+
+/* The blur that used to sit here was frosted glass, and it was live.
+   `backdrop-filter: blur(14px) saturate(1.6)` over --bg-header: dark resolves
+   that to var(--bg), fully opaque, so the blur did nothing there and had been
+   dead since the surfaces were flattened. Light resolved it to
+   rgba(255,255,255,0.78), so in light theme this was the one real piece of
+   glass left on the site — on the sticky header of all 991 pages, which is the
+   single highest-traffic element there is. core.css's own header note says
+   there is no glass and no blur "in both themes"; that was true of one.
+
+   Light is now opaque like dark and the blur is gone. Removing it rather than
+   setting blur(0) is deliberate: a zero blur still promotes a compositing
+   layer and still establishes a containing block for fixed-position
+   descendants, so it is a layout-affecting no-op rather than a free one. */
+header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    background: var(--bg-header);
+    border-bottom: 1px solid var(--border);
+}
+
+/* Capped at --measure and padded with --sp-5 so the header lines up with the
+   page under it. `.page-layout` is `max-width: var(--measure)` with
+   `padding-inline: var(--sp-5)`, and the header was full-bleed on
+   `var(--sp-4)`, so the two never agreed:
+
+     at 1440px   logo at 16px, h1 at 24px        -> 8px out
+     at 1680px   logo at 16px, h1 at 144px       -> 128px out
+
+   Above --measure the logo and the sign-in button drifted toward the screen
+   edges while the content stayed centred, so the header read as a separate
+   full-width bar sitting on top of the page rather than part of it. Matching
+   both values makes the logo share a left edge with the h1 and the table at
+   every width. */
+.header-inner {
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding: 0 var(--sp-5);
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+}
+
+/* There is deliberately no full-bleed variant of the rule above.
+
+   `.header-inner-wide { max-width: none }` used to release the measure column
+   for the judge, the LLD IDE, the four compilers and the whiteboard, so on
+   those pages the header spanned the window: the logo sat at x=24 against
+   x=264 on every other page at 1920px, i.e. it jumped 240px when you
+   navigated into an app page. a6b058c9 had already removed an 8px gutter
+   difference between the two variants for exactly that reason — "the logo
+   stops moving when you navigate" — but left the width difference, which moved
+   it thirty times further.
+
+   The variant existed because an app shell has no centred content column.
+   That is still true and still honoured: the shells (.lc-shell, #ide-app, the
+   compiler toolbars, the canvas) are full-bleed. Full-bleed is a property of
+   the page body, not of the shared chrome row above it, so only this row
+   stopped being special. The one visible consequence is above --measure, where
+   the header's right-hand controls now stop at the measure edge rather than
+   tracking the app's own right edge; a header that lines up on every page is
+   worth more than one that lines up with Run and Submit on one of them. */
+
+/* Small pill button. Used by Shuffle in the judge's problem tab row; it used to
+   sit beside the logo in the header, and kept this styling when it moved. */
+.header-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.75rem;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: var(--r-full);
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+                background var(--dur-fast) var(--ease);
+}
+.header-chip:hover { color: var(--text); border-color: var(--border-accent); background: var(--surface-2); }
+/* Drop to icon-only before the header runs out of room next to the auth button */
+@media (max-width: 620px) {
+    .header-chip { padding: 0.3rem 0.5rem; }
+    .header-chip-label { display: none; }
+}
+
+/* Logo */
+.logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    text-decoration: none;
+    flex-shrink: 0;
+}
+.logo-icon { width: 22px; height: 22px; border-radius: var(--r-xs); flex-shrink: 0; }
+.logo .logo-text span { color: var(--accent); }
+/* nowrap because the computed value here was `normal`, i.e. "SystemCraft" was
+   free to break across two lines and double the header's height. It never did,
+   only because .logo is flex-shrink: 0 and so was never squeezed -- the word
+   was one layout change away from wrapping, with nothing asserting otherwise.
+   The width breakpoints below are measured against a single line. */
+.logo .logo-text { white-space: nowrap; }
+
+/* Primary nav.
+   position: relative is load-bearing — the auth dropdown, the mobile nav
+   sheet, and the streak popover are all absolutely positioned against it.
+   Without it they anchor to <header>, which is full-bleed, and land at the
+   viewport edge instead of under their trigger.
+
+   The nav used to be `margin-left: auto`, i.e. the whole thing — links and
+   chrome controls alike — was shrink-wrapped against the right edge, which
+   centre-right-aligned the nav items. It now spans the remaining width and the
+   split is done inside it: `.nav-links { margin-right: auto }` parks the
+   top-level items next to the logo and pushes theme/streak/bell/CTA/sign-in to
+   the right. nav's own right edge is unchanged (it still ends at the header's
+   right padding edge), so every `right: 0` popover anchored to it lands where
+   it did before. */
+nav { position: relative; display: flex; align-items: center; gap: var(--sp-1); flex: 1; min-width: 0; }
+
+/* No `margin-right: auto` here any more, and that is the point. An auto margin
+   absorbs every pixel of free space before flex-grow gets a look in, so the
+   slack between the nav items and the search pill became one dead hole — 656px
+   of it at 1680px, 39% of the header. The search pill now carries `flex: 1`
+   instead (see search-palette.html), so the same slack becomes a wider search
+   field and the right-hand controls still sit hard against the right edge. */
+.nav-links { display: flex; align-items: center; gap: 2px; }
+
+/* The header search pill.
+   
+   These rules live here, in the render-blocking stylesheet, and NOT in
+   search-palette.html's inline <style>, which is where they used to be. That
+   include sits at the end of <body> — on the homepage its <style> starts at
+   byte ~168k against the header nav at ~26k — so a header-rendered button
+   styled from there would paint as an unstyled full-width block and then snap
+   into a pill once the parser reached the end of the document. The button is
+   now in the server-rendered header (site-header.html), so its geometry has to
+   be known at first paint. The overlay's own rules stay in that include: the
+   overlay is display:none until opened, so it is never in a first paint.
+
+   `flex: 1 1 auto` so the pill absorbs the header's slack instead of leaving it
+   as an empty gap between the nav items and the controls. core.css used to park
+   that space in a `margin-right: auto` on .nav-links; the space is the same, it
+   is just a usable search field now. No max-width is needed because
+   .header-inner is capped at --measure, which bounds how wide this can get. */
+/* 240px is the PREFERRED width (flex-basis), not a floor. It used to be
+   `min-width: 240px`, which is a hard floor that flex cannot shrink past, so
+   when the row ran out of room the surplus was pushed onto the controls to the
+   right instead — the Sign in button was clipped 2px at 960px on every normal
+   page, and far worse on the problem pages, which carry an extra chip. As a
+   basis it still claims 240px whenever the row can afford it and yields when it
+   cannot, which is what an elastic item should do. */
+.sc-search-btn { flex: 1 1 240px; min-width: 0; background: var(--glass); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; padding: 0.4rem 0.7rem; border-radius: 10px; margin: 0 0.25rem 0 var(--sp-4); display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; transition: all 0.2s; justify-content: flex-start; }
+.sc-search-btn:hover { color: var(--text); border-color: var(--accent); background: rgba(129,140,248,0.06); }
+
+/* The placeholder truncates; it must never wrap.
+   
+   It is a flex item in a pill that shrinks (`flex: 1 1 240px`), and it was a
+   plain text node with no wrapping rules, so once the pill was narrower than
+   the string the string broke onto a second and third line and dragged the
+   pill's height with it — the pill is content-height inside a 56px header, so
+   it burst out of the row:
+   
+     641px   116.3 x 99.2   three lines
+     700px   161.3 x 57     two lines
+     900px   142.7 x 78.1   three lines
+     1000px  239.5 x 57     two lines
+   
+   The widths in between (820px, 1100px) happened to fit on one line, which is
+   why this survived: it is not a clean breakpoint range but a function of how
+   much room the row has left after the controls, and the control set changes
+   at 860px and 900px. Ellipsis instead of wrap makes the height a constant at
+   every width.
+   
+   min-width: 0 on the label is required, not decorative: a flex item's
+   automatic minimum size is its content, so without it the label refuses to
+   shrink below the full string and text-overflow never engages. overflow on
+   the button keeps the clipped text inside the rounded border. */
+.sc-search-btn { overflow: hidden; }
+.sc-search-btn .sc-btn-label {
+    color: var(--text-dim);
+    font-weight: 500;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.sc-search-btn:hover .sc-btn-label { color: var(--text-muted); }
+.sc-search-btn .sc-btn-kbd { margin-left: auto; font-size: 0.66rem; font-weight: 600; color: var(--text-dim); border: 1px solid var(--border); border-radius: 5px; padding: 0.1rem 0.35rem; letter-spacing: 0.03em; }
+/* Order matters against the 640px block below (equal specificity, later wins)
+   and against the 520px block further down, which uses !important on margin. */
+@media (max-width: 900px) {
+    /* flex-basis, not min-width, for the same reason as above. */
+    .sc-search-btn { flex-basis: 150px; }
+    .sc-search-btn .sc-btn-kbd { display: none; }
+}
+/* Icon-only below 640px: the label is dropped, so what is left is a 15px
+   magnifier in a box. That box has to be SQUARE and FIXED, which is what the
+   explicit width/height and `flex: 0 0 auto` are for.
+
+   It used to be `padding: 0.35rem; border-radius: 50%; min-width: 0` with the
+   base rule's `flex: 1 1 240px` (basis 150px here) still in force, so the
+   width was whatever flex handed it while the height stayed content-sized at
+   ~28px. A 50% radius on an unequal box is an ellipse, not a circle, and it
+   was visibly one in both directions: the pill still had flex-grow, so it
+   absorbed the row's slack and stretched into a wide oval between 521px and
+   640px, then — as the only shrinkable item once the 520px block below pins
+   `flex-shrink: 0` on its neighbours — got squeezed narrower than it was tall
+   at 390px and came out as a vertical one.
+
+   The radius is now var(--r-sm) rather than 50%, matching #theme-btn beside it
+   and .hamburger to its left, which are the other two icon buttons in this row
+   and are both 34-36px rounded squares. A lone circle between two rounded
+   squares was the other half of what looked wrong. 34px matches #theme-btn
+   exactly; the padding declaration goes because a fixed box plus
+   `justify-content: center` already centres the glyph. */
+@media (max-width: 640px) {
+    .sc-search-btn {
+        flex: 0 0 auto;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        border-radius: var(--r-sm);
+        margin: 0 0.3rem;
+        justify-content: center;
+        /* Transparent, like .hamburger and #theme-btn beside it. The base rule
+           fills this button with var(--surface-2) because at desktop widths it
+           is a wide search pill and the fill is what makes it read as an input.
+           Shrunk to a 34px icon box it stops being an input, and the fill then
+           reads as "selected" next to two unfilled buttons — one of the three
+           looking pressed at all times. */
+        background: transparent;
+    }
+    .sc-search-btn .sc-btn-label { display: none; }
+
+    /* The third icon button in the row had no border at all, so the group was
+       two bordered boxes and one bare glyph floating between them. Matching the
+       border here rather than on the base rule keeps the desktop header as it
+       was, where this button is not part of a row of square icon boxes. */
+    #theme-btn,
+    .theme-toggle {
+        border: 1px solid var(--border);
+        width: 34px;
+        height: 34px;
+    }
+
+    /* One baseline for the whole row. The CTA pill was 33px tall against the
+       icon buttons' 34px, so nothing in the row shared an edge. The radius
+       stays as it is: a filled pill is a deliberately different affordance
+       from the square icon buttons, and only its height made the row ragged.
+       .auth-btn gets the same treatment in auth-styles.html rather than here,
+       because that include declares its own min-height and loads after this
+       stylesheet, so a rule here loses on source order. */
+    .nav-cta { min-height: 34px; }
+
+    /* The pill was the only growable item in this row, and pinning it leaves
+       nav's slack unclaimed. nav is `flex: 1`, so without this the hamburger
+       and the chrome controls pack against the logo and strand the gap at the
+       right edge. The 520px block below says the same thing; it starts here
+       instead, because this is where the pill stops absorbing the slack. */
+    .header-inner > nav { justify-content: flex-end; }
+}
+
+/* There is deliberately no `:has(#lc-shuffle)` relief here any more.
+   
+   Problem pages used to put a 90px Shuffle chip in this row — the only
+   per-page addition to it — and the row could not spare the width. The pill
+   could not shrink past its floor, so the surplus went to the controls on its
+   right, which have nowhere to go: 44px of overflow at 1024px, 167px at 901px,
+   with the sign-in button, Go Pro and the bell going off-screen in turn. Two
+   media queries clawed it back by shrinking the pill to an icon on those pages
+   only.
+   
+   The chip now lives in the problem tab row (_layouts/lc.html), so the judge
+   header has exactly the same contents as every other page and needs no
+   special case. The flex-basis on .sc-search-btn above is what keeps the row
+   from overflowing anywhere, and it is not specific to these pages. */
+
+/* Direct children only. The panel menus below contain anchors of their own
+   (.nav-tile), and they are laid out as icon+label rows rather than as nav
+   pills — a descendant selector here would give every tile this padding and
+   type scale too. */
+.nav-links > a,
+.nav-panel-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.7rem;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-radius: var(--r-sm);
+    white-space: nowrap;
+    transition: color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.nav-links > a:hover,
+.nav-panel-btn:hover { color: var(--text); background: var(--surface-2); }
+.nav-links > a.active,
+.nav-panel-btn.active { color: var(--accent); background: var(--accent-subtle); font-weight: 600; }
+
+/* ---- Icon-tile nav panels ----
+   Replaces the flat text-only "More" dropdown. Two triggers (Learn, Practice),
+   each opening a single column of icon tiles: a small tinted rounded square
+   plus a label.
+
+   Nothing here is named .nav-more / .nav-more-btn / .nav-more-menu, and that
+   is a behavioural requirement rather than a rename. search-palette.js's
+   initNavMore() resolves its trigger with querySelector('.nav-more') and binds
+   a second click handler that toggles .open on it. With chrome.js bound to the
+   same button, each click toggled .open twice and the panel never opened — it
+   appeared to work only because there used to be a `.nav-more:hover
+   .nav-more-menu` rule here, i.e. the menu was hover-only. Under the new names
+   that querySelector returns null and initNavMore() returns early, so
+   chrome.js's .nav-panel binder is the sole handler. There is deliberately no
+   :hover open path below, and therefore no hover bridge pseudo-element either:
+   the panel opens on click and on Enter/Space, because the trigger is a native
+   <button>, and closes on click-away or Escape.
+
+   auth-styles.html still carries the old .nav-more* rules. They load later and
+   would win on source order, which is a second reason not to reuse the names;
+   with no .nav-more markup left on the page they match nothing. */
+.nav-panel { position: relative; display: inline-flex; align-items: center; }
+/* 0.65em rendered as a near-invisible speck, so Learn/Practice/Companies did
+   not read as menus at all — the only cue that they open something was the
+   cursor. Sized and weighted enough to be seen without competing with the
+   label, and nudged off the baseline because the glyph sits high in its box. */
+.nav-panel-caret {
+    font-size: 0.78em;
+    line-height: 1;
+    opacity: 0.55;
+    transform: translateY(1px);
+    transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
+}
+.nav-panel-btn:hover .nav-panel-caret { opacity: 0.9; }
+.nav-panel.open > .nav-panel-btn { color: var(--text); background: var(--surface-2); }
+.nav-panel.open .nav-panel-caret { opacity: 0.9; transform: translateY(1px) rotate(180deg); }
+
+/* Count badge on a tile that leads to a list, so "Company Guides" can say how
+   many without a second line of copy. `margin-left: auto` pushes it to the
+   trailing edge; the tile is already a flex row. */
+.nav-tile-meta {
+    margin-left: auto;
+    flex-shrink: 0;
+    padding: 0.1rem 0.4rem;
+    border-radius: var(--r-full);
+    background: var(--accent-subtle);
+    border: 1px solid var(--border-accent);
+    color: var(--accent);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.4;
+}
+
+.nav-panel-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    width: 232px;
+    padding: var(--sp-2);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-lg);
+    /* --z-nav, above --z-header, so the sticky header never covers the panel.
+       A long panel on a short viewport scrolls rather than putting a focusable
+       tile below the fold where it cannot be seen. */
+    z-index: var(--z-nav);
+    max-height: calc(100vh - var(--header-h) - 24px);
+    overflow-y: auto;
+}
+.nav-panel.open > .nav-panel-menu { display: block; animation: navPanelIn var(--dur-fast) var(--ease-out) both; }
+
+/* Left-anchored, because the triggers now sit next to the logo rather than at
+   the right edge. The second panel is far enough from the viewport edge that
+   a 232px column still fits; if a third trigger is ever added past the midpoint
+   it will want `right: 0` instead. */
+.nav-tile {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    padding: var(--sp-2);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-radius: var(--r-sm);
+    transition: color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.nav-tile:hover { color: var(--text); background: var(--surface-2); }
+.nav-tile[aria-current="page"] { color: var(--accent); font-weight: 600; background: var(--accent-subtle); }
+.nav-tile-label { min-width: 0; }
+
+/* The tinted rounded square. 28px of box around a 16px stroke icon, which is
+   the smallest size that still reads as a tile rather than as a bullet.
+   flex-shrink: 0 so a two-word label never squeezes it. */
+.nav-tile-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--r-sm);
+    flex-shrink: 0;
+    background: var(--accent-subtle);
+    color: var(--accent);
+}
+
+/* Per-tile tints.
+   Every value is derived from an existing token via color-mix — the same
+   pattern listing.css, home.css and judge.css already use for badge fills — so
+   there is no colour literal here and both themes follow their own ramp. 14%
+   matches the heaviest tint already in use (.lc-diff) and is what keeps the
+   tile distinguishable from --surface in light theme, where --accent-subtle is
+   only 7%.
+
+   core.css has no token for "a subtle tint of a semantic colour": --accent has
+   --accent-subtle, but --success, --info, --warning and --danger have no
+   -subtle sibling, so the four non-violet tints are mixed at the call site.
+   A --success-subtle / --info-subtle / --warning-subtle / --danger-subtle set
+   would remove the color-mix() calls from here and from the three stylesheets
+   above. Reported rather than worked around. */
+.nav-tile-icon.i-violet { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+.nav-tile-icon.i-blue   { background: color-mix(in srgb, var(--info) 14%, transparent); color: var(--info); }
+.nav-tile-icon.i-green  { background: color-mix(in srgb, var(--success) 14%, transparent); color: var(--success); }
+.nav-tile-icon.i-amber  { background: color-mix(in srgb, var(--warning) 14%, transparent); color: var(--warning); }
+.nav-tile-icon.i-red    { background: color-mix(in srgb, var(--danger) 14%, transparent); color: var(--danger); }
+
+.nav-tilegroup + .nav-tilegroup {
+    margin-top: var(--sp-2);
+    padding-top: var(--sp-2);
+    border-top: 1px solid var(--border);
+}
+
+/* Visual form only — the group's accessible name comes from aria-labelledby on
+   its role="group" wrapper, so the label is announced on entering the group
+   rather than inferred from being bold. */
+.nav-tilegroup-label {
+    display: block;
+    padding: var(--sp-1) var(--sp-2) var(--sp-2);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+
+/* --focus-ring rather than the global :focus-visible ring: these sit on
+   --surface, and a trigger sits on --accent-subtle when its section is
+   current, which is the pairing the ring token was audited against. */
+.nav-panel-btn:focus-visible,
+.nav-tile:focus-visible,
+.nav-cta:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+}
+
+@keyframes navPanelIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Primary CTA pill, pinned right next to sign-in. The one filled element in
+   the header, so it is also the only thing competing with the logo. */
+.nav-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem var(--sp-3);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--accent-contrast);
+    background: var(--accent);
+    border-radius: var(--r-full);
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background var(--dur-fast) var(--ease);
+}
+.nav-cta:hover { background: var(--accent-hover); }
+
+/* Flattened into the hamburger sheet: the trigger is hidden and both panels
+   are always open, because a nested dropdown inside a sheet is bad on touch.
+   Keyed on .nav-panel.open-insensitively (plain class, not the .open state) so
+   the sheet does not depend on whatever the desktop toggle last left behind. */
+@media (max-width: 860px) {
+    .nav-panel { position: static; display: block; }
+    .nav-panel-btn { display: none; }
+    .nav-panel-menu,
+    .nav-panel.open > .nav-panel-menu {
+        display: block;
+        position: static;
+        width: auto;
+        padding: 0;
+        margin: 0;
+        background: none;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        max-height: none;
+        overflow-y: visible;
+        animation: none;
+    }
+    .nav-panel + .nav-panel .nav-panel-menu {
+        margin-top: var(--sp-2);
+        padding-top: var(--sp-2);
+        border-top: 1px solid var(--border);
+    }
+    /* --target-touch floor, like the sheet's own links. */
+    .nav-tile { padding: var(--sp-2) 0.6rem; font-size: var(--fs-base); min-height: var(--target-touch); }
+    .nav-cta { justify-content: center; }
+}
+
+/* Icon buttons in the header (theme, search, streak) */
+#theme-btn,
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    font-size: 0.95rem;
+    line-height: 1;
+    color: var(--text-muted);
+    border-radius: var(--r-sm);
+    flex-shrink: 0;
+    transition: color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+#theme-btn:hover,
+.theme-toggle:hover { color: var(--text); background: var(--surface-2); }
+
+/* Hamburger — hidden on desktop */
+/* 34px, not 36px. This button only ever renders at 860px and below, where it
+   sits immediately left of .sc-search-btn and #theme-btn, and both of those
+   are 34px. At 36 it was two pixels taller than its neighbours, which does not
+   read as a bigger button but as a row that does not line up. The search
+   block's own comment already names 34px as the shared size for the three
+   icon buttons in this row; this is the one that was not following it. */
+.hamburger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    font-size: 1.15rem;
+    line-height: 1;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    flex-shrink: 0;
+}
+.hamburger:hover { background: var(--surface-2); }
+
+/* ---- Mobile nav: slide-down sheet with full-width tap targets ---- */
+@media (max-width: 860px) {
+    .hamburger { display: inline-flex; }
+
+    /* Fixed to the viewport rather than absolute inside nav. nav is no longer
+       shrink-wrapped against the right edge — it starts just after the logo —
+       so an absolutely positioned sheet inset inside it began about 160px in
+       and left the labels wrapping in a half-width column. The header is
+       sticky at top: 0, so `top: header height + 8px` puts the sheet exactly
+       where the absolute version used to sit, and it now spans the full width
+       regardless of what nav's box is doing. */
+    .nav-links {
+        display: none;
+        position: fixed;
+        top: calc(var(--header-h) + 8px);
+        right: var(--sp-4);
+        left: var(--sp-4);
+        flex-direction: column;
+        align-items: stretch;
+        gap: 2px;
+        padding: var(--sp-2);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r-lg);
+        box-shadow: var(--shadow-lg);
+        max-height: calc(100vh - var(--header-h) - 24px);
+        overflow-y: auto;
+        /* The sheet is a child of nav, which sits below the CTA pill and the
+           auth button in source order; without this it renders under them. */
+        z-index: var(--z-nav);
+    }
+    /* The sheet is a fixed-position overlay here, so it is no longer inside
+       nav's flex row and must not be stretched by it. */
+    nav { flex-wrap: nowrap; }
+    .nav-links.open { display: flex; animation: navSheetIn var(--dur) var(--ease-out) both; }
+
+    .nav-links > a {
+        padding: 0.7rem 0.85rem;
+        font-size: var(--fs-base);
+        border-radius: var(--r-sm);
+        min-height: var(--target-touch);
+    }
+}
+
+@keyframes navSheetIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Narrow-viewport header: stop the row from overflowing ----
+   The header packs logo + hamburger + search + theme + streak + auth. Below
+   ~520px that clips the right edge (the "Sign in" button falls off). Drop the
+   secondary streak widget and collapse "Sign in" to just its Google icon —
+   the label is a bare text node, so font-size:0 hides it while the fixed-size
+   SVG survives. Both selectors are also defined in shared includes; these
+   overrides win on specificity + source order (core.css loads first, but the
+   media query raises specificity via the wrapping @media is irrelevant — we
+   match the includes' 0-1-0 and rely on load order, so use !important to be
+   robust against the include's own @media rules). */
+@media (max-width: 520px) {
+    .sc-daily-btn { display: none !important; }
+
+    /* The CTA pill is new in this row and it is what tipped the balance back
+       into overflow: with it in place the collapsed "Sign in" measured 393px
+       against a 374px content edge at 390px wide. Dropping "Go " and tightening
+       the padding gives back ~30px, which clears it, and "Pro" alone is still
+       an unambiguous label next to the Google mark. */
+    .nav-cta-wide { display: none; }
+    .nav-cta { padding: 0.35rem 0.6rem; }
+
+    .auth-btn:not(.signed-in) {
+        font-size: 0 !important;
+        gap: 0 !important;
+        padding: 0.3rem 0.4rem !important;
+        margin-left: 0.25rem !important;
+    }
+    .auth-btn:not(.signed-in) .auth-google-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* Icon-only buttons must keep their size: as flex items they were being
+       shrunk to 16-18px wide, squashing the search and Google icons to slivers. */
+    .sc-search-btn,
+    .auth-btn,
+    .notif-btn { flex-shrink: 0; }
+    .sc-search-btn svg,
+    .auth-btn svg,
+    .notif-btn svg { flex-shrink: 0; }
+
+    /* This used to read "the row is ~26px too wide at 390px, take it back from
+       the gaps" and set `gap: 2px`, which left the hamburger and the search box
+       almost touching while the rest of the row had daylight between items.
+       The shortage was mostly not real: 34px of that row was .notif-wrap, which
+       is `visibility: hidden` when signed out and therefore reserves its whole
+       box while drawing nothing. auth-styles.html now takes that box out of the
+       flow below 640px, which returns 34px plus its gap — more than the 26px
+       that was missing — so the gaps no longer have to be paid for.
+
+       6px rather than var(--sp-1)'s 4px: five controls at 34px plus four 6px
+       gaps is 200px against 242px of nav at 320px, the narrowest width worth
+       supporting, so there is room to space them like a group instead of
+       cramming them. */
+    .header-inner { gap: var(--sp-2); }
+    .header-inner > nav { gap: 6px; }
+    .sc-search-btn { margin: 0 !important; }
+    .auth-btn:not(.signed-in) { margin-left: 0 !important; }
+}
+
+/* Small phones: the wordmark is the only thing left to give, and the logo mark
+   still identifies the site.
+
+   The breakpoint is 420px because that is what the row measures. Nothing in
+   this header shrinks any more — the 520px block above pins flex-shrink: 0 on
+   the controls and the search pill is a fixed 34px square below 640px — so the
+   width it needs is a constant, and it is 406.7px:
+
+     gutter 24x2                                        48.0
+     logo with wordmark                                129.5
+     gap to nav                                          8.0
+     hamburger 36, search 34, theme 34, bell 34,
+       Pro 40.4, auth 32.8                             211.2
+     5 nav gaps at 2px, plus the auth button's 2px       12.0
+                                                      ------
+                                                      ~406.7
+
+   With nothing able to shrink, a viewport under that does not clip the right
+   edge: `justify-content: flex-end` on nav pins the controls to the right, so
+   the surplus comes off the LEFT and the hamburger is drawn on top of the
+   wordmark. At 390px — iPhone 12 through 15, the single most common width —
+   the hamburger overlapped it by 10.7px, which read as a box sitting on "ft".
+
+   This rule was 380px, which was right when the row was narrower, and was not
+   recomputed when the row changed around it; before the search pill was pinned
+   to a square the same overlap was 126.7px at 390px and the hamburger sat at
+   x=26.8, almost entirely over the word.
+
+   Dropping the wordmark here rather than a control is the cheaper loss. The
+   logo mark is immediately to its left and carries the brand on its own, so
+   nothing becomes unreachable; dropping the bell or the Pro pill instead would
+   buy similar width but hide a feature that has no other surface on a phone.
+
+   RECOMPUTED, and it is now two thresholds rather than one. The 406.7px
+   arithmetic above described a row carrying a 36px hamburger, 2px gaps and the
+   notification bell's reserved box even when signed out. None of those is true
+   now: the hamburger is 34, the gaps are 6, and the bell leaves the flow when
+   signed out. So the row is narrower and the single 420px threshold was ~30px
+   too conservative -- it hid the wordmark on a Galaxy S23 Ultra and a Pixel
+   (412px CSS) where it fits with 34px to spare.
+
+   Measured on the built site with the wordmark forced visible, as the slack
+   between the logo block and the first nav control. "Fits" means at least 6px,
+   the row's own gap, so the wordmark is never closer to the controls than they
+   are to each other:
+
+     signed out          5 controls, no bell, Pro shown    fits from 384px
+     signed in, Pro      5 controls, bell, Pro hidden      fits from 384px
+     signed in, no Pro   6 controls, bell AND Pro          fits from 424px
+
+   An earlier revision of this comment demanded 10px rather than 6px, on the
+   grounds that the word is 100px in Inter but 104px in "the widest fallback",
+   and set the first threshold to 390px. That was wrong twice. The 104px came
+   from canvas-measuring Inter itself, which is the font that loads; and the
+   realistic substitute on the phones this matters for is Roboto, measured at
+   92px -- NARROWER than Inter, not wider. So the headroom was protecting
+   against nothing while costing the wordmark on every 384px device, which is a
+   Galaxy S23 Ultra at its default display size: 1440 physical pixels at DPR
+   3.75. Erring high here is not the safe direction, it is just a hidden word.
+
+   Hence the two rules. The second is not a safety margin, it is a real 40px:
+   the bell at 34px plus its 6px gap. Without it a signed-in reader without Pro
+   at 412px gets -6px of slack, an actual overlap, and overlap is SILENT here --
+   `justify-content: flex-end` pins the controls right, so the surplus comes off
+   the left and draws over the word without producing any document overflow for
+   a test to catch.
+
+   Keyed on html[data-auth], which site-head.html sets from localStorage before
+   first paint, so the wordmark's presence is settled in the first frame and
+   this costs no layout shift.
+
+   THE data-pro EXEMPTION WAS REMOVED AND IS NOW BACK, in the positive form and
+   for a narrower band. The history is worth keeping because it explains both
+   moves.
+
+   It used to read `html[data-auth="in"]:not([data-pro="1"])`, on the reasoning
+   that `[data-pro="1"] .nav-cta` was display: none, so a paying reader's row
+   was one control shorter and hiding their wordmark charged them for a button
+   they never see. It was then dropped, because site-head.html began reserving
+   the pill's box with visibility: hidden, which made every signed-in reader's
+   row the same width and left no saving to pass on.
+
+   It was also dropped because while it stood, `data-pro` flipping 1 -> 0 —
+   an expired subscription, a sign-out, a cached guess withdrawn — deleted the
+   brand name and reflowed the nav mid-read. Measured at 412px: nav x moved
+   161.5 -> 54 and the wordmark went from 100x28 to absent, in the same frame
+   the PRO badge disappeared. Four header elements rewriting at once was judged
+   worse than a Pro reader having no wordmark.
+
+   BOTH REASONS HAVE SINCE GONE. site-head.html removes the pill from the flow
+   again, so a Pro row IS one control shorter; and `sc-pro-exp` resolves a
+   lapsed reader before first paint, so the expiry flip — the common 1 -> 0 case
+   and the one that made this unsurvivable — no longer happens at all.
+
+   MEASURED, not assumed. Clear space between the wordmark and the first drawn
+   nav control, with the wordmark forced on:
+
+                        320   344   360   375   384   390   412   423
+       signed out       -57   -33   -17    -2     7    13    35    46
+       signed in, free  -97   -73   -57   -42   -33    -5*         6
+       signed in, Pro   -51   -27   -11     4    13    19    41    52
+                                                 ^ 412px reads -5 for free
+
+   The two thresholds below fall straight out of that: signed-out needs 384px
+   and signed-in-free needs 424px, which is exactly what they already were. A
+   Pro reader clears from 375px, so the 424px threshold was costing them the
+   wordmark across a 49px band of common phone widths for nothing.
+
+   The exemption is restored from 384px, not 375px. 375px leaves 4px of clear
+   space, under the 8px this row keeps everywhere else and visibly tight; 384px
+   leaves 13px and reuses a threshold that already exists rather than inventing
+   one. A Pro reader below 384px still loses the wordmark, with everybody else.
+
+   WHAT THIS COSTS, stated because it is a real residue: a refund or revocation
+   flips data-pro 1 -> 0 without any expiry change, and at 384-423px that now
+   deletes the wordmark and returns the pill together. `sc-pro-exp` cannot
+   predict a refund. Refunds are rare; readers on a 390px phone are not. */
+@media (max-width: 383px) {
+    .header-inner .logo-text { display: none; }
+}
+@media (max-width: 423px) {
+    html[data-auth="in"] .header-inner .logo-text { display: none; }
+}
+/* Separate block rather than a rule inside the one above, because it must NOT
+   override the 383px rule. Specificity would win there and hand a Pro reader a
+   wordmark at 320px, where it overlaps the row by 51px. */
+@media (min-width: 384px) and (max-width: 423px) {
+    html[data-auth="in"][data-pro="1"] .header-inner .logo-text { display: inline; }
+}
+/* A third `@media (max-width: 520px)` block sat here holding two rules, and
+   both have moved out:
+
+     .header-inner .logo-text { display: none }   -> the 420px rule above.
+       It was dropped at 520px on problem pages only, because the Shuffle chip
+       needed the width (ffe7f633). The chip is in the problem tab row now, so
+       the row is the same everywhere and one breakpoint serves every page.
+
+     .header-inner > nav { justify-content: flex-end }   -> the 640px block.
+       It is needed from the width at which the search pill stops growing and
+       stops claiming nav's slack, which is 640px, not 520px. Declared at 520px
+       it left the 521-640px band packing the controls left against the logo
+       with the gap stranded at the right edge. */
+
+/* --------------------------------------------------------------------------
+   5. Shared primitives
+   -------------------------------------------------------------------------- */
+.container { max-width: var(--measure); margin: 0 auto; padding: 0 var(--sp-5); }
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.6rem 1.1rem;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    line-height: 1.2;
+    min-height: 40px;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+                color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.btn:hover { border-color: var(--border-strong); background: var(--surface-2); }
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+    color: var(--accent-contrast);
+    background: var(--accent);
+    border-color: var(--accent);
+}
+.btn-primary:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+    box-shadow: var(--shadow-accent);
+}
+
+.btn-ghost { background: none; border-color: transparent; color: var(--text-muted); }
+.btn-ghost:hover { background: var(--surface-2); color: var(--text); }
+
+.btn-lg { padding: 0.8rem 1.6rem; font-size: var(--fs-md); min-height: 48px; }
+
+/* Cards */
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: var(--sp-5);
+    transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease),
+                box-shadow var(--dur) var(--ease);
+}
+.card-link { text-decoration: none; color: inherit; display: block; }
+.card-link:hover {
+    border-color: var(--border-accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+.card-link:active { transform: translateY(0); box-shadow: var(--shadow-sm); }
+
+/* Badges / tags */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.55rem;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--accent);
+    background: var(--accent-subtle);
+    border: 1px solid var(--border-accent);
+    border-radius: var(--r-full);
+    white-space: nowrap;
+}
+.badge-easy { color: var(--easy); background: color-mix(in srgb, var(--easy) 12%, transparent); border-color: color-mix(in srgb, var(--easy) 30%, transparent); }
+.badge-medium { color: var(--medium); background: color-mix(in srgb, var(--medium) 12%, transparent); border-color: color-mix(in srgb, var(--medium) 30%, transparent); }
+.badge-hard { color: var(--hard); background: color-mix(in srgb, var(--hard) 12%, transparent); border-color: color-mix(in srgb, var(--hard) 30%, transparent); }
+
+/* --------------------------------------------------------------------------
+   Progress_Indicator — .prog-dot
+
+   Server-rendered at its final size with aria-hidden="true" and no state
+   class, so resolving the Progress_Store is a class toggle on an element that
+   already occupies its space (Req 7 AC 5).
+
+   WHY THIS LIVES IN core.css AND NOT IN catalog.css.
+   It started in catalog.css beside the other seven shared component classes,
+   and that was right while the only renderer of a dot was a Catalog_View row:
+   catalog.css is linked by the listing pages and by nothing else. Task 19.2
+   gives the Section_Sidebar a dot per entry, and the Section_Sidebar renders
+   on 258 content pages served by _layouts/default.html, which links core.css
+   and content.css and NOT catalog.css. The options were a second definition
+   in content.css or one definition here; Requirement 14 AC 3 wants each
+   shared class defined exactly once, so it moved rather than being copied.
+   `.cat-done` and `.cat-save`, the controls that wrap it, stay in catalog.css
+   because only a Catalog_View renders those.
+   -------------------------------------------------------------------------- */
+.prog-dot {
+    position: relative;
+    flex: 0 0 auto;
+    width: var(--sp-4);
+    height: var(--sp-4);
+    /* 2px ring from the spacing scale: the 1px hairline reads as noise at
+       --sp-4 across, and there is no line-weight token. */
+    border: calc(var(--sp-1) * 0.5) solid var(--control-border);
+    border-radius: var(--r-full);
+    transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.prog-dot.is-done { background: var(--easy); border-color: var(--easy); }
+/* A shape change, not only a fill change, so completion is legible without
+   colour (Req 15 AC 8). */
+.prog-dot.is-done::after { content: '\2713'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: var(--fs-xs); font-weight: 800; line-height: 1; color: var(--bg); }
+
+/* --------------------------------------------------------------------------
+   Breadcrumb_Trail — REMOVED SITE-WIDE
+
+   `.breadcrumbs` and its `.page-crumbs` wrapper lived here. The whole feature
+   is gone: the trail read "Home > System Design > ..." above every article and
+   listing page, and it was removed because it restated what the page title and
+   the section rail beside it already said.
+
+   Removed as ONE unit, deliberately, and this is the part to know if you ever
+   restore it. The visible trail and its BreadcrumbList structured data were
+   separate includes, so keeping the structured data after dropping the trail
+   was possible — and wrong twice over. Google's structured-data guidelines say
+   not to mark up content a reader cannot see, and
+   .github/scripts/validate_site.py counted exactly that case
+   ("a BreadcrumbList with no visible trail") as a defect whose number "has to
+   go down and cannot quietly go up". pages/resume.html had already hit this and
+   recorded the rule: restore both or neither. So this took the trail
+   (breadcrumb-nav.html), the shared structured data (breadcrumb-jsonld.html),
+   and the separate hardcoded BreadcrumbList in _layouts/lc.html together.
+
+   The derivation survives as _includes/section-ctx.html, reduced to the
+   section name and URL, because _layouts/default.html's Article-vs-WebPage
+   decision reads it. Restoring a trail means restoring a renderer over that,
+   plus a structured-data block, plus the validator check — not just this CSS.
+
+   The cost of removal, recorded so it is a choice and not a surprise: Google
+   no longer shows a breadcrumb line in search results for these pages, and
+   each article lost two internal links to its section hub. The site header
+   links every hub from every page, so crawl reach is unchanged.
+   -------------------------------------------------------------------------- */
+
+/* Section heading pattern used across listing pages */
+.section-eyebrow {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: var(--sp-2);
+}
+.section-title {
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    color: var(--text);
+}
+.section-sub {
+    color: var(--text-muted);
+    font-size: var(--fs-md);
+    margin-top: var(--sp-2);
+    max-width: 60ch;
+}
+
+/* --------------------------------------------------------------------------
+   6. Footer — grouped sitemap, not a run of dot-separated links
+   -------------------------------------------------------------------------- */
+/* `body > footer` rather than a bare `footer`: embedded widgets have their own
+   footers (Excalidraw's zoom/undo bar is one), and the background, border and
+   margin here would otherwise paint over their UI. */
+body > footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    background: var(--bg-subtle);
+    margin-top: var(--sp-8);
+}
+
+.footer-inner {
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding: var(--sp-7) var(--sp-5) var(--sp-5);
+}
+
+.footer-grid {
+    display: grid;
+    /* brand + four link columns (System Design, DSA, Careers, Site) */
+    grid-template-columns: 1.4fr repeat(4, 1fr);
+    gap: var(--sp-6) var(--sp-5);
+}
+
+.footer-brand .logo { margin-bottom: var(--sp-3); }
+.footer-tagline {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+    max-width: 34ch;
+}
+
+.footer-col-title {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: var(--sp-3);
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+.footer-col a {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease);
+}
+.footer-col a:hover { color: var(--accent); }
+
+.footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    margin-top: var(--sp-6);
+    padding-top: var(--sp-4);
+    border-top: 1px solid var(--border);
+    font-size: var(--fs-xs);
+    color: var(--text-dim);
+}
+.footer-bottom a { color: var(--text-dim); text-decoration: none; }
+.footer-bottom a:hover { color: var(--accent); }
+
+/* ---------------------------------------------------------------------------
+   Clearance for the floating controls, which is what makes the end of a page
+   reachable on a phone.
+
+   Four controls are anchored to the bottom of the VIEWPORT, not the page:
+   #fb-trigger and #mobile-toc-btn bottom-left, #sensei-toggle bottom-right,
+   #back-to-top above it. Measured at 390x844 the tallest arrangement puts the
+   top of the band 102px above the viewport floor (#fb-trigger's pill form on
+   catalog pages), and #back-to-top's 68px offset plus its own 36px reaches
+   104px. On a desktop they land in the page's side gutter; at 390px there is
+   no gutter, so they land on the content column.
+
+   Floating over prose mid-scroll is what these controls are for. The defect is
+   at FULL scroll, where there is no further scroll available and whatever sits
+   in the last 104px is covered for good. Measured over 70 pages, 49 ended with
+   their own content under a pill, and on 8 of those the trapped element was
+   operable rather than decorative -- the status <select> on
+   /target-companies/sde-2/, problem links at the end of /problemset.html, the
+   donate button on /neetcode-150-vs-blind-75/. The footer's 24px bottom
+   padding is what was left to absorb a 104px band.
+
+   So the page ends with a 104px runway. The footer already owns the end of
+   every scroll, has its own background, and is the one place this can be
+   stated once instead of per page.
+
+   Scoped to the width where the gutter is gone and the mobile control set is
+   active (the same 1023.98px threshold content.css uses to reveal
+   .mobile-toc-btn). The pills are fixed at every width, so a desktop window
+   has a milder version of this; it is left alone here because the gutter
+   absorbs it and widening the desktop footer was not the ask.
+   --------------------------------------------------------------------------- */
+@media (max-width: 1023.98px) {
+    .footer-inner { padding-bottom: 104px; }
+}
+
+@media (max-width: 860px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-brand { grid-column: 1 / -1; }
+}
+/* Phones: one centred column. Left-aligned it read as a ragged list hugging
+   one edge of an otherwise centred page. Brand, column titles, each link list
+   and the bottom bar all centre. */
+@media (max-width: 520px) {
+    .footer-grid { grid-template-columns: 1fr; gap: var(--sp-5); text-align: center; }
+    .footer-brand .logo { display: inline-flex; }
+    .footer-tagline { margin-left: auto; margin-right: auto; }
+    .footer-col ul { align-items: center; }
+    .footer-bottom { flex-direction: column; justify-content: center; text-align: center; }
+}
+
+/* --------------------------------------------------------------------------
+   7. Floating controls
+   -------------------------------------------------------------------------- */
+#back-to-top {
+    position: fixed;
+    bottom: 68px;
+    right: var(--sp-5);
+    width: 36px;
+    height: 36px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--text-muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-md);
+    z-index: 50;
+    transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+                transform var(--dur-fast) var(--ease);
+}
+#back-to-top.visible { display: flex; }
+#back-to-top:hover { color: var(--accent); border-color: var(--border-accent); transform: translateY(-2px); }
+#back-to-top:active { transform: translateY(0); }
+
+/* --------------------------------------------------------------------------
+   8. Scrollbars
+   -------------------------------------------------------------------------- */
+* { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: var(--r-full);
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); background-clip: content-box; }
+
+/* --------------------------------------------------------------------------
+   9. Utilities
+   -------------------------------------------------------------------------- */
+.sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* The Pro lock mark, from _includes/icon-lock.html.
+   HERE rather than in catalog.css because two different page types draw it and
+   they load disjoint stylesheets: a catalogue page loads catalog.css and never
+   content.css, a design page loads content.css and never catalog.css. core.css
+   is the only file both get.
+   `stroke: currentColor` is the whole point — each surface sets a real token on
+   the wrapper and the mark follows it. The 🔒 emoji this replaced could not be
+   coloured at all, only faded, and at 12px/0.45 it was invisible in both
+   themes. */
+/* The PRO tag that replaced that lock on gated entries (_includes/pro-tag.html).
+   A --pro-chip wash with --pro-chip ink, the paywall icon tile's treatment, so
+   it follows the theme: 5.94:1 dark and 5.92:1 light at this weight, measured.
+   It used to read --accent, which put the badge in the same purple-blue as
+   every link and button near it and measured 4.37 in light theme despite the
+   comment here claiming otherwise. Fixed size in rem so it does not inherit a
+   heading's or a list's font size and balloon.
+
+   `.is-solid` and `.on-fill` are the same chip on the other two grounds the
+   site paints a PRO badge on; the token block beside the accent ramp explains
+   which ground takes which. Everything that used to hardcode an orange
+   gradient now takes one of the three, so the badge is one colour family
+   site-wide and follows the theme everywhere. */
+.pro-tag {
+    display: inline-block;
+    flex: 0 0 auto;
+    padding: 0.08rem 0.32rem;
+    border-radius: 4px;
+    background: var(--pro-chip-bg);
+    color: var(--pro-chip-fg);
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+.pro-tag.is-solid { background: var(--pro-chip-solid-bg); color: var(--pro-chip-solid-fg); }
+.pro-tag.on-fill { background: var(--pro-chip-fill-bg); color: var(--pro-chip-fill-fg); }
+
+/* The Pro mark on the header avatar. A RULE rather than the inline cssText it
+   replaced: three separate code paths add this badge — pro-gate.html's
+   syncProBadge(), auth-button.html's optimistic paint from the auth cache, and
+   auth.js re-adding it once Firebase resolves — and each carried its own copy
+   of the same 200-character style string. That is how it stayed orange after
+   the rest of the site moved: nobody edits three strings. The element now
+   arrives bare and takes its look from here.
+
+   Solid rather than a wash: it sits on an arbitrary profile photo, so it needs
+   an opaque fill to be legible at 7px. The shadow lifts it off a light photo.
+   `pointer-events: none` keeps the badge out of the way of the button it is
+   positioned inside — the three call sites set `position: relative` on that
+   button, which is the containing block this absolute offset reads from. */
+#sc-pro-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    padding: 1px 3px;
+    border-radius: 3px;
+    background: var(--pro-chip-solid-bg);
+    color: var(--pro-chip-solid-fg);
+    font-size: 7px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    line-height: 1;
+    pointer-events: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+.icon-lock {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}

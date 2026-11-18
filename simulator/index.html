@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Design Simulator - Stress-Test Architectures - SystemCraft</title>
+  <script>
+    (function () {
+      function getInitialTheme() {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t === 'dark' || t === 'light') return t;
+          var s = JSON.parse(localStorage.getItem('dsa-settings') || '{}');
+          if (s && (s.theme === 'dark' || s.theme === 'light')) return s.theme;
+        } catch (e) {}
+        return 'dark';
+      }
+      var initial = getInitialTheme();
+      document.documentElement.setAttribute('data-theme', initial);
+    })();
+  </script>
+  <link rel="stylesheet" href="/assets/css/core.css">
+  <link rel="stylesheet" href="/assets/css/simulator.css">
+  <style>
+    /* Standalone full-page styling */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    header.sc-standalone-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 42px;
+      padding: 0 16px;
+      background: var(--bg-header, var(--surface));
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      z-index: 100;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .sc-standalone-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    header.sc-standalone-bar a.brand-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    header.sc-standalone-bar a.brand-link svg {
+      color: var(--accent);
+    }
+    .sc-sim-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sc-sim-nav-link {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 4px 10px;
+      border-radius: var(--r-sm, 6px);
+      transition: all 0.15s ease;
+    }
+    .sc-sim-nav-link:hover {
+      color: var(--text);
+      background: var(--surface-2);
+    }
+    .sc-standalone-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sc-dsa-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: var(--r-sm, 6px);
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .sc-dsa-btn:hover {
+      background: var(--surface-3, var(--surface));
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    #theme-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--r-sm, 6px);
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.15s ease;
+    }
+    #theme-btn:hover {
+      color: var(--text);
+      border-color: var(--border-strong);
+      background: var(--surface-3, var(--surface));
+    }
+    #sim-app {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    body.sim-canvas #sim-app {
+      flex: 1;
+      min-height: 0;
+      height: calc(100vh - 42px);
+      height: calc(100dvh - 42px);
+    }
+  </style>
+</head>
+<body>
+  <header class="sc-standalone-bar">
+    <div class="sc-standalone-left">
+      <a href="/simulator/?c=sandbox" class="brand-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+          <polyline points="2 17 12 22 22 17"></polyline>
+          <polyline points="2 12 12 17 22 12"></polyline>
+        </svg>
+        <span>SystemCraft Simulator</span>
+      </a>
+      <nav class="sc-sim-nav">
+        <a href="/simulator/index.html?c=sandbox&mode=simulate" class="sc-sim-nav-link" id="nav-sandbox">Simulator</a>
+        <a href="/simulator/index.html?c=sandbox&mode=draw" class="sc-sim-nav-link" id="nav-draw">Draw Diagram</a>
+        <a href="/simulator/index.html" class="sc-sim-nav-link" id="nav-challenges">All Challenges</a>
+      </nav>
+    </div>
+    <div class="sc-standalone-right">
+      <a href="/#hld" class="sc-dsa-btn" title="Back to HLD Sheet Viewer">
+        <span>← Back to DSA Tracker</span>
+      </a>
+      <button type="button" id="theme-btn" title="Toggle theme">
+        <span>☀︎</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="sim-app"></main>
+
+  <!-- SystemCraft Assets -->
+  <script src="/assets/js/md-render.js"></script>
+  <script src="/assets/js/simulator/catalog.js"></script>
+  <script src="/assets/js/simulator/engine.js"></script>
+  <script src="/assets/js/simulator/app.js"></script>
+  <script>
+    // Theme toggle & cross-tab synchronization handler
+    (function () {
+      var btn = document.getElementById('theme-btn');
+      if (btn) {
+        function updateBtn(theme) {
+          btn.setAttribute('title', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+          btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+          btn.textContent = theme === 'dark' ? '☀︎' : '☽';
+        }
+        function applyTheme(next) {
+          document.documentElement.setAttribute('data-theme', next);
+          try {
+            localStorage.setItem('theme', next);
+            var s = JSON.parse(localStorage.getItem('dsa-settings') || '{}');
+            s.theme = next;
+            localStorage.setItem('dsa-settings', JSON.stringify(s));
+          } catch (e) {}
+          updateBtn(next);
+        }
+        var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+        updateBtn(cur);
+        btn.addEventListener('click', function () {
+          var current = document.documentElement.getAttribute('data-theme') || 'dark';
+          var next = current === 'dark' ? 'light' : 'dark';
+          applyTheme(next);
+        });
+        window.addEventListener('storage', function (e) {
+          if (e.key === 'theme' && (e.newValue === 'dark' || e.newValue === 'light')) {
+            document.documentElement.setAttribute('data-theme', e.newValue);
+            updateBtn(e.newValue);
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

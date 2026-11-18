@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Payment System — Revision Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0D1420; --panel: #131C2B; --panel-2: #17202F; --line: #253247; --text: #E6ECF5; --muted: #8A99AE;
+    --azure: #5BA9E0; --azure-dim: #2C4B6B; --amber: #E0A94F; --amber-dim: #6E5730;
+    --teal: #4FB5A8; --teal-dim: #2A5750; --rust: #DB6E56; --rust-dim: #6E392A;
+    --radius-panel: 10px; --radius-tag: 6px;
+    box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) { --bg: #F1F2F0; --panel: #FFFFFF; --panel-2: #FAFBF9; --line: #DEE1DC; --text: #1A1F27; --muted: #5B6472; }
+  }
+  :root[data-theme="dark"] { --bg: #0D1420; --panel: #131C2B; --panel-2: #17202F; --line: #253247; --text: #E6ECF5; --muted: #8A99AE; }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1;
+    background-image: radial-gradient(circle at 12% 15%, rgba(91,169,224,0.07), transparent 40%), radial-gradient(circle at 88% 80%, rgba(224,169,79,0.05), transparent 40%);
+    pointer-events: none;
+  }
+  h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin: 0 0 0.5em 0; letter-spacing: -0.01em; }
+  a { color: var(--teal); }
+  code, .mono { font-family: 'JetBrains Mono', monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px 100px; }
+
+  .hero { padding: 72px 0 48px; border-bottom: 1px solid var(--line); margin-bottom: 56px; }
+  .hero .kicker { font-size: 14px; color: var(--azure); font-family: 'JetBrains Mono', monospace; margin-bottom: 14px; }
+  .hero h1 { font-size: clamp(32px, 5vw, 48px); line-height: 1.08; max-width: 17ch; }
+  .hero p.sub { color: var(--muted); font-size: 17px; max-width: 62ch; margin-top: 16px; }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 36px; }
+  .stat { min-width: 120px; }
+  .stat .num { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 600; color: var(--teal); }
+  .stat .label { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  section { margin-bottom: 64px; scroll-margin-top: 20px; }
+  .section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 22px; }
+  .section-num { font-family: 'JetBrains Mono', monospace; color: var(--azure); font-size: 14px; }
+  .section-head h2 { font-size: 24px; }
+  .section-intro { color: var(--muted); max-width: 68ch; margin-bottom: 24px; font-size: 15px; }
+
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-panel); padding: 24px; }
+  .panel + .panel { margin-top: 18px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  @media (max-width: 720px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  svg { max-width: 100%; height: auto; display: block; }
+  .diagram-caption { color: var(--muted); font-size: 13px; margin-top: 10px; text-align: center; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 14px; font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-family: 'JetBrains Mono', monospace; font-size: 12px; white-space: nowrap; }
+  td.mono, th.mono { font-family: 'JetBrains Mono', monospace; }
+
+  .tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 2px 8px; border-radius: var(--radius-tag); border: 1px solid var(--line); color: var(--muted); }
+  .tag.azure { color: var(--azure); border-color: var(--azure-dim); }
+  .tag.amber { color: var(--amber); border-color: var(--amber-dim); }
+  .tag.teal { color: var(--teal); border-color: var(--teal-dim); }
+  .tag.rust { color: var(--rust); border-color: var(--rust-dim); }
+
+  pre { background: #0A0F18; border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 14px 0 0; }
+  :root:not([data-theme="dark"]) pre { background: #F3F2EE; }
+  pre code { color: var(--text); }
+  .comment { color: var(--muted); }
+  .kw { color: var(--teal); }
+  .str { color: var(--amber); }
+  .fn { color: var(--azure); }
+
+  .edge-card { border-left: 3px solid var(--rust); padding-left: 18px; }
+  .edge-card h3 { display: flex; align-items: center; gap: 10px; font-size: 17px; }
+  .edge-card .sev { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--rust); border: 1px solid var(--rust-dim); padding: 2px 7px; border-radius: 5px; }
+
+  .flow-step { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .flow-step:last-child { border-bottom: none; }
+  .flow-step .idx { font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--azure); font-size: 15px; min-width: 22px; }
+  .flow-step .body h4 { font-size: 15.5px; margin-bottom: 4px; }
+  .flow-step .body p { color: var(--muted); font-size: 14px; margin: 0; }
+
+  .qa { border-bottom: 1px solid var(--line); padding: 16px 0; }
+  .qa:last-child { border-bottom: none; }
+  .qa .q { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+  .qa .a { color: var(--muted); font-size: 14.5px; }
+
+  .calc-line { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 14px; }
+  .calc-line:last-child { border-bottom: none; }
+  .calc-line .k { color: var(--muted); }
+  .calc-line .v { font-family: 'JetBrains Mono', monospace; color: var(--text); text-align: right; }
+  .calc-result { margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-weight: 600; }
+  .calc-result .v { color: var(--teal); font-family: 'JetBrains Mono', monospace; }
+
+  .toc { position: sticky; top: 20px; display: none; }
+  @media (min-width: 1180px) {
+    .page { display: flex; gap: 40px; max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+    .wrap { padding: 0; max-width: none; flex: 1; }
+    .toc { display: block; width: 200px; padding-top: 90px; }
+    .toc a { display: block; color: var(--muted); text-decoration: none; font-size: 12.5px; padding: 5px 0; border-left: 2px solid transparent; padding-left: 12px; }
+    .toc a:hover { color: var(--text); border-left-color: var(--azure); }
+  }
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 40px 0 20px; border-top: 1px solid var(--line); margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <nav class="toc">
+    <a href="#reqs">01 · Requirements</a>
+    <a href="#architecture">02 · Architecture</a>
+    <a href="#model">03 · Data Model</a>
+    <a href="#lifecycle">04 · Payment Lifecycle</a>
+    <a href="#idempotency">05 · Idempotency</a>
+    <a href="#failures">06 · Timeouts &amp; Unknowns</a>
+    <a href="#ledger">07 · Double-Entry Ledger</a>
+    <a href="#settlement">08 · Settlement &amp; Reconciliation</a>
+    <a href="#refunds">09 · Refunds &amp; Disputes</a>
+    <a href="#psp">10 · Tokens, 3DS &amp; PSPs</a>
+    <a href="#async">11 · Events &amp; Webhooks</a>
+    <a href="#scaling">12 · Scaling &amp; Sharding</a>
+    <a href="#capacity">13 · Capacity Plan</a>
+    <a href="#security">14 · Security &amp; Compliance</a>
+    <a href="#alternatives">15 · Alternatives</a>
+    <a href="#playbook">16 · Interview Playbook</a>
+    <a href="#cheatsheet">17 · Cheat Sheet</a>
+  </nav>
+
+  <div class="wrap">
+    <div class="hero">
+      <div class="kicker">SYSTEM DESIGN REVISION · SDE-2 DEPTH</div>
+      <h1>Payment System</h1>
+      <p class="sub">Charging money exactly once across systems you don't control — idempotency keys, the unknown-state problem, auth/capture/settlement lifecycle, a double-entry ledger as source of truth, PSP adapters, reconciliation against bank files, and the sharding tricks that keep hot merchant accounts from melting the database.</p>
+      <div class="stat-row">
+        <div class="stat"><div class="num">0</div><div class="label">tolerated double charges</div></div>
+        <div class="stat"><div class="num">10⁴/s</div><div class="label">peak payment attempts</div></div>
+        <div class="stat"><div class="num">99.99%</div><div class="label">availability target</div></div>
+        <div class="stat"><div class="num">T+2</div><div class="label">bank settlement cadence</div></div>
+      </div>
+    </div>
+
+    <!-- 01 REQUIREMENTS -->
+    <section id="reqs">
+      <div class="section-head"><span class="section-num">01</span><h2>Requirements</h2></div>
+      <p class="section-intro">Scope it first: a platform that charges customers via external instruments (cards, UPI, wallets, net-banking), moves money to merchants, and can prove every rupee/dollar afterward. State the non-functional column before drawing — <em>it is the whole design</em>.</p>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Functional</h3>
+          <table>
+            <tr><td>Charge</td><td>One-time payments via card / UPI / wallet / net-banking, through PSPs and banks</td></tr>
+            <tr><td>Pre-auth</td><td>Authorize now, capture later (or void) — hotels, fuel, rentals</td></tr>
+            <tr><td>Refund</td><td>Full and partial refunds within the instrument's window</td></tr>
+            <tr><td>Recurring</td><td>Card-on-file tokenized charges (subscriptions)</td></tr>
+            <tr><td>Payouts</td><td>Settle collected money to merchant bank accounts on schedule</td></tr>
+            <tr><td>Statements</td><td>Per-merchant transaction history + balance, exportable</td></tr>
+            <tr><td>Disputes</td><td>Chargeback intake, evidence submission, resolution posting</td></tr>
+          </table>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Non-functional</h3>
+          <table>
+            <tr><td>Correctness</td><td><strong>Exactly-once money movement</strong> — never double-charge, never lose a completed payment</td></tr>
+            <tr><td>Durability</td><td>Every accepted intent survives crash; nothing silently dropped</td></tr>
+            <tr><td>Consistency</td><td>Balances provably match transaction history (auditable to the cent)</td></tr>
+            <tr><td>Latency</td><td>&lt; 300 ms internal overhead; total gated by PSP (~2–5 s end-to-end)</td></tr>
+            <tr><td>Availability</td><td>99.99% — a payment path outage is direct revenue loss per second</td></tr>
+            <tr><td>Compliance</td><td>PCI DSS; card data must never enter scope; full audit trail</td></tr>
+            <tr><td>Idempotent retries</td><td>Clients <em>will</em> retry blindly — the system must absorb it</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px; margin:0;"><strong style="color:var(--text);">The tension to name up front:</strong> you must deliver <em>exactly-once effects</em> on top of transports that are only <em>at-least-once</em> (client retries, network timeouts, PSP callbacks delivered 0..n times), and across systems you do not control — a PSP cannot enroll in your database transaction. Every hard decision below (idempotency keys, sagas, the ledger, reconciliation) exists to resolve that one sentence.</p>
+      </div>
+    </section>
+
+    <!-- 02 ARCHITECTURE -->
+    <section id="architecture">
+      <div class="section-head"><span class="section-num">02</span><h2>End-to-End Architecture</h2></div>
+      <p class="section-intro">Five decoupled concerns: <span class="tag azure">accept</span> (idempotent payment API), <span class="tag amber">execute</span> (orchestrator talking to PSPs), <span class="tag teal">record</span> (append-only ledger), <span class="tag rust">reconcile</span> (bank files vs. our truth), and <span class="tag">notify</span> (async events + webhooks).</p>
+
+      <div class="panel">
+        <svg viewBox="0 0 960 420" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker>
+          </defs>
+          <!-- client -->
+          <rect x="20" y="60" width="140" height="56" rx="8" fill="var(--panel-2)" stroke="var(--azure-dim)"/>
+          <text x="90" y="83" text-anchor="middle" fill="var(--azure)" font-size="13" font-family="Space Grotesk">Client app</text>
+          <text x="90" y="101" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">Idempotency-Key</text>
+          <!-- payments api -->
+          <rect x="230" y="40" width="170" height="96" rx="8" fill="var(--panel-2)" stroke="var(--azure-dim)"/>
+          <text x="315" y="63" text-anchor="middle" fill="var(--azure)" font-size="13" font-family="Space Grotesk">Payments API</text>
+          <text x="315" y="82" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">validate · fraud gate</text>
+          <text x="315" y="98" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">intent → PENDING</text>
+          <text x="315" y="118" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">outbox event</text>
+          <!-- idempotency store -->
+          <rect x="230" y="160" width="170" height="52" rx="8" fill="none" stroke="var(--line)" stroke-dasharray="4 4"/>
+          <text x="315" y="182" text-anchor="middle" fill="var(--muted)" font-size="11.5" font-family="JetBrains Mono">idempotency store</text>
+          <text x="315" y="200" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">UNIQUE(merchant,key)</text>
+          <!-- orchestrator -->
+          <rect x="470" y="60" width="170" height="72" rx="8" fill="var(--panel-2)" stroke="var(--amber-dim)"/>
+          <text x="555" y="83" text-anchor="middle" fill="var(--amber)" font-size="13" font-family="Space Grotesk">PSP Orchestrator</text>
+          <text x="555" y="102" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">state machine · saga</text>
+          <text x="555" y="118" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">retry + get-status</text>
+          <!-- psp adapters -->
+          <rect x="710" y="30" width="220" height="52" rx="8" fill="var(--panel-2)" stroke="var(--amber-dim)"/>
+          <text x="820" y="52" text-anchor="middle" fill="var(--amber)" font-size="12" font-family="JetBrains Mono">PSP A (cards, 3DS)</text>
+          <text x="820" y="70" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">auth · capture · refund</text>
+          <rect x="710" y="92" width="220" height="52" rx="8" fill="var(--panel-2)" stroke="var(--line)"/>
+          <text x="820" y="114" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="JetBrains Mono">PSP B (UPI / wallets)</text>
+          <text x="820" y="132" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">collect · callback URL</text>
+          <!-- ledger -->
+          <rect x="470" y="190" width="170" height="72" rx="8" fill="var(--panel-2)" stroke="var(--teal-dim)"/>
+          <text x="555" y="213" text-anchor="middle" fill="var(--teal)" font-size="13" font-family="Space Grotesk">Ledger Service</text>
+          <text x="555" y="232" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">double-entry postings</text>
+          <text x="555" y="248" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">append-only, sharded</text>
+          <!-- kafka / bus -->
+          <rect x="230" y="270" width="170" height="56" rx="8" fill="none" stroke="var(--line)" stroke-dasharray="4 4"/>
+          <text x="315" y="292" text-anchor="middle" fill="var(--muted)" font-size="11.5" font-family="JetBrains Mono">event bus (Kafka)</text>
+          <text x="315" y="312" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">payment.* topics, partitioned</text>
+          <!-- notifications -->
+          <rect x="20" y="270" width="140" height="56" rx="8" fill="var(--panel-2)" stroke="var(--teal-dim)"/>
+          <text x="90" y="292" text-anchor="middle" fill="var(--teal)" font-size="12" font-family="Space Grotesk">Notifier</text>
+          <text x="90" y="312" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">webhooks HMAC</text>
+          <!-- recon -->
+          <rect x="710" y="190" width="220" height="72" rx="8" fill="var(--panel-2)" stroke="var(--rust-dim)"/>
+          <text x="820" y="213" text-anchor="middle" fill="var(--rust)" font-size="12" font-family="Space Grotesk">Reconciliation</text>
+          <text x="820" y="232" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">bank settlement files</text>
+          <text x="820" y="248" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">vs ledger → breaks queue</text>
+          <!-- settlement/payout -->
+          <rect x="470" y="300" width="170" height="56" rx="8" fill="var(--panel-2)" stroke="var(--line)"/>
+          <text x="555" y="322" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="Space Grotesk">Payout Scheduler</text>
+          <text x="555" y="342" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">merchant T+n batches</text>
+          <!-- arrows -->
+          <path d="M160 88 L 230 88" fill="none" stroke="var(--azure)" marker-end="url(#arr)"/>
+          <path d="M315 136 L 315 160" fill="none" stroke="var(--muted)" marker-end="url(#arr)"/>
+          <path d="M400 88 L 470 90" fill="none" stroke="var(--azure)" marker-end="url(#arr)"/>
+          <path d="M640 78 L 710 56" fill="none" stroke="var(--amber)" marker-end="url(#arr)"/>
+          <path d="M640 110 L 710 118" fill="none" stroke="var(--amber)" marker-end="url(#arr)"/>
+          <path d="M820 144 C 820 180, 700 200, 640 210" fill="none" stroke="var(--muted)" stroke-dasharray="3 3" marker-end="url(#arr)"/>
+          <text x="700" y="176" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">callbacks / get-status</text>
+          <path d="M555 132 L 555 190" fill="none" stroke="var(--teal)" marker-end="url(#arr)"/>
+          <path d="M470 240 L 400 296" fill="none" stroke="var(--muted)" marker-end="url(#arr)"/>
+          <path d="M230 298 L 160 298" fill="none" stroke="var(--teal)" marker-end="url(#arr)"/>
+          <path d="M820 262 C 820 330, 700 340, 640 330" fill="none" stroke="var(--rust)" marker-end="url(#arr)"/>
+          <path d="M555 262 L 555 300" fill="none" stroke="var(--muted)" marker-end="url(#arr)"/>
+          <!-- footer labels -->
+          <text x="90" y="360" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">merchant APIs · email/SMS</text>
+          <text x="555" y="380" text-anchor="middle" fill="var(--muted)" font-size="10.5" font-family="JetBrains Mono">bank rails (ACH / wire / UPI collect)</text>
+        </svg>
+        <div class="legend">
+          <span><span class="swatch" style="background:var(--azure)"></span>synchronous API path</span>
+          <span><span class="swatch" style="background:var(--amber)"></span>PSP execution</span>
+          <span><span class="swatch" style="background:var(--teal)"></span>ledger &amp; events</span>
+          <span><span class="swatch" style="background:var(--rust)"></span>reconciliation</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">The pieces, and why each exists</h3>
+          <table>
+            <tr><td>Payments API</td><td>Idempotent front door; persists the <em>intent</em> durably <strong>before</strong> anything external happens</td></tr>
+            <tr><td>Idempotency store</td><td>Unique (merchant, key) → cached response; absorbs client retries (§05)</td></tr>
+            <tr><td>Orchestrator</td><td>Owns the state machine, calls PSP adapters, resolves unknowns via get-status (§06)</td></tr>
+            <tr><td>PSP adapters</td><td>Per-provider plugins translating auth/capture/refund/get-status + verifying callbacks</td></tr>
+            <tr><td>Ledger</td><td>Double-entry postings appended once per <em>confirmed</em> state change (§07)</td></tr>
+            <tr><td>Reconciliation</td><td>Daily bank settlement files matched against ledger; breaks to humans (§08)</td></tr>
+            <tr><td>Notifier</td><td>Consumes events, fires HMAC-signed webhooks with their own retry ladder</td></tr>
+          </table>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Two golden rules</h3>
+          <p style="color:var(--muted); font-size:14px;"><strong style="color:var(--text);">1 · Write the intent first.</strong> A payment request is persisted (with its idempotency key) before touching a PSP. If we crash next, the work is resumable — nothing external happened that we can't account for.</p>
+          <p style="color:var(--muted); font-size:14px; margin-top:10px;"><strong style="color:var(--text);">2 · Only real money is a settled fact from evidence.</strong> A payment is SUCCEEDED when the PSP says so on a <em>response we read</em> or a <em>get-status query we ran</em> or the <em>bank file shows it</em> — never because a callback "should have" arrived. The three-way redundancy (§06, §08, §11) is the design.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 DATA MODEL -->
+    <section id="model">
+      <div class="section-head"><span class="section-num">03</span><h2>Data Model</h2></div>
+      <p class="section-intro">Payments are not one table — the <em>attempt</em>, the <em>PSP round</em>, the <em>money movement</em> and the <em>client retry</em> are four different lifecycles that must never be conflated.</p>
+      <div class="panel">
+        <pre><code><span class="kw">CREATE TABLE</span> payment_intents (
+  id            <span class="kw">UUID PRIMARY KEY</span>,
+  merchant_id   <span class="kw">UUID NOT NULL</span>,
+  order_ref     <span class="kw">VARCHAR NOT NULL</span>,          <span class="comment">-- business reference</span>
+  amount_minor  <span class="kw">BIGINT NOT NULL CHECK</span> (amount_minor &gt; 0),   <span class="comment">-- always integer minor units!</span>
+  currency      <span class="kw">CHAR(3) NOT NULL</span>,
+  method        <span class="kw">VARCHAR NOT NULL</span>,           <span class="comment">-- card | upi | wallet | netbanking</span>
+  status        <span class="kw">VARCHAR NOT NULL</span>,           <span class="comment">-- see state machine §04</span>
+  instrument_token <span class="kw">VARCHAR</span>,                 <span class="comment">-- network/PSP token, NEVER a PAN (§10)</span>
+  failure_code  <span class="kw">VARCHAR</span>, failure_message <span class="kw">VARCHAR</span>,
+  created_at    <span class="kw">TIMESTAMPTZ NOT NULL DEFAULT now()</span>,
+  updated_at    <span class="kw">TIMESTAMPTZ NOT NULL</span>
+);
+
+<span class="kw">CREATE TABLE</span> payment_attempts (            <span class="comment">-- one PSP round-trip each; retried flows add rows</span>
+  id           <span class="kw">UUID PRIMARY KEY</span>,
+  intent_id    <span class="kw">UUID NOT NULL REFERENCES</span> payment_intents(id),
+  psp          <span class="kw">VARCHAR NOT NULL</span>,
+  psp_ref      <span class="kw">VARCHAR</span>,                     <span class="comment">-- PSP's own transaction id (join key in §08)</span>
+  event_type   <span class="kw">VARCHAR NOT NULL</span>,            <span class="comment">-- AUTH | CAPTURE | VOID | REFUND | GET_STATUS</span>
+  psp_status   <span class="kw">VARCHAR NOT NULL</span>,            <span class="comment">-- SUCCESS | FAILED | UNKNOWN (timeout!)</span>
+  raw_response <span class="kw">JSONB</span>,                        <span class="comment">-- redacted before storage (§14)</span>
+  created_at   <span class="kw">TIMESTAMPTZ NOT NULL</span>
+);
+
+<span class="kw">CREATE TABLE</span> idempotency_keys (
+  merchant_id  <span class="kw">UUID NOT NULL</span>,
+  <span class="str">key</span>          <span class="kw">VARCHAR NOT NULL</span>,            <span class="comment">-- client-supplied UUID</span>
+  request_hash <span class="kw">CHAR(64) NOT NULL</span>,           <span class="comment">-- sha256 of semantic body fields (§05)</span>
+  response     <span class="kw">JSONB</span>,                        <span class="comment">-- cached result for replays</span>
+  state        <span class="kw">VARCHAR NOT NULL</span>,            <span class="comment">-- IN_PROGRESS | COMPLETED</span>
+  created_at   <span class="kw">TIMESTAMPTZ NOT NULL</span>,
+  <span class="kw">PRIMARY KEY</span> (merchant_id, <span class="str">key</span>)           <span class="comment">-- the constraint IS the feature</span>
+);
+
+<span class="kw">CREATE TABLE</span> outbox_events (               <span class="comment">-- transactional outbox (§11)</span>
+  id          <span class="kw">BIGSERIAL PRIMARY KEY</span>,
+  aggregate   <span class="kw">VARCHAR NOT NULL</span>,             <span class="comment">-- intent id → becomes Kafka partition key</span>
+  topic       <span class="kw">VARCHAR NOT NULL</span>,
+  payload     <span class="kw">JSONB NOT NULL</span>,
+  published   <span class="kw">BOOLEAN NOT NULL DEFAULT false</span>
+);</code></pre>
+      </div>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Money representation — non-negotiables</h3>
+          <table>
+            <tr><td>Minor units</td><td>Store <code>amount_minor</code> as <strong>integer</strong> (cents/paise) — never float, never decimal-through-arithmetic</td></tr>
+            <tr><td>Currency pinned</td><td>Amount without currency is a bug; FX happens only at settlement boundary (§08)</td></tr>
+            <tr><td>Immutable rows</td><td>Correcting a mistake = new reversing entry, never UPDATE of an amount</td></tr>
+          </table>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Why separate attempts from intents</h3>
+          <table>
+            <tr><td>1 intent : N PSP rounds</td><td>Retry after timeout, auth-then-capture, partial refunds — each is a distinct external transaction with its own <code>psp_ref</code></td></tr>
+            <tr><td>The unknown tracker</td><td>An <code>UNKNOWN</code> attempt row is the durable to-do list for get-status resolution (§06)</td></tr>
+            <tr><td>Audit surface</td><td>Raw responses + timestamps per round = the evidence trail disputes and audits run on</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 LIFECYCLE -->
+    <section id="lifecycle">
+      <div class="section-head"><span class="section-num">04</span><h2>Payment Lifecycle &amp; State Machine</h2></div>
+      <p class="section-intro">Model it as a state machine whose arrows only fire on <strong>evidence</strong>. The classic split — <em>authorize</em> (hold funds) vs <em>capture</em> (take funds) — exists because shipping/hotels need reservations without taking money, and it's also what lets us keep "we asked" and "we have money" as provably different states.</p>
+      <div class="panel">
+        <pre><code>                         ┌──────────┤ declined ├─► FAILED (terminal)
+ CREATED ─► AUTH_PENDING ┤
+                         └─► AUTHORIZED ─► CAPTURE_PENDING ─► CAPTURED ─► SETTLED
+                              │  (hold)         (sweep)         (money)     (bank file §08)
+                              ├─ expired / VOID ──────────────────────────► VOIDED
+                              └─ capture failed ─► retry / FAILED
+   CAPTURED ─► REFUND_PENDING ─► REFUNDED (full | partial, N attempts per refund)
+   CAPTURED/SETTLED ─► DISPUTED (chargeback opened) ─► DISPUTED_WON | DISPUTED_LOST</code></pre>
+        <table style="margin-top:14px;">
+          <tr><th>State</th><th>Meaning</th><th>Funds</th></tr>
+          <tr><td class="mono">CREATED</td><td>Intent durably persisted with idempotency key</td><td>none touched</td></tr>
+          <tr><td class="mono">AUTH_PENDING</td><td>PSP call in flight (or unknown — §06 owns this window)</td><td>on hold at issuer if it lands</td></tr>
+          <tr><td class="mono">AUTHORIZED</td><td>Issuer placed a hold; PSP confirmed with psp_ref</td><td>reserved, not taken</td></tr>
+          <tr><td class="mono">CAPTURED</td><td>We asked to take the money and PSP confirmed</td><td>in flight to our merchant account</td></tr>
+          <tr><td class="mono">SETTLED</td><td>Money actually arrived — proven by the bank file (§08)</td><td>ours; merchant payout becomes due</td></tr>
+          <tr><td class="mono">FAILED / VOIDED</td><td>Terminal negative outcomes; void releases an auth hold</td><td>none</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">A charge, step by step (happy path)</h3>
+        <div class="flow-step"><span class="idx">1</span><div class="body"><h4>Client POSTs with Idempotency-Key</h4><p>Server inserts the (merchant, key) row — <code>ON CONFLICT DO NOTHING</code>. Conflict → return the cached/in-progress response, do zero new work (§05).</p></div></div>
+        <div class="flow-step"><span class="idx">2</span><div class="body"><h4>Intent + outbox in one DB transaction</h4><p><code>payment_intents(CREATED→AUTH_PENDING)</code> and the <code>outbox_events</code> row commit atomically — the event is guaranteed if the state is (§11).</p></div></div>
+        <div class="flow-step"><span class="idx">3</span><div class="body"><h4>Orchestrator calls the PSP adapter</h4><p><code>auth(amount, currency, instrument, our_intent_id_as_reference)</code>. We send <em>our</em> ID as the PSP-side reference — the join key for callbacks, get-status and reconciliation.</p></div></div>
+        <div class="flow-step"><span class="idx">4</span><div class="body"><h4>Evidence lands → state advances</h4><p>Success response (or verified callback, or get-status result) → <code>AUTHORIZED</code>, <code>psp_ref</code> recorded. A pending-only ledger posting is appended (§07).</p></div></div>
+        <div class="flow-step"><span class="idx">5</span><div class="body"><h4>Capture</h4><p>Immediately (e-commerce) or on shipment (pre-auth flows) — same evidence rule. Capture confirmation → <code>CAPTURED</code> + real double-entry posting.</p></div></div>
+        <div class="flow-step"><span class="idx">6</span><div class="body"><h4>Settlement + notification</h4><p>T+2 bank file confirms arrival → <code>SETTLED</code>. Kafka events drive receipts, merchant webhooks, dashboards, payout scheduling — all async, all idempotent consumers.</p></div></div>
+      </div>
+      <div class="panel">
+        <div class="edge-card">
+          <h3>The 3 a.m. question: is PENDING a state you can act on? <span class="sev">hazard</span></h3>
+          <p style="color:var(--muted); font-size:14px; margin:6px 0 0;">Never let the UI, the merchant, or a cron treat <code>AUTH_PENDING</code> as failed-then-recharge. Pending means "a PSP round exists that we haven't resolved with evidence." The only legal operations from pending are: resolve via get-status, or expire via the pending-timeout sweeper that <em>queries before deciding</em> (§06).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 IDEMPOTENCY -->
+    <section id="idempotency">
+      <div class="section-head"><span class="section-num">05</span><h2>Idempotency — The Anti-Double-Charge Layer</h2></div>
+      <p class="section-intro">Timeouts guarantee one thing: clients <em>must</em> retry, and some of those retries will duplicate a request that actually succeeded. Idempotency keys turn "at-least-once delivery" into "exactly-once effect" — it is the single most important mechanism in this design.</p>
+      <div class="panel">
+        <h3 style="font-size:15px;">How the key flow works</h3>
+        <pre><code><span class="comment"># client side: one key per BUSINESS action, reused across retries of that action</span>
+POST /v1/payments
+Idempotency-Key: 7f9c2e5a-…        <span class="comment"># generated once when the user taps "Pay", then frozen</span>
+{ "order_ref": "ord_1042", "amount_minor": 49900, "currency": "USD", "method": "card" }</code></pre>
+        <div class="flow-step"><span class="idx">1</span><div class="body"><h4>Claim</h4><p><code>INSERT INTO idempotency_keys (merchant_id, key, request_hash, state='IN_PROGRESS') ON CONFLICT DO NOTHING</code>. One and only one request ever wins this insert.</p></div></div>
+        <div class="flow-step"><span class="idx">2</span><div class="body"><h4>Loser path (conflict)</h4><p><code>COMPLETED</code> → replay the cached response (same status code + body). <code>IN_PROGRESS</code> → the first request is still executing: return 409 / or long-poll briefly — <em>never</em> start a second PSP call.</p></div></div>
+        <div class="flow-step"><span class="idx">3</span><div class="body"><h4>Winner path</h4><p>Run the real flow; on terminal outcome, store the response and flip state to <code>COMPLETED</code>. Keys are retained ≥ the client's plausible retry window (24 h+) and swept after.</p></div></div>
+        <div class="flow-step"><span class="idx">4</span><div class="body"><h4>Misuse guard</h4><p>Compare <code>request_hash</code> (canonical JSON of semantic fields only — not timestamps/nonce headers): same key + different body → <strong>422 conflict</strong>. That catches "client reused a key for a different payment," which idempotency would otherwise silently honor as one and the same.</p></div></div>
+      </div>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Scope of a key</h3>
+          <p style="color:var(--muted); font-size:14px;">Unique per <code>(merchant_id, endpoint, key)</code> — merchant A can never collide with merchant B, and a key on <code>/payments</code> must not match a later <code>/refunds</code> call. Keyed scope also keeps the store partitionable by merchant (§12).</p>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Where the same pattern repeats</h3>
+          <p style="color:var(--muted); font-size:14px;">Idempotency is layered, not one point: API keys (§05) → PSP reference ID (auth deduped PSP-side), callback dedupe (<code>psp_ref</code> unique per event type, §11), webhook delivery (merchant acks + replay), ledger postings (<code>(event_id, entry_type)</code> unique, §07), payouts (batch ID at the bank). Every boundary crossing reuses the trick.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:14px;"><strong style="color:var(--text);">Interview nuance:</strong> idempotency keys protect <em>one operation</em>, not a business flow. "The user tapped Pay twice with two different keys" is two legitimate payments — deduping <em>that</em> is order-level (one PAID intent per <code>order_ref</code> unless explicitly re-authorized), a separate constraint worth stating out loud.</p>
+      </div>
+    </section>
+
+    <!-- 06 TIMEOUTS & UNKNOWNS -->
+    <section id="failures">
+      <div class="section-head"><span class="section-num">06</span><h2>Timeouts, Retries &amp; the Unknown-State Problem</h2></div>
+      <p class="section-intro">The signature hard part of payments: when a PSP call times out, you don't know if the money moved. A timeout is <strong>not a failure</strong> — it's a third outcome, <code>UNKNOWN</code>, and it must be modeled as a first-class state with its own resolution machinery.</p>
+      <div class="panel">
+        <pre><code>our PSP call ── outcome ∈ { SUCCESS,          <span class="comment">retry never needed; advance state</span>
+                             FAILURE (code),   <span class="comment">terminal or retry-with-new-attempt</span>
+                             UNKNOWN }         <span class="comment">timeout / connection reset / 5xx pre-commit</span></code></pre>
+        <table style="margin-top:14px;">
+          <tr><th>Error class</th><th>Examples</th><th>Legal action</th></tr>
+          <tr><td><strong>Definitive decline</strong></td><td>insufficient_funds, card_expired, do_not_honor</td><td>Mark FAILED; surface to user. Never blind-retry (decline codes are non-retryable; retry loops can trip issuer fraud rails)</td></tr>
+          <tr><td><strong>Transient, pre-commit</strong></td><td>429/rate-limit, provider outage before the PSP processed anything (request rejected at edge)</td><td>Retry same intent, exponential backoff + jitter — safe because PSP dedupes on our reference ID</td></tr>
+          <tr><td><strong>UNKNOWN</strong> <span class="tag rust">the hard one</span></td><td>read timeout, connection reset mid-request, 500 after processing started</td><td>Never re-POST a fresh auth. <strong>Query get-status(reference) until definitive</strong>; retry the <em>same</em> auth request only if the PSP's API is itself idempotent on reference</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">The resolution ladder for an UNKNOWN attempt</h3>
+        <div class="flow-step"><span class="idx">1</span><div class="body"><h4>Poll get-status with backoff</h4><p>Background resolver scans <code>payment_attempts WHERE psp_status='UNKNOWN'</code> (indexed), calls <code>get_status(intent_ref)</code> with exponential backoff — PSPs typically resolve within seconds to minutes.</p></div></div>
+        <div class="flow-step"><span class="idx">2</span><div class="body"><h4>Callback shortcut</h4><p>If an async callback arrives first (§11), it satisfies the same evidence role — deduped and applied; the pending get-status find becomes a no-op.</p></div></div>
+        <div class="flow-step"><span class="idx">3</span><div class="body"><h4>Expiry policy (still evidence-based)</h4><p>If no definitive answer after a bounded window: hold the intent in a <em>user-visible</em> "processing" state as long as the PSP's auth hold lifetime allows (issuer holds expire on their own clock anyway, usually 7 days, typically 1–3). Do not mark failed and let the user re-pay while a live auth exists.</p></div></div>
+        <div class="flow-step"><span class="idx">4</span><div class="body"><h4>The final arbiter: reconciliation</h4><p>Anything still unknown at T+1 is adjudicated against the bank's settlement file: money arrived → force state to SETTLED with an audit note; nothing appears → VOID + close. The daily file is the ground truth we can't argue with (§08).</p></div></div>
+      </div>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Fencing the PSP call itself</h3>
+          <p style="color:var(--muted); font-size:14px;">We send <code>reference = intent_id (+ attempt_no)</code> and PSPs dedupe on it: a re-issued identical auth returns the original result instead of creating a second charge. Combined with client idempotency keys, <strong>both</strong> ingress and egress are deduped — that's what makes the whole chain exactly-once in effect.</p>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Orphan authorizations</h3>
+          <p style="color:var(--muted); font-size:14px;">The reverse ghost: PSP has an auth we lost track of (crash between call and write). Mitigations: write intent + IN_PROGRESS <em>before</em> the call (rule 1, §02); and a nightly sweep reconciling <em>PSP-side</em> open-authorizations list against our pending set, auto-voiding orphans. State this unprompted — it's the answer that separates SDE-2 from SDE-3.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 LEDGER -->
+    <section id="ledger">
+      <div class="section-head"><span class="section-num">07</span><h2>The Double-Entry Ledger</h2></div>
+      <p class="section-intro">Balances are not columns you UPDATE — they are <strong>projections of an append-only journal</strong> where every event posts ≥2 entries that always sum to zero. This is the component that makes the system <em>auditable to the cent</em>, and it is where interviewers test whether you've built money systems or only CRUD.</p>
+      <div class="panel">
+        <h3 style="font-size:15px;">Account chart &amp; posting rules</h3>
+        <pre><code><span class="kw">CREATE TABLE</span> ledger_entries (
+  id           <span class="kw">BIGSERIAL PRIMARY KEY</span>,
+  journal_id   <span class="kw">UUID NOT NULL</span>,               <span class="comment">-- one logical event groups its entries</span>
+  event_id     <span class="kw">VARCHAR NOT NULL</span>,            <span class="comment">-- intent:CAPTURE, refund:REFUND:1 …</span>
+  account_id   <span class="kw">UUID NOT NULL</span>,               <span class="comment">-- customer-payable, merchant-receivable, us-fees, us-settlement-bank …</span>
+  direction    <span class="kw">VARCHAR NOT NULL CHECK</span> (direction <span class="kw">IN</span> (<span class="str">'DEBIT'</span>,<span class="str">'CREDIT'</span>)),
+  amount_minor <span class="kw">BIGINT NOT NULL CHECK</span> (amount_minor &gt; 0),
+  currency     <span class="kw">CHAR(3) NOT NULL</span>,
+  <span class="kw">UNIQUE</span> (event_id, account_id, direction)   <span class="comment">← replay-proof posting (§05 pattern, again)</span>
+);
+<span class="kw">CREATE INDEX</span> ON ledger_entries (account_id, id);   <span class="comment">-- balance sweeps stay shard-local</span></code></pre>
+        <table style="margin-top:14px;">
+          <tr><th>Event</th><th>DEBIT</th><th>CREDIT</th></tr>
+          <tr><td>Auth succeeds (hold — memo only)</td><td colspan="2" style="color:var(--muted)">no real entries; a pending memo keeps UX honest without touching money</td></tr>
+          <tr><td>Capture $100, fee $3</td><td>see worked example below</td><td>zero-sum per journal, always</td></tr>
+        </table>
+        <p style="color:var(--muted); font-size:13.5px; margin-top:10px;">Read the journal like an accountant: <em>every journal_id's entries sum to exactly zero</em> — that invariant (<code>SUM(debit) = SUM(credit)</code> per journal, per currency) is continuously verified, and a violation pages someone.</p>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">A capture, posted (customer pays, we skim a fee, merchant is owed)</h3>
+        <pre><code>journal: intent_42:CAPTURE            $100 charge, 3% fee
+  DEBIT   customer:payable              100      <span class="comment"># customer owes money → liability settles</span>
+  CREDIT  us:settlement-pending         100      <span class="comment"># money arriving via PSP is our asset-in-flight</span>
+
+journal: intent_42:SETTLED            <span class="comment"># bank file proves arrival (§08)</span>
+  DEBIT   us:settlement-pending         100
+  CREDIT  us:bank-account               100
+
+journal: intent_42:FEE_SPLIT          <span class="comment"># fee carved from what we owe the merchant</span>
+  DEBIT   us:bank-account               100
+  CREDIT  merchant:receivable            97      <span class="comment"># merchant is owed net-of-fee</span>
+  CREDIT  us:fee-income                   3      <span class="comment"># zero-sum holds: 100 in = 97 owed + 3 earned</span></code></pre>
+        <p style="color:var(--muted); font-size:13.5px;">Every real-world movement — capture, settlement, fee carve, refund, chargeback, FX — is one or more zero-sum journals, appended once, keyed by <code>event_id</code>. Refund = the mirror journals in reverse; chargeback = a forced debit of <code>merchant:receivable</code> with a dispute-reference event.</p>
+      </div>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Why not just <code>UPDATE balance</code>?</h3>
+          <table>
+            <tr><td>No audit trail</td><td>A mutated number can't explain itself; regulators and merchants demand the sequence of events</td></tr>
+            <tr><td>Lost-update races</td><td>Concurrent debits on a hot row serialize on one lock — and silent double-spend bugs hide in retry paths</td></tr>
+            <tr><td>Unrecoverable errors</td><td>With a journal you recompute the projection after any bug; with columns you reconstruct from bank files and prayer</td></tr>
+          </table>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Reading balances without melting the journal</h3>
+          <p style="color:var(--muted); font-size:14px;">Balance = <code>SUM(entries)</code> is too slow live, so maintain <strong>materialized balance snapshots per (account, journal-seq)</strong>, updated in the same transaction as the append (single-shard ACID, §12) — i.e. the balance is a <em>cache of a pure function</em>, always re-buildable. Statement reads paginate the journal itself.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 SETTLEMENT & RECONCILIATION -->
+    <section id="settlement">
+      <div class="section-head"><span class="section-num">08</span><h2>Settlement &amp; Reconciliation</h2></div>
+      <p class="section-intro">Between "PSP says captured" and "the money is in our bank and distributable" sits the async world of clearing. Reconciliation is the daily act of comparing <em>their books</em> to <em>our books</em> — it's not a reporting nicety, it's the system's final arbiter of truth (§06 step 4).</p>
+      <div class="panel">
+        <h3 style="font-size:15px;">The pipeline</h3>
+        <div class="flow-step"><span class="idx">1</span><div class="body"><h4>Ingest settlement files</h4><p>T+1/T+2 batch files (or balance APIs) per PSP/bank: line items with psp_ref, gross, fees, FX rate, net. Idempotent import: <code>(psp, file_date, line_hash)</code> unique — re-delivered files must not double-post.</p></div></div>
+        <div class="flow-step"><span class="idx">2</span><div class="body"><h4>Match on the join keys</h4><p>File line ↔ ledger journal via <code>psp_ref</code> (and our <code>intent_id</code> passed as reference, §04 step 3). Auto-match rate is the health metric — a good system runs &gt;99.5%.</p></div></div>
+        <div class="flow-step"><span class="idx">3</span><div class="body"><h4>Classify breaks</h4><p><strong>File-only</strong> (money in, no journal → likely a lost/UNKNOWN payment → resolve state from evidence!), <strong>book-only</strong> (journal, no file → failed settlement, fee billing error, or still in-flight — recheck tomorrow's file), <strong>amount-mismatch</strong> (fee or FX delta → tolerance rules, e.g. ±1 minor unit auto-adjusts with an adjustment journal).</p></div></div>
+        <div class="flow-step"><span class="idx">4</span><div class="body"><h4>Post &amp; age out</h4><p>Every break becomes a work item with SLAs; money-affecting resolutions are themselves journals (adjustment entries always reference the break). Nothing is hand-edited.</p></div></div>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">Merchant payout = settlement downstream</h3>
+        <pre><code>payout_batch = Σ (merchant:receivable settled balances)   <span class="comment"># only SETTLED money is payable</span>
+             − refunds/disputes owed back
+             ≥ payout_floor?  schedule T+n (daily) else roll forward
+   → freeze batch (snapshot the journal seq it covers) → bank transfer w/ batch-id reference
+   → file confirms → DEBIT merchant:receivable / CREDIT us:bank-account journals</code></pre>
+        <p style="color:var(--muted); font-size:13.5px;">The batch references a journal sequence, so "what exactly comprises this payout" is answerable forever — that's what a merchant dispute about a payout reads on.</p>
+      </div>
+    </section>
+
+    <!-- 09 REFUNDS & DISPUTES -->
+    <section id="refunds">
+      <div class="section-head"><span class="section-num">09</span><h2>Refunds, Voids &amp; Chargebacks</h2></div>
+      <div class="panel">
+        <table>
+          <tr><th>Operation</th><th>Against</th><th>Mechanics &amp; gotchas</th></tr>
+          <tr><td><strong>Void</strong></td><td>AUTHORIZED, not captured</td><td>Release the hold; no money journals (none moved). Idempotent on intent; after capture, void is illegal — refund instead</td></tr>
+          <tr><td><strong>Refund</strong></td><td>CAPTURED / SETTLED</td><td>New intent child: <code>refund_ref</code> unique per PSP call; partial refunds tracked as running total (<code>SUM(refunds) ≤ original</code> enforced in the DB, not the UI). Window: instruments expire — a 2-year-old card may refund-to-original-fail → fallback to account credit/payout rail</td></tr>
+          <tr><td><strong>Chargeback</strong></td><td>SETTLED (card networks)</td><td>Initiated by issuer, not us — arrives via PSP notification: funds clawed back <em>immediately</em> (forced debit journal), response window 7–30 days to submit evidence, won/lost journals finalize. Clocks run on network time: SLA monitors must page before deadlines</td></tr>
+        </table>
+      </div>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Refund concurrency guard</h3>
+          <p style="color:var(--muted); font-size:14px;">Two simultaneous partial refunds can each pass a read-then-write check on the refunded total. Serialize per original intent: single-partition transaction (<code>SELECT … FOR UPDATE</code> on the intent row, or a compare-and-set on <code>refunded_so_far</code>) — the check and the posting live in one shard-local transaction (§12).</p>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">State the money-truth</h3>
+          <p style="color:var(--muted); font-size:14px;">A refund's lifecycle is the same machine in miniature: <code>REFUND_PENDING → REFUNDED</code> with the same UNKNOWN handling (get-status on <code>refund_ref</code>) and the same reconciliation (negative lines in the file). One pattern, applied recursively — say this explicitly; it shows the design is compositional, not a pile of special cases.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 TOKENS, 3DS & PSPs -->
+    <section id="psp">
+      <div class="section-head"><span class="section-num">10</span><h2>Tokens, 3DS &amp; PSP Adapters</h2></div>
+      <p class="section-intro">The card-data path decides your compliance surface. Design it so the PAN (raw card number) never touches our servers at all.</p>
+      <div class="panel">
+        <h3 style="font-size:15px;">Tokenization &amp; the vault</h3>
+        <pre><code>card form (PSP-hosted iframe / direct-to-PSP JS SDK)   <span class="comment"># PAN goes client → PSP, bypassing us</span>
+        └─► PSP returns  network_token / vault_token    <span class="comment"># only THIS reaches and is stored by us</span>
+Later recurring charge: POST /payments { instrument_token } → adapter → PSP vault → issuer</code></pre>
+        <table style="margin-top:12px;">
+          <tr><td>PCI scope</td><td>Never store/forward PANs → we drop from SAQ-D to a minimal SAQ class; CVV is never stored, ever</td></tr>
+          <tr><td>Network tokens</td><td>Issuer-governed tokens that survive reissue/expiry (auto-updater) → higher recurring auth rates than vault PANs</td></tr>
+          <tr><td>Token vault</td><td>Our <code>instrument_tokens</code> table stores provider, token, BIN, last4, expiry — enough to render and route, nothing to steal</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">3DS / strong customer authentication (SCA)</h3>
+        <p style="color:var(--muted); font-size:14px;">An <em>interleaved</em> step in the state machine: AUTH_PENDING → <code>CHALLENGE_REQUIRED</code> (PSP returns redirect/JS challenge) → customer authenticates → PSP callback with the outcome → resume to AUTHORIZED or FAILED. Friction-free flows skip the challenge (risk-scored). Design consequences: the intent must survive the browser round-trip (state server-side, keyed by intent ID), and a challenge abandoned mid-way is just an expiring auth — resolved by the same ladder (§06), re-chargeable only after resolution.</p>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">The adapter seam (multi-PSP)</h3>
+        <pre><code><span class="kw">interface</span> PaymentProvider {
+  auth(intent)      capture(ref, amount)   void(ref)   refund(refund_ref, amount)
+  get_status(psp_ref_or_intent_ref)        verify_callback(raw_http) → event | reject
+}</code></pre>
+        <p style="color:var(--muted); font-size:14px; margin-top:10px;">Why an interface: PSPs differ on idempotency semantics, callback authenticity (HMAC vs mTLS vs IP allowlist), refund windows, and error-vocabulary. The orchestrator speaks only our state machine; adapters translate both ways (error-code mapping table per provider — including which map to UNKNOWN, which are terminal). <strong>Smart routing</strong> then picks a provider per transaction on cost / BIN-country / auth-rate, with automatic failover when one's health degrades — circuit breaker per adapter, and the same attempt lands on at most one provider until it's definitive-negative (double-submitting an auth to two PSPs "for redundancy" = double charge; name this trap).</p>
+      </div>
+    </section>
+
+    <!-- 11 EVENTS & WEBHOOKS -->
+    <section id="async">
+      <div class="section-head"><span class="section-num">11</span><h2>Async: Outbox, Kafka &amp; Webhooks</h2></div>
+      <p class="section-intro">Everything downstream of a state change — receipts, dashboards, payout accruals, merchant webhooks — rides events. The two classic bugs are "lost event" and "duplicate event"; the outbox and consumer idempotency kill them respectively.</p>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Transactional outbox (no lost events)</h3>
+          <pre><code><span class="kw">BEGIN</span>;
+  <span class="kw">UPDATE</span> payment_intents <span class="kw">SET</span> status=<span class="str">'AUTHORIZED'</span> …;   <span class="comment">-- state change</span>
+  <span class="kw">INSERT</span> INTO outbox_events(aggregate, topic, payload)  <span class="comment">-- same txn!</span>
+     VALUES (<span class="str">'intent_42'</span>, <span class="str">'payment.authorized'</span>, …);
+<span class="kw">COMMIT</span>;
+<span class="comment">-- relay process: poll/CDC → publish to Kafka → mark published</span></code></pre>
+          <p style="color:var(--muted); font-size:13.5px; margin-top:10px;">Publish-then-crash between DB commit and Kafka publish only <em>delays</em> delivery — the row is still unpublished. At-least-once to the bus, by construction.</p>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Kafka plumbing (ties to the Kafka sheet)</h3>
+          <table>
+            <tr><td>Partition key</td><td><code>intent_id</code> → per-payment ordering so consumers never see CAPTURED before AUTHORIZED</td></tr>
+            <tr><td>Topics by domain</td><td><code>payment.lifecycle</code>, <code>payout.batch</code>, <code>dispute.events</code>, <code>dlq.bad-callback</code></td></tr>
+            <tr><td>Consumer idempotency</td><td>Every handler dedupes on <code>event_id</code> (processed-events table / unique upsert) — at-least-once consumption, exactly-once effect</td></tr>
+            <tr><td>Retention</td><td>Compacted topic for current intent state → replayable read models (§12)</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">Webhooks out to merchants — we are the unreliable party now</h3>
+        <p style="color:var(--muted); font-size:14px;">Merchants get push (webhook) + pull (status API) — push optimized for latency, pull is the merchant's own reconciliation tool. Delivery contract: retry ladder over hours (backoff), <strong>HMAC-signed body + delivery GUID</strong> so merchants dedupe our at-least-once; we log ack/non-ack per delivery, surface a "missed webhooks" replay UI, and never gate <em>our</em> state on their ack. Callbacks <em>in</em> from PSPs get symmetric treatment: verify authenticity before anything else, dedupe on <code>(psp_ref, event_type)</code>, unknown/malformed → DLQ for humans, never a state change.</p>
+      </div>
+    </section>
+
+    <!-- 12 SCALING & SHARDING -->
+    <section id="scaling">
+      <div class="section-head"><span class="section-num">12</span><h2>Scaling &amp; Sharding</h2></div>
+      <p class="section-intro">Two different workloads with two different keys. Payments API scales statelessly behind a load balancer; the hard part is the <em>stateful</em> side — intents, idempotency rows, ledger postings — where correctness demands transactions and hot accounts demand locality.</p>
+      <div class="panel">
+        <h3 style="font-size:15px;">Shard keys — chosen so every transaction is shard-local</h3>
+        <table>
+          <tr><th>Data</th><th class="mono">Shard key</th><th>Rationale</th></tr>
+          <tr><td>payment_intents + attempts + idempotency_keys</td><td class="mono">merchant_id</td><td>The charge txn (claim key + write intent + outbox) touches all three → same shard → single-node ACID, no distributed transaction</td></tr>
+          <tr><td>ledger_entries</td><td class="mono">account_id</td><td>A posting touches the involved accounts; a journal spanning shards breaks the one-txn rule → see hot-account box</td></tr>
+          <tr><td>Statements / balances</td><td class="mono">account_id</td><td>Reads sweep one shard's index — shard-local pagination, no scatter-gather</td></tr>
+          <tr><td>Kafka lifecycle events</td><td class="mono">intent_id</td><td>Per-payment ordering (§11); independent of DB sharding</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="edge-card">
+          <h3>Hot accounts — the Amazon problem <span class="sev">senior follow-up</span></h3>
+          <p style="color:var(--muted); font-size:14px; margin:6px 0 0;">One merchant = one shard, and during a sale the top merchant's shard absorbs a disproportionate share of traffic; every posting to <code>merchant:receivable</code> serializes on one row's balance lock. Answers, in escalating strength: (a) keep postings append-only and update the balance cache <em>asynchronously in batches</em> (balance reads lag by one flush interval — fine for statements, flag it); (b) <strong>sub-account splitting</strong>: each account is N logical sub-buckets, postings hash across them, balance = ΣN at read/cache time — same trick as splitting a hot counter key; (c) route top-N merchants to dedicated shards (explicit tiering, more ops burden). Name (b) as the default and be honest that per-account FIFO ordering gets weaker with it.</p>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Read path (CQRS-lite)</h3>
+          <p style="color:var(--muted); font-size:14px;">Dashboards/receipts never hit the OLTP shards: lifecycle events build read models (search index for statement lookups, rollups for merchant dashboards) projected from Kafka — replayable from the compacted log, eventually consistent by design, with intent status API served from a replica for the "did my payment go through?" pull-path.</p>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Multi-region note (state it, then scope it)</h3>
+          <p style="color:var(--muted); font-size:14px;">Route a merchant's entire flow (API → shards → orchestrator) to one region — payments are latency-tolerant enough that cross-region failover is DR (plan it, RPO≈0 via quorum log shipping), not geo-sharded live traffic. Data residency (EU cards stay in EU) can force region splits per jurisdiction.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13 CAPACITY -->
+    <section id="capacity">
+      <div class="section-head"><span class="section-num">13</span><h2>Capacity Estimation</h2></div>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">Traffic</h3>
+          <div class="calc-line"><span class="k">Peak charge rate</span><span class="v">10,000/s (sale-day 5× burst)</span></div>
+          <div class="calc-line"><span class="k">Avg PSP latency / our budget</span><span class="v">2–5 s / +300 ms</span></div>
+          <div class="calc-line"><span class="k">Intent write size (rows + attempts)</span><span class="v">~2 KB</span></div>
+          <div class="calc-result"><span>Payment write throughput</span><span class="v">~20 MB/s + event fan-out</span></div>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Storage &amp; ledger</h3>
+          <div class="calc-line"><span class="k">Payments/day</span><span class="v">50 M (~600/s avg)</span></div>
+          <div class="calc-line"><span class="k">Ledger entries/payment (avg journals)</span><span class="v">~8–12 rows</span></div>
+          <div class="calc-line"><span class="k">Entry size</span><span class="v">~120 B</span></div>
+          <div class="calc-result"><span>Journal growth</span><span class="v">~60 GB/day → tier cold data</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">Sizing the fleet</h3>
+        <div class="calc-line"><span class="k">API pods (I/O-bound, ~200 concurrent/instance)</span><span class="v">10k peak ÷ 200 ≈ 50 + 30% headroom</span></div>
+        <div class="calc-line"><span class="k">DB shards (merchant-keyed)</span><span class="v">8–16, over-provisioned for top-merchant skew</span></div>
+        <div class="calc-line"><span class="k">Ledger shards (account-keyed)</span><span class="v">16–32, sub-bucketed for hot accounts</span></div>
+        <div class="calc-result"><span>Availability plan</span><span class="v">3 AZs per tier; PSP failover = routing, not capacity</span></div>
+        <p style="color:var(--muted); font-size:13px; margin-top:10px;">Idempotency store: keys retained 24 h at 50 M/day ≈ 150 M live rows — small enough to colocate with intent shards (same-key co-partitioning is the point), big enough to need a TTL sweeper.</p>
+      </div>
+    </section>
+
+    <!-- 14 SECURITY & COMPLIANCE -->
+    <section id="security">
+      <div class="section-head"><span class="section-num">14</span><h2>Security &amp; Compliance</h2></div>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="font-size:15px;">PCI DSS by architecture</h3>
+          <table>
+            <tr><td>Scope out, not guard</td><td>Hosted fields / direct-to-PSP SDK → PAN never enters our VPC (§10) — the cheapest compliance decision in the design</td></tr>
+            <tr><td>Logs redact at the edge</td><td>Structured logging with a redaction filter (PAN/CVV patterns) — one leaked log re-scopes the whole company</td></tr>
+            <tr><td>What we do store</td><td>Tokens, BIN, last4, expiry — encrypt at rest, but breach impact is fraud-cost, not card-theft</td></tr>
+          </table>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">Integrity &amp; abuse surface</h3>
+          <table>
+            <tr><td>AuthN/AuthZ</td><td>mTLS + per-merchant API keys; a merchant can only ever read its own intents (merchant_id is in the shard key <em>and</em> every query)</td></tr>
+            <tr><td>Callback authenticity</td><td>Verify HMAC/signature before parsing, reject on unknown schema (§11) — an unverified callback is an unsigned instruction to mark money collected</td></tr>
+            <tr><td>Fraud gate</td><td>Inline scoring (velocity, BIN-country mismatch, device) in the accept path — synchronous for a fast verdict, async review lane for maybes; every fraud decision is logged with the intent</td></tr>
+            <tr><td>Rate limiting</td><td>Per merchant + per card-BIN + per IP ladders; decline-storm detection (card-testing attack) auto-freezes an instrument</td></tr>
+            <tr><td>Audit</td><td>Immutable audit log of state transitions + who/what triggered each; dual-control (4-eyes) for any manual override tooling</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">Failure &amp; chaos posture</h3>
+        <p style="color:var(--muted); font-size:14px;">PSP outage → circuit breaker opens, queue-and-retry non-urgent flows, user-visible "try later" for new auths, <em>never</em> auto-failover to a second PSP mid-attempt (§10 trap). DB failover → orchestrators drain; because UNKNOWN resolution is a durable sweeper, a restarted pod continues exactly where the crashed one stopped — the design has no in-memory critical state, and saying that out loud is worth points.</p>
+      </div>
+    </section>
+
+    <!-- 15 ALTERNATIVES -->
+    <section id="alternatives">
+      <div class="section-head"><span class="section-num">15</span><h2>Alternatives Considered</h2></div>
+      <div class="panel">
+        <table>
+          <tr><th>Alternative</th><th>Rejected because</th></tr>
+          <tr><td>One ACID transaction spanning the PSP call</td><td>External systems can't enlist; holding a DB txn open across a 2–5 s network call couples our availability to the internet's p99</td></tr>
+          <tr><td>2PC/XA with the bank or PSP</td><td>No bank/PSP exposes a prepare-vote protocol; coordinators blocking on participants is the worst failure mode for money paths</td></tr>
+          <tr><td><code>balance</code> column with optimistic locking</td><td>No audit trail, lost-update races under retries, unrecoverable after bugs — §07; and it still doesn't fix hot rows any better than the ledger does</td></tr>
+          <tr><td>Treat timeouts as failures + let user retry</td><td>The classic double-charge bug: the "failed" payment often succeeds at the issuer. UNKNOWN must be an explicit state with a resolver (§06)</td></tr>
+          <tr><td>Client-generated payment UUID alone (no server store)</td><td>Requires trusting clients for uniqueness and gives no cached-response replay, no in-progress lock, no hash-mismatch guard (§05)</td></tr>
+          <tr><td>Sync webhook call in the charge request path</td><td>Merchant latency/uptime becomes our checkout latency/uptime — events go through the outbox + bus, merchants get async push + pull (§11)</td></tr>
+          <tr><td>Redundant auth to two PSPs, first-response-wins</td><td>Both can succeed → guaranteed double charge; redundancy belongs at routing/failover between attempts, never parallel within one</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- 16 PLAYBOOK -->
+    <section id="playbook">
+      <div class="section-head"><span class="section-num">16</span><h2>Interview Playbook</h2></div>
+      <div class="panel">
+        <h3 style="font-size:15px;">The questions you will actually get</h3>
+        <div class="qa">
+          <div class="q">How do you guarantee a customer is never charged twice?</div>
+          <div class="a">Layered dedupe, each with a unique constraint: client idempotency key per business action (server-claimed via <code>ON CONFLICT DO NOTHING</code>, response cached for replay); our intent ID as PSP-side reference so a re-sent auth dedupes at the PSP; callbacks and get-status results deduped on <code>(psp_ref, event_type)</code>; ledger postings unique on <code>event_id</code>. Timeouts go to UNKNOWN, never to "failed-and-recharge." Exactly-once <em>effect</em>, on at-least-once <em>delivery</em>.</div>
+        </div>
+        <div class="qa">
+          <div class="q">The PSP call timed out. Walk me through your next three moves.</div>
+          <div class="a">Record the attempt as UNKNOWN (durable, indexed). Backoff-poll <code>get_status(reference)</code> — any callback that arrives first serves as the same evidence. If still unresolved at the bounded window, hold the intent in "processing"; the T+1 bank file is the final arbiter: line present → SETTLED with audit note, absent → VOID. Never re-initiate a fresh charge from a pending auth.</div>
+        </div>
+        <div class="qa">
+          <div class="q">Why double-entry instead of a balances table?</div>
+          <div class="a">Auditability (every number explains itself as a journal sequence), invariants machines can check (<code>SUM=0</code> per journal, per currency), and recoverability — a balance is a recomputable projection, so a bug is a backfill, not a forensic dead-end. Auth/capture/settlement also map 1:1 onto journals, which makes "when does money become spendable" a posting rule, not tribal knowledge.</div>
+        </div>
+        <div class="qa">
+          <div class="q">The reconciliation file shows money for a payment we think failed. Now what?</div>
+          <div class="a">File-only break → evidence outranks our state: re-query PSP for the ref (it will show AUTHORIZED/CAPTURED), force the intent's state via the audited transition path, post the missing journals from the file's own gross/fee/net, and file the break as resolved-with-cause. Then measure: if a class of these recurs (e.g. only on PSP B), the get-status ladder's window or mapping table is the bug.</div>
+        </div>
+        <div class="qa">
+          <div class="q">How do you handle a 100× spike on the top merchant during a sale?</div>
+          <div class="a">Shard skew is the failure mode: merchant-keyed shards and the account's posting row both go hot. Mitigations: sub-bucketed account balances (ΣN), append-only postings with batched balance-cache flushes, dedicated shard tier for top-N merchants, and stateless API scale-out — name the trade-off each introduces (balance staleness, weaker per-account FIFO) rather than claiming a free lunch.</div>
+        </div>
+        <div class="qa">
+          <div class="q">When is the merchant's balance allowed to increase?</div>
+          <div class="a">Only on SETTLED — proven by the bank file, not by a PSP "captured" response. PSP-says-captured is a receivable-in-flight; paying out on it means lending against unsettled clearing, which is how payment companies die. Say "pending ≠ payable" explicitly.</div>
+        </div>
+        <div class="qa">
+          <div class="q">Design the refund API for concurrency: two partial refunds racing.</div>
+          <div class="a">Enforce <code>refunded_so_far + new ≤ original</code> inside one transaction that takes a row lock on the original intent (shard-local, §12), with the refund's own idempotency key (<code>refund_ref</code>) so its PSP round gets the full UNKNOWN ladder too. Read-check-write across two transactions is the bug to point at.</div>
+        </div>
+        <div class="qa">
+          <div class="q">Why is a webhook retry your problem and not the merchant's?</div>
+          <div class="a">Because we're the party claiming "your payment succeeded" to an uncontrolled consumer: at-least-once with a backoff ladder, HMAC-signed bodies, a delivery GUID for their dedupe, delivery logs + a replay tool. But our state never depends on their ack — they always also have the pull API. Push for speed, pull for truth.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 17 CHEAT SHEET -->
+    <section id="cheatsheet">
+      <div class="section-head"><span class="section-num">17</span><h2>Cheat Sheet — One Pass Before the Interview</h2></div>
+      <div class="grid-3">
+        <div class="panel">
+          <h3 style="font-size:15px;">🔑 Correctness spine</h3>
+          <ul style="color:var(--muted); font-size:13.5px; padding-left:18px; margin:0;">
+            <li>Idempotency keys: claim → run → cache response; hash-mismatch = 422</li>
+            <li>Timeout = UNKNOWN, its own resolver ladder + bank-file arbiter</li>
+            <li>Intent persisted before any PSP call; state advances only on evidence</li>
+            <li>Auth ≠ capture ≠ settled — three states, three posting decisions</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">💰 Money spine</h3>
+          <ul style="color:var(--muted); font-size:13.5px; padding-left:18px; margin:0;">
+            <li>Integer minor units + pinned currency; corrections are new journals</li>
+            <li>Double-entry, zero-sum per journal, unique on <code>event_id</code></li>
+            <li>Balance = cached projection, always recomputable</li>
+            <li>Payouts only from SETTLED; reconciliation runs the breaks queue</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:15px;">🏗️ Scale &amp; ops spine</h3>
+          <ul style="color:var(--muted); font-size:13.5px; padding-left:18px; margin:0;">
+            <li>Shard by merchant_id (API state), account_id (ledger) — txn-local</li>
+            <li>Hot accounts → sub-buckets + batched balance flush</li>
+            <li>Outbox → Kafka (key=intent) → CQRS read models + webhooks</li>
+            <li>PCI scoped out by tokenization; verified callbacks; circuit-broken PSPs</li>
+          </ul>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:15px;">The 60-second narration</h3>
+        <p style="color:var(--muted); font-size:14px;">"Clients retry, so the API is idempotent at (merchant, key) with a cached response. The intent is written durably before any PSP call, then a state machine — auth, capture, settle — advances only on evidence: a read response, a verified callback, or a get-status poll, because a timeout is UNKNOWN, not failure. Confirmed money movement posts zero-sum double-entry journals; balances are cached projections; merchants get paid only from what the bank's settlement file proves, and reconciliation is the final arbiter for everything still unresolved. Events flow through a transactional outbox onto Kafka, consumed idempotently; webhooks are our own at-least-once push with an HMAC and a replay tool. Sharding puts a payment's whole transaction on one shard by merchant, the ledger by account, with sub-bucketing for hot accounts — and the card PAN never enters our environment at all, because tokenization scoped the PCI away up front."</p>
+      </div>
+    </section>
+
+    <footer>Payment System — revision sheet</footer>
+  </div>
+</div>
+</body>
+</html>
